@@ -1,0 +1,13 @@
+{
+  "jupyter-config-data": {
+    "appName": "人工智能训练师三级 Notebook 实验室",
+    "appUrl": "./lab",
+    "appVersion": "2026.07",
+    "collaborative": false,
+    "faviconUrl": "./lab/favicon.ico",
+    "disabledExtensions": [
+      "@jupyterlab/apputils-extension:announcements",
+      "@jupyterlab/help-extension:about"
+    ]
+  }
+}

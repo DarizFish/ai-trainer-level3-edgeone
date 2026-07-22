@@ -1,0 +1,2196 @@
+{
+  "manualSourceSha256": "f1cc0e867b69b82de411bed53b955fa2f5cc535b7979af51371682469e6ad62d",
+  "convertedDocxSha256": "0cbc5d00168fec2aa0551ba4e47e5c6b0300f9f8c400529ec30e231a86ef25b6",
+  "summary": {
+    "tasks": 40,
+    "titleMatches": 40,
+    "descriptionMatches": 40,
+    "rubricCountMatches": 40,
+    "rubricItemChecks": 297,
+    "rubricItemExactMatches": 297
+  },
+  "tasks": [
+    {
+      "code": "1.1.1",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 14,
+      "siteRubricItems": 14,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M2",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M3",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M4",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M5",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M6",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M7",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M8",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M9",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M10",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M11",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M12",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M13",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M14",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "1.1.2",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 10,
+      "siteRubricItems": 10,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M2",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M3",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M4",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M5",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M6",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M7",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M8",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M9",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M10",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "1.1.3",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 18,
+      "siteRubricItems": 18,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M2",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M3",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M4",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M5",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M6",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M7",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M8",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M9",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M10",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M11",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M12",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M13",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M14",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M15",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M16",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M17",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M18",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "1.1.4",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 13,
+      "siteRubricItems": 13,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M2",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M3",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M4",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M5",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M6",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M7",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M8",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M9",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M10",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M11",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M12",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M13",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "1.1.5",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 14,
+      "siteRubricItems": 14,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M2",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M3",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M4",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M5",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M6",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M7",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M8",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M9",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M10",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M11",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M12",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M13",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M14",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "1.2.1",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 5,
+      "siteRubricItems": 5,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M2",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M3",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M4",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M5",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "1.2.2",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 6,
+      "siteRubricItems": 6,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M2",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M3",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M4",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M5",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M6",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "1.2.3",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 5,
+      "siteRubricItems": 5,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M2",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M3",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M4",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M5",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "1.2.4",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 5,
+      "siteRubricItems": 5,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M2",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M3",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M4",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M5",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "1.2.5",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 5,
+      "siteRubricItems": 5,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M2",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M3",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M4",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M5",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "2.1.1",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 10,
+      "siteRubricItems": 10,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M2",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M3",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M4",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M5",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M6",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M7",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M8",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M9",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M10",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "2.1.2",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 10,
+      "siteRubricItems": 10,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M2",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M3",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M4",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M5",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M6",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M7",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M8",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M9",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M10",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "2.1.3",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 10,
+      "siteRubricItems": 10,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M2",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M3",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M4",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M5",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M6",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M7",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M8",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M9",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M10",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "2.1.4",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 10,
+      "siteRubricItems": 10,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M2",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M3",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M4",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M5",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M6",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M7",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M8",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M9",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M10",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "2.1.5",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 11,
+      "siteRubricItems": 11,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M2",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M3",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M4",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M5",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M6",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M7",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M8",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M9",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M10",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M11",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "2.2.1",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 12,
+      "siteRubricItems": 12,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M2",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M3",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M4",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M5",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M6",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M7",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M8",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M9",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M10",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M11",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M12",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "2.2.2",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 14,
+      "siteRubricItems": 14,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M2",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M3",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M4",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M5",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M6",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M7",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M8",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M9",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M10",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M11",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M12",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M13",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M14",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "2.2.3",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 16,
+      "siteRubricItems": 16,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M2",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M3",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M4",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M5",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M6",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M7",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M8",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M9",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M10",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M11",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M12",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M13",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M14",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M15",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M16",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "2.2.4",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 15,
+      "siteRubricItems": 15,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M2",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M3",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M4",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M5",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M6",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M7",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M8",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M9",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M10",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M11",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M12",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M13",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M14",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M15",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "2.2.5",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 13,
+      "siteRubricItems": 13,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M2",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M3",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M4",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M5",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M6",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M7",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M8",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M9",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M10",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M11",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M12",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M13",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "3.1.1",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 4,
+      "siteRubricItems": 4,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M2",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M3",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M4",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "3.1.2",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 4,
+      "siteRubricItems": 4,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M2",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M3",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M4",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "3.1.3",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 4,
+      "siteRubricItems": 4,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M2",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M3",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M4",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "3.1.4",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 4,
+      "siteRubricItems": 4,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M2",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M3",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M4",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "3.1.5",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 4,
+      "siteRubricItems": 4,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M2",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M3",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M4",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "3.2.1",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 9,
+      "siteRubricItems": 9,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M2",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M3",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M4",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M5",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M6",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M7",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M8",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M9",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "3.2.2",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 11,
+      "siteRubricItems": 11,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M2",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M3",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M4",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M5",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M6",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M7",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M8",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M9",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M10",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M11",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "3.2.3",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 8,
+      "siteRubricItems": 8,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M2",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M3",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M4",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M5",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M6",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M7",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M8",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "3.2.4",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 11,
+      "siteRubricItems": 11,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M2",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M3",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M4",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M5",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M6",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M7",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M8",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M9",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M10",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M11",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "3.2.5",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 12,
+      "siteRubricItems": 12,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M2",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M3",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M4",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M5",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M6",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M7",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M8",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M9",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M10",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M11",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        },
+        {
+          "id": "M12",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "4.1.1",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 1,
+      "siteRubricItems": 1,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "4.1.2",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 1,
+      "siteRubricItems": 1,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "4.1.3",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 1,
+      "siteRubricItems": 1,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "4.1.4",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 1,
+      "siteRubricItems": 1,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "4.1.5",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 1,
+      "siteRubricItems": 1,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "4.2.1",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 1,
+      "siteRubricItems": 1,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "4.2.2",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 1,
+      "siteRubricItems": 1,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "4.2.3",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 1,
+      "siteRubricItems": 1,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "4.2.4",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 1,
+      "siteRubricItems": 1,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    },
+    {
+      "code": "4.2.5",
+      "titleMatch": true,
+      "descriptionMatch": true,
+      "officialRubricItems": 1,
+      "siteRubricItems": 1,
+      "rubricCountMatch": true,
+      "rubricChecks": [
+        {
+          "id": "M1",
+          "idMatch": true,
+          "pointsMatch": true,
+          "descriptionMatch": true
+        }
+      ]
+    }
+  ]
+}

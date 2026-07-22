@@ -1,0 +1,53 @@
+{
+  "name": "ai-trainer-level3-edgeone",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build --webpack",
+    "start": "next start",
+    "test": "npm run build && node --test tests/rendered-html.test.mjs",
+    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern public/lite --ignore-pattern public/labs/runtime --ignore-pattern .jupyterlite-venv --ignore-pattern jupyterlite/.cache --ignore-pattern jupyterlite-extension/.core --ignore-pattern jupyterlite-extension/lib --ignore-pattern jupyterlite-extension/labextension",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "content:import": "python scripts/import-reference.py",
+    "content:reference:snapshot": "python scripts/theory_reference.py snapshot",
+    "content:reference:apply": "python scripts/theory_reference.py apply",
+    "content:notebook-solutions:snapshot": "python scripts/notebook_solutions.py snapshot",
+    "content:notebook-solutions:apply": "python scripts/notebook_solutions.py apply",
+    "content:practical-materials": "python scripts/sync-practical-materials.py",
+    "content:validate": "python scripts/validate-content.py",
+    "labs:quantize": "python scripts/quantize-browser-models.py",
+    "labs:prepare": "python scripts/prepare-lab-assets.py",
+    "labs:runtime": "node scripts/copy-onnxruntime-web.mjs",
+    "jupyterlite:notebooks": "python scripts/generate-jupyterlite-notebooks.py",
+    "jupyterlite:extension": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build-jupyterlite-extension.ps1",
+    "jupyterlite:patch": "python scripts/patch-jupyterlite-config.py",
+    "jupyterlite:build": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build-jupyterlite.ps1"
+  },
+  "dependencies": {
+    "drizzle-orm": "0.45.2",
+    "jupyter-iframe-commands-host": "0.3.0",
+    "next": "16.2.6",
+    "onnxruntime-web": "1.27.0",
+    "react": "19.2.6",
+    "postgres": "3.4.7",
+    "react-dom": "19.2.6"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.2.1",
+    "@types/node": "22.19.19",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "drizzle-kit": "0.31.10",
+    "eslint": "9.39.4",
+    "eslint-config-next": "16.2.6",
+    "react-server-dom-webpack": "19.2.6",
+    "tailwindcss": "4.2.1",
+    "typescript": "5.9.3"
+  },
+  "type": "module"
+}

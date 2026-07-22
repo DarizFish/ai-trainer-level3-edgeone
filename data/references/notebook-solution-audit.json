@@ -1,0 +1,154 @@
+{
+  "version": "2026-07-16-v1",
+  "snapshotVersion": "2026-07-16-v1",
+  "capturedAt": "2026-07-16",
+  "summary": {
+    "notebookSolutions": 20,
+    "derivedNotebookSolutions": 16,
+    "officialNotebookSolutions": 4,
+    "solutionCodeCells": 33,
+    "solutionsWithBlanks": 0
+  },
+  "solutions": [
+    {
+      "code": "1.1.1",
+      "sourceNotebookSha256": "f0766b203bd7e3438c033c9bcb0b74cf3c1755b53ef2aee740bcb91d3b2a372e",
+      "codeSha256": "0fa705480b7c6e5bb3e7d77d82943b56a356d06813612eb771da8de1fba05615",
+      "codeCells": 4,
+      "sourceOutputs": 5
+    },
+    {
+      "code": "1.1.2",
+      "sourceNotebookSha256": "f4b5a99d52b4461e45bf6ff56d6094de2632baed46fbfb1a351616958d09effc",
+      "codeSha256": "073d0244994239961bfaa25f9581d99d4549601a8b4ef339d89c628dd70e2abd",
+      "codeCells": 4,
+      "sourceOutputs": 4
+    },
+    {
+      "code": "1.1.3",
+      "sourceNotebookSha256": "f49595b2a7714110d5c44b914e54e21530adee365f0ccf6aff441fa4411f6c58",
+      "codeSha256": "e3b1e6196763fa32df9e3f70557e4fb47305b5cea36e43d2dff29ed23a4bead5",
+      "codeCells": 4,
+      "sourceOutputs": 3
+    },
+    {
+      "code": "1.1.4",
+      "sourceNotebookSha256": "c1d780373d17dfd76ec0514efd25f9cde50f22aa5f0ec04bc42f84b697115f4c",
+      "codeSha256": "fd35c3f26e44dee8f8768c7faede62e12647a32f8a71f0fc664fc208057bff1f",
+      "codeCells": 3,
+      "sourceOutputs": 3
+    },
+    {
+      "code": "1.1.5",
+      "sourceNotebookSha256": "55b25fe4bc6fabfb0d1970dcbf0e0d47f29fc5c1e95a889aef7a20f0bdfb77dd",
+      "codeSha256": "f5eca1bbe653a6144878ffdaad5ba96dd69fc6a9c3910a8584cc4d1ba03c7f8a",
+      "codeCells": 3,
+      "sourceOutputs": 3
+    },
+    {
+      "code": "2.1.1",
+      "sourceNotebookSha256": "9cafd484b9d8ca77d23e6b1d8be2c5a14b7c0e64f8b47898e4d95878b44f0cfe",
+      "codeSha256": "072a7ceaac1925a440c9da46f1eb7ccc74085402f5a4755c399564ec0ffa78d5",
+      "codeCells": 1,
+      "sourceOutputs": 1
+    },
+    {
+      "code": "2.1.2",
+      "sourceNotebookSha256": "d89ceecf893d69572d2c09383ec49f169a4e779e3df9cd056ef77cbe3ba989f6",
+      "codeSha256": "fe2a0292cdb10fed22facc3f1ac1ae7d74c5ead9114cb76330e4034af965a846",
+      "codeCells": 1,
+      "sourceOutputs": 1
+    },
+    {
+      "code": "2.1.3",
+      "sourceNotebookSha256": "67305bf94f3d753c8226d915c5d7cc113f8589f0fe74e12cb07ac83bdc47c052",
+      "codeSha256": "25d18036a85cc60ddfd46b3571fd516639712f0cbec66ef9b1ab051c643cf0ca",
+      "codeCells": 1,
+      "sourceOutputs": 3
+    },
+    {
+      "code": "2.1.4",
+      "sourceNotebookSha256": "8ecdb7829500c4c084228809df8f13b664de9b768340261c017da87f197d925f",
+      "codeSha256": "2ba9510e1681a6d1c6fedffdc82826b32b896b64e1f601db3fcc1837b87c673e",
+      "codeCells": 1,
+      "sourceOutputs": 4
+    },
+    {
+      "code": "2.1.5",
+      "sourceNotebookSha256": "7805c2e63197a4e6efe60c30ef24c7b4ab87558d54b97cf8e4c9a324ac0241b0",
+      "codeSha256": "0f1a281ea1b9d4f541523935cc7bc310211cddea57ff19b7f1c57bc32bd8a3e9",
+      "codeCells": 1,
+      "sourceOutputs": 2
+    },
+    {
+      "code": "2.2.1",
+      "sourceNotebookSha256": "59ef87842ca927afebab72ae7b9f94125678e1083fc9cf1d71f7806c3a0ea3eb",
+      "codeSha256": "3e16debb2496f51a006fbca2ee13b53c09ea66a0e8ac9c85b8368b0ff627916a",
+      "codeCells": 1,
+      "sourceOutputs": 4
+    },
+    {
+      "code": "2.2.2",
+      "sourceNotebookSha256": "2bae0ef23217a92bfef5dd608f11120097658a7d193357db90d79491f8833741",
+      "codeSha256": "5a54a17e4291fa5bf657bc225546ac71db640227f6f41adfd818616f76d5b0ea",
+      "codeCells": 1,
+      "sourceOutputs": 1
+    },
+    {
+      "code": "2.2.3",
+      "sourceNotebookSha256": "0e6b55b9058dc2cb278bc304935b33813d35dfeb584378ac6a5c0f426bba6315",
+      "codeSha256": "2a55c1be1a7f2c505152fa3680c0092fd61dbfb7647009ed8c11113773237f7c",
+      "codeCells": 1,
+      "sourceOutputs": 2
+    },
+    {
+      "code": "2.2.4",
+      "sourceNotebookSha256": "006fdd32174a464c25fd45fc17d06c829b95d7463fef16f274146b2439cf55b0",
+      "codeSha256": "201c1e3142d8f6221ff09ada642cc846a95340ad10d2f728e8abacbb7d657c9e",
+      "codeCells": 1,
+      "sourceOutputs": 1
+    },
+    {
+      "code": "2.2.5",
+      "sourceNotebookSha256": "e31c66cfa85370a5139c0bb50c30c80940a8d96fc4f8fba611249645fff66ab0",
+      "codeSha256": "99dfe8e80bef40e4f44528f100e887e91693e9d12f62bee7aed34f0192b6c68d",
+      "codeCells": 1,
+      "sourceOutputs": 1
+    },
+    {
+      "code": "3.2.1",
+      "sourceNotebookSha256": "ba5e5cc5aff98ea7cb8aa3f309cffd9521fdcdb55172b304cc2cdf9ebcfed5ac",
+      "codeSha256": "02c02f87629d22ee3fecffcfd813e47dda66c3854cd443e67c60cb16a838ea1e",
+      "codeCells": 1,
+      "sourceOutputs": 1
+    },
+    {
+      "code": "3.2.2",
+      "sourceNotebookSha256": "9416cbec19d42c1caea2cca6acda501fede2648ef7dc1f1e52b8ac94bd13ba16",
+      "codeSha256": "168e29a2253fb467adb940ba86286ccd494476e7bf1782322aaf894a91df16a4",
+      "codeCells": 1,
+      "sourceOutputs": 1
+    },
+    {
+      "code": "3.2.3",
+      "sourceNotebookSha256": "1d19640eaf3cf27fb2b6b777fc357c83b3d4063f223e34dd910760a391a37d64",
+      "codeSha256": "de5453ca97a5bfcf98ca94b02c7df6821949217e6d8a0c99251b4b785f4cae6b",
+      "codeCells": 1,
+      "sourceOutputs": 1
+    },
+    {
+      "code": "3.2.4",
+      "sourceNotebookSha256": "14ff61807bfbbf244c7840fa1f18a3d0856449f3b049781640d5e8ef89c08c63",
+      "codeSha256": "96a8bf241f999383616aa3d5be17635ea68987efedf962e6551da51a0a3b7c5d",
+      "codeCells": 1,
+      "sourceOutputs": 1
+    },
+    {
+      "code": "3.2.5",
+      "sourceNotebookSha256": "30fff07908d57157bed2389cfa1018496298fb00d4871a63854b4523f3f52e1e",
+      "codeSha256": "b8548146ce3671452152d487076f46ef9f07d6bf6ef5236c9a2882e7a5682369",
+      "codeCells": 1,
+      "sourceOutputs": 1
+    }
+  ]
+}

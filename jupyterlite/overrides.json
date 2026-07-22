@@ -1,0 +1,10 @@
+{
+  "@jupyterlab/apputils-extension:themes": {
+    "theme": "JupyterLab Light"
+  },
+  "@jupyterlab/notebook-extension:tracker": {
+    "autoStartDefaultKernel": true,
+    "scrollPastEnd": true,
+    "recordTiming": true
+  }
+}

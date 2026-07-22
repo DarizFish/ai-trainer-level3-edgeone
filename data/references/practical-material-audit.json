@@ -1,0 +1,2789 @@
+{
+  "contentVersion": "2026-07-19-v7",
+  "materialRoot": "人工智能训练师_3级_sucai",
+  "summary": {
+    "tasks": 40,
+    "sourceDirectories": 35,
+    "tasksWithMaterials": 35,
+    "tasksWithoutOfficialFiles": [
+      "1.2.1",
+      "1.2.2",
+      "1.2.3",
+      "1.2.4",
+      "1.2.5"
+    ],
+    "orphanSourceDirectories": [],
+    "materialFiles": 74,
+    "materialBytes": 260624879,
+    "sourceTreeSha256": "3f2bd85018e21d8ba11cee6fb9b6f624734122fd79f58dec647eb492261cb1ab",
+    "sourceFilesRegistered": 74,
+    "exactBrowserCopies": 49,
+    "browserDeliveriesVerified": 74,
+    "tasksFullyRegistered": 40,
+    "kinds": {
+      "notebook": 20,
+      "dataset": 13,
+      "document": 20,
+      "spreadsheet": 7,
+      "image": 5,
+      "text": 3,
+      "model": 5,
+      "code": 1
+    }
+  },
+  "tasks": [
+    {
+      "code": "1.1.1",
+      "sourceDirectory": "1.1.1-素材",
+      "files": 2,
+      "sourceStatus": "official-files-registered",
+      "allSourceFilesRegistered": true,
+      "materials": [
+        {
+          "name": "1.1.1.ipynb",
+          "kind": "notebook",
+          "label": "Notebook 模板",
+          "size": 3932,
+          "sha256": "cb73a9dc78ce963419891cdb19e018e218e849d52657ef33ca4908aeb4b6e454",
+          "note": "官方 Notebook 模板；4 个代码单元",
+          "url": "/lite/files/1.1.1/1.1.1.ipynb",
+          "delivery": "jupyterlite-generated-template",
+          "publishedExists": true,
+          "publishedExactCopy": null,
+          "deliveryVerified": true
+        },
+        {
+          "name": "patient_data.csv",
+          "kind": "dataset",
+          "label": "CSV 数据集",
+          "size": 22996,
+          "sha256": "1dca56eed4f5a447e31a47e71a1bb0e645fc369dbd9507300b0cca0d3d6f8e91",
+          "note": "1000 行数据 × 6 列；字段：PatientID、Age、BMI、BloodPressure、Cholesterol…",
+          "url": "/labs/1.1.1/patient_data.csv",
+          "delivery": "lab-runtime",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        }
+      ]
+    },
+    {
+      "code": "1.1.2",
+      "sourceDirectory": "1.1.2-素材",
+      "files": 2,
+      "sourceStatus": "official-files-registered",
+      "allSourceFilesRegistered": true,
+      "materials": [
+        {
+          "name": "1.1.2.ipynb",
+          "kind": "notebook",
+          "label": "Notebook 模板",
+          "size": 2998,
+          "sha256": "243aa4072426ca509e207311323694b6c19e73156cd38470112901f6578c58c9",
+          "note": "官方 Notebook 模板；4 个代码单元",
+          "url": "/lite/files/1.1.2/1.1.2.ipynb",
+          "delivery": "jupyterlite-generated-template",
+          "publishedExists": true,
+          "publishedExactCopy": null,
+          "deliveryVerified": true
+        },
+        {
+          "name": "sensor_data.csv",
+          "kind": "dataset",
+          "label": "CSV 数据集",
+          "size": 604795,
+          "sha256": "c9d9b70f406bd014023ff96e8ad94afd217353954dbf3b648dd9a879b91d9bf4",
+          "note": "10000 行数据 × 5 列；字段：SensorID、Timestamp、SensorType、Value、Location",
+          "url": "/labs/1.1.2/sensor_data.csv",
+          "delivery": "lab-runtime",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        }
+      ]
+    },
+    {
+      "code": "1.1.3",
+      "sourceDirectory": "1.1.3-素材",
+      "files": 2,
+      "sourceStatus": "official-files-registered",
+      "allSourceFilesRegistered": true,
+      "materials": [
+        {
+          "name": "1.1.3.ipynb",
+          "kind": "notebook",
+          "label": "Notebook 模板",
+          "size": 3068,
+          "sha256": "82e22d5e692895134033657c2756b3d64f938562ba0240f63876dd1cc64186ce",
+          "note": "官方 Notebook 模板；4 个代码单元",
+          "url": "/lite/files/1.1.3/1.1.3.ipynb",
+          "delivery": "jupyterlite-generated-template",
+          "publishedExists": true,
+          "publishedExactCopy": null,
+          "deliveryVerified": true
+        },
+        {
+          "name": "credit_data.csv",
+          "kind": "dataset",
+          "label": "CSV 数据集",
+          "size": 583251,
+          "sha256": "2d040de2559c987043fec64aa5fc4ef1805f3bb1bc518bbb54989f3e15af9fe5",
+          "note": "1000 行数据 × 9 列；字段：CustomerID、Name、Age、Income、LoanAmount…",
+          "url": "/labs/1.1.3/credit_data.csv",
+          "delivery": "lab-runtime",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        }
+      ]
+    },
+    {
+      "code": "1.1.4",
+      "sourceDirectory": "1.1.4-素材",
+      "files": 2,
+      "sourceStatus": "official-files-registered",
+      "allSourceFilesRegistered": true,
+      "materials": [
+        {
+          "name": "1.1.4.ipynb",
+          "kind": "notebook",
+          "label": "Notebook 模板",
+          "size": 3445,
+          "sha256": "df397270f56c343f410a460bd5d305b3267dda57ff55c9f5545b9d8f74bdf639",
+          "note": "官方 Notebook 模板；3 个代码单元",
+          "url": "/lite/files/1.1.4/1.1.4.ipynb",
+          "delivery": "jupyterlite-generated-template",
+          "publishedExists": true,
+          "publishedExactCopy": null,
+          "deliveryVerified": true
+        },
+        {
+          "name": "user_behavior_data.csv",
+          "kind": "dataset",
+          "label": "CSV 数据集",
+          "size": 68060,
+          "sha256": "0147d06abc773fe47e16ea4c71003b553c99f159c8f3feeb71f76973a867aa91",
+          "note": "1000 行数据 × 10 列；字段：UserID、UserName、Age、Gender、Location…",
+          "url": "/labs/1.1.4/user_behavior_data.csv",
+          "delivery": "lab-runtime",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        }
+      ]
+    },
+    {
+      "code": "1.1.5",
+      "sourceDirectory": "1.1.5-素材",
+      "files": 2,
+      "sourceStatus": "official-files-registered",
+      "allSourceFilesRegistered": true,
+      "materials": [
+        {
+          "name": "1.1.5.ipynb",
+          "kind": "notebook",
+          "label": "Notebook 模板",
+          "size": 3548,
+          "sha256": "114385baeb1bdf072e209d0ecaf4a88fe9a4438f0f6751683baff9b363d8fb9f",
+          "note": "官方 Notebook 模板；3 个代码单元",
+          "url": "/lite/files/1.1.5/1.1.5.ipynb",
+          "delivery": "jupyterlite-generated-template",
+          "publishedExists": true,
+          "publishedExactCopy": null,
+          "deliveryVerified": true
+        },
+        {
+          "name": "vehicle_traffic_data.csv",
+          "kind": "dataset",
+          "label": "CSV 数据集",
+          "size": 52213,
+          "sha256": "8184e508e9787647d82963e0393db26750051d9739afbd2b870faa6674453f86",
+          "note": "1000 行数据 × 8 列；字段：VehicleID、DriverName、Age、Gender、Speed…",
+          "url": "/labs/1.1.5/vehicle_traffic_data.csv",
+          "delivery": "lab-runtime",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        }
+      ]
+    },
+    {
+      "code": "1.2.1",
+      "sourceDirectory": null,
+      "files": 0,
+      "sourceStatus": "official-directory-not-provided",
+      "allSourceFilesRegistered": true,
+      "materials": []
+    },
+    {
+      "code": "1.2.2",
+      "sourceDirectory": null,
+      "files": 0,
+      "sourceStatus": "official-directory-not-provided",
+      "allSourceFilesRegistered": true,
+      "materials": []
+    },
+    {
+      "code": "1.2.3",
+      "sourceDirectory": null,
+      "files": 0,
+      "sourceStatus": "official-directory-not-provided",
+      "allSourceFilesRegistered": true,
+      "materials": []
+    },
+    {
+      "code": "1.2.4",
+      "sourceDirectory": null,
+      "files": 0,
+      "sourceStatus": "official-directory-not-provided",
+      "allSourceFilesRegistered": true,
+      "materials": []
+    },
+    {
+      "code": "1.2.5",
+      "sourceDirectory": null,
+      "files": 0,
+      "sourceStatus": "official-directory-not-provided",
+      "allSourceFilesRegistered": true,
+      "materials": []
+    },
+    {
+      "code": "2.1.1",
+      "sourceDirectory": "2.1.1-素材",
+      "files": 3,
+      "sourceStatus": "official-files-registered",
+      "allSourceFilesRegistered": true,
+      "materials": [
+        {
+          "name": "2.1.1.docx",
+          "kind": "document",
+          "label": "配套文档",
+          "size": 15008,
+          "sha256": "ff98031b7a8d0c7de7c125f528e9c8cab451439a4d0fdd45ab11e111d76d99cd",
+          "note": "官方配套文档；7 个正文段落，0 个表格",
+          "url": "/materials/2.1.1/2.1.1.docx",
+          "delivery": "direct-download",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        },
+        {
+          "name": "2.1.1.ipynb",
+          "kind": "notebook",
+          "label": "Notebook 模板",
+          "size": 2808,
+          "sha256": "c9de87137eeaa0ce7bedfca14722b1f251dc8b759a6a9d51efb94b72d30af60c",
+          "note": "官方 Notebook 模板；2 个代码单元",
+          "url": "/lite/files/2.1.1/2.1.1.ipynb",
+          "delivery": "jupyterlite-generated-template",
+          "publishedExists": true,
+          "publishedExactCopy": null,
+          "deliveryVerified": true
+        },
+        {
+          "name": "auto-mpg.csv",
+          "kind": "dataset",
+          "label": "CSV 数据集",
+          "size": 18108,
+          "sha256": "6fc0f7dcca8ffdae68e2592993e8dd8883e9e52627affdb7532f69e4b54a8ad4",
+          "note": "398 行数据 × 9 列；字段：mpg、cylinders、displacement、horsepower、weight…",
+          "url": "/labs/2.1.1/auto-mpg.csv",
+          "delivery": "lab-runtime",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        }
+      ]
+    },
+    {
+      "code": "2.1.2",
+      "sourceDirectory": "2.1.2-素材",
+      "files": 3,
+      "sourceStatus": "official-files-registered",
+      "allSourceFilesRegistered": true,
+      "materials": [
+        {
+          "name": "2.1.2.docx",
+          "kind": "document",
+          "label": "配套文档",
+          "size": 15056,
+          "sha256": "f800411dc61203eea6afaff22153d26c1b917a04a44932aa93ffa0b643bcc3c2",
+          "note": "官方配套文档；7 个正文段落，0 个表格",
+          "url": "/materials/2.1.2/2.1.2.docx",
+          "delivery": "direct-download",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        },
+        {
+          "name": "2.1.2.ipynb",
+          "kind": "notebook",
+          "label": "Notebook 模板",
+          "size": 2280,
+          "sha256": "94369c7458f5ab484dccdae527c3ee1dde8a5b2da5c9a3d11134cd610beb710e",
+          "note": "官方 Notebook 模板；2 个代码单元",
+          "url": "/lite/files/2.1.2/2.1.2.ipynb",
+          "delivery": "jupyterlite-generated-template",
+          "publishedExists": true,
+          "publishedExactCopy": null,
+          "deliveryVerified": true
+        },
+        {
+          "name": "大学生低碳生活行为的影响因素数据集.xlsx",
+          "kind": "spreadsheet",
+          "label": "Excel 数据集",
+          "size": 63152,
+          "sha256": "aa3ccf118a49b8b5492b8701b374d8eb5afe516ae10d0a164c41371107120322",
+          "note": "Sheet1：319 行 × 41 列",
+          "url": "/labs/2.1.2/%E5%A4%A7%E5%AD%A6%E7%94%9F%E4%BD%8E%E7%A2%B3%E7%94%9F%E6%B4%BB%E8%A1%8C%E4%B8%BA%E7%9A%84%E5%BD%B1%E5%93%8D%E5%9B%A0%E7%B4%A0%E6%95%B0%E6%8D%AE%E9%9B%86.xlsx",
+          "delivery": "lab-runtime",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        }
+      ]
+    },
+    {
+      "code": "2.1.3",
+      "sourceDirectory": "2.1.3-素材",
+      "files": 3,
+      "sourceStatus": "official-files-registered",
+      "allSourceFilesRegistered": true,
+      "materials": [
+        {
+          "name": "2.1.3.docx",
+          "kind": "document",
+          "label": "配套文档",
+          "size": 15078,
+          "sha256": "9b8dd43bcdcb61cae22c995fe7d7e9f5490872c031d7aa63428a3d978ed54949",
+          "note": "官方配套文档；7 个正文段落，0 个表格",
+          "url": "/materials/2.1.3/2.1.3.docx",
+          "delivery": "direct-download",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        },
+        {
+          "name": "2.1.3.ipynb",
+          "kind": "notebook",
+          "label": "Notebook 模板",
+          "size": 2816,
+          "sha256": "b392671419376f04b844eca4cb7b12df2b5e2c4782a926cff0ac22880c889dd0",
+          "note": "官方 Notebook 模板；1 个代码单元",
+          "url": "/lite/files/2.1.3/2.1.3.ipynb",
+          "delivery": "jupyterlite-generated-template",
+          "publishedExists": true,
+          "publishedExactCopy": null,
+          "deliveryVerified": true
+        },
+        {
+          "name": "finance数据集.csv",
+          "kind": "dataset",
+          "label": "CSV 数据集",
+          "size": 7270450,
+          "sha256": "ffa9184a8ba53082c3d06f04b70e6f5322cc67433edd03035213280ab8acee57",
+          "note": "142577 行数据 × 12 列；字段：Unnamed: 0、SeriousDlqin2yrs、RevolvingUtilizationOfUnsecuredLines、age、NumberOfTime30-59DaysPastDueNotWorse…",
+          "url": "/labs/2.1.3/finance%E6%95%B0%E6%8D%AE%E9%9B%86.csv",
+          "delivery": "lab-runtime",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        }
+      ]
+    },
+    {
+      "code": "2.1.4",
+      "sourceDirectory": "2.1.4-素材",
+      "files": 3,
+      "sourceStatus": "official-files-registered",
+      "allSourceFilesRegistered": true,
+      "materials": [
+        {
+          "name": "2.1.4.docx",
+          "kind": "document",
+          "label": "配套文档",
+          "size": 15056,
+          "sha256": "f800411dc61203eea6afaff22153d26c1b917a04a44932aa93ffa0b643bcc3c2",
+          "note": "官方配套文档；7 个正文段落，0 个表格",
+          "url": "/materials/2.1.4/2.1.4.docx",
+          "delivery": "direct-download",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        },
+        {
+          "name": "2.1.4.ipynb",
+          "kind": "notebook",
+          "label": "Notebook 模板",
+          "size": 3920,
+          "sha256": "a1f5ca33339444d962ffd00324e5789167204a0036e18db625f460dc24fbc56b",
+          "note": "官方 Notebook 模板；1 个代码单元",
+          "url": "/lite/files/2.1.4/2.1.4.ipynb",
+          "delivery": "jupyterlite-generated-template",
+          "publishedExists": true,
+          "publishedExactCopy": null,
+          "deliveryVerified": true
+        },
+        {
+          "name": "medical_data.csv",
+          "kind": "dataset",
+          "label": "CSV 数据集",
+          "size": 684258,
+          "sha256": "b2c3e63c379a0b5c7c6f8e01411616752f228c07141f525edaedea4f2e5f799d",
+          "note": "5440 行数据 × 22 列；字段：病人ID、年龄、性别、地区、就诊日期…",
+          "url": "/labs/2.1.4/medical_data.csv",
+          "delivery": "lab-runtime",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        }
+      ]
+    },
+    {
+      "code": "2.1.5",
+      "sourceDirectory": "2.1.5-素材",
+      "files": 3,
+      "sourceStatus": "official-files-registered",
+      "allSourceFilesRegistered": true,
+      "materials": [
+        {
+          "name": "2.1.5.docx",
+          "kind": "document",
+          "label": "配套文档",
+          "size": 15056,
+          "sha256": "f800411dc61203eea6afaff22153d26c1b917a04a44932aa93ffa0b643bcc3c2",
+          "note": "官方配套文档；7 个正文段落，0 个表格",
+          "url": "/materials/2.1.5/2.1.5.docx",
+          "delivery": "direct-download",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        },
+        {
+          "name": "2.1.5.ipynb",
+          "kind": "notebook",
+          "label": "Notebook 模板",
+          "size": 3264,
+          "sha256": "fb67f3ae3a327d40aac940931406ab8db1668cb824b832a5c07c9d56a5f03edd",
+          "note": "官方 Notebook 模板；1 个代码单元",
+          "url": "/lite/files/2.1.5/2.1.5.ipynb",
+          "delivery": "jupyterlite-generated-template",
+          "publishedExists": true,
+          "publishedExactCopy": null,
+          "deliveryVerified": true
+        },
+        {
+          "name": "健康咨询客户数据集.csv",
+          "kind": "dataset",
+          "label": "CSV 数据集",
+          "size": 149039,
+          "sha256": "c9efeb02a7aca45f1d17e99c4fbf72d2dc475bfef32b0a86083480a95e1e99d3",
+          "note": "551 行数据 × 18 列；字段：Timestamp、Your name、Your gender、Your age、How important is exercise to you ?…",
+          "url": "/labs/2.1.5/%E5%81%A5%E5%BA%B7%E5%92%A8%E8%AF%A2%E5%AE%A2%E6%88%B7%E6%95%B0%E6%8D%AE%E9%9B%86.csv",
+          "delivery": "lab-runtime",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        }
+      ]
+    },
+    {
+      "code": "2.2.1",
+      "sourceDirectory": "2.2.1-素材",
+      "files": 3,
+      "sourceStatus": "official-files-registered",
+      "allSourceFilesRegistered": true,
+      "materials": [
+        {
+          "name": "2.2.1.docx",
+          "kind": "document",
+          "label": "配套文档",
+          "size": 14934,
+          "sha256": "a05e1f928a4c50f3099c23b9c88e575c7d1727a0a9fd3b1a90ad37c3c649c4d5",
+          "note": "官方配套文档；6 个正文段落，1 个表格",
+          "url": "/materials/2.2.1/2.2.1.docx",
+          "delivery": "direct-download",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        },
+        {
+          "name": "2.2.1.ipynb",
+          "kind": "notebook",
+          "label": "Notebook 模板",
+          "size": 3032,
+          "sha256": "49895f3c20e222a0857f56587cd273aa12ec09810f6417a91ba684f7ce561811",
+          "note": "官方 Notebook 模板；2 个代码单元",
+          "url": "/lite/files/2.2.1/2.2.1.ipynb",
+          "delivery": "jupyterlite-generated-template",
+          "publishedExists": true,
+          "publishedExactCopy": null,
+          "deliveryVerified": true
+        },
+        {
+          "name": "finance数据集.csv",
+          "kind": "dataset",
+          "label": "CSV 数据集",
+          "size": 7777795,
+          "sha256": "12aad75e1e14015d97b7b182f29ad7dde37190b56ff87a5f23b21b2912831cd3",
+          "note": "142577 行数据 × 12 列；字段：Unnamed: 0、SeriousDlqin2yrs、RevolvingUtilizationOfUnsecuredLines、age、NumberOfTime30-59DaysPastDueNotWorse…",
+          "url": "/labs/2.2.1/finance%E6%95%B0%E6%8D%AE%E9%9B%86.csv",
+          "delivery": "lab-runtime",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        }
+      ]
+    },
+    {
+      "code": "2.2.2",
+      "sourceDirectory": "2.2.2-素材",
+      "files": 3,
+      "sourceStatus": "official-files-registered",
+      "allSourceFilesRegistered": true,
+      "materials": [
+        {
+          "name": "2.2.2.docx",
+          "kind": "document",
+          "label": "配套文档",
+          "size": 14178,
+          "sha256": "a66a69826cc88030c49ae2c375b0799ea5cedb14e5f36d70415c7b1ed94351d5",
+          "note": "官方配套文档；6 个正文段落，0 个表格",
+          "url": "/materials/2.2.2/2.2.2.docx",
+          "delivery": "direct-download",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        },
+        {
+          "name": "2.2.2.ipynb",
+          "kind": "notebook",
+          "label": "Notebook 模板",
+          "size": 3490,
+          "sha256": "c4b6609a3acaba7416afa14f8986ecfbb7703ec6c622dea7078c6389c19b705a",
+          "note": "官方 Notebook 模板；3 个代码单元",
+          "url": "/lite/files/2.2.2/2.2.2.ipynb",
+          "delivery": "jupyterlite-generated-template",
+          "publishedExists": true,
+          "publishedExactCopy": null,
+          "deliveryVerified": true
+        },
+        {
+          "name": "auto-mpg.csv",
+          "kind": "dataset",
+          "label": "CSV 数据集",
+          "size": 18131,
+          "sha256": "09a282cf12c7ab4ffb517b496b0dd1a8bac6e95977178cc7832c32044c32c3f6",
+          "note": "398 行数据 × 9 列；字段：mpg、cylinders、displacement、horsepower、weight…",
+          "url": "/labs/2.2.2/auto-mpg.csv",
+          "delivery": "lab-runtime",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        }
+      ]
+    },
+    {
+      "code": "2.2.3",
+      "sourceDirectory": "2.2.3-素材",
+      "files": 3,
+      "sourceStatus": "official-files-registered",
+      "allSourceFilesRegistered": true,
+      "materials": [
+        {
+          "name": "2.2.3.docx",
+          "kind": "document",
+          "label": "配套文档",
+          "size": 14406,
+          "sha256": "104d0ddb4822ddc8bc2daa9b9a7603c5c80f5119ce87e1e7e6ee84b4b22e9966",
+          "note": "官方配套文档；8 个正文段落，0 个表格",
+          "url": "/materials/2.2.3/2.2.3.docx",
+          "delivery": "direct-download",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        },
+        {
+          "name": "2.2.3.ipynb",
+          "kind": "notebook",
+          "label": "Notebook 模板",
+          "size": 3963,
+          "sha256": "3ab437e15f270a3bf03e94b7f61491cdbe8e5d045342f0d3145ac644d1337111",
+          "note": "官方 Notebook 模板；2 个代码单元",
+          "url": "/lite/files/2.2.3/2.2.3.ipynb",
+          "delivery": "jupyterlite-generated-template",
+          "publishedExists": true,
+          "publishedExactCopy": null,
+          "deliveryVerified": true
+        },
+        {
+          "name": "fitness analysis.csv",
+          "kind": "dataset",
+          "label": "CSV 数据集",
+          "size": 166379,
+          "sha256": "82427ce1064ecb1777e371b122ff15a16c941a66ecc534fb4e9a9f6cce16dff4",
+          "note": "545 行数据 × 18 列；字段：Timestamp、Your name 、Your gender 、Your age 、How important is exercise to you ?…",
+          "url": "/labs/2.2.3/fitness%20analysis.csv",
+          "delivery": "lab-runtime",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        }
+      ]
+    },
+    {
+      "code": "2.2.4",
+      "sourceDirectory": "2.2.4-素材",
+      "files": 3,
+      "sourceStatus": "official-files-registered",
+      "allSourceFilesRegistered": true,
+      "materials": [
+        {
+          "name": "2.2.4.docx",
+          "kind": "document",
+          "label": "配套文档",
+          "size": 14347,
+          "sha256": "16877fbd750c6fdf088f55aaa63f5ba99e51354274d40fba6a5824e382728b97",
+          "note": "官方配套文档；6 个正文段落，0 个表格",
+          "url": "/materials/2.2.4/2.2.4.docx",
+          "delivery": "direct-download",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        },
+        {
+          "name": "2.2.4.ipynb",
+          "kind": "notebook",
+          "label": "Notebook 模板",
+          "size": 3738,
+          "sha256": "c6190b604a24062662b6905d0cf6a80f82989415ec6a8ca1cec5c4f5eec9c59a",
+          "note": "官方 Notebook 模板；2 个代码单元",
+          "url": "/lite/files/2.2.4/2.2.4.ipynb",
+          "delivery": "jupyterlite-generated-template",
+          "publishedExists": true,
+          "publishedExactCopy": null,
+          "deliveryVerified": true
+        },
+        {
+          "name": "大学生低碳生活行为的影响因素数据集.xlsx",
+          "kind": "spreadsheet",
+          "label": "Excel 数据集",
+          "size": 57588,
+          "sha256": "c299518811916b0b80ffb90604417da59550bbf299d9309b740920ec3e2ebfac",
+          "note": "Sheet1：319 行 × 40 列",
+          "url": "/labs/2.2.4/%E5%A4%A7%E5%AD%A6%E7%94%9F%E4%BD%8E%E7%A2%B3%E7%94%9F%E6%B4%BB%E8%A1%8C%E4%B8%BA%E7%9A%84%E5%BD%B1%E5%93%8D%E5%9B%A0%E7%B4%A0%E6%95%B0%E6%8D%AE%E9%9B%86.xlsx",
+          "delivery": "lab-runtime",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        }
+      ]
+    },
+    {
+      "code": "2.2.5",
+      "sourceDirectory": "2.2.5-素材",
+      "files": 3,
+      "sourceStatus": "official-files-registered",
+      "allSourceFilesRegistered": true,
+      "materials": [
+        {
+          "name": "2.2.5.docx",
+          "kind": "document",
+          "label": "配套文档",
+          "size": 14045,
+          "sha256": "449300de7f0e64c30542bb9201fcdad37838feb1384d2e84982442c5661b43a8",
+          "note": "官方配套文档；6 个正文段落，0 个表格",
+          "url": "/materials/2.2.5/2.2.5.docx",
+          "delivery": "direct-download",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        },
+        {
+          "name": "2.2.5.ipynb",
+          "kind": "notebook",
+          "label": "Notebook 模板",
+          "size": 2495,
+          "sha256": "41b0e844c9e0784e721e99c8220e4be6fddfc446dabb1c15b959ec025450dd34",
+          "note": "官方 Notebook 模板；2 个代码单元",
+          "url": "/lite/files/2.2.5/2.2.5.ipynb",
+          "delivery": "jupyterlite-generated-template",
+          "publishedExists": true,
+          "publishedExactCopy": null,
+          "deliveryVerified": true
+        },
+        {
+          "name": "fitness analysis.csv",
+          "kind": "dataset",
+          "label": "CSV 数据集",
+          "size": 149669,
+          "sha256": "d1b18b5115bc4ef833b6cc00c4bda1bf5223c65c1ec5f3ace0cc8900e00e28e3",
+          "note": "545 行数据 × 19 列；字段：Timestamp、Your name 、Your gender 、Your age 、How important is exercise to you ?…",
+          "url": "/labs/2.2.5/fitness%20analysis.csv",
+          "delivery": "lab-runtime",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        }
+      ]
+    },
+    {
+      "code": "3.1.1",
+      "sourceDirectory": "3.1.1-素材",
+      "files": 1,
+      "sourceStatus": "official-files-registered",
+      "allSourceFilesRegistered": true,
+      "materials": [
+        {
+          "name": "智能音箱数据集.xlsx",
+          "kind": "spreadsheet",
+          "label": "Excel 数据集",
+          "size": 43121,
+          "sha256": "5b6b6d18f0c97d7064a6504a4d9e70dc97de9f64d9a8f8d0bd1e007f9e0b89c7",
+          "note": "Sheet1：1001 行 × 4 列",
+          "url": "/materials/3.1.1/%E6%99%BA%E8%83%BD%E9%9F%B3%E7%AE%B1%E6%95%B0%E6%8D%AE%E9%9B%86.xlsx",
+          "delivery": "direct-download",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        }
+      ]
+    },
+    {
+      "code": "3.1.2",
+      "sourceDirectory": "3.1.2-素材",
+      "files": 1,
+      "sourceStatus": "official-files-registered",
+      "allSourceFilesRegistered": true,
+      "materials": [
+        {
+          "name": "智能照明系统数据集.xlsx",
+          "kind": "spreadsheet",
+          "label": "Excel 数据集",
+          "size": 61987,
+          "sha256": "133180d64a233a7b233a70a8d5ad49ad3ae535696384b6135808662b22a9c0dd",
+          "note": "Sheet1：1001 行 × 6 列",
+          "url": "/materials/3.1.2/%E6%99%BA%E8%83%BD%E7%85%A7%E6%98%8E%E7%B3%BB%E7%BB%9F%E6%95%B0%E6%8D%AE%E9%9B%86.xlsx",
+          "delivery": "direct-download",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        }
+      ]
+    },
+    {
+      "code": "3.1.3",
+      "sourceDirectory": "3.1.3-素材",
+      "files": 1,
+      "sourceStatus": "official-files-registered",
+      "allSourceFilesRegistered": true,
+      "materials": [
+        {
+          "name": "智能健康手环数据集.xlsx",
+          "kind": "spreadsheet",
+          "label": "Excel 数据集",
+          "size": 493412,
+          "sha256": "a8d8b67f06f67233bbe45be433eea65d910de2428bf4c797aa04afa215700d43",
+          "note": "步数统计记录：16801 行 × 4 列；功能查看记录：3837 行 × 4 列",
+          "url": "/materials/3.1.3/%E6%99%BA%E8%83%BD%E5%81%A5%E5%BA%B7%E6%89%8B%E7%8E%AF%E6%95%B0%E6%8D%AE%E9%9B%86.xlsx",
+          "delivery": "direct-download",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        }
+      ]
+    },
+    {
+      "code": "3.1.4",
+      "sourceDirectory": "3.1.4-素材",
+      "files": 1,
+      "sourceStatus": "official-files-registered",
+      "allSourceFilesRegistered": true,
+      "materials": [
+        {
+          "name": "智能健康监测系统数据集.xlsx",
+          "kind": "spreadsheet",
+          "label": "Excel 数据集",
+          "size": 14078,
+          "sha256": "083e573e2ad9f94427e33737911e7f03abdf3ae48a69dcea3043fa9d6319fbe0",
+          "note": "Sheet1：169 行 × 6 列",
+          "url": "/materials/3.1.4/%E6%99%BA%E8%83%BD%E5%81%A5%E5%BA%B7%E7%9B%91%E6%B5%8B%E7%B3%BB%E7%BB%9F%E6%95%B0%E6%8D%AE%E9%9B%86.xlsx",
+          "delivery": "direct-download",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        }
+      ]
+    },
+    {
+      "code": "3.1.5",
+      "sourceDirectory": "3.1.5-素材",
+      "files": 1,
+      "sourceStatus": "official-files-registered",
+      "allSourceFilesRegistered": true,
+      "materials": [
+        {
+          "name": "智能家居环境控制系统数据集.xlsx",
+          "kind": "spreadsheet",
+          "label": "Excel 数据集",
+          "size": 94405,
+          "sha256": "5d5ceac604b9cca3c3577a449d2e0d02d8cb0a2a210188626aaceb4f7c2b4cea",
+          "note": "Sheet1：1001 行 × 6 列",
+          "url": "/materials/3.1.5/%E6%99%BA%E8%83%BD%E5%AE%B6%E5%B1%85%E7%8E%AF%E5%A2%83%E6%8E%A7%E5%88%B6%E7%B3%BB%E7%BB%9F%E6%95%B0%E6%8D%AE%E9%9B%86.xlsx",
+          "delivery": "direct-download",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        }
+      ]
+    },
+    {
+      "code": "3.2.1",
+      "sourceDirectory": "3.2.1-素材",
+      "files": 4,
+      "sourceStatus": "official-files-registered",
+      "allSourceFilesRegistered": true,
+      "materials": [
+        {
+          "name": "3.2.1.ipynb",
+          "kind": "notebook",
+          "label": "Notebook 模板",
+          "size": 2831,
+          "sha256": "735fe70d5c98cd7f77f4ca600891453bf87d1e7aec6606d3d1d71e45effe1c1e",
+          "note": "官方 Notebook 模板；1 个代码单元",
+          "url": "/lite/files/3.2.1/3.2.1.ipynb",
+          "delivery": "jupyterlite-generated-template",
+          "publishedExists": true,
+          "publishedExactCopy": null,
+          "deliveryVerified": true
+        },
+        {
+          "name": "img_test.jpg",
+          "kind": "image",
+          "label": "测试图片",
+          "size": 150351,
+          "sha256": "d39697e9ee9f37371e13f50c33e6677275fe28e11839173d37ac98cf432d83d1",
+          "note": "测试图片",
+          "url": "/labs/3.2.1/img_test.jpg",
+          "delivery": "lab-runtime",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        },
+        {
+          "name": "labels.txt",
+          "kind": "text",
+          "label": "标签文件",
+          "size": 10472,
+          "sha256": "1f386e0d1cb6e28b9c2dac651c3dea6801e98ad1b41a14ce6bb1a093d72069f5",
+          "note": "标签文件",
+          "url": "/labs/3.2.1/labels.txt",
+          "delivery": "lab-runtime",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        },
+        {
+          "name": "resnet.onnx",
+          "kind": "model",
+          "label": "ONNX 模型",
+          "size": 102583340,
+          "sha256": "af16a04a6ec48ac494065d4439fe9dea590d337b9ca6dc328160ccf04a217b9c",
+          "note": "官方 ONNX 模型；进入实验室后按需加载浏览器兼容版本",
+          "url": null,
+          "delivery": "chunked-browser-cache",
+          "publishedExists": true,
+          "publishedExactCopy": null,
+          "deliveryVerified": true
+        }
+      ]
+    },
+    {
+      "code": "3.2.2",
+      "sourceDirectory": "3.2.2-素材",
+      "files": 3,
+      "sourceStatus": "official-files-registered",
+      "allSourceFilesRegistered": true,
+      "materials": [
+        {
+          "name": "3.2.2.ipynb",
+          "kind": "notebook",
+          "label": "Notebook 模板",
+          "size": 1768,
+          "sha256": "0fbe1e7ca06dc3604268887020fec32e5e879e0fdc24210b2a83cd48a06497ee",
+          "note": "官方 Notebook 模板；1 个代码单元",
+          "url": "/lite/files/3.2.2/3.2.2.ipynb",
+          "delivery": "jupyterlite-generated-template",
+          "publishedExists": true,
+          "publishedExactCopy": null,
+          "deliveryVerified": true
+        },
+        {
+          "name": "img_test.png",
+          "kind": "image",
+          "label": "测试图片",
+          "size": 16753,
+          "sha256": "85dbd75a5b0c81491ddeae785cd208f4084b608bcd8b27deca87e3e6be473606",
+          "note": "测试图片",
+          "url": "/labs/3.2.2/img_test.png",
+          "delivery": "lab-runtime",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        },
+        {
+          "name": "mnist.onnx",
+          "kind": "model",
+          "label": "ONNX 模型",
+          "size": 26143,
+          "sha256": "5c688690f8bacf667d4c2074af5ad0646ca328d7ab03eccf944a65b320171bdd",
+          "note": "官方 ONNX 模型；进入实验室后按需加载浏览器兼容版本",
+          "url": null,
+          "delivery": "chunked-browser-cache",
+          "publishedExists": true,
+          "publishedExactCopy": null,
+          "deliveryVerified": true
+        }
+      ]
+    },
+    {
+      "code": "3.2.3",
+      "sourceDirectory": "3.2.3-素材",
+      "files": 3,
+      "sourceStatus": "official-files-registered",
+      "allSourceFilesRegistered": true,
+      "materials": [
+        {
+          "name": "3.2.3.ipynb",
+          "kind": "notebook",
+          "label": "Notebook 模板",
+          "size": 3173,
+          "sha256": "a04e0a3c31dbc8ef98285e60000f2b0332663a1f7c215f9c148fa51edfd0093f",
+          "note": "官方 Notebook 模板；2 个代码单元",
+          "url": "/lite/files/3.2.3/3.2.3.ipynb",
+          "delivery": "jupyterlite-generated-template",
+          "publishedExists": true,
+          "publishedExactCopy": null,
+          "deliveryVerified": true
+        },
+        {
+          "name": "emotion-ferplus.onnx",
+          "kind": "model",
+          "label": "ONNX 模型",
+          "size": 35040571,
+          "sha256": "a2a2ba6a335a3b29c21acb6272f962bd3d47f84952aaffa03b60986e04efa61c",
+          "note": "官方 ONNX 模型；进入实验室后按需加载浏览器兼容版本",
+          "url": null,
+          "delivery": "chunked-browser-cache",
+          "publishedExists": true,
+          "publishedExactCopy": null,
+          "deliveryVerified": true
+        },
+        {
+          "name": "img_test.png",
+          "kind": "image",
+          "label": "测试图片",
+          "size": 17697,
+          "sha256": "7e688ab62e96522f26d84cc0178621794c5f2f705e6a323ded11f3f668a6e124",
+          "note": "测试图片",
+          "url": "/labs/3.2.3/img_test.png",
+          "delivery": "lab-runtime",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        }
+      ]
+    },
+    {
+      "code": "3.2.4",
+      "sourceDirectory": "3.2.4-素材",
+      "files": 4,
+      "sourceStatus": "official-files-registered",
+      "allSourceFilesRegistered": true,
+      "materials": [
+        {
+          "name": "3.2.4.ipynb",
+          "kind": "notebook",
+          "label": "Notebook 模板",
+          "size": 2957,
+          "sha256": "9ebcc32ad169ad1d6526c139b8932273b70684087d6b24b6ec98f613acaeffa6",
+          "note": "官方 Notebook 模板；1 个代码单元",
+          "url": "/lite/files/3.2.4/3.2.4.ipynb",
+          "delivery": "jupyterlite-generated-template",
+          "publishedExists": true,
+          "publishedExactCopy": null,
+          "deliveryVerified": true
+        },
+        {
+          "name": "flower-detection.onnx",
+          "kind": "model",
+          "label": "ONNX 模型",
+          "size": 102583340,
+          "sha256": "af16a04a6ec48ac494065d4439fe9dea590d337b9ca6dc328160ccf04a217b9c",
+          "note": "官方 ONNX 模型；进入实验室后按需加载浏览器兼容版本",
+          "url": null,
+          "delivery": "chunked-browser-cache",
+          "publishedExists": true,
+          "publishedExactCopy": null,
+          "deliveryVerified": true
+        },
+        {
+          "name": "flower_test.png",
+          "kind": "image",
+          "label": "测试图片",
+          "size": 100699,
+          "sha256": "0fa1f4d5aad2121e4f4bc74a7f38d290f3094eeb1082d4daae1daa65b4b0cdf5",
+          "note": "测试图片",
+          "url": "/labs/3.2.4/flower_test.png",
+          "delivery": "lab-runtime",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        },
+        {
+          "name": "labels.txt",
+          "kind": "text",
+          "label": "标签文件",
+          "size": 10472,
+          "sha256": "1f386e0d1cb6e28b9c2dac651c3dea6801e98ad1b41a14ce6bb1a093d72069f5",
+          "note": "标签文件",
+          "url": "/labs/3.2.4/labels.txt",
+          "delivery": "lab-runtime",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        }
+      ]
+    },
+    {
+      "code": "3.2.5",
+      "sourceDirectory": "3.2.5-素材",
+      "files": 5,
+      "sourceStatus": "official-files-registered",
+      "allSourceFilesRegistered": true,
+      "materials": [
+        {
+          "name": "3.2.5.ipynb",
+          "kind": "notebook",
+          "label": "Notebook 模板",
+          "size": 6643,
+          "sha256": "df8974b126c2e9238a506c4eb14db7486750f07949f0dfb923d701fafc7695a2",
+          "note": "官方 Notebook 模板；2 个代码单元",
+          "url": "/lite/files/3.2.5/3.2.5.ipynb",
+          "delivery": "jupyterlite-generated-template",
+          "publishedExists": true,
+          "publishedExactCopy": null,
+          "deliveryVerified": true
+        },
+        {
+          "name": "imgs/1.jpg",
+          "kind": "image",
+          "label": "测试图片",
+          "size": 49124,
+          "sha256": "929d79fd5ac4dea69fd5bc4bd5dab0199f19d06fa84e5649b69c3d5c481c52c9",
+          "note": "测试图片",
+          "url": "/labs/3.2.5/imgs/1.jpg",
+          "delivery": "lab-runtime",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        },
+        {
+          "name": "version-RFB-320.onnx",
+          "kind": "model",
+          "label": "ONNX 模型",
+          "size": 1270727,
+          "sha256": "34cd7e60aeff28744c657de7a3dc64e872d506741de66987f3426f2b79f88017",
+          "note": "官方 ONNX 模型；进入实验室后按需加载浏览器兼容版本",
+          "url": null,
+          "delivery": "chunked-browser-cache",
+          "publishedExists": true,
+          "publishedExactCopy": null,
+          "deliveryVerified": true
+        },
+        {
+          "name": "vision/utils/box_utils_numpy.py",
+          "kind": "code",
+          "label": "Python 代码",
+          "size": 4509,
+          "sha256": "2b23965cd99e9e462e5ce3d52a86e816c17006514edba7ade11fb29688247aab",
+          "note": "Python 代码",
+          "url": "/labs/3.2.5/vision/utils/box_utils_numpy.py",
+          "delivery": "lab-runtime",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        },
+        {
+          "name": "voc-model-labels.txt",
+          "kind": "text",
+          "label": "标签文件",
+          "size": 15,
+          "sha256": "42f22f006e845cedefcbbbc76399d00a83a27831cb17a7b3fafcb9c60c814cd6",
+          "note": "标签文件",
+          "url": "/labs/3.2.5/voc-model-labels.txt",
+          "delivery": "lab-runtime",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        }
+      ]
+    },
+    {
+      "code": "4.1.1",
+      "sourceDirectory": "4.1.1-素材",
+      "files": 1,
+      "sourceStatus": "official-files-registered",
+      "allSourceFilesRegistered": true,
+      "materials": [
+        {
+          "name": "4.1.1.docx",
+          "kind": "document",
+          "label": "配套文档",
+          "size": 16470,
+          "sha256": "0d4e9596603f9a20bbc962fc067626e1a99edb2ccf59d79ce15d4c7aa2dcc65e",
+          "note": "官方配套文档；56 个正文段落，0 个表格",
+          "url": "/materials/4.1.1/4.1.1.docx",
+          "preview": [
+            {
+              "kind": "heading",
+              "text": "在下划线上填写答案。"
+            },
+            {
+              "kind": "heading",
+              "text": "根据学习大纲补充学习目标"
+            },
+            {
+              "kind": "heading",
+              "text": "引言"
+            },
+            {
+              "kind": "paragraph",
+              "text": "学习目标：了解数据标注的重要性和应用场景。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "介绍人工智能在康复训练中的应用，数据标注在个性化康复训练计划中的作用。"
+            },
+            {
+              "kind": "heading",
+              "text": "数据标注基础理论"
+            },
+            {
+              "kind": "paragraph",
+              "text": "学习目标："
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "什么是数据标注？"
+            },
+            {
+              "kind": "paragraph",
+              "text": "数据标注的类型：文本、图像、视频、音频。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "数据标注在人工智能中的作用和重要性。"
+            },
+            {
+              "kind": "heading",
+              "text": "Label Studio简介与安装"
+            },
+            {
+              "kind": "paragraph",
+              "text": "学习目标："
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "Label Studio简介及应用场景。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "安装与配置Label Studio。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "Label Studio界面介绍和基本操作。"
+            },
+            {
+              "kind": "heading",
+              "text": "文本数据标注"
+            },
+            {
+              "kind": "paragraph",
+              "text": "学习目标："
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "文本标注类型：命名实体识别、情感分析等。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "Label Studio文本标注功能演示。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "实践操作：标注一个文本数据集。"
+            },
+            {
+              "kind": "heading",
+              "text": "图像数据标注"
+            },
+            {
+              "kind": "paragraph",
+              "text": "学习目标："
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "图像标注类型：图像分类、目标检测、图像分割等。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "Label Studio图像标注功能演示。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "实践操作：标注一个图像数据集。"
+            },
+            {
+              "kind": "heading",
+              "text": "视频数据标注"
+            },
+            {
+              "kind": "paragraph",
+              "text": "学习目标："
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "视频标注类型：动作识别、事件检测等。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "Label Studio视频标注功能演示。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "实践操作：标注一个视频数据集。"
+            },
+            {
+              "kind": "heading",
+              "text": "音频数据标注"
+            },
+            {
+              "kind": "paragraph",
+              "text": "学习目标：掌握音频数据标注的方法和技巧。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "音频标注类型：语音识别、情感分析等。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "Label Studio音频标注功能演示。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "实践操作：标注一个音频数据集。"
+            },
+            {
+              "kind": "heading",
+              "text": "综合项目实践"
+            },
+            {
+              "kind": "paragraph",
+              "text": "学习目标：综合运用所学知识进行数据标注项目。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "项目介绍：为康复训练项目进行多模态数据标注（包括文本、图像、视频、音频）。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "数据标注：学员分组进行实际数据标注任务。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "项目评审：展示标注成果，讲解标注思路和遇到的问题。"
+            },
+            {
+              "kind": "heading",
+              "text": "总结与答疑"
+            },
+            {
+              "kind": "paragraph",
+              "text": "学习目标：巩固所学内容，解决学员疑问。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容：培训内容总结，关键点回顾，学员提问与解答。"
+            },
+            {
+              "kind": "heading",
+              "text": "评估测试"
+            },
+            {
+              "kind": "paragraph",
+              "text": "学习目标：评估学员掌握的数据标注技能。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "理论测试：关于数据标注基本概念和Label Studio使用的笔试。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "实操测试：要求学员完成指定的数据标注任务。"
+            }
+          ],
+          "delivery": "direct-download",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        }
+      ]
+    },
+    {
+      "code": "4.1.2",
+      "sourceDirectory": "4.1.2-素材",
+      "files": 1,
+      "sourceStatus": "official-files-registered",
+      "allSourceFilesRegistered": true,
+      "materials": [
+        {
+          "name": "4.1.2.docx",
+          "kind": "document",
+          "label": "配套文档",
+          "size": 16858,
+          "sha256": "72c65d21ac3e1c5fdf3cb7e92beb1966eec6ad98662f371ad0ab7e10adf35a0f",
+          "note": "官方配套文档；63 个正文段落，0 个表格",
+          "url": "/materials/4.1.2/4.1.2.docx",
+          "preview": [
+            {
+              "kind": "heading",
+              "text": "在下划线上填写答案。"
+            },
+            {
+              "kind": "heading",
+              "text": "根据学习大纲补充学习目标"
+            },
+            {
+              "kind": "heading",
+              "text": "引言"
+            },
+            {
+              "kind": "paragraph",
+              "text": "学习目标：了解网页爬虫的重要性和应用场景。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "介绍人工智能在金融数据采集中的应用，网页爬虫在获取上市公司财务报告中的作用。"
+            },
+            {
+              "kind": "heading",
+              "text": "网页爬虫基础理论"
+            },
+            {
+              "kind": "paragraph",
+              "text": "学习目标："
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "什么是网页爬虫？"
+            },
+            {
+              "kind": "paragraph",
+              "text": "网页爬虫的工作流程和基本结构。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "机器人协议（robots.txt）的作用和遵守方法。"
+            },
+            {
+              "kind": "heading",
+              "text": "常用网页爬虫工具简介"
+            },
+            {
+              "kind": "paragraph",
+              "text": "学习目标："
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "BeautifulSoup：用于解析HTML和XML文档。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "Scrapy：一个快速、高效的网页爬虫框架。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "Selenium：用于模拟浏览器操作，处理动态网页。"
+            },
+            {
+              "kind": "heading",
+              "text": "环境搭建与工具安装"
+            },
+            {
+              "kind": "paragraph",
+              "text": "学习目标：掌握网页爬虫工具的安装和环境配置。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "安装Python和pip包管理工具。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "安装并配置BeautifulSoup、Scrapy、Selenium。"
+            },
+            {
+              "kind": "heading",
+              "text": "网页数据解析"
+            },
+            {
+              "kind": "paragraph",
+              "text": "学习目标："
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "使用BeautifulSoup进行HTML解析。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "使用XPath和CSS选择器提取数据。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "实践操作：解析一个简单的网页数据。"
+            },
+            {
+              "kind": "heading",
+              "text": "动态网页处理"
+            },
+            {
+              "kind": "paragraph",
+              "text": "学习目标：掌握处理动态网页的方法。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "使用Selenium模拟浏览器操作。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "处理动态加载的数据，如Ajax请求。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "实践操作：爬取一个动态加载的网页数据。"
+            },
+            {
+              "kind": "heading",
+              "text": "Scrapy框架实战"
+            },
+            {
+              "kind": "paragraph",
+              "text": "学习目标："
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "Scrapy项目的创建和基本配置。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "编写爬虫脚本，设置抓取规则。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "数据存储与导出：将数据保存为CSV、JSON等格式。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "实践操作：构建一个Scrapy爬虫项目，获取上市公司财务报告。"
+            },
+            {
+              "kind": "heading",
+              "text": "数据清洗与处理"
+            },
+            {
+              "kind": "paragraph",
+              "text": "学习目标："
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "数据去重、缺失值处理。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "数据格式转换与规范化。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "实践操作：对获取的财务报告数据进行清洗和处理。"
+            },
+            {
+              "kind": "heading",
+              "text": "综合项目实践"
+            },
+            {
+              "kind": "paragraph",
+              "text": "学习目标：综合运用所学知识进行网页爬虫项目。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "项目介绍：构建一个完整的财务报告爬虫项目。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "数据采集：获取多个网站的财务报告数据。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "数据处理与分析：清洗并分析获取的数据。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "项目评审：展示爬虫成果，讲解实现思路和遇到的问题。"
+            },
+            {
+              "kind": "heading",
+              "text": "总结与答疑"
+            },
+            {
+              "kind": "paragraph",
+              "text": "学习目标：巩固所学内容，解决学员疑问。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容：培训内容总结，关键点回顾，学员提问与解答。"
+            },
+            {
+              "kind": "heading",
+              "text": "评估测试"
+            },
+            {
+              "kind": "paragraph",
+              "text": "学习目标：评估学员掌握的网页爬虫技能。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "理论测试：关于网页爬虫基本概念和工具使用的笔试。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "实操测试：要求学员完成指定的网页爬虫任务。"
+            }
+          ],
+          "delivery": "direct-download",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        }
+      ]
+    },
+    {
+      "code": "4.1.3",
+      "sourceDirectory": "4.1.3-素材",
+      "files": 1,
+      "sourceStatus": "official-files-registered",
+      "allSourceFilesRegistered": true,
+      "materials": [
+        {
+          "name": "4.1.3.docx",
+          "kind": "document",
+          "label": "配套文档",
+          "size": 15950,
+          "sha256": "2288ca03b7ec6d5e34c2eb2d3e914bbc807ef18b770f04fa41621a20bb8dc49c",
+          "note": "官方配套文档；38 个正文段落，0 个表格",
+          "url": "/materials/4.1.3/4.1.3.docx",
+          "preview": [
+            {
+              "kind": "heading",
+              "text": "在下划线上填写答案。"
+            },
+            {
+              "kind": "heading",
+              "text": "根据学习大纲补充学习目标"
+            },
+            {
+              "kind": "heading",
+              "text": "引言"
+            },
+            {
+              "kind": "heading",
+              "text": "学习目标："
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "介绍人工智能在康复训练中的应用，数据清洗在处理康复数据中的作用。"
+            },
+            {
+              "kind": "heading",
+              "text": "数据清洗基础理论"
+            },
+            {
+              "kind": "heading",
+              "text": "学习目标："
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "什么是数据清洗？"
+            },
+            {
+              "kind": "paragraph",
+              "text": "数据清洗的常见任务：数据去重、缺失值处理、数据格式转换等。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "数据清洗在数据分析和模型训练中的重要性。"
+            },
+            {
+              "kind": "heading",
+              "text": "常用数据清洗工具简介"
+            },
+            {
+              "kind": "heading",
+              "text": "学习目标："
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "Pandas：强大的数据处理与分析工具。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "NumPy：高性能科学计算和数据处理库。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "OpenRefine：用于数据清洗的开源工具。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "Dask：用于处理大规模数据的并行计算库。"
+            },
+            {
+              "kind": "heading",
+              "text": "环境搭建与工具安装"
+            },
+            {
+              "kind": "heading",
+              "text": "学习目标："
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "安装Python和pip包管理工具。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "安装并配置Pandas、NumPy、OpenRefine、Dask。"
+            },
+            {
+              "kind": "heading",
+              "text": "Pandas实战"
+            },
+            {
+              "kind": "heading",
+              "text": "学习目标："
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "数据导入与导出：读取和保存CSV、Excel等格式的数据。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "数据筛选与过滤：条件筛选、去重、缺失值处理。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "数据转换：数据类型转换、时间序列处理。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "实践操作：使用Pandas清洗一个康复数据集。"
+            },
+            {
+              "kind": "heading",
+              "text": "NumPy实战"
+            },
+            {
+              "kind": "paragraph",
+              "text": "学习目标：综合运用所学知识进行数据清洗项目。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "项目介绍：清洗一个多来源、多格式的康复数据集。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "数据采集：导入多种格式的数据。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "数据清洗：使用Pandas、NumPy、OpenRefine、Dask进行清洗。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "项目评审：展示清洗成果，讲解实现思路和遇到的问题。"
+            }
+          ],
+          "delivery": "direct-download",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        }
+      ]
+    },
+    {
+      "code": "4.1.4",
+      "sourceDirectory": "4.1.4-素材",
+      "files": 1,
+      "sourceStatus": "official-files-registered",
+      "allSourceFilesRegistered": true,
+      "materials": [
+        {
+          "name": "4.1.4.docx",
+          "kind": "document",
+          "label": "配套文档",
+          "size": 16213,
+          "sha256": "d2f0c5b5f5254ee566d15a4af3b23311fdb6185341fefc1395b1f14e3707f68d",
+          "note": "官方配套文档；47 个正文段落，0 个表格",
+          "url": "/materials/4.1.4/4.1.4.docx",
+          "preview": [
+            {
+              "kind": "heading",
+              "text": "在下划线上填写答案。"
+            },
+            {
+              "kind": "heading",
+              "text": "根据学习大纲补充学习目标"
+            },
+            {
+              "kind": "heading",
+              "text": "数据清洗基础理论"
+            },
+            {
+              "kind": "paragraph",
+              "text": "学习目标：掌握数据清洗的基本概念和流程。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "什么是数据清洗？"
+            },
+            {
+              "kind": "paragraph",
+              "text": "数据清洗的常见任务：数据去重、缺失值处理、数据格式转换等。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "数据清洗在数据分析和模型训练中的重要性。"
+            },
+            {
+              "kind": "heading",
+              "text": "Pandas简介与安装"
+            },
+            {
+              "kind": "heading",
+              "text": "学习目标："
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "读取CSV、Excel、SQL等格式的数据。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "保存数据到CSV、Excel等格式。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "实践操作：导入和导出康复数据集。"
+            },
+            {
+              "kind": "heading",
+              "text": "数据筛选与过滤"
+            },
+            {
+              "kind": "heading",
+              "text": "学习目标："
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "条件筛选：基于单列或多列的条件筛选数据。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "数据去重：去除重复记录。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "缺失值处理：识别、删除和填充缺失值。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "实践操作：筛选和过滤康复数据。"
+            },
+            {
+              "kind": "heading",
+              "text": "数据转换"
+            },
+            {
+              "kind": "heading",
+              "text": "学习目标："
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "数据类型转换：转换数据类型（如字符串到日期）。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "时间序列处理：处理和分析时间序列数据。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "数据分列和合并：分割和合并数据列。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "实践操作：转换和处理康复数据。"
+            },
+            {
+              "kind": "heading",
+              "text": "数据合并与重塑"
+            },
+            {
+              "kind": "heading",
+              "text": "学习目标："
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "数据合并：concat和merge方法。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "数据重塑：pivot和melt方法。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "实践操作：合并和重塑康复数据。"
+            },
+            {
+              "kind": "heading",
+              "text": "数据分组与聚合"
+            },
+            {
+              "kind": "heading",
+              "text": "学习目标："
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "数据分组：groupby方法。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "聚合函数：sum、mean、count等。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "实践操作：分组和聚合康复数据。"
+            },
+            {
+              "kind": "heading",
+              "text": "数据可视化"
+            },
+            {
+              "kind": "paragraph",
+              "text": "学习目标：综合运用所学知识进行数据清洗项目。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "项目介绍：清洗一个多来源的康复数据集。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "数据采集：导入多种格式的数据。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "数据清洗：使用Pandas进行数据清洗和转换。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "项目评审：展示清洗成果，讲解实现思路和遇到的问题。"
+            }
+          ],
+          "delivery": "direct-download",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        }
+      ]
+    },
+    {
+      "code": "4.1.5",
+      "sourceDirectory": "4.1.5-素材",
+      "files": 1,
+      "sourceStatus": "official-files-registered",
+      "allSourceFilesRegistered": true,
+      "materials": [
+        {
+          "name": "4.1.5.docx",
+          "kind": "document",
+          "label": "配套文档",
+          "size": 16246,
+          "sha256": "eeb013ac9f1fc8556a5b4f637e9a65078326597383b82d74f76c209b4c3cdd3e",
+          "note": "官方配套文档；47 个正文段落，0 个表格",
+          "url": "/materials/4.1.5/4.1.5.docx",
+          "preview": [
+            {
+              "kind": "heading",
+              "text": "在下划线上填写答案。"
+            },
+            {
+              "kind": "heading",
+              "text": "根据学习大纲补充学习目标"
+            },
+            {
+              "kind": "heading",
+              "text": "数据可视化基础理论"
+            },
+            {
+              "kind": "heading",
+              "text": "学习目标："
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "什么是数据可视化？"
+            },
+            {
+              "kind": "paragraph",
+              "text": "数据可视化的目的和优势。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "常见的数据可视化类型：条形图、折线图、散点图、饼图等。"
+            },
+            {
+              "kind": "heading",
+              "text": "Matplotlib简介与安装"
+            },
+            {
+              "kind": "heading",
+              "text": "学习目标："
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "Matplotlib简介及其应用场景。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "安装与配置Matplotlib库。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "Matplotlib基本构架与常用组件。"
+            },
+            {
+              "kind": "heading",
+              "text": "Matplotlib基本绘图"
+            },
+            {
+              "kind": "heading",
+              "text": "学习目标："
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "创建简单图表：折线图、条形图、饼图。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "图表定制：标题、轴标签、图例、颜色等。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "实践操作：使用Matplotlib绘制康复数据的基本图表。"
+            },
+            {
+              "kind": "heading",
+              "text": "Plotly简介与安装"
+            },
+            {
+              "kind": "heading",
+              "text": "学习目标："
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "Plotly简介及其应用场景。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "安装与配置Plotly库。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "Plotly与Jupyter Notebook的结合使用。"
+            },
+            {
+              "kind": "heading",
+              "text": "Plotly交互式绘图"
+            },
+            {
+              "kind": "heading",
+              "text": "学习目标："
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "创建交互式图表：折线图、散点图、饼图、地理图表。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "图表交互功能：缩放、平移、悬停显示。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "实践操作：使用Plotly绘制交互式康复数据图表。"
+            },
+            {
+              "kind": "heading",
+              "text": "数据可视化项目实战"
+            },
+            {
+              "kind": "paragraph",
+              "text": "学习目标：综合运用所学知识进行数据可视化项目。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "项目介绍：对康复数据进行可视化分析。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "数据采集与预处理：导入并清洗康复数据。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "数据可视化：使用Matplotlib、Seaborn、Plotly进行可视化分析。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "项目评审：展示可视化成果，讲解实现思路和遇到的问题。"
+            },
+            {
+              "kind": "heading",
+              "text": "总结与答疑"
+            },
+            {
+              "kind": "paragraph",
+              "text": "学习目标：巩固所学内容，解决学员疑问。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容：培训内容总结，关键点回顾，学员提问与解答。"
+            },
+            {
+              "kind": "heading",
+              "text": "评估测试"
+            },
+            {
+              "kind": "paragraph",
+              "text": "学习目标：评估学员掌握的数据可视化技能。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "内容："
+            },
+            {
+              "kind": "paragraph",
+              "text": "理论测试：关于数据可视化基本概念和工具使用的笔试。"
+            },
+            {
+              "kind": "paragraph",
+              "text": "实操测试：要求学员完成指定的数据可视化任务。"
+            }
+          ],
+          "delivery": "direct-download",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        }
+      ]
+    },
+    {
+      "code": "4.2.1",
+      "sourceDirectory": "4.2.1-素材",
+      "files": 1,
+      "sourceStatus": "official-files-registered",
+      "allSourceFilesRegistered": true,
+      "materials": [
+        {
+          "name": "4.2.1.docx",
+          "kind": "document",
+          "label": "配套文档",
+          "size": 14737,
+          "sha256": "f3fef9f90715cde755e8be02d56a46a6ee318349f6d2e5cd5bff47015d04ba2d",
+          "note": "官方配套文档；28 个正文段落，0 个表格",
+          "url": "/materials/4.2.1/4.2.1.docx",
+          "preview": [
+            {
+              "kind": "heading",
+              "text": "智能零售分析系统数据采集和处理指导方案"
+            },
+            {
+              "kind": "heading",
+              "text": "1. 数据源确定"
+            },
+            {
+              "kind": "list",
+              "text": "销售点（POS）数据：从收银系统获取交易记录，包括商品种类、数量、价格和购买时间。"
+            },
+            {
+              "kind": "list",
+              "text": "顾客信息：会员卡使用数据，包括_____________________。"
+            },
+            {
+              "kind": "list",
+              "text": "库存管理系统：实时库存量、入库和出库记录。"
+            },
+            {
+              "kind": "list",
+              "text": "顾客反馈：在线评价、投诉和建议。"
+            },
+            {
+              "kind": "list",
+              "text": "外部数据：天气预报、节假日信息、竞争对手价格数据。"
+            },
+            {
+              "kind": "heading",
+              "text": "2. 数据采集方法"
+            },
+            {
+              "kind": "list",
+              "text": "API接口：与内部系统（如POS、CRM）和外部数据提供商建立API连接，自动化数据抓取。"
+            },
+            {
+              "kind": "list",
+              "text": "传感器和物联网设备：在货架上安装RFID标签和重量传感器，监测商品存量。"
+            },
+            {
+              "kind": "list",
+              "text": "社交媒体监听：通过社交媒体API监听品牌相关的公众讨论和评价。"
+            },
+            {
+              "kind": "list",
+              "text": "顾客调查：定期发送电子问卷，收集顾客反馈。"
+            },
+            {
+              "kind": "heading",
+              "text": "3. 数据预处理"
+            },
+            {
+              "kind": "list",
+              "text": "清洗：_____________________。"
+            },
+            {
+              "kind": "list",
+              "text": "标准化：_____________________。"
+            },
+            {
+              "kind": "list",
+              "text": "整合：将来自不同来源的数据合并到单一数据库中，创建关联字段。"
+            },
+            {
+              "kind": "heading",
+              "text": "4. 数据安全与合规"
+            },
+            {
+              "kind": "list",
+              "text": "加密传输：确保数据在传输过程中的安全。"
+            },
+            {
+              "kind": "list",
+              "text": "访问控制：限制对敏感数据的访问权限，只允许授权人员查看。"
+            },
+            {
+              "kind": "list",
+              "text": "匿名化处理：对个人信息进行去标识化，遵守GDPR等数据保护法规。"
+            },
+            {
+              "kind": "heading",
+              "text": "5. 数据存储与管理"
+            },
+            {
+              "kind": "list",
+              "text": "云存储：选择可靠的云服务商，如AWS或Azure，存储海量数据。"
+            },
+            {
+              "kind": "list",
+              "text": "备份与恢复：定期备份数据，并测试恢复流程，以防数据丢失。"
+            },
+            {
+              "kind": "heading",
+              "text": "6. 数据分析与应用"
+            },
+            {
+              "kind": "list",
+              "text": "建模：_____________________。"
+            },
+            {
+              "kind": "list",
+              "text": "可视化：开发仪表板展示关键指标，帮助管理层做出决策。"
+            },
+            {
+              "kind": "list",
+              "text": "报告：定期生成销售、库存和顾客满意度报告，提供业务洞察。"
+            },
+            {
+              "kind": "list",
+              "text": "通过上述方案，智能零售分析系统能够有效地采集、处理和分析大量数据，为企业提供决策支持，最终达到_____________________的目标。"
+            }
+          ],
+          "delivery": "direct-download",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        }
+      ]
+    },
+    {
+      "code": "4.2.2",
+      "sourceDirectory": "4.2.2-素材",
+      "files": 1,
+      "sourceStatus": "official-files-registered",
+      "allSourceFilesRegistered": true,
+      "materials": [
+        {
+          "name": "4.2.2.docx",
+          "kind": "document",
+          "label": "配套文档",
+          "size": 14443,
+          "sha256": "1062270ef2cfec3cd0cd894275b0a22cbdc2201c03c61ff8ab7d4a02bdb8ff11",
+          "note": "官方配套文档；19 个正文段落，0 个表格",
+          "url": "/materials/4.2.2/4.2.2.docx",
+          "preview": [
+            {
+              "kind": "heading",
+              "text": "AI辅助的医疗影像诊断系统数据采集和处理指导方案"
+            },
+            {
+              "kind": "heading",
+              "text": "1. 数据采集方案"
+            },
+            {
+              "kind": "list",
+              "text": "医学影像获取：确保影像质量，使用高分辨率的医疗设备获取清晰的影像资料，涵盖多种疾病类型和人群。"
+            },
+            {
+              "kind": "list",
+              "text": "患者信息收集：在符合HIPAA等隐私保护法规的前提下，收集患者的病史、年龄、性别等基本信息，以及相关的实验室检查结果。"
+            },
+            {
+              "kind": "list",
+              "text": "_________________________：邀请经验丰富的医生对影像进行标注，标记病灶位置、类型、大小等关键信息，作为训练AI模型的标注数据集。"
+            },
+            {
+              "kind": "list",
+              "text": "数据脱敏处理：对收集的患者信息进行脱敏处理，确保患者隐私安全。"
+            },
+            {
+              "kind": "heading",
+              "text": "2. 数据处理方案"
+            },
+            {
+              "kind": "list",
+              "text": "数据清洗与预处理：_________________________。"
+            },
+            {
+              "kind": "list",
+              "text": "模型训练与验证：_________________________。"
+            },
+            {
+              "kind": "list",
+              "text": "模型测试与优化：_________________________。"
+            },
+            {
+              "kind": "list",
+              "text": "系统集成与部署：将训练好的模型集成到医疗影像诊断系统中，部署在医院的服务器上，确保医生可以随时调用AI分析结果。"
+            },
+            {
+              "kind": "heading",
+              "text": "3. 数据安全与隐私保护"
+            },
+            {
+              "kind": "list",
+              "text": "所有数据传输和存储过程都需加密，防止数据泄露。"
+            },
+            {
+              "kind": "list",
+              "text": "遵守HIPAA等隐私法规，确保患者信息不被非法访问或滥用。"
+            },
+            {
+              "kind": "list",
+              "text": "使用数据脱敏技术，如差分隐私，保护患者身份不被识别。"
+            },
+            {
+              "kind": "heading",
+              "text": "4. 系统优化与升级"
+            },
+            {
+              "kind": "list",
+              "text": "定期收集医生和患者的反馈，评估系统性能，根据实际需求调整AI模型。"
+            },
+            {
+              "kind": "list",
+              "text": "不断更新训练数据集，加入新的疾病类型或变异特征，提高_________________________。"
+            },
+            {
+              "kind": "list",
+              "text": "跟踪AI技术的最新进展，适时引入更先进的算法，提升系统性能。"
+            }
+          ],
+          "delivery": "direct-download",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        }
+      ]
+    },
+    {
+      "code": "4.2.3",
+      "sourceDirectory": "4.2.3-素材",
+      "files": 1,
+      "sourceStatus": "official-files-registered",
+      "allSourceFilesRegistered": true,
+      "materials": [
+        {
+          "name": "4.2.3.docx",
+          "kind": "document",
+          "label": "配套文档",
+          "size": 14302,
+          "sha256": "1a173bb6f0a0620fe2b18c00eeac96830b0d35aa97a3e6177067424f89227693",
+          "note": "官方配套文档；15 个正文段落，0 个表格",
+          "url": "/materials/4.2.3/4.2.3.docx",
+          "preview": [
+            {
+              "kind": "heading",
+              "text": "AI智能安防监控系统采集和处理指导方案"
+            },
+            {
+              "kind": "heading",
+              "text": "1. 数据采集方法"
+            },
+            {
+              "kind": "list",
+              "text": "高清视频流采集：部署高清摄像头，确保视频画面清晰，便于AI算法识别细节。"
+            },
+            {
+              "kind": "list",
+              "text": "多角度覆盖：合理布置摄像头，确保_____________________无死角，覆盖所有入口、出口和敏感区域。"
+            },
+            {
+              "kind": "list",
+              "text": "夜间与低光环境适应：使用带有红外夜视功能的摄像头，保证夜间或低光条件下仍能捕捉到清晰图像。"
+            },
+            {
+              "kind": "list",
+              "text": "数据传输与存储：采用稳定的数据传输网络，确保视频流的实时传输，同时建立安全的_____________________，保存原始视频和分析结果。"
+            },
+            {
+              "kind": "heading",
+              "text": "2. 数据处理方案"
+            },
+            {
+              "kind": "list",
+              "text": "视频流预处理：_____________________。"
+            },
+            {
+              "kind": "list",
+              "text": "行为分析与异常检测：_____________________。"
+            },
+            {
+              "kind": "list",
+              "text": "隐私保护算法：在不影响异常行为识别的前提下，对视频中无关个体进行模糊处理，保护个人隐私。"
+            },
+            {
+              "kind": "list",
+              "text": "数据融合与决策支持：结合多个摄像头的数据，进行空间和时间上的数据融合，构建更全面的场景理解，为安全决策提供依据。"
+            },
+            {
+              "kind": "heading",
+              "text": "3. 系统优化与安全措施"
+            },
+            {
+              "kind": "list",
+              "text": "算法优化：持续训练和优化AI模型，提升_____________________。"
+            },
+            {
+              "kind": "list",
+              "text": "隐私合规：确保系统设计和运营遵守GDPR、CCPA等数据保护法规，定期进行隐私影响评估。"
+            },
+            {
+              "kind": "list",
+              "text": "安全防护：实施数据加密、访问控制和防火墙等安全措施，防止数据泄露和系统被攻击。"
+            }
+          ],
+          "delivery": "direct-download",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        }
+      ]
+    },
+    {
+      "code": "4.2.4",
+      "sourceDirectory": "4.2.4-素材",
+      "files": 1,
+      "sourceStatus": "official-files-registered",
+      "allSourceFilesRegistered": true,
+      "materials": [
+        {
+          "name": "4.2.4.docx",
+          "kind": "document",
+          "label": "配套文档",
+          "size": 14148,
+          "sha256": "ae167d719167a6218af4dcdb05d0d9be97f09b63c475d51626926022eaeca944",
+          "note": "官方配套文档；14 个正文段落，0 个表格",
+          "url": "/materials/4.2.4/4.2.4.docx",
+          "preview": [
+            {
+              "kind": "heading",
+              "text": "自动驾驶汽车感知系统数据采集与标注指导方案"
+            },
+            {
+              "kind": "heading",
+              "text": "1. 数据采集方案"
+            },
+            {
+              "kind": "list",
+              "text": "多传感器融合：______________________。"
+            },
+            {
+              "kind": "list",
+              "text": "场景覆盖：______________________。"
+            },
+            {
+              "kind": "list",
+              "text": "事件触发采集：在特定事件发生时（如紧急刹车、避让行动），自动触发额外数据采集，以捕获关键时刻。"
+            },
+            {
+              "kind": "list",
+              "text": "数据质量控制：______________________。"
+            },
+            {
+              "kind": "list",
+              "text": "数据加密与传输：采用安全的数据传输协议，确保数据在传输过程中的安全性。"
+            },
+            {
+              "kind": "heading",
+              "text": "2. 数据标注方案"
+            },
+            {
+              "kind": "list",
+              "text": "定义标注标准：明确标注类别、边界框精度要求、遮挡处理规则等。"
+            },
+            {
+              "kind": "list",
+              "text": "选择标注工具：使用专业的数据标注软件，支持2D框、3D框、语义分割等标注类型。"
+            },
+            {
+              "kind": "list",
+              "text": "______________________：对标注员进行专业培训，确保他们理解标注标准，熟悉工具使用。"
+            },
+            {
+              "kind": "list",
+              "text": "执行标注任务：分配数据给标注团队，设定清晰的任务指标和截止日期。"
+            },
+            {
+              "kind": "list",
+              "text": "质量控制与复查：实施多级检查，包括自动检查和人工复查，确保标注的准确性和一致性。"
+            },
+            {
+              "kind": "list",
+              "text": "数据整合与存储：将标注后的数据整合，形成______________________数据集，存储在安全的数据仓库中，供模型训练使用。"
+            }
+          ],
+          "delivery": "direct-download",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        }
+      ]
+    },
+    {
+      "code": "4.2.5",
+      "sourceDirectory": "4.2.5-素材",
+      "files": 1,
+      "sourceStatus": "official-files-registered",
+      "allSourceFilesRegistered": true,
+      "materials": [
+        {
+          "name": "4.2.5.docx",
+          "kind": "document",
+          "label": "配套文档",
+          "size": 15079,
+          "sha256": "5ad70961862121b630fbcbf60cab464060c5b769d8f9e8e60fff0bcdf13d6b2b",
+          "note": "官方配套文档；27 个正文段落，0 个表格",
+          "url": "/materials/4.2.5/4.2.5.docx",
+          "preview": [
+            {
+              "kind": "heading",
+              "text": "智能化数据标注在文化遗产数字化保护中的应用指导方案"
+            },
+            {
+              "kind": "heading",
+              "text": "1. 数据标注工具与方法"
+            },
+            {
+              "kind": "list",
+              "text": "图像标注："
+            },
+            {
+              "kind": "list",
+              "text": "使用____________________________等标注工具，为文化遗产图像添加边界框、多边形、点、线段等标注。"
+            },
+            {
+              "kind": "list",
+              "text": "对于复杂的文物细节，可以使用语义分割或实例分割技术，精细到每个物体的每一部分。"
+            },
+            {
+              "kind": "list",
+              "text": "三维模型标注："
+            },
+            {
+              "kind": "list",
+              "text": "采用MeshLab或Blender等软件，对3D模型进行顶点、面、体素级别的标注。"
+            },
+            {
+              "kind": "list",
+              "text": "实现对模型内部结构和外部特征的全面标注。"
+            },
+            {
+              "kind": "list",
+              "text": "属性标签："
+            },
+            {
+              "kind": "list",
+              "text": "文物的材料、风格、时代、作者、位置等元数据，使用CSV、JSON等格式记录，并关联至相应的图像或模型。"
+            },
+            {
+              "kind": "list",
+              "text": "可以使用数据库管理系统（如MySQL、MongoDB）来存储和管理这些信息。"
+            },
+            {
+              "kind": "heading",
+              "text": "2. 智能化辅助标注"
+            },
+            {
+              "kind": "list",
+              "text": "深度学习模型：训练____________________________的模型，如Mask R-CNN、U-Net等，用于自动识别和标记文物的特定特征。"
+            },
+            {
+              "kind": "list",
+              "text": "模型训练数据集：构建一个包含大量已标注文化遗产图像的数据集，用于模型训练和验证。"
+            },
+            {
+              "kind": "list",
+              "text": "模型迭代与优化：定期更新模型，引入新发现的文物类型和特征，提升识别精度。"
+            },
+            {
+              "kind": "heading",
+              "text": "3. 跨学科团队协作"
+            },
+            {
+              "kind": "list",
+              "text": "组建由考古学家、艺术史家、计算机视觉专家、AI工程师组成的____________________________团队，共同制定标注标准和工作流程。"
+            },
+            {
+              "kind": "list",
+              "text": "定期举行会议，讨论标注过程中的问题，调整标注策略。"
+            },
+            {
+              "kind": "heading",
+              "text": "4. 数据安全与隐私保护"
+            },
+            {
+              "kind": "list",
+              "text": "使用____________________________存储和传输数据，确保文化遗产信息不被非法获取。"
+            },
+            {
+              "kind": "list",
+              "text": "遵守相关法律法规，特别是涉及文化遗产的所有权和使用权的规定。"
+            },
+            {
+              "kind": "heading",
+              "text": "5. 用户体验与公众教育"
+            },
+            {
+              "kind": "list",
+              "text": "开发Web应用或移动应用程序，允许用户在线浏览、搜索和学习文化遗产的数字化资料。"
+            },
+            {
+              "kind": "list",
+              "text": "利用____________________________技术，为用户提供沉浸式文化遗产体验，增加教育和娱乐价值。"
+            },
+            {
+              "kind": "heading",
+              "text": "6. 技术融合与未来展望"
+            },
+            {
+              "kind": "list",
+              "text": "探索区块链技术的应用，为文化遗产的数字档案提供不可篡改的记录，增强其权威性和可信度。"
+            },
+            {
+              "kind": "list",
+              "text": "结合AI和物联网技术，监测和预警文化遗产的物理状态变化，及时采取保护措施。"
+            }
+          ],
+          "delivery": "direct-download",
+          "publishedExists": true,
+          "publishedExactCopy": true,
+          "deliveryVerified": true
+        }
+      ]
+    }
+  ]
+}

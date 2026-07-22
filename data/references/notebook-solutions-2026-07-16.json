@@ -1,0 +1,299 @@
+{
+  "version": "2026-07-16-v1",
+  "capturedAt": "2026-07-16",
+  "sourceLabel": "用户提供的配套完成版 Notebook",
+  "solutions": [
+    {
+      "code": "1.1.1",
+      "sourceNotebookSha256": "f0766b203bd7e3438c033c9bcb0b74cf3c1755b53ef2aee740bcb91d3b2a372e",
+      "sourceOutputs": 5,
+      "codeSha256": "0fa705480b7c6e5bb3e7d77d82943b56a356d06813612eb771da8de1fba05615",
+      "cells": [
+        {
+          "id": "solution-1",
+          "source": "import pandas as pd\nimport numpy as np\n\n# 读取数据集 1分\ndata = pd.read_csv('patient_data.csv')\n"
+        },
+        {
+          "id": "solution-2",
+          "source": "# 1. 统计住院天数超过7天的患者数量及其占比\n# 创建新列'RiskLevel'，根据住院天数判断风险等级 3分\ndata['RiskLevel'] = np.where(data['DaysInHospital']>7, '高风险患者', '低风险患者')\n# 统计不同风险等级的患者数量 2分\nrisk_counts = data['RiskLevel'].value_counts()\n# 计算高风险患者占比 1分\nhigh_risk_ratio = risk_counts['高风险患者'] / len(data)\n# 计算低风险患者占比 1分\nlow_risk_ratio = risk_counts['低风险患者'] / len(data)\n\n# 输出结果\nprint(\"高风险患者数量:\", risk_counts['高风险患者'])\nprint(\"低风险患者数量:\", risk_counts['低风险患者'])\nprint(\"高风险患者占比:\", high_risk_ratio)\nprint(\"低风险患者占比:\", low_risk_ratio)\n"
+        },
+        {
+          "id": "solution-3",
+          "source": "# 2. 统计不同BMI区间中高风险患者的比例和统计不同BMI区间中的患者数\n# 定义BMI区间和标签\nbmi_bins = [0, 18.5, 24, 28, np.inf]\nbmi_labels = ['偏瘦', '正常', '超重', '肥胖']\n# 根据BMI值划分指定区间 4分\ndata['BMIRange'] = pd.cut(data['BMI'], bins=bmi_bins, labels=bmi_labels, right=False)  # 使用左闭右开区间\n# 计算每个BMI区间中高风险患者的比例 2分\nbmi_risk_rate = data.groupby('BMIRange')['RiskLevel'].apply(lambda x: (x == '高风险患者').mean())\n# 统计每个BMI区间的患者数量 1分\nbmi_patient_count = data['BMIRange'].value_counts()\n\n# 输出结果\nprint(\"BMI区间中高风险患者的比例和患者数:\")\nprint(bmi_risk_rate) \nprint(bmi_patient_count)\n"
+        },
+        {
+          "id": "solution-4",
+          "source": "# 3. 统计不同年龄区间中高风险患者的比例和统计不同年龄区间中的患者数\n# 定义年龄区间和标签\nage_bins = [0, 26, 36, 46, 56, 66, np.inf]\nage_labels = ['≤25岁', '26-35岁', '36-45岁', '46-55岁', '56-65岁', '＞65岁']\n# 根据年龄值划分指定区间 4分\ndata['AgeRange'] = pd.cut(data['Age'], bins=age_bins, labels=age_labels, right=False)  # 使用左闭右开区间\n# 计算每个年龄区间中高风险患者的比例 2分\nage_risk_rate = data.groupby('AgeRange')['RiskLevel'].apply(lambda x: (x == '高风险患者').mean())\n# 统计每个年龄区间的患者数量 1分\nage_patient_count = data['AgeRange'].value_counts()\n\n# 输出结果\nprint(\"年龄区间中高风险患者的比例和患者数:\")\nprint(age_risk_rate) \nprint(age_patient_count)\n"
+        }
+      ]
+    },
+    {
+      "code": "1.1.2",
+      "sourceNotebookSha256": "f4b5a99d52b4461e45bf6ff56d6094de2632baed46fbfb1a351616958d09effc",
+      "sourceOutputs": 4,
+      "codeSha256": "073d0244994239961bfaa25f9581d99d4549601a8b4ef339d89c628dd70e2abd",
+      "cells": [
+        {
+          "id": "solution-1",
+          "source": "import pandas as pd\nimport numpy as np\nimport matplotlib.pyplot as plt\n# 读取数据集 2分\ndata = pd.read_csv('sensor_data.csv')\n"
+        },
+        {
+          "id": "solution-2",
+          "source": "# 1. 传感器数据统计\n# 对传感器类型进行分组，并计算每个组的数据数量和平均值 3分\nsensor_stats = data.groupby('SensorType')['Value'].agg(['count','mean'])\n# 输出结果\nprint(\"传感器数据数量和平均值:\")\nprint(sensor_stats)\n"
+        },
+        {
+          "id": "solution-3",
+          "source": "# 2. 按位置统计温度和湿度数据\n# 筛选出温度和湿度数据，然后按位置和传感器类型分组，计算每个组的平均值 2分\nlocation_stats = data[data['SensorType'].isin(['Temperature','Humidity'])].groupby(['Location','SensorType'])['Value'].mean().unstack()\n# 输出结果\nprint(\"每个位置的温度和湿度数据平均值:\")\nprint(location_stats)\n"
+        },
+        {
+          "id": "solution-4",
+          "source": "# 3. 数据清洗和异常值处理\n# 标记异常值 3分\ndata['is_abnormal'] = np.where(\n    ((data['SensorType']=='Temperature') & ((data['Value'] < -10) | (data['Value'] > 50))) |\n    ((data['SensorType']=='Humidity') & ((data['Value'] < 0) | (data['Value'] > 100))),\n    True, False\n)\n# 输出异常值数量 2分\nprint(\"异常值数量:\", data['is_abnormal'].sum())\n# 填补缺失值\n# 使用前向填充和后向填充的方法填补缺失值 4分\ndata['Value'].fillna(method='ffill', inplace=True)\ndata['Value'].fillna(method='bfill', inplace=True)\n# 保存清洗后的数据\n# 删除用于标记异常值的列，并将清洗后的数据保存到新的CSV文件中 4分\ncleaned_data = data.drop(columns=['is_abnormal'])\ncleaned_data.to_csv('cleaned_sensor_data.csv', index=False)\nprint(\"数据清洗完成，已保存为 'cleaned_sensor_data.csv'\")\n"
+        }
+      ]
+    },
+    {
+      "code": "1.1.3",
+      "sourceNotebookSha256": "f49595b2a7714110d5c44b914e54e21530adee365f0ccf6aff441fa4411f6c58",
+      "sourceOutputs": 3,
+      "codeSha256": "e3b1e6196763fa32df9e3f70557e4fb47305b5cea36e43d2dff29ed23a4bead5",
+      "cells": [
+        {
+          "id": "solution-1",
+          "source": "import pandas as pd\nimport numpy as np\nimport matplotlib.pyplot as plt\n# 读取数据集\ndata = pd.read_csv('credit_data.csv')\n"
+        },
+        {
+          "id": "solution-2",
+          "source": "# 1. 数据完整性审核\nmissing_values = data.isnull().sum()       #数据缺失值统计 2分\nduplicate_values = data.duplicated().sum()     #数据重复值统计 2分\n# 输出结果\nprint(\"缺失值统计:\")\nprint(missing_values)\nprint(\"重复值统计:\")\nprint(duplicate_values)\n"
+        },
+        {
+          "id": "solution-3",
+          "source": "# 2. 数据合理性审核\ndata['is_age_valid'] = data['Age'].between(18, 70)              #Age数据的合理性审核 2分\ndata['is_income_valid'] = data['Income'] > 0                 #Income数据的合理性审核 2分\ndata['is_loan_amount_valid'] = data['LoanAmount'] < (data['Income'] * 5)      #LoanAmount数据的合理性审核 2分\ndata['is_credit_score_valid'] = data['CreditScore'].between(300, 850)   #CreditScore数据的合理性审核 2分\n# 合理性检查结果\nvalidity_checks = data[['is_age_valid', 'is_income_valid', 'is_loan_amount_valid', 'is_credit_score_valid']].all(axis=1)\ndata['is_valid'] = validity_checks\n# 输出结果\nprint(\"数据合理性检查:\")\nprint(data[['is_age_valid', 'is_income_valid', 'is_loan_amount_valid', 'is_credit_score_valid', 'is_valid']].describe())\n"
+        },
+        {
+          "id": "solution-4",
+          "source": "# 3. 数据清洗和异常值处理\n# 标记不合理数据\ninvalid_rows = data[~data['is_valid']]\n# 删除不合理数据行\ncleaned_data = data[data['is_valid']]\n# 删除标记列\ncleaned_data = cleaned_data.drop(columns=['is_age_valid', 'is_income_valid', 'is_loan_amount_valid', 'is_credit_score_valid', 'is_valid'])\n# 保存清洗后的数据\ncleaned_data.to_csv('credit_data.csv', index=False)\nprint(\"数据清洗完成，已保存为 'cleaned_credit_data.csv'\")\n"
+        }
+      ]
+    },
+    {
+      "code": "1.1.4",
+      "sourceNotebookSha256": "c1d780373d17dfd76ec0514efd25f9cde50f22aa5f0ec04bc42f84b697115f4c",
+      "sourceOutputs": 3,
+      "codeSha256": "fd35c3f26e44dee8f8768c7faede62e12647a32f8a71f0fc664fc208057bff1f",
+      "cells": [
+        {
+          "id": "solution-1",
+          "source": "import pandas\nimport numpy as np\nimport matplotlib.pyplot as plt\n\n# 1. 数据采集\n# 从本地文件中读取数据  2分\ndata =  pandas.read_csv('user_behavior_data.csv')\nprint(\"数据采集完成，已加载到DataFrame中\")\n\n# 打印数据的前5条记录  2分\nprint(data.head())\n"
+        },
+        {
+          "id": "solution-2",
+          "source": "# 2. 数据清洗与预处理\n# 处理缺失值（删除）  2分\ndata = data.dropna()\n\n# 数据类型转换\ndata['Age'] = data['Age'].astype(int)   # Age数据类型转换为int 2分\ndata['PurchaseAmount'] = data['PurchaseAmount'].astype(float) # PurchaseAmount数据类型转换为float  2分\ndata['ReviewScore'] = data['ReviewScore'].astype(int)   # ReviewScore数据类型转换为int 2分\n\n# 处理异常值  2分\ndata = data[(data['Age'].between(18, 70)) & \n            (data['PurchaseAmount'] > 0) & \n            (data['ReviewScore'].between(1, 5))]\n\n# 数据标准化\ndata['PurchaseAmount'] = (data['PurchaseAmount'] - data['PurchaseAmount'].mean()) / data['PurchaseAmount'].std()  # PurchaseAmount数据标准化 2分\ndata['ReviewScore'] = (data['ReviewScore'] - data['ReviewScore'].mean()) / data['ReviewScore'].std()        # ReviewScore数据标准化 2分\n\n# 保存清洗后的数据  1分\ndata.to_csv('cleaned_user_behavior_data.csv', index=False)\nprint(\"数据清洗完成，已保存为 'cleaned_user_behavior_data.csv'\")\n"
+        },
+        {
+          "id": "solution-3",
+          "source": "# 3. 数据统计\n# 统计每个购买类别的用户数 2分\npurchase_category_counts = data['PurchaseCategory'].value_counts()\nprint(\"每个购买类别的用户数:\\n\", purchase_category_counts)\n\n# 统计不同性别的平均购买金额 2分\ngender_purchase_amount_mean = data.groupby('Gender')['PurchaseAmount'].mean()\nprint(\"不同性别的平均购买金额:\\n\", gender_purchase_amount_mean)\n\n# 统计不同年龄段的用户数 2分\nbins = [18, 26, 36, 46, 56, 66, np.inf]\nlabels = ['18-25', '26-35', '36-45', '46-55', '56-65', '65+']\ndata['AgeGroup'] = pandas.cut(data['Age'],bins=bins,labels=labels, right=False)\nage_group_counts = data['AgeGroup'].value_counts().sort_index()\nprint(\"不同年龄段的用户数:\\n\", age_group_counts)\n"
+        }
+      ]
+    },
+    {
+      "code": "1.1.5",
+      "sourceNotebookSha256": "55b25fe4bc6fabfb0d1970dcbf0e0d47f29fc5c1e95a889aef7a20f0bdfb77dd",
+      "sourceOutputs": 3,
+      "codeSha256": "f5eca1bbe653a6144878ffdaad5ba96dd69fc6a9c3910a8584cc4d1ba03c7f8a",
+      "cells": [
+        {
+          "id": "solution-1",
+          "source": "import pandas as pd\nimport numpy as np\nimport matplotlib.pyplot as plt\n\n# 1. 数据采集\n# 从本地文件中读取数据  2分\ndata = pd.read_csv('vehicle_traffic_data.csv')\nprint(\"数据采集完成，已加载到DataFrame中\")\n\n# 打印数据的前5条记录 2分\nprint(data.head())\n"
+        },
+        {
+          "id": "solution-2",
+          "source": "# 2. 数据清洗与预处理\n# 处理缺失值（删除）  2分\ndata = data.dropna()\n\n# 数据类型转换\ndata['Age']= data['Age'].astype(int)       #Age数据类型转换为int 1分\ndata['Speed']= data['Speed'].astype(float)     #Speed数据类型转换为float 1分\ndata['TravelDistance'] = data['TravelDistance'].astype(float)     #TravelDistance数据类型转换为float 1分\ndata['TravelTime'] = data['TravelTime'].astype(float)     #TravelTime数据类型转换为float 1分\n\n# 处理异常值  2分\ndata = data[(data['Age'].between(18, 70))  & \n            (data['Speed'].between(0, 200)) & \n            (data['TravelDistance'].between(1, 1000)) & \n            (data['TravelTime'].between(1, 1440))]\n\n# 保存清洗后的数据  1分\ndata.to_csv('cleaned_vehicle_traffic_data.csv', index=False)\nprint(\"数据清洗完成，已保存为 'cleaned_vehicle_traffic_data.csv'\")\n"
+        },
+        {
+          "id": "solution-3",
+          "source": "# 3. 数据合理性审核\n# 审核字段合理性 1分\nunreasonable_data = data[~((data['Age'].between(18, 70)) & \n                           (data['Speed'].between(0, 200)) & \n                           (data['TravelDistance'].between(1, 1000)) & \n                           (data['TravelTime'].between(1, 1440)))]\nprint(\"不合理的数据:\\n\", unreasonable_data)\n\n# 4. 数据统计\n# 统计每种交通事件的发生次数  2分\ntraffic_event_counts = data['TrafficEvent'].value_counts()\nprint(\"每种交通事件的发生次数:\\n\", traffic_event_counts)\n\n# 统计不同性别的平均车速、行驶距离和行驶时间  2分\ngender_stats = data.groupby('Gender').agg({'Speed':'mean','TravelDistance':'mean','TravelTime':'mean'})\nprint(\"不同性别的平均车速、行驶距离和行驶时间:\\n\", gender_stats)\n\n# 统计不同年龄段的驾驶员数  5分\nage_bins = [18, 26, 36, 46, 56, 66, np.inf]\nage_labels = ['18-25', '26-35', '36-45', '46-55', '56-65', '65+']\ndata['AgeGroup'] = pd.cut(data['Age'],bins=age_bins,labels=age_labels, right=False)\nage_group_counts = data['AgeGroup'].value_counts()\nprint(\"不同年龄段的驾驶员数:\\n\", age_group_counts)\n"
+        }
+      ]
+    },
+    {
+      "code": "2.1.1",
+      "sourceNotebookSha256": "9cafd484b9d8ca77d23e6b1d8be2c5a14b7c0e64f8b47898e4d95878b44f0cfe",
+      "sourceOutputs": 1,
+      "codeSha256": "072a7ceaac1925a440c9da46f1eb7ccc74085402f5a4755c399564ec0ffa78d5",
+      "cells": [
+        {
+          "id": "solution-1",
+          "source": "import pandas as pd\n\n# 加载数据集并显示数据集的前五行 1分\ndata = pd.read_csv('auto-mpg.csv')\nprint(\"数据集的前五行:\")\nprint(data.head())\n\n# 显示每一列的数据类型\nprint(data.dtypes)\n\n# 检查缺失值并删除缺失值所在的行  2分\nprint(\"\\n检查缺失值:\")\nprint(data.isnull().sum())  \ndata = data.dropna()\n\n# 将 'horsepower' 列转换为数值类型，并（删除）处理转换中的异常值 1分\ndata['horsepower'] = pd.to_numeric(data['horsepower'], errors='coerce')\ndata = data.dropna(subset=['horsepower'])\n\n# 显示每一列的数据类型\nprint(data.horsepower.dtypes)\n\n# 检查清洗后的缺失值\nprint(\"\\n检查清洗后的缺失值:\")\nprint(data.isnull().sum())\n\nfrom sklearn.preprocessing import StandardScaler\n# 对数值型数据进行标准化处理 1分\nnumerical_features = ['displacement', 'horsepower', 'weight', 'acceleration']\nscaler = StandardScaler()\ndata[numerical_features] = scaler.fit_transform(data[numerical_features])\n\nfrom sklearn.model_selection import train_test_split\n# 选择特征,自变量和目标变量 2分\nselected_features = ['cylinders','displacement','horsepower','weight','acceleration','model year','origin']\nX = data[selected_features]\ny = data['mpg']\n\n# 划分数据集为训练集和测试集（训练集占8成） 1分\nX_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2, random_state=42)\n\n\n# 将特征和目标变量合并到一个数据框中\ncleaned_data = X.copy()\ncleaned_data['mpg'] = y\n\n# 保存清洗和处理后的数据（不存储额外的索引号） 1分\ncleaned_data.to_csv('2.1.1_cleaned_data.csv', index=False)\n\n# 打印消息指示文件已保存\nprint(\"\\n清洗后的数据已保存到 2.1.1_cleaned_data.csv\")\n"
+        }
+      ]
+    },
+    {
+      "code": "2.1.2",
+      "sourceNotebookSha256": "d89ceecf893d69572d2c09383ec49f169a4e779e3df9cd056ef77cbe3ba989f6",
+      "sourceOutputs": 1,
+      "codeSha256": "fe2a0292cdb10fed22facc3f1ac1ae7d74c5ead9114cb76330e4034af965a846",
+      "cells": [
+        {
+          "id": "solution-1",
+          "source": "import pandas as pd\n#读取一个Excel文件，并将读取到的数据存储在变量data中\ndata = pd.read_excel('大学生低碳生活行为的影响因素数据集.xlsx')\n#打印出数据集的前5行\nprint(data.head())\n\n#处理数据集中的缺失值\ninitial_row_count = data.shape[0]   #处理前的数据行数\ndata = data.dropna()                #删除缺失值所在行\nfinal_row_count = data.shape[0]     #处理后的数据行数\nprint(f'处理后数据行数: {final_row_count}, 删除的行数: {initial_row_count - final_row_count}')\n\n#删除重复行\ndata = data.drop_duplicates()\n\nfrom sklearn.preprocessing import StandardScaler\nnumerical_features = ['4.您的月生活费○≦1,000元   ○1,001-2,000元   ○2,001-3,000元   ○≧3,001元']\nscaler = StandardScaler()\ndata[numerical_features] = scaler.fit_transform(data[numerical_features])\n\n#选择特征\nselected_features = ['1.您的性别○男性   ○女性']\nX = data[selected_features]\n\n# 创建目标变量\ny = data['低碳行为积极性']\n\nfrom sklearn.model_selection import train_test_split\n# 数据划分（测试集取20%）\nX_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2, random_state=42)\n\n# 合并处理后得数据，并将其保存（保存中不用额外创建索引）\ncleaned_data = pd.concat([X,y], axis=1)\ncleaned_data.to_csv('2.1.2_cleaned_data.csv', index=False)\n"
+        }
+      ]
+    },
+    {
+      "code": "2.1.3",
+      "sourceNotebookSha256": "67305bf94f3d753c8226d915c5d7cc113f8589f0fe74e12cb07ac83bdc47c052",
+      "sourceOutputs": 3,
+      "codeSha256": "25d18036a85cc60ddfd46b3571fd516639712f0cbec66ef9b1ab051c643cf0ca",
+      "cells": [
+        {
+          "id": "solution-1",
+          "source": "import pandas as pd\n\n# 加载数据\ndata = pd.read_csv('finance数据集.csv')\n\n# 显示前五行的数据\nprint(data.head())\n\nimport matplotlib.pyplot as plt\nimport seaborn as sns\n\n# 设置图像尺寸\nplt.figure(figsize=(12, 8))\n\n# 识别数值列用于箱线图\nnumeric_cols = data.select_dtypes(include=['float64', 'int64']).columns\n\n# 创建箱线图\nfor i, col in enumerate(numeric_cols, 1):\n    plt.subplot(3, 4, i)\n    sns.boxplot(x=data[col])\n    plt.title(col)\n\nplt.tight_layout()\nplt.show()\n\n# 使用IQR处理异常值\nQ1 = data[numeric_cols].quantile(0.25)\nQ3 = data[numeric_cols].quantile(0.75)\nIQR = Q3-Q1\n\n# 移除异常值\ndata_cleaned = data[~((data[numeric_cols] < (Q1 - 1.5 * IQR)) | (data[numeric_cols] > (Q3 + 1.5 * IQR))).any(axis=1)]\n\n# 检查处理重复值\nduplicates = data_cleaned.duplicated()\nnum_duplicates = duplicates.sum()\ndata_cleaned = data_cleaned[~duplicates]\n\nprint(f'删除的重复行数: {num_duplicates}')\n\n#对数据进行归一化处理\nfrom sklearn.preprocessing import MinMaxScaler\n\nscaler = MinMaxScaler()\ndata_cleaned[numeric_cols] = scaler.fit_transform(data_cleaned[numeric_cols])\n\n# 设定目标变量\ntarget_variable = 'SeriousDlqin2yrs'\n\nfrom sklearn.model_selection import train_test_split\n\n# 定义特征和目标\nX = data_cleaned.drop(columns=[target_variable])   #1分\ny = data_cleaned[target_variable]                         #1分\n\n# 划分数据（训练集占80%）\nX_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2, random_state=42)\n\n# 显示划分后的数据形状\nprint(f'训练数据形状: {X_train.shape}')\nprint(f'测试数据形状: {X_test.shape}')\n\n# 保存清洗后的数据到CSV\ncleaned_file_path = '2.1.3_cleaned_data.csv'\ndata_cleaned.to_csv(cleaned_file_path, index=False)\n"
+        }
+      ]
+    },
+    {
+      "code": "2.1.4",
+      "sourceNotebookSha256": "8ecdb7829500c4c084228809df8f13b664de9b768340261c017da87f197d925f",
+      "sourceOutputs": 4,
+      "codeSha256": "2ba9510e1681a6d1c6fedffdc82826b32b896b64e1f601db3fcc1837b87c673e",
+      "cells": [
+        {
+          "id": "solution-1",
+          "source": "import pandas as pd\n\n# 加载数据集并指定编码为gbk\ndata = pd.read_csv('medical_data.csv',encoding='gbk')\n\n# 查看数据类型\nprint(data.dtypes)\n# 查看表结构基本信息\nprint(data.info())\n\n# 显示每一列的空缺值数量\nprint(data.isnull().sum())\n\n# 规范日期格式\ndata['就诊日期'] = pd.to_datetime(data['就诊日期'])\ndata['诊断日期'] = pd.to_datetime(data['诊断日期'])\n\n# 修改列名\ndata.rename(columns={'病人ID':'患者ID'}, inplace=True)\n\n# 查看修改后的表结构\nprint(data.head())\n\nfrom datetime import datetime\n\n# 增加诊断延迟和病程列\ndata['诊断延迟'] = (data['诊断日期']-data['就诊日期']).dt.days\ndata['病程'] = (datetime(2024, 9, 1) - data['诊断日期']).dt.days\n\n# 删除不合理的数据\ndata = data[(data['诊断延迟'] >= 0) & (data['年龄'] > 0) & (data['年龄'] < 120)]\n\n# 查看修改后的数据\nprint(data.describe())\n\n# 删除重复值并记录删除的行数\ninitial_rows = data.shape[0]\ndata.drop_duplicates(inplace=True)\ndeleted_rows = initial_rows - data.shape[0]\n\nprint(f'删除的重复行数: {deleted_rows}')\n\nfrom sklearn.preprocessing import MinMaxScaler\n\n# 对需要归一化的列进行处理\nscaler = MinMaxScaler()\ncolumns_to_normalize = ['年龄','体重','身高']\ndata[columns_to_normalize] = scaler.fit_transform(data[columns_to_normalize])\n\n# 查看归一化后的数据\nprint(data.head())\n\nimport matplotlib.pyplot as plt\nimport matplotlib.font_manager as fm\n\n\n# 统计治疗结果分布\ntreatment_outcome_distribution = data.groupby('疾病类型')['治疗结果'].value_counts().unstack()\n\n# 设置中文字体\nfont_path = 'C:/Windows/Fonts/simhei.ttf'  # 根据你的系统调整字体路径\nmy_font = fm.FontProperties(fname=font_path)\n\n# 绘制柱状图\ntreatment_outcome_distribution.plot(kind='bar', stacked=True)\nplt.title('不同疾病类型的治疗结果分布', fontproperties=my_font)\nplt.xlabel('疾病类型', fontproperties=my_font)\nplt.ylabel('治疗结果数量', fontproperties=my_font)\nplt.xticks(fontproperties=my_font)  # 设置x轴刻度标签的字体\nplt.yticks(fontproperties=my_font)  # 设置y轴刻度标签的字体\nplt.legend(prop=my_font)  # 设置图例字体\nplt.show()\n\n# 绘制散点图\nplt.scatter(data['年龄'], data['疾病严重程度'])\nplt.title('年龄和疾病严重程度的关系', fontproperties=my_font)\nplt.xlabel('年龄', fontproperties=my_font)\nplt.ylabel('疾病严重程度', fontproperties=my_font)\nplt.xticks(fontproperties=my_font)  # 设置x轴刻度标签的字体\nplt.yticks(fontproperties=my_font)  # 设置y轴刻度标签的字体\nplt.legend(prop=my_font)  # 设置图例字体\nplt.show()\n\n# 保存处理后得数据\noutput_path = '2.1.4_cleaned_data.csv'\ndata.to_csv(output_path, index=False)\n"
+        }
+      ]
+    },
+    {
+      "code": "2.1.5",
+      "sourceNotebookSha256": "7805c2e63197a4e6efe60c30ef24c7b4ab87558d54b97cf8e4c9a324ac0241b0",
+      "sourceOutputs": 2,
+      "codeSha256": "0f1a281ea1b9d4f541523935cc7bc310211cddea57ff19b7f1c57bc32bd8a3e9",
+      "cells": [
+        {
+          "id": "solution-1",
+          "source": "import pandas as pd\n\n# 加载数据集\ndata = pd.read_csv('健康咨询客户数据集.csv')\n\n# 查看表结构基本信息\nprint(data.info())\n\n# 显示每一列的空缺值数量\nprint(data.isnull().sum())\n\n# 删除含有缺失值的行\ndata_cleaned = data.dropna()\n\n# 转换 'Your age' 列的数据类型为整数类型，并处理异常值\ndata_cleaned.loc[:, 'Your age'] = pd.to_numeric(data['Your age'], errors='coerce')\ndata_cleaned = data_cleaned.dropna(subset=['Your age'])\ndata_cleaned = data_cleaned[data_cleaned['Your age'] >= 0]\ndata_cleaned.loc[:, 'Your age'] = data_cleaned['Your age'].astype(int)\n\nprint(data_cleaned['Your age'].dtype)\n\n# 检查和删除重复值\nduplicates_removed = data_cleaned.duplicated().sum()\ndata_cleaned = data_cleaned.drop_duplicates()\n\nprint(f\"Removed {duplicates_removed} duplicate rows\")\n\nfrom sklearn.preprocessing import LabelEncoder\n\n# 归一化 'How do you describe your current level of fitness ?' 列\nlabel_encoder = LabelEncoder()\ndata_cleaned['How do you describe your current level of fitness ?'] = label_encoder.fit_transform(data_cleaned['How do you describe your current level of fitness ?'])\n\nprint(data_cleaned['How do you describe your current level of fitness ?'].unique())\n\nfrom sklearn.preprocessing import LabelEncoder\nimport matplotlib.pyplot as plt\n\n# 去掉列名中的空格\ndata.columns = data.columns.str.strip()\n# 显示数据集的列名\nprint(data.columns)\n\n# 删除包含缺失值的行\ndata_cleaned = data.dropna(subset=['How often do you exercise?'])\n\n# 统计不同健身频率的分布情况\nexercise_frequency_counts = data_cleaned['How often do you exercise?'].value_counts()\n\n# 绘制饼图\nplt.figure(figsize=(10, 6))\nexercise_frequency_counts.plot.pie(autopct='%1.1f%%', startangle=90, colors=plt.cm.Paired.colors)\nplt.title('Distribution of Exercise Frequency')\nplt.ylabel('')\nplt.show()\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nimport matplotlib.pyplot as plt\n\n# 填充缺失值\ndata_filled = data.apply(lambda x: x.fillna(x.mode()[0]))\n\n# 划分数据（测试集占比20%）\ntrain_data, test_data = train_test_split(data_filled,test_size=0.2, random_state=42)\n\n# 保存处理后的数据\ncleaned_file_path = '2.1.5_cleaned_data.csv'\ndata_filled.to_csv(cleaned_file_path, index=False)\n"
+        }
+      ]
+    },
+    {
+      "code": "2.2.1",
+      "sourceNotebookSha256": "59ef87842ca927afebab72ae7b9f94125678e1083fc9cf1d71f7806c3a0ea3eb",
+      "sourceOutputs": 4,
+      "codeSha256": "3e16debb2496f51a006fbca2ee13b53c09ea66a0e8ac9c85b8368b0ff627916a",
+      "cells": [
+        {
+          "id": "solution-1",
+          "source": "import pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LogisticRegression\nimport pickle\nfrom sklearn.metrics import classification_report\nfrom imblearn.over_sampling import SMOTE\n\n# 加载数据\ndata = pd.read_csv('finance数据集.csv')\n\n# 显示前五行的数据\nprint(data.head())\n\n# 选择自变量和因变量\nX = data.drop(['SeriousDlqin2yrs', 'Unnamed: 0'], axis=1)\ny = data['SeriousDlqin2yrs']\n\n# 分割训练集和测试集（测试集20%）\nX_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2, random_state=42)\n\n# 训练Logistic回归模型（最大迭代次数为1000次）\nmodel = LogisticRegression(max_iter=1000)\n#训练 Logistic 回归模型\nmodel.fit(X_train, y_train)\n\n# 保存模型\nwith open('2.2.1_model.pkl', 'wb') as file:\n    pickle.dump(model, file)\n\n# 预测并保存结果\ny_pred = model.predict(X_test)\npd.DataFrame(y_pred, columns=['预测结果']).to_csv('2.2.1_results.txt', index=False)\n\n# 生成测试报告\nreport = classification_report(y_test, y_pred, zero_division=1)\nwith open('2.2.1_report.txt', 'w') as file:\n    file.write(report)\n\n# 分析测试结果\naccuracy = (y_test==y_pred).mean()\nprint(f\"模型准确率: {accuracy:.2f}\")\n\n# 处理数据不平衡\nsmote = SMOTE(random_state=42)\nX_resampled, y_resampled = smote.fit_resample(X_train,y_train)\n\n# 重新训练模型\nmodel.fit(X_resampled, y_resampled)\n# 重新预测\ny_pred_resampled = model.predict(X_test)\n\n# 保存新结果\npd.DataFrame(y_pred_resampled, columns=['预测结果']).to_csv('2.2.1_results_xg.txt', index=False)\n\n# 生成新的测试报告\nreport_resampled = classification_report(y_test, y_pred_resampled, zero_division=1)\nwith open('2.2.1_report_xg.txt', 'w') as file:\n    file.write(report_resampled)\n\n# 分析新的测试结果\naccuracy_resampled = (y_test==y_pred_resampled).mean()\nprint(f\"重新采样后的模型准确率: {accuracy_resampled:.2f}\")\n"
+        }
+      ]
+    },
+    {
+      "code": "2.2.2",
+      "sourceNotebookSha256": "2bae0ef23217a92bfef5dd608f11120097658a7d193357db90d79491f8833741",
+      "sourceOutputs": 1,
+      "codeSha256": "5a54a17e4291fa5bf657bc225546ac71db640227f6f41adfd818616f76d5b0ea",
+      "cells": [
+        {
+          "id": "solution-1",
+          "source": "import pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.pipeline import Pipeline\nimport pickle\nfrom sklearn.ensemble import RandomForestRegressor\n\n# 加载数据集\ndf = pd.read_csv('auto-mpg.csv')\n\n# 显示前五行数据\nprint(df.head())\n\n# 处理缺失值\n# 将 'horsepower' 列中的所有值转换为数值类型\ndf['horsepower'] = pd.to_numeric(df['horsepower'], errors='coerce')\n# 删除包含缺失值的行\ndf = df.dropna()\n\n# 选择相关特征进行建模（定义自变量（返回一个DataFrame）和因变量）\nX = df[['cylinders','displacement','horsepower','weight','acceleration','model year','origin']]\ny = df['mpg']\n\n# 将数据集划分为训练集和测试集（测试集占比20%）\nX_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2, random_state=42)\n\n# 创建包含标准化和线性回归的管道\npipeline = Pipeline([('scaler', StandardScaler()),('linreg', LinearRegression())])\n\n# 训练模型\npipeline.fit(X_train,y_train)\n\n# 保存训练好的模型\nwith open('2.2.2_model.pkl', 'wb') as model_file:\n    pickle.dump(pipeline, model_file)\n\n# 预测并保存结果\ny_pred = pipeline.predict(X_test)\nresults_df = pd.DataFrame(y_pred, columns=['预测结果'])\nresults_df.to_csv('2.2.2_results.txt', index=False)\n\n# 测试模型\nwith open('2.2.2_report.txt', 'w') as results_file:\n    results_file.write(f'训练集得分: {pipeline.score(X_train, y_train)}\\n')\n    results_file.write(f'测试集得分: {pipeline.score(X_test, y_test)}\\n')\n\n# 创建随机森林回归模型实例（创建的决策树的数量为100）\nrf_model = RandomForestRegressor(n_estimators=100, random_state=42)\n# 训练随机森林回归模型\nrf_model.fit(X_train,y_train)\n\n# 使用随机森林模型进行预测\ny_pred_rf = rf_model.predict(X_test)\n\n# 保存新的结果\nresults_rf_df = pd.DataFrame(y_pred_rf, columns=['预测结果'])\nresults_rf_df.to_csv('2.2.2_results_rf.txt', index=False)\n\n# 测试模型并保存得分\nwith open('2.2.2_report_rf.txt', 'w') as results_rf_file:\n    results_rf_file.write(f'训练集得分: {rf_model.score(X_train, y_train)}\\n')\n    results_rf_file.write(f'测试集得分: {rf_model.score(X_test, y_test)}\\n')\n"
+        }
+      ]
+    },
+    {
+      "code": "2.2.3",
+      "sourceNotebookSha256": "0e6b55b9058dc2cb278bc304935b33813d35dfeb584378ac6a5c0f426bba6315",
+      "sourceOutputs": 2,
+      "codeSha256": "2a55c1be1a7f2c505152fa3680c0092fd61dbfb7647009ed8c11113773237f7c",
+      "cells": [
+        {
+          "id": "solution-1",
+          "source": "import pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.ensemble import RandomForestRegressor\nimport pickle\nfrom sklearn.metrics import mean_squared_error, r2_score\nimport xgboost as xgb\n\n# 加载数据集\ndf = pd.read_csv('fitness analysis.csv')\n\n# 显示前五行数据\nprint(df.head())\n\n# 去除所有字符串字段的前后空格\ndf = df.applymap(lambda x: x.strip() if isinstance(x, str) else x)\n\n# 检查和清理列名\ndf.columns = df.columns.str.strip()\n\n# 选择相关特征进行建模\nX = df[['Your gender', 'How important is exercise to you ?', 'How healthy do you consider yourself?']]\nX = pd.get_dummies(X)  # 将分类变量转为数值变量\n\n# 将年龄段转为数值变量\ny = df['Your age'].apply(lambda x: int(x.split(' ')[0]))  # 假设年龄段为整数\n\n# 将数据集划分为训练集和测试集（测试集占比20%）\nX_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2, random_state=42)\n\n# 创建随机森林回归模型（创建的决策树的数量为100）\nrf_model = RandomForestRegressor(n_estimators=100, random_state=42)\n# 训练随机森林回归模型\nrf_model.fit(X_train,y_train)\n\n# 保存训练好的模型\nwith open('2.2.3_model.pkl', 'wb') as model_file:\n    pickle.dump(rf_model, model_file)\n\n# 进行结果预测\ny_pred = rf_model.predict(X_test)\nresults_df = pd.DataFrame(y_pred, columns=['预测结果'])\nresults_df.to_csv('2.2.3_results.txt', index=False)\n\n# 使用测试工具对模型进行测试，并记录测试结果\ntrain_score = rf_model.score(X_train,y_train)   #训练集分数\ntest_score = rf_model.score(X_test,y_test)    #测试集分数\nmse = mean_squared_error(y_test,y_pred)  #均方误差\nr2 = r2_score(y_test,y_pred)  #决定系数\nwith open('2.2.3_report.txt', 'w') as report_file:\n    report_file.write(f'训练集得分: {train_score}\\n')\n    report_file.write(f'测试集得分: {test_score}\\n')\n    report_file.write(f'均方误差(MSE): {mse}\\n')\n    report_file.write(f'决定系数(R^2): {r2}\\n')\n\n# 运用工具分析算法中错误案例产生的原因并进行纠正\n# 初始化XGBoost回归模型（构建100棵树）\nxgb_model = xgb.XGBRegressor(n_estimators=100, random_state=42)\n# 训练XGBoost回归模型\nxgb_model.fit(X_train,y_train)\n# 使用XGBoost回归模型在测试集上进行结果预测\ny_pred_xgb = xgb_model.predict(X_test)\n\nresults_df_xgb = pd.DataFrame(y_pred_xgb, columns=['预测结果'])\nresults_df_xgb.to_csv('2.2.3_results_xgb.txt', index=False)\n\nwith open('2.2.3_report_xgb.txt', 'w') as xgb_report_file:\n    xgb_report_file.write(f'XGBoost训练集得分: {xgb_model.score(X_train,y_train)}\\n')\n    xgb_report_file.write(f'XGBoost测试集得分: {xgb_model.score(X_test,y_test)}\\n')\n    xgb_report_file.write(f'XGBoost均方误差(MSE): {mean_squared_error(y_test,y_pred_xgb)}\\n')\n    xgb_report_file.write(f'XGBoost决定系数(R^2): {r2_score(y_test,y_pred_xgb)}\\n')\n"
+        }
+      ]
+    },
+    {
+      "code": "2.2.4",
+      "sourceNotebookSha256": "006fdd32174a464c25fd45fc17d06c829b95d7463fef16f274146b2439cf55b0",
+      "sourceOutputs": 1,
+      "codeSha256": "201c1e3142d8f6221ff09ada642cc846a95340ad10d2f728e8abacbb7d657c9e",
+      "cells": [
+        {
+          "id": "solution-1",
+          "source": "import pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import mean_squared_error, r2_score\nimport joblib\nfrom xgboost import XGBRegressor\n\n# 加载数据集\ndata = pd.read_excel('大学生低碳生活行为的影响因素数据集.xlsx')\n\n# 显示数据集的前五行\nprint(data.head())\n\n# 删除不必要的列并处理分类变量\ndata_cleaned = data.drop(columns=['序号', '所用时间'])  # 删除不必要的列\ndata_cleaned = pd.get_dummies(data_cleaned, drop_first=True)  # 将分类变量转换为哑变量/指示变量\n\n# 定义目标变量和特征\ntarget = '5.您进行过绿色低碳的相关生活方式吗?'  # 确保这是目标变量\n\n# 定义自变量和因变量\nX = data_cleaned.drop(columns=target)\ny = data_cleaned[target]\n\n# 将数据拆分为训练集和测试集（测试集占20%）\nX_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2, random_state=42)\n\n# 初始化线性回归模型\nmodel = LinearRegression()\n# 训练线性回归模型\nmodel.fit(X_train,y_train)\n\n# 保存训练好的模型\nmodel_filename = '2.2.4_model.pkl'\njoblib.dump(model,model_filename)\n\n# 进行预测\ny_pred = model.predict(X_test)\n\n# 将结果保存到文本文件中\nresults = pd.DataFrame({'实际值': y_test, '预测值': y_pred})\nresults_filename = '2.2.4_results.txt'\nresults.to_csv(results_filename, index=False, sep='\\t')  # 使用制表符分隔值保存到文本文件\n\n# 将测试结果保存到报告文件中\nreport_filename = '2.2.4_report.txt'\nwith open(report_filename, 'w') as f:\n    f.write(f'均方误差: {mean_squared_error(y_test,y_pred)}\\n')\n    f.write(f'决定系数: {r2_score(y_test,y_pred)}\\n')\n    \n# 分析并纠正错误（示例：使用XGBoost）\n# 初始化XGBoost模型（设定树的数量为1000，学习率为0.05，每棵树的最大深度为5，）\nxgb_model = XGBRegressor(n_estimators=1000,learning_rate=0.05,max_depth=5, subsample=0.8, colsample_bytree=0.8)\n# 训练XGBoost模型\nxgb_model.fit(X_train,y_train)\n\n# 使用XGBoost模型进行预测\ny_pred_xg = xgb_model.predict(X_test)\n\n# 将XGBoost结果保存到文本文件中\nresults_xg_filename = '2.2.4_results_xg.txt'\nresults_xg = pd.DataFrame({'实际值': y_test, '预测值': y_pred_xg})\nresults_xg.to_csv(results_xg_filename, index=False, sep='\\t')  # 使用制表符分隔值保存到文本文件\n\n# 将XGBoost测试结果保存到报告文件中\nreport_filename_xgb = '2.2.4_report_xgb.txt'\nwith open(report_filename_xgb, 'w') as f:\n    f.write(f'均方误差: {mean_squared_error(y_test,y_pred_xg)}\\n')\n    f.write(f'决定系数: {r2_score(y_test,y_pred_xg)}\\n')\n"
+        }
+      ]
+    },
+    {
+      "code": "2.2.5",
+      "sourceNotebookSha256": "e31c66cfa85370a5139c0bb50c30c80940a8d96fc4f8fba611249645fff66ab0",
+      "sourceOutputs": 1,
+      "codeSha256": "99dfe8e80bef40e4f44528f100e887e91693e9d12f62bee7aed34f0192b6c68d",
+      "cells": [
+        {
+          "id": "solution-1",
+          "source": "import pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.tree import DecisionTreeRegressor\nimport pickle\nfrom sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score\n\n# 加载数据集\ndf = pd.read_csv('fitness analysis.csv')\n\n# 显示前五行数据\nprint(df.head())\n\n# 选择相关特征进行建模\nX = df[['Your gender ', 'How important is exercise to you ?', 'How healthy do you consider yourself?']]\nX = pd.get_dummies(X)  # 将分类变量转为数值变量\n\n# 设置目标变量\ny = df['daily_steps']\n\n# 将数据集划分为训练集和测试集（测试集占20%）\nX_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2, random_state=42)\n\n# 创建并训练决策树回归模型\nmodel = DecisionTreeRegressor(random_state=42)\n# 训练决策树回归模型\nmodel.fit(X_train,y_train)\n\n# 保存训练好的模型\nwith open('2.2.5_model.pkl', 'wb') as model_file:\n    pickle.dump(model, model_file)\n\n# 进行预测\ny_pred = model.predict(X_test)\n\n# 将结果保存到文本文件中\nresults = pd.DataFrame({'实际值': y_test, '预测值': y_pred})\nresults_filename = '2.2.5_results.txt'\nresults.to_csv(results_filename, index=False, sep='\\t')  \n\n# 将测试结果保存到报告文件中\nreport_filename = '2.2.5_report.txt'\nwith open(report_filename,'w') as f:\n    f.write(f'均方误差: {mean_squared_error(y_test,y_pred)}\\n')\n    f.write(f'平均绝对误差: {mean_absolute_error(y_test,y_pred)}\\n')\n    f.write(f'决定系数: {r2_score(y_test,y_pred)}\\n')\n"
+        }
+      ]
+    },
+    {
+      "code": "3.2.1",
+      "sourceNotebookSha256": "ba5e5cc5aff98ea7cb8aa3f309cffd9521fdcdb55172b304cc2cdf9ebcfed5ac",
+      "sourceOutputs": 1,
+      "codeSha256": "02c02f87629d22ee3fecffcfd813e47dda66c3854cd443e67c60cb16a838ea1e",
+      "cells": [
+        {
+          "id": "solution-1",
+          "source": "import onnxruntime as ort\nimport numpy as np\nimport scipy.special\nfrom PIL import Image\n\n\n# 预处理图像\ndef preprocess_image(image, resize_size=256, crop_size=224, mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]):\n  image = image.resize((resize_size, resize_size), Image.BILINEAR)\n  w, h = image.size\n  left = (w - crop_size) / 2\n  top = (h - crop_size) / 2\n  image = image.crop((left, top, left + crop_size, top + crop_size))\n  image = np.array(image).astype(np.float32)\n  image = image / 255.0\n  image = (image - mean) / std\n  image = np.transpose(image, (2, 0, 1))\n  image = image.reshape((1,) + image.shape)\n  return image\n\n\n# 模型加载 2分\nsession = ort.InferenceSession('resnet.onnx')\n\n\n# 加载类别标签\nlabels_path = 'labels.txt'\nwith open(labels_path) as f:\n  labels = [line.strip() for line in f.readlines()]\n\n\n# 获取模型输入和输出的名称\ninput_name = session.get_inputs()[0].name\noutput_name = session.get_outputs()[0].name\n\n\n# 加载图片 2分\nimage = Image.open('img_test.jpg').convert('RGB')\n\n\n# 预处理图片 2分\nprocessed_image = preprocess_image(image)\n\n\n# 确保输入数据是 float32 类型\nprocessed_image = processed_image.astype(np.float32)\n\n\n# 进行图片识别 2分\noutput = session.run([output_name], {input_name: processed_image})[0]\n\n\n# 应用 softmax 函数获取概率 2分\nprobabilities = scipy.special.softmax(output, axis=-1)\n\n\n# 获取最高的5个概率和对应的类别索引 3分\ntop5_idx = np.argsort(probabilities[0])[-5:][::-1]\ntop5_prob = probabilities[0][top5_idx]\n\n\n# 打印结果\nprint(\"Top 5 predicted classes:\")\nfor i in range(5):\n  print(f\"{i+1}: {labels[top5_idx[i]]} - Probability: {top5_prob[i]}\")\n"
+        }
+      ]
+    },
+    {
+      "code": "3.2.2",
+      "sourceNotebookSha256": "9416cbec19d42c1caea2cca6acda501fede2648ef7dc1f1e52b8ac94bd13ba16",
+      "sourceOutputs": 1,
+      "codeSha256": "168e29a2253fb467adb940ba86286ccd494476e7bf1782322aaf894a91df16a4",
+      "cells": [
+        {
+          "id": "solution-1",
+          "source": "import onnxruntime\nimport numpy as np\nfrom PIL import Image\n\n\n# 加载ONNX模型  2分\nort_session = onnxruntime.InferenceSession('mnist.onnx')   \n\n\n# 加载图像 2分\nimage = Image.open('img_test.png').convert('L')  # 转为灰度图\n\n\n#图像预处理 \nimage = image.resize((28, 28))  # 调整大小为MNIST模型的输入尺寸2分\nimage_array = np.array(image, dtype=np.float32)  # 转为numpy数组2分\nimage_array = np.expand_dims(image_array, axis=0)  # 添加batch维度2分\nimage_array = np.expand_dims(image_array, axis=0)  # 添加通道维度2分\n\n\n#返回模型输入列表 2分\nort_inputs = {ort_session.get_inputs()[0].name: image_array}\n# 执行预测 2分\nort_outs = ort_session.run(None, ort_inputs)\n\n\n# 获取预测结果 2分\npredicted_class = np.argmax(ort_outs[0])\n\n\n# 输出预测结果\nprint(f\"Predicted class: {predicted_class}\")\n"
+        }
+      ]
+    },
+    {
+      "code": "3.2.3",
+      "sourceNotebookSha256": "1d19640eaf3cf27fb2b6b777fc357c83b3d4063f223e34dd910760a391a37d64",
+      "sourceOutputs": 1,
+      "codeSha256": "de5453ca97a5bfcf98ca94b02c7df6821949217e6d8a0c99251b4b785f4cae6b",
+      "cells": [
+        {
+          "id": "solution-1",
+          "source": "# 导入必要的库\nimport numpy as np\nfrom PIL import Image\nimport onnxruntime as ort\n\n\n# 定义预处理函数，用于将图片转换为模型所需的输入格式\ndef preprocess(image_path):\n    input_shape = (1, 1, 64, 64)    # 模型输入期望的形状，这里是 (N, C, H, W)，N=batch size, C=channels, H=height, W=width\n    img = Image.open(image_path).convert('L')    # 打开图像文件并将其转换为灰度图  1分\n    img = img.resize((64, 64))    # 调整图像大小到模型输入所需的尺寸\n    img_data = np.array(img, dtype=np.float32)    # 将PIL图像对象转换为numpy数组，并确保数据类型是float32\n    # 调整数组的形状以匹配模型输入的形状\n    img_data = np.expand_dims(img_data, axis=0)  # 添加 batch 维度\n    img_data = np.expand_dims(img_data, axis=1)  # 添加 channel 维度\n    assert img_data.shape == input_shape, f\"Expected shape {input_shape}, but got {img_data.shape}\"    # 确保最终的形状与模型输入要求的形状一致\n    return img_data    # 返回预处理后的图像数据\n\n\n# 定义情感类别与数字标签的映射表 3分\nemotion_table = {'neutral':0, 'happiness':1, 'surprise':2, 'sadness':3, 'anger':4, 'disgust':5, 'fear':6, 'contempt':7}\n\n\n# 加载模型 3分\nort_session = ort.InferenceSession('emotion-ferplus.onnx')    # 使用onnxruntime创建一个会话，用于加载并运行模型\n\n\n# 加载本地图片并进行预处理 3分\ninput_data = preprocess('img_test.png')\n\n\n# 准备输入数据，确保其符合模型输入的要求\nort_inputs = {ort_session.get_inputs()[0].name: input_data}    # ort_session.get_inputs()[0].name 是获取模型的第一个输入的名字\n\n\n# 运行模型，进行预测 3分\nort_outs = ort_session.run(None, ort_inputs)\n\n\n# 解码模型输出，找到预测概率最高的情感类别 3分\npredicted_label = np.argmax(ort_outs[0])\n\n\n# 根据预测的标签找到对应的情感名称 3分\npredicted_emotion = list(emotion_table.keys())[predicted_label]\n\n\n# 输出预测的情感\nprint(f\"Predicted emotion: {predicted_emotion}\")\n"
+        }
+      ]
+    },
+    {
+      "code": "3.2.4",
+      "sourceNotebookSha256": "14ff61807bfbbf244c7840fa1f18a3d0856449f3b049781640d5e8ef89c08c63",
+      "sourceOutputs": 1,
+      "codeSha256": "96a8bf241f999383616aa3d5be17635ea68987efedf962e6551da51a0a3b7c5d",
+      "cells": [
+        {
+          "id": "solution-1",
+          "source": "import onnxruntime as ort\nimport numpy as np\nimport scipy.special\nfrom PIL import Image\n\n\n# 预处理图像\ndef preprocess_image(image, resize_size=256, crop_size=224, mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]):\n    image = image.resize((resize_size, resize_size), Image.BILINEAR)\n    w, h = image.size\n    left = (w - crop_size) / 2\n    top = (h - crop_size) / 2\n    image = image.crop((left, top, left + crop_size, top + crop_size))\n    image = np.array(image).astype(np.float32)\n    image = image / 255.0\n    image = (image - mean) / std\n    image = np.transpose(image, (2, 0, 1))\n    image = image.reshape((1,) + image.shape)\n    return image\n\n\n# 加载模型  2分\nsession = ort.InferenceSession('flower-detection.onnx')\n\n\n# 加载类别标签 2分\nwith open('labels.txt') as f:\n    labels = [line.strip() for line in f.readlines()]\n\n\n# 获取模型输入和输出的名称\ninput_name = session.get_inputs()[0].name\noutput_name = session.get_outputs()[0].name\n\n\n# 加载图片  2分\nimage = Image.open('flower_test.png').convert('RGB')\n\n\n# 预处理图片  2分\nprocessed_image = preprocess_image(image)\n\n\n# 确保输入数据是 float32 类型\nprocessed_image = processed_image.astype(np.float32)\n\n\n# 进行图片识别  2分\noutput = session.run([output_name], {input_name: processed_image})[0]\n\n\n# 应用 softmax 函数获取识别分类后的准确率  2分\naccuracy = scipy.special.softmax(output, axis=-1)\n\n\n# 获取预测的类别索引\npredicted_idx =  np.argmax(accuracy[0])\n\n\n# 获取预测的准确值（转换为百分比）\nprob_percentage =  accuracy[0,predicted_idx] * 100\n\n\n# 获取预测的类别标签\npredicted_label = labels[predicted_idx]\n\n\n# 输出预测结果，包含百分比形式的概率\nprint(f\"Predicted class: {predicted_label}, Accuracy: {prob_percentage:.2f}%\")\n"
+        }
+      ]
+    },
+    {
+      "code": "3.2.5",
+      "sourceNotebookSha256": "30fff07908d57157bed2389cfa1018496298fb00d4871a63854b4523f3f52e1e",
+      "sourceOutputs": 1,
+      "codeSha256": "b8548146ce3671452152d487076f46ef9f07d6bf6ef5236c9a2882e7a5682369",
+      "cells": [
+        {
+          "id": "solution-1",
+          "source": "import os\nimport time\nimport cv2\nimport numpy as np\nimport vision.utils.box_utils_numpy as box_utils\nimport onnxruntime as ort\n\n# 定义预测函数，对模型输出的边界框和置信度进行后处理\ndef predict(width, height, confidences, boxes, prob_threshold, iou_threshold=0.3, top_k=-1):\n    boxes = boxes[0]\n    confidences = confidences[0]\n    picked_box_probs = []\n    picked_labels = []\n    for class_index in range(1, confidences.shape[1]):\n        probs = confidences[:, class_index]\n        mask = probs > prob_threshold\n        probs = probs[mask]\n        if probs.shape[0] == 0:\n            continue\n        subset_boxes = boxes[mask, :]\n        box_probs = np.concatenate([subset_boxes, probs.reshape(-1, 1)], axis=1)\n        box_probs = box_utils.hard_nms(box_probs,\n                                       iou_threshold=iou_threshold,\n                                       top_k=top_k,\n                                       )\n        picked_box_probs.append(box_probs)\n        picked_labels.extend([class_index] * box_probs.shape[0])\n    if not picked_box_probs:\n        return np.array([]), np.array([]), np.array([])\n    picked_box_probs = np.concatenate(picked_box_probs)\n    picked_box_probs[:, 0] *= width\n    picked_box_probs[:, 1] *= height\n    picked_box_probs[:, 2] *= width\n    picked_box_probs[:, 3] *= height\n    return picked_box_probs[:, :4].astype(np.int32), np.array(picked_labels), picked_box_probs[:, 4]\n\n# 从标签文件中读取每一行，并去除行首尾的空白字符，得到类别名称列表 2分\nclass_names = [name.strip() for name in open('voc-model-labels.txt').readlines()]\n\n# 创建 ONNX Runtime 的推理会话，用于运行模型进行推理 2分\nort_session = ort.InferenceSession('version-RFB-320.onnx')\n\n# 获取模型输入的名称 2分\ninput_name = ort_session.get_inputs()[0].name\n\n# 定义保存检测结果图像的目录路径\nresult_path = \"./detect_imgs_results_onnx\"\n\n# 定义置信度阈值，用于筛选出置信度较高的检测结果\nthreshold = 0.7\n# 定义存储待检测图像的目录路径\npath = \"imgs\"\n# 用于统计所有图像中检测到的目标框总数，初始化为 0\nsum = 0\n\n# 如果保存结果的目录不存在，则创建该目录 2分\nif not os.path.exists(result_path):\n    os.mkdir(result_path)\n    \n# 获取指定目录下的所有文件和文件夹名称列表\nlistdir = os.listdir(path)\n\n# 遍历目录下的每个文件\nfor file_path in listdir:\n    # 拼接图像文件的完整路径\n    img_path = os.path.join(path, file_path)\n    # 使用 OpenCV 读取图像文件 2分\n    orig_image = cv2.imread(img_path)\n    # 将图像从 BGR 颜色空间转换为 RGB 颜色空间（许多模型要求输入为 RGB 格式）\n    image = cv2.cvtColor(orig_image, cv2.COLOR_BGR2RGB)\n    # 将图像调整为 320x240 的尺寸（符合模型输入的尺寸要求） 2分\n    image = cv2.resize(image, (320, 240))\n    # 定义图像归一化的均值数组 2分\n    image_mean = np.array([127, 127, 127])\n    # 对图像进行归一化处理，减去均值并除以 128\n    image = (image - image_mean) / 128\n    # 将图像的维度从 (高度, 宽度, 通道数) 转换为 (通道数, 高度, 宽度)\n    image = np.transpose(image, [2, 0, 1])\n    # 在第一个维度上扩展一个维度，将图像变为 (1, 通道数, 高度, 宽度)，以符合模型输入的维度要求  1分\n    image = np.expand_dims(image, axis=0)\n    # 将图像数据类型转换为 float32 类型\n    image = image.astype(np.float32)\n    # 记录开始时间，用于计算模型推理的耗时\n    time_time = time.time()\n    # 使用 ONNX Runtime 运行模型，输入图像数据，得到模型输出的置信度和边界框  2分\n    confidences, boxes = ort_session.run(None, {input_name: image})\n    # 计算并打印模型推理的耗时\n    print(\"cost time:{}\".format(time.time() - time_time))\n    # 调用 predict 函数对模型输出的边界框和置信度进行后处理，得到最终的边界框、类别标签和置信度\n    boxes, labels, probs = predict(orig_image.shape[1], orig_image.shape[0], confidences, boxes, threshold)\n    # 遍历每个检测到的目标框\n    for i in range(boxes.shape[0]):\n        # 获取当前目标框的坐标\n        box = boxes[i, :]\n        # 生成当前目标框的标签字符串，包含类别名称和置信度\n        label = f\"{class_names[labels[i]]}: {probs[i]:.2f}\"\n\n        # 在原始图像上绘制目标框，颜色为 (255, 255, 0)，线条粗细为 4\n        cv2.rectangle(orig_image, (box[0], box[1]), (box[2], box[3]), (255, 255, 0), 4)\n        # 将绘制了目标框的图像保存到结果目录中\n        cv2.imwrite(os.path.join(result_path, file_path), orig_image)\n    # 累加当前图像中检测到的目标框数量到总数中\n    sum += boxes.shape[0]\n# 打印所有图像中检测到的目标框总数\nprint(\"sum:{}\".format(sum))\n"
+        }
+      ]
+    }
+  ]
+}

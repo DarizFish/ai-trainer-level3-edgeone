@@ -1,0 +1,296 @@
+{
+  "version": "2026-07-17-v1",
+  "capturedAt": "2026-07-17",
+  "reviewMethod": "official_docx_blank_slots",
+  "notes": "逐题读取指导手册配套的官方 Word 空白模板，按题干和评分细则整理可直接填写的示例。示例不是指导手册标准答案；仅在题目、评分表和模板文件哈希全部匹配时应用。",
+  "answers": [
+    {
+      "code": "4.1.1",
+      "taskSha256": "1a7be7cb24e530619aa02df8a178b78e984af41021dc299171d853da3bdcefde",
+      "template": {
+        "name": "4.1.1.docx",
+        "sha256": "0d4e9596603f9a20bbc962fc067626e1a99edb2ccf59d79ce15d4c7aa2dcc65e",
+        "blankCount": 5
+      },
+      "fills": [
+        {
+          "section": "数据标注基础理论｜学习目标",
+          "answer": "掌握数据标注的基本概念、常见数据类型及其在人工智能训练中的作用。"
+        },
+        {
+          "section": "Label Studio 简介与安装｜学习目标",
+          "answer": "了解 Label Studio 的应用场景，能够完成安装配置并掌握界面与基本操作。"
+        },
+        {
+          "section": "文本数据标注｜学习目标",
+          "answer": "掌握文本分类、命名实体识别和情感标注的基本方法，能够使用 Label Studio 完成文本标注。"
+        },
+        {
+          "section": "图像数据标注｜学习目标",
+          "answer": "掌握图像分类、目标检测和图像分割的标注方法，能够完成图像数据集标注。"
+        },
+        {
+          "section": "视频数据标注｜学习目标",
+          "answer": "掌握动作识别和事件检测的标注方法，能够使用 Label Studio 完成视频标注。"
+        }
+      ],
+      "submissionChecklist": "只补充模板中 5 个空白学习目标，保留原有标题与内容；每个目标均使用可观察的“掌握 / 能够完成”表述，另存完成版 DOCX。"
+    },
+    {
+      "code": "4.1.2",
+      "taskSha256": "35846bce786de3fdd7be51de706bca35440872b75c4ba1096ac76571d0a6272a",
+      "template": {
+        "name": "4.1.2.docx",
+        "sha256": "72c65d21ac3e1c5fdf3cb7e92beb1966eec6ad98662f371ad0ab7e10adf35a0f",
+        "blankCount": 5
+      },
+      "fills": [
+        {
+          "section": "网页爬虫基础理论｜学习目标",
+          "answer": "理解网页爬虫的概念、工作流程和基本结构，能够说明 robots.txt 的作用与合规要求。"
+        },
+        {
+          "section": "常用网页爬虫工具简介｜学习目标",
+          "answer": "了解 BeautifulSoup、Scrapy 和 Selenium 的特点与适用场景，能够根据任务选择合适工具。"
+        },
+        {
+          "section": "网页数据解析｜学习目标",
+          "answer": "掌握 HTML 解析、XPath 和 CSS 选择器，能够从静态网页提取目标数据。"
+        },
+        {
+          "section": "Scrapy 框架实战｜学习目标",
+          "answer": "掌握 Scrapy 项目创建、抓取规则配置和数据导出，能够完成财务报告采集任务。"
+        },
+        {
+          "section": "数据清洗与处理｜学习目标",
+          "answer": "掌握爬取数据的去重、缺失值处理、格式转换与规范化方法。"
+        }
+      ],
+      "submissionChecklist": "按官方模板顺序填入 5 个学习目标，保留工具名称、实践内容和评估方式；采集任务须遵守 robots.txt、网站条款和数据合规要求。"
+    },
+    {
+      "code": "4.1.3",
+      "taskSha256": "467dc5df7ead42ca17e28fc7211e8e7a17ca935a712a88ea98f31a51ffb85e4f",
+      "template": {
+        "name": "4.1.3.docx",
+        "sha256": "2288ca03b7ec6d5e34c2eb2d3e914bbc807ef18b770f04fa41621a20bb8dc49c",
+        "blankCount": 5
+      },
+      "fills": [
+        {
+          "section": "引言｜学习目标",
+          "answer": "了解数据清洗在康复数据处理和人工智能模型训练中的作用。"
+        },
+        {
+          "section": "数据清洗基础理论｜学习目标",
+          "answer": "掌握数据清洗的基本概念、常见任务与标准流程。"
+        },
+        {
+          "section": "常用数据清洗工具简介｜学习目标",
+          "answer": "了解 Pandas、NumPy、OpenRefine 和 Dask 的特点与适用场景。"
+        },
+        {
+          "section": "环境搭建与工具安装｜学习目标",
+          "answer": "能够安装配置 Python 及 Pandas、NumPy、OpenRefine、Dask 数据清洗环境。"
+        },
+        {
+          "section": "Pandas 实战｜学习目标",
+          "answer": "掌握使用 Pandas 进行数据导入导出、筛选去重、缺失值处理、类型转换与时间序列处理的方法。"
+        }
+      ],
+      "submissionChecklist": "只填写模板中 5 个空白学习目标；目标应与紧随其后的内容一一对应，并保留综合项目实践部分。"
+    },
+    {
+      "code": "4.1.4",
+      "taskSha256": "01f5f613ae617f3861625373637542921853522f22335a525ff3c9b0594e983a",
+      "template": {
+        "name": "4.1.4.docx",
+        "sha256": "d2f0c5b5f5254ee566d15a4af3b23311fdb6185341fefc1395b1f14e3707f68d",
+        "blankCount": 5
+      },
+      "fills": [
+        {
+          "section": "Pandas 简介与安装｜学习目标",
+          "answer": "了解 Pandas 的主要功能，能够安装配置环境并完成 CSV、Excel、SQL 数据的导入导出。"
+        },
+        {
+          "section": "数据筛选与过滤｜学习目标",
+          "answer": "掌握条件筛选、重复值删除和缺失值识别、删除与填充方法。"
+        },
+        {
+          "section": "数据转换｜学习目标",
+          "answer": "掌握数据类型转换、时间序列处理以及数据列分割与合并方法。"
+        },
+        {
+          "section": "数据合并与重塑｜学习目标",
+          "answer": "掌握使用 concat、merge、pivot 和 melt 完成数据合并与重塑。"
+        },
+        {
+          "section": "数据分组与聚合｜学习目标",
+          "answer": "掌握 groupby 及 sum、mean、count 等聚合方法，能够汇总康复数据。"
+        }
+      ],
+      "submissionChecklist": "按模板中的 5 个空白顺序填写，确保每个学习目标覆盖该节列出的 Pandas 操作，并保留原有综合项目实践内容。"
+    },
+    {
+      "code": "4.1.5",
+      "taskSha256": "ee5ddc121dbdedecc9f99c4dc7f968acf94d222117ed33b37281a28a77bf61e2",
+      "template": {
+        "name": "4.1.5.docx",
+        "sha256": "eeb013ac9f1fc8556a5b4f637e9a65078326597383b82d74f76c209b4c3cdd3e",
+        "blankCount": 5
+      },
+      "fills": [
+        {
+          "section": "数据可视化基础理论｜学习目标",
+          "answer": "理解数据可视化的概念、目的和优势，能够根据数据选择常见图表类型。"
+        },
+        {
+          "section": "Matplotlib 简介与安装｜学习目标",
+          "answer": "了解 Matplotlib 的应用场景、安装配置、基本架构与常用组件。"
+        },
+        {
+          "section": "Matplotlib 基本绘图｜学习目标",
+          "answer": "掌握使用 Matplotlib 绘制折线图、条形图和饼图，并设置标题、坐标轴、图例和颜色。"
+        },
+        {
+          "section": "Plotly 简介与安装｜学习目标",
+          "answer": "了解 Plotly 的应用场景，能够安装配置并在 Jupyter Notebook 中使用。"
+        },
+        {
+          "section": "Plotly 交互式绘图｜学习目标",
+          "answer": "掌握使用 Plotly 绘制交互式折线图、散点图、饼图和地理图表，并配置缩放、平移和悬停交互。"
+        }
+      ],
+      "submissionChecklist": "填满 5 个空白学习目标，分别对应基础理论、Matplotlib 和 Plotly 内容；保留项目实战、答疑和评估测试结构。"
+    },
+    {
+      "code": "4.2.2",
+      "taskSha256": "212d55c34777bbdda07926b50c5065218107c5b59fd5cce873619cf5ae9f30eb",
+      "template": {
+        "name": "4.2.2.docx",
+        "sha256": "1062270ef2cfec3cd0cd894275b0a22cbdc2201c03c61ff8ab7d4a02bdb8ff11",
+        "blankCount": 5
+      },
+      "fills": [
+        {
+          "section": "数据采集方案｜第 1 处",
+          "answer": "医生专业标注"
+        },
+        {
+          "section": "数据清洗与预处理",
+          "answer": "统一影像尺寸、分辨率与像素强度，去除无效或重复影像，并进行标准化和必要的数据增强"
+        },
+        {
+          "section": "模型训练与验证",
+          "answer": "按患者维度划分训练集和验证集，选用合适的深度学习模型训练，并用独立验证集评估"
+        },
+        {
+          "section": "模型测试与优化",
+          "answer": "使用独立测试集评估灵敏度、特异度、准确率和 AUC，分析误诊、漏诊并由医生复核后迭代模型"
+        },
+        {
+          "section": "系统优化与升级｜末处",
+          "answer": "模型对不同疾病、设备和人群的泛化能力与诊断准确性"
+        }
+      ],
+      "submissionChecklist": "将 5 项内容填回对应下划线，保留医疗影像、患者信息、数据脱敏、部署和安全条款；示例用于训练流程设计，不能替代医生诊断。"
+    },
+    {
+      "code": "4.2.3",
+      "taskSha256": "daf2b5cb939232a106a57c669a721d4ac8ed35351791ee8bb678c745301139b9",
+      "template": {
+        "name": "4.2.3.docx",
+        "sha256": "1a173bb6f0a0620fe2b18c00eeac96830b0d35aa97a3e6177067424f89227693",
+        "blankCount": 5
+      },
+      "fills": [
+        {
+          "section": "多角度覆盖",
+          "answer": "监控区域"
+        },
+        {
+          "section": "数据传输与存储",
+          "answer": "视频存储与备份系统"
+        },
+        {
+          "section": "视频流预处理",
+          "answer": "对视频进行去噪、稳像、畸变校正、尺寸统一和低照度增强，并按帧率要求抽帧"
+        },
+        {
+          "section": "行为分析与异常检测",
+          "answer": "使用目标检测、跟踪和时空行为识别模型，识别闯入、徘徊、冲突和遗留物等异常并触发分级告警"
+        },
+        {
+          "section": "算法优化",
+          "answer": "异常行为识别的准确率、召回率、实时性和复杂环境适应能力"
+        }
+      ],
+      "submissionChecklist": "按官方模板顺序填写 5 处空白，同时保留隐私模糊、数据融合、合规和安全防护要求；告警结果应由安保人员复核。"
+    },
+    {
+      "code": "4.2.4",
+      "taskSha256": "e9bc2da90b70baeea7b4b49678b917c870acba8a5c8de5f9408c81bca98d5ba6",
+      "template": {
+        "name": "4.2.4.docx",
+        "sha256": "ae167d719167a6218af4dcdb05d0d9be97f09b63c475d51626926022eaeca944",
+        "blankCount": 5
+      },
+      "fills": [
+        {
+          "section": "多传感器融合",
+          "answer": "同步采集摄像头、毫米波雷达、激光雷达、GNSS/IMU 等数据，统一时间戳和坐标系，保留传感器标定信息"
+        },
+        {
+          "section": "场景覆盖",
+          "answer": "覆盖晴雨雾雪、昼夜、城乡道路、施工区、路口和长尾危险事件等多样化场景"
+        },
+        {
+          "section": "数据质量控制",
+          "answer": "检查传感器标定、时间同步、清晰度、完整性和异常值，剔除或修复不合格样本并记录质量标签"
+        },
+        {
+          "section": "数据标注方案｜第 3 处",
+          "answer": "标注员培训与考核"
+        },
+        {
+          "section": "数据整合与存储",
+          "answer": "经过版本管理、质量验收且可追溯的标准化训练"
+        }
+      ],
+      "submissionChecklist": "填写 5 处空白后，逐项核对多传感器时间同步、场景多样性、标注规范、复查和版本追溯；不删除模板已有的数据加密要求。"
+    },
+    {
+      "code": "4.2.5",
+      "taskSha256": "63e69ae72f030f22d1c4a9e205a46ded240976748c56851997e6a878396be982",
+      "template": {
+        "name": "4.2.5.docx",
+        "sha256": "5ad70961862121b630fbcbf60cab464060c5b769d8f9e8e60fff0bcdf13d6b2b",
+        "blankCount": 5
+      },
+      "fills": [
+        {
+          "section": "图像标注工具",
+          "answer": "CVAT、Label Studio"
+        },
+        {
+          "section": "深度学习模型",
+          "answer": "适用于目标检测、语义分割和损伤区域识别"
+        },
+        {
+          "section": "跨学科团队协作",
+          "answer": "跨学科协作"
+        },
+        {
+          "section": "数据安全与隐私保护",
+          "answer": "加密技术、分级访问控制和可靠备份机制"
+        },
+        {
+          "section": "用户体验与公众教育",
+          "answer": "虚拟现实（VR）和增强现实（AR）"
+        }
+      ],
+      "submissionChecklist": "将 5 项填入对应下划线，并保留三维模型、属性标签、模型迭代、权利合规和数字档案可信性内容；工具名称可用同类合规工具替换。"
+    }
+  ]
+}

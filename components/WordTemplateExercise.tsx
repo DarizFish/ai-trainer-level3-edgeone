@@ -1,0 +1,146 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+import type { PracticalTask } from "@/lib/content";
+import { createPracticalWordExercise } from "@/lib/practical-word-exercise";
+import { SourceBadge } from "./SourceBadge";
+
+type WordDraft = {
+  version: 1;
+  answers: Record<string, string>;
+  checks: Record<string, boolean>;
+};
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}
+
+function restoreDraft(serialized: string, fieldIds: Set<string>) {
+  try {
+    const candidate = JSON.parse(serialized) as Partial<WordDraft>;
+    if (candidate.version !== 1 || !isRecord(candidate.answers) || !isRecord(candidate.checks)) return null;
+    const answers: Record<string, string> = {};
+    const checks: Record<string, boolean> = {};
+    for (const fieldId of fieldIds) {
+      if (typeof candidate.answers[fieldId] === "string") answers[fieldId] = (candidate.answers[fieldId] as string).slice(0, 5_000);
+      if (typeof candidate.checks[fieldId] === "boolean") checks[fieldId] = candidate.checks[fieldId] as boolean;
+    }
+    return { answers, checks };
+  } catch {
+    return null;
+  }
+}
+
+export function WordTemplateExercise({ task, userEmail }: { task: PracticalTask; userEmail: string | null }) {
+  const exercise = useMemo(() => createPracticalWordExercise(task), [task]);
+  const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [checks, setChecks] = useState<Record<string, boolean>>({});
+  const [revealed, setRevealed] = useState(false);
+  const [restored, setRestored] = useState(false);
+  const storageKey = useMemo(() => exercise && userEmail
+    ? `ai-trainer-word-draft-v1:${encodeURIComponent(userEmail)}:${task.code}:${exercise.materialSha256.slice(0, 16)}`
+    : null, [exercise, task.code, userEmail]);
+
+  useEffect(() => {
+    let cancelled = false;
+    queueMicrotask(() => {
+      if (cancelled) return;
+      const fieldIds = new Set(exercise?.fields.map((field) => field.id) ?? []);
+      const draft = storageKey ? restoreDraft(localStorage.getItem(storageKey) ?? "", fieldIds) : null;
+      setAnswers(draft?.answers ?? {});
+      setChecks(draft?.checks ?? {});
+      setRestored(true);
+    });
+    return () => { cancelled = true; };
+  }, [exercise, storageKey]);
+
+  useEffect(() => {
+    if (!restored || !storageKey) return;
+    const draft: WordDraft = { version: 1, answers, checks };
+    localStorage.setItem(storageKey, JSON.stringify(draft));
+  }, [answers, checks, restored, storageKey]);
+
+  if (!exercise) return null;
+  const fieldCount = exercise.fields.length;
+  const fieldByBlock = new Map(exercise.fields.map((field) => [field.blockIndex, field]));
+  const answeredCount = exercise.fields.filter((field) => answers[field.id]?.trim()).length;
+  const checkedCount = exercise.fields.filter((field) => Object.prototype.hasOwnProperty.call(checks, field.id)).length;
+  const sourceDocument = task.materials.find((material) => material.kind === "document");
+
+  function requireSignIn() {
+    window.location.assign(`/account?mode=login&return_to=${encodeURIComponent(`/practical/${task.code}`)}`);
+  }
+
+  function changeAnswer(fieldId: string, value: string) {
+    if (!userEmail) return requireSignIn();
+    setAnswers((current) => ({ ...current, [fieldId]: value.slice(0, 5_000) }));
+    setChecks((current) => {
+      const next = { ...current };
+      delete next[fieldId];
+      return next;
+    });
+  }
+
+  function checkAnswer(fieldId: string, achieved: boolean) {
+    if (!userEmail) return requireSignIn();
+    setChecks((current) => ({ ...current, [fieldId]: achieved }));
+  }
+
+  function toggleReview() {
+    setRevealed((value) => !value);
+  }
+
+  return <section id={`work-${task.code}`} className="word-template-exercise">
+    <aside id={`task-${task.code}`} className="word-workbench-context">
+      <p className="eyebrow">任务与材料</p>
+      <h2>完成这份文档</h2>
+      <p>直接补全官方 Word 模板中的 {fieldCount} 处横线，每处 1 分。</p>
+      <details className="word-task-requirements">
+        <summary>查看完整题目要求</summary>
+        <div className="task-description">{task.description}</div>
+      </details>
+      {sourceDocument?.url && <a className="word-download-link" href={sourceDocument.url} download>下载原始 Word</a>}
+      <section className="word-context-progress" aria-label="作答状态">
+        <header><p className="eyebrow">作答状态</p><strong>{answeredCount}<small> / {fieldCount}</small></strong><span>处已填写</span></header>
+        <nav aria-label="填写位置">{exercise.fields.map((field, index) => {
+          const answered = Boolean(answers[field.id]?.trim());
+          return <a className={answered ? "complete" : "pending"} href={`#word-field-${task.code}-${field.id}`} key={field.id}><span>{answered ? "✓" : index + 1}</span><b>{field.label}</b></a>;
+        })}</nav>
+        <div className="word-side-review">{revealed ? <><SourceBadge source={task.answerSource} basis={task.answerBasis} /><small>参考填写已显示在对应横线下方。</small></> : <small>{userEmail ? "草稿自动保存" : "登录后可填写"}</small>}<button type="button" className={`button ${revealed ? "button-quiet" : "button-primary"}`} onClick={toggleReview}>{revealed ? "返回填写" : "完成并核对"}</button></div>
+      </section>
+    </aside>
+    <div className="word-document-canvas">
+      <header className="word-exercise-heading">
+        <p className="word-document-label">待补全文档</p>
+        <p className="word-exercise-progress" aria-label={`已填写 ${answeredCount} 处，共 ${exercise.fields.length} 处`}>已填写 <strong>{answeredCount}</strong> / {exercise.fields.length}</p>
+      </header>
+      <div className="document-preview-page word-exercise-document" role="document" aria-label={`${exercise.materialName} 在线填写`}>
+        {exercise.blocks.map((block, blockIndex) => {
+          const field = fieldByBlock.get(blockIndex);
+          if (!field) return <p className={`document-preview-${block.kind}`} key={`${blockIndex}-${block.text}`}>{block.text}</p>;
+          const checked = Object.prototype.hasOwnProperty.call(checks, field.id);
+          const fieldNumber = exercise.fields.indexOf(field) + 1;
+          return <article id={`word-field-${task.code}-${field.id}`} className={`word-fill-slot ${checked ? checks[field.id] ? "achieved" : "revise" : ""}`} data-word-answer={field.id} key={field.id}>
+            <p className="word-fill-line">
+              <span>{field.before}</span>
+              <label className="word-inline-field"><span className="sr-only">{field.label}</span><input aria-label={`${field.label}：填写内容`} type="text" value={answers[field.id] ?? ""} readOnly={!userEmail} maxLength={5_000} onFocus={() => { if (!userEmail) requireSignIn(); }} onChange={(event) => changeAnswer(field.id, event.target.value)} placeholder="填写" /></label>
+              {field.after && <span>{field.after}</span>}
+            </p>
+            {revealed && <div className="word-fill-reference">
+              <p><b>参考填写</b><span>{field.referenceAnswer}</span></p>
+              <div role="group" aria-label={`核对空白 ${fieldNumber}`}>
+                <button type="button" className={checked && !checks[field.id] ? "active revise" : ""} aria-pressed={checked && !checks[field.id]} onClick={() => checkAnswer(field.id, false)}>未达到 · 0 分</button>
+                <button type="button" className={checked && checks[field.id] ? "active achieved" : ""} aria-pressed={checked && checks[field.id]} onClick={() => checkAnswer(field.id, true)}>达到 · 1 分</button>
+              </div>
+            </div>}
+          </article>;
+        })}
+      </div>
+      <footer id={`review-${task.code}`} className="word-exercise-actions">
+        <div className="word-review-status">{revealed ? <><SourceBadge source={task.answerSource} basis={task.answerBasis} /><span>逐处对照参考填写后，确认每空得分。</span></> : <span>{userEmail ? "草稿与核分自动保存在当前浏览器" : "登录后可填写并核分"}</span>}</div>
+        <button type="button" className={`button ${revealed ? "button-quiet" : "button-primary"}`} onClick={toggleReview}>{revealed ? "返回填写" : "完成填写，核对答案"}</button>
+      </footer>
+      {revealed && checkedCount === fieldCount && <p className="correct word-exercise-saved">✓ 本题已完成全部核分，当前 {exercise.fields.filter((field) => checks[field.id]).length} / {task.maxScore} 分；修改填写会撤销对应旧分数。</p>}
+    </div>
+  </section>;
+}
