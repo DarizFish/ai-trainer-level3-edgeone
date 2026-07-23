@@ -1,4 +1,4 @@
-import Link from "next/link";
+import IntentLink from "@/components/IntentLink";
 import { content } from "@/lib/content";
 import { HomeAccountCta } from "@/components/AccountSession";
 
@@ -38,9 +38,9 @@ export default function HomePage() {
           <p>练习、订正、模拟、实操，所有进度都围绕同一份内容版本保存。</p>
         </div>
         <div className="path-grid">
-          <Link className="path-card" href="/theory"><span className="path-number">壹</span><h3>理论题库</h3><p>判断、单选、多选，按领域筛选；即时评分、错题与收藏。</p><b>900 道全题库 →</b></Link>
-          <Link className="path-card featured" href="/theory/mock"><span className="path-number">贰</span><h3>90 分钟模拟</h3><p>官方卷或随机卷，190 题、100 分，完全按规则计分。</p><b>进入模拟考场 →</b></Link>
-          <Link className="path-card" href="/practical"><span className="path-number">叁</span><h3>实操与实验</h3><p>逐项对照官方评分表，Python 代码直接在浏览器运行。</p><b>40 道实操题 →</b></Link>
+          <IntentLink className="path-card" href="/theory"><span className="path-number">壹</span><h3>理论题库</h3><p>判断、单选、多选，按领域筛选；即时评分、错题与收藏。</p><b>900 道全题库 →</b></IntentLink>
+          <IntentLink className="path-card featured" href="/theory/mock"><span className="path-number">贰</span><h3>90 分钟模拟</h3><p>官方卷或随机卷，190 题、100 分，完全按规则计分。</p><b>进入模拟考场 →</b></IntentLink>
+          <IntentLink className="path-card" href="/practical"><span className="path-number">叁</span><h3>实操与实验</h3><p>逐项对照官方评分表，Python 代码直接在浏览器运行。</p><b>40 道实操题 →</b></IntentLink>
         </div>
       </section>
 
@@ -61,7 +61,7 @@ export default function HomePage() {
           <pre><code><span className="code-key">import</span> pandas <span className="code-key">as</span> pd{"\n"}data = pd.read_csv(<span className="code-string">&quot;patient_data.csv&quot;</span>){"\n"}<span className="code-comment"># 清洗、分析、建模，全在本机运行</span>{"\n"}data.describe()</code></pre>
           <div className="lab-result">浏览器内核 · 按需启动　原始模板 · 一键恢复</div>
         </div>
-        <div className="lab-copy"><p className="eyebrow">无需安装本机环境</p><h2>在浏览器中启动完整 Notebook</h2><p>首次打开会准备 Python 内核和题目素材；代码在独立浏览器内核中执行。支持数据处理、机器学习、图表与 ONNX 浏览器模型实验，并提供原始模板恢复。</p><Link className="text-link" href="/practical?lab=1">查看 {stats.notebookTasks} 个在线实验 →</Link></div>
+        <div className="lab-copy"><p className="eyebrow">无需安装本机环境</p><h2>在浏览器中启动完整 Notebook</h2><p>首次打开会准备 Python 内核和题目素材；代码在独立浏览器内核中执行。支持数据处理、机器学习、图表与 ONNX 浏览器模型实验，并提供原始模板恢复。</p><IntentLink className="text-link" href="/practical?lab=1">查看 {stats.notebookTasks} 个在线实验 →</IntentLink></div>
       </section>
     </main>
   );

@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import IntentLink from "./IntentLink";
 
 type AccountUser = {
   displayName: string;
@@ -61,7 +61,7 @@ export function AccountControls({ mobile = false }: { mobile?: boolean }) {
   }
 
   if (!user) {
-    return <Link className={mobile ? "button button-primary" : "button button-small"} href={SIGN_IN_PATH}>登录 / 注册</Link>;
+    return <IntentLink className={mobile ? "button button-primary" : "button button-small"} href={SIGN_IN_PATH}>登录 / 注册</IntentLink>;
   }
 
   if (mobile) {
@@ -87,14 +87,14 @@ export function HomeAccountCta() {
 
   return <>
     <div className="hero-actions">
-      <Link
+      <IntentLink
         className="button button-primary"
         href={user ? "/theory" : "/account?mode=login&return_to=%2Ftheory"}
         aria-disabled={loading}
       >
         {loading ? "正在确认账号…" : user ? "继续理论练习" : "登录并开始练习"}
-      </Link>
-      <Link className="button button-quiet" href="/practical">浏览实操题库 <span aria-hidden>→</span></Link>
+      </IntentLink>
+      <IntentLink className="button button-quiet" href="/practical">浏览实操题库 <span aria-hidden>→</span></IntentLink>
     </div>
     <p className="hero-note">
       {loading

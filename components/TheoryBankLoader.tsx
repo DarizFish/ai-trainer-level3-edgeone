@@ -2,10 +2,8 @@
 
 import { useEffect, useState } from "react";
 import type { TheoryQuestion } from "@/lib/content";
-import TheoryPractice from "./TheoryPractice";
-import TheoryMock from "./TheoryMock";
 
-type TheoryBank = {
+export type TheoryBank = {
   version: string;
   questions: TheoryQuestion[];
   officialQuestionIds: string[];
@@ -38,7 +36,7 @@ function loadTheoryBank(contentVersion: string): Promise<TheoryBank> {
   return pendingTheoryBank;
 }
 
-function useTheoryBank(contentVersion: string) {
+export function useTheoryBank(contentVersion: string) {
   const [bank, setBank] = useState<TheoryBank | null>(
     cachedTheoryBank?.version === contentVersion ? cachedTheoryBank : null,
   );
@@ -70,7 +68,7 @@ function useTheoryBank(contentVersion: string) {
   };
 }
 
-function TheoryBankLoading({ error, retry }: { error: string; retry: () => void }) {
+export function TheoryBankLoading({ error, retry }: { error: string; retry: () => void }) {
   if (error) {
     return <div className="bank-loading bank-loading-error" role="alert">
       <b>{error}</b>
@@ -82,23 +80,4 @@ function TheoryBankLoading({ error, retry }: { error: string; retry: () => void 
     <span className="bank-loading-mark" aria-hidden>900</span>
     <div><b>正在载入题库</b><small>页面框架已就绪，题库只需缓存一次。</small></div>
   </div>;
-}
-
-export function TheoryPracticeLoader({ contentVersion }: { contentVersion: string }) {
-  const { bank, error, retry } = useTheoryBank(contentVersion);
-  return bank
-    ? <TheoryPractice questions={bank.questions} contentVersion={contentVersion} />
-    : <TheoryBankLoading error={error} retry={retry} />;
-}
-
-export function TheoryMockLoader({ contentVersion }: { contentVersion: string }) {
-  const { bank, error, retry } = useTheoryBank(contentVersion);
-  if (!bank) return <div className="container mock-entry"><TheoryBankLoading error={error} retry={retry} /></div>;
-
-  const questionById = new Map(bank.questions.map((question) => [question.id, question]));
-  const officialQuestions = bank.officialQuestionIds.flatMap((id) => {
-    const question = questionById.get(id);
-    return question ? [question] : [];
-  });
-  return <TheoryMock allQuestions={bank.questions} officialQuestions={officialQuestions} contentVersion={contentVersion} />;
 }

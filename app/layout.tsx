@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { AccountControls, AccountProvider } from "@/components/AccountSession";
-import { content } from "@/lib/content";
+import IntentLink from "@/components/IntentLink";
 import "./globals.css";
 
 const navigation = [
@@ -29,16 +28,14 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="zh-CN">
       <body>
         <AccountProvider>
-          <link rel="prefetch" href={`/content/theory-${encodeURIComponent(content.version)}.json`} as="fetch" />
-          <link rel="prefetch" href={`/content/practical-${encodeURIComponent(content.version)}.json`} as="fetch" />
           <header className="site-header">
             <div className="container nav-row">
-              <Link className="brand" href="/" aria-label="人工智能训练师三级备考站首页">
+              <IntentLink className="brand" href="/" aria-label="人工智能训练师三级备考站首页">
                 <span className="brand-mark">AI</span>
                 <span><b>人工智能训练师</b><small>三级全题库备考站</small></span>
-              </Link>
+              </IntentLink>
               <nav className="main-nav" aria-label="主导航">
-                {navigation.map(([label, href]) => <Link href={href} key={href}>{label}</Link>)}
+                {navigation.map(([label, href]) => <IntentLink href={href} key={href}>{label}</IntentLink>)}
               </nav>
               <div className="account-area desktop-account">
                 <AccountControls />
@@ -47,7 +44,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                 <summary><span aria-hidden="true">☰</span><span>菜单</span></summary>
                 <div className="mobile-menu-panel">
                   <nav aria-label="手机主导航">
-                    {navigation.map(([label, href]) => <Link href={href} key={href}>{label}<span aria-hidden="true">→</span></Link>)}
+                    {navigation.map(([label, href]) => <IntentLink href={href} key={href}>{label}<span aria-hidden="true">→</span></IntentLink>)}
                   </nav>
                   <div className="mobile-account">
                     <AccountControls mobile />
@@ -60,7 +57,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <footer className="site-footer">
             <div className="container footer-row">
               <div><b>人工智能训练师三级备考站</b><p>依据评价指导手册整理 · 每道答案标明具体来源</p></div>
-              <div>{navigation.map(([label, href]) => <Link href={href} key={href}>{label}</Link>)}</div>
+              <div>{navigation.map(([label, href]) => <IntentLink href={href} key={href}>{label}</IntentLink>)}</div>
             </div>
           </footer>
         </AccountProvider>

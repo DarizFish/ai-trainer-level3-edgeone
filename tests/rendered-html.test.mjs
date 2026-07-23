@@ -31,18 +31,27 @@ test("theory and practical content pages remain public while progress is protect
 });
 
 test("public route shells are static while answer scoring is immediate and persistence is batched", async () => {
-  const [layout, publicContent, theoryPractice, theoryAnswer, progressPage, dashboard] = await Promise.all([
+  const [layout, intentLink, publicContent, theoryPage, practicalPage, theoryPractice, theoryAnswer, progressPage, dashboard] = await Promise.all([
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/IntentLink.tsx", import.meta.url), "utf8"),
     readFile(new URL("../scripts/generate-public-content.mjs", import.meta.url), "utf8"),
+    readFile(new URL("../app/theory/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/practical/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/TheoryPractice.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/api/theory/answer/route.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/progress/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/ProgressDashboard.tsx", import.meta.url), "utf8"),
   ]);
   assert.doesNotMatch(layout, /headers\(\)|getAccountUser/);
-  assert.match(layout, /content\/theory-/);
+  assert.doesNotMatch(layout, /content\/(?:theory|practical)-/);
+  assert.match(intentLink, /prefetch=\{false\}/);
+  assert.match(intentLink, /router\.prefetch\(href\)/);
+  assert.match(theoryPage, /rel="preload"/);
+  assert.match(theoryPage, /content\/theory-/);
+  assert.match(practicalPage, /content\/practical-catalog-/);
   assert.match(publicContent, /theory-\$\{content\.version\}\.json/);
   assert.match(publicContent, /practical-\$\{content\.version\}\.json/);
+  assert.match(publicContent, /practical-catalog-\$\{content\.version\}\.json/);
   assert.match(theoryPractice, /const correct = isCorrect\(question, answer\)/);
   assert.match(theoryPractice, /pendingAnswersRef/);
   assert.match(theoryPractice, /setTimeout\(\(\) => flushProgress\(\), 900\)/);
@@ -54,9 +63,10 @@ test("public route shells are static while answer scoring is immediate and persi
 
 test("versioned public content banks exactly match the source content", async () => {
   const content = JSON.parse(await readFile(new URL("../data/content.json", import.meta.url), "utf8"));
-  const [theory, practical] = await Promise.all([
+  const [theory, practical, catalog] = await Promise.all([
     readFile(new URL(`../public/content/theory-${content.version}.json`, import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL(`../public/content/practical-${content.version}.json`, import.meta.url), "utf8").then(JSON.parse),
+    readFile(new URL(`../public/content/practical-catalog-${content.version}.json`, import.meta.url), "utf8").then(JSON.parse),
   ]);
   assert.equal(theory.version, content.version);
   assert.deepEqual(theory.questions, content.theory);
@@ -64,6 +74,24 @@ test("versioned public content banks exactly match the source content", async ()
   assert.equal(practical.version, content.version);
   assert.deepEqual(practical.tasks, content.practical);
   assert.deepEqual(practical.officialTaskCodes, content.officialPracticalMockCodes);
+  assert.equal(catalog.version, content.version);
+  assert.deepEqual(catalog.tasks, content.practical.map((task) => ({
+    answerBasis: task.answerBasis,
+    answerSource: task.answerSource,
+    category: task.category,
+    code: task.code,
+    descriptionExcerpt: task.description.length > 92 ? `${task.description.slice(0, 92)}…` : task.description,
+    durationMinutes: task.durationMinutes,
+    group: task.group,
+    hasNotebook: task.hasNotebook,
+    materialSummary: task.materials.length
+      ? `${task.materials[0].label}${task.materials.length > 1 ? ` 等 ${task.materials.length} 份` : ""}`
+      : "手册未配套文件",
+    maxScore: task.maxScore,
+    rubricCount: task.rubric.length,
+    title: task.title,
+    unit: task.unit,
+  })));
 });
 
 test("email accounts use versioned PostgreSQL schema, hashed passwords, and revocable sessions", async () => {
@@ -113,11 +141,12 @@ test("email accounts use versioned PostgreSQL schema, hashed passwords, and revo
 });
 
 test("theory opens as a direct study console and Python tasks enter a code-first lab", async () => {
-  const [theory, theoryPage, practicalPage, practical, detail, labPage, workbench, lab, styles] = await Promise.all([
+  const [theory, theoryPage, practicalPage, practical, publicContent, detail, labPage, workbench, lab, styles] = await Promise.all([
     readFile(new URL("../components/TheoryPractice.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/theory/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/practical/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/PracticalCatalog.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../scripts/generate-public-content.mjs", import.meta.url), "utf8"),
     readFile(new URL("../app/practical/[code]/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/practical/[code]/lab/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/PracticalLabWorkbench.tsx", import.meta.url), "utf8"),
@@ -163,8 +192,9 @@ test("theory opens as a direct study console and Python tasks enter a code-first
   assert.match(practical, /aria-label="实操题库导航"/);
   assert.match(practical, /catalog-controls/);
   assert.match(practical, /占实操总分/);
-  assert.match(practical, /task\.materials\[0\]\.label/);
-  assert.match(practical, /手册未配套文件/);
+  assert.match(practical, /task\.materialSummary/);
+  assert.match(practical, /task\.rubricCount/);
+  assert.match(publicContent, /手册未配套文件/);
   assert.match(practical, /进入实验室/);
   assert.match(practical, /catalog-scope-buttons/);
   assert.match(practical, /hasActiveFilters &&/);

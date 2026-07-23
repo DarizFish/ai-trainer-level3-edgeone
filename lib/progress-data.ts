@@ -1,87 +1,168 @@
-import { and, count, desc, eq, max } from "drizzle-orm";
+import { sql } from "drizzle-orm";
 import { getDb } from "@/db";
-import { codeDrafts, favorites, practicalAttempts, theoryAttempts, theoryProgress } from "@/db/schema";
 import { practicalByCode, theoryById } from "@/lib/content";
 import { examBlueprint, practicalModuleForGroup } from "@/lib/exam-blueprint";
 
 export type ProgressData = Awaited<ReturnType<typeof getProgressData>>;
 
+type ProgressSummary = {
+  answered: number;
+  wrong: number;
+  favorites: number;
+  practicalAttempts: number;
+  mockAttempts: number;
+  bestTheoryScore: number;
+  drafts: number;
+  wrongRows: {
+    questionId: string;
+    answerJson: string;
+    attempts: number;
+    updatedAt: string;
+  }[];
+  favoriteRows: {
+    itemType: string;
+    itemId: string;
+    updatedAt: string;
+  }[];
+  recentMockRows: {
+    mode: string;
+    score: number;
+    maxScore: number;
+    passed: boolean;
+    createdAt: string;
+  }[];
+  recentPracticalRows: {
+    taskCode: string;
+    score: number;
+    maxScore: number;
+    createdAt: string;
+  }[];
+  practicalRows: {
+    taskCode: string;
+    bestRatio: number;
+    attempts: number;
+  }[];
+};
+
 export async function getProgressData(email: string) {
   const db = getDb();
-  const [
-    [answered],
-    [wrong],
-    [saved],
-    [practical],
-    [mocks],
-    [best],
-    [drafts],
+  const rows = await db.execute(sql`
+    with
+      theory_progress_rows as materialized (
+        select question_id, answer_json, correct, attempts, updated_at
+        from theory_progress
+        where email = ${email}
+      ),
+      favorite_rows as materialized (
+        select item_type, item_id, active, updated_at
+        from favorites
+        where email = ${email}
+      ),
+      theory_attempt_rows as materialized (
+        select mode, score, max_score, passed, created_at
+        from theory_attempts
+        where email = ${email}
+      ),
+      practical_attempt_rows as materialized (
+        select task_code, score, max_score, created_at
+        from practical_attempts
+        where email = ${email}
+      ),
+      draft_rows as materialized (
+        select task_code
+        from code_drafts
+        where email = ${email}
+      )
+    select
+      (select count(*)::int from theory_progress_rows) as "answered",
+      (select count(*)::int from theory_progress_rows where correct = false) as "wrong",
+      (select count(*)::int from favorite_rows where active = true) as "favorites",
+      (select count(*)::int from practical_attempt_rows) as "practicalAttempts",
+      (select count(*)::int from theory_attempt_rows) as "mockAttempts",
+      coalesce((select max(score)::float8 from theory_attempt_rows), 0::float8) as "bestTheoryScore",
+      (select count(*)::int from draft_rows) as "drafts",
+      coalesce((
+        select jsonb_agg(jsonb_build_object(
+          'questionId', item.question_id,
+          'answerJson', item.answer_json,
+          'attempts', item.attempts,
+          'updatedAt', item.updated_at
+        ) order by item.updated_at desc)
+        from (
+          select question_id, answer_json, attempts, updated_at
+          from theory_progress_rows
+          where correct = false
+          order by updated_at desc
+          limit 50
+        ) item
+      ), '[]'::jsonb) as "wrongRows",
+      coalesce((
+        select jsonb_agg(jsonb_build_object(
+          'itemType', item.item_type,
+          'itemId', item.item_id,
+          'updatedAt', item.updated_at
+        ) order by item.updated_at desc)
+        from (
+          select item_type, item_id, updated_at
+          from favorite_rows
+          where active = true
+          order by updated_at desc
+          limit 50
+        ) item
+      ), '[]'::jsonb) as "favoriteRows",
+      coalesce((
+        select jsonb_agg(jsonb_build_object(
+          'mode', item.mode,
+          'score', item.score,
+          'maxScore', item.max_score,
+          'passed', item.passed,
+          'createdAt', item.created_at
+        ) order by item.created_at desc)
+        from (
+          select mode, score, max_score, passed, created_at
+          from theory_attempt_rows
+          order by created_at desc
+          limit 8
+        ) item
+      ), '[]'::jsonb) as "recentMockRows",
+      coalesce((
+        select jsonb_agg(jsonb_build_object(
+          'taskCode', item.task_code,
+          'score', item.score,
+          'maxScore', item.max_score,
+          'createdAt', item.created_at
+        ) order by item.created_at desc)
+        from (
+          select task_code, score, max_score, created_at
+          from practical_attempt_rows
+          order by created_at desc
+          limit 8
+        ) item
+      ), '[]'::jsonb) as "recentPracticalRows",
+      coalesce((
+        select jsonb_agg(jsonb_build_object(
+          'taskCode', item.task_code,
+          'bestRatio', item.best_ratio,
+          'attempts', item.attempts
+        ))
+        from (
+          select
+            task_code,
+            max(score / nullif(max_score, 0))::float8 as best_ratio,
+            count(*)::int as attempts
+          from practical_attempt_rows
+          group by task_code
+        ) item
+      ), '[]'::jsonb) as "practicalRows"
+  `);
+  const summary = rows[0] as unknown as ProgressSummary;
+  const {
     wrongRows,
     favoriteRows,
     recentMockRows,
     recentPracticalRows,
     practicalRows,
-  ] = await Promise.all([
-    db.select({ value: count() }).from(theoryProgress).where(eq(theoryProgress.email, email)),
-    db.select({ value: count() }).from(theoryProgress).where(and(eq(theoryProgress.email, email), eq(theoryProgress.correct, false))),
-    db.select({ value: count() }).from(favorites).where(and(eq(favorites.email, email), eq(favorites.active, true))),
-    db.select({ value: count() }).from(practicalAttempts).where(eq(practicalAttempts.email, email)),
-    db.select({ value: count() }).from(theoryAttempts).where(eq(theoryAttempts.email, email)),
-    db.select({ value: max(theoryAttempts.score) }).from(theoryAttempts).where(eq(theoryAttempts.email, email)),
-    db.select({ value: count() }).from(codeDrafts).where(eq(codeDrafts.email, email)),
-    db
-      .select({
-        questionId: theoryProgress.questionId,
-        answerJson: theoryProgress.answerJson,
-        attempts: theoryProgress.attempts,
-        updatedAt: theoryProgress.updatedAt,
-      })
-      .from(theoryProgress)
-      .where(and(eq(theoryProgress.email, email), eq(theoryProgress.correct, false)))
-      .orderBy(desc(theoryProgress.updatedAt))
-      .limit(50),
-    db
-      .select({
-        itemType: favorites.itemType,
-        itemId: favorites.itemId,
-        updatedAt: favorites.updatedAt,
-      })
-      .from(favorites)
-      .where(and(eq(favorites.email, email), eq(favorites.active, true)))
-      .orderBy(desc(favorites.updatedAt))
-      .limit(50),
-    db
-      .select({
-        mode: theoryAttempts.mode,
-        score: theoryAttempts.score,
-        maxScore: theoryAttempts.maxScore,
-        passed: theoryAttempts.passed,
-        createdAt: theoryAttempts.createdAt,
-      })
-      .from(theoryAttempts)
-      .where(eq(theoryAttempts.email, email))
-      .orderBy(desc(theoryAttempts.createdAt))
-      .limit(8),
-    db
-      .select({
-        taskCode: practicalAttempts.taskCode,
-        score: practicalAttempts.score,
-        maxScore: practicalAttempts.maxScore,
-        createdAt: practicalAttempts.createdAt,
-      })
-      .from(practicalAttempts)
-      .where(eq(practicalAttempts.email, email))
-      .orderBy(desc(practicalAttempts.createdAt))
-      .limit(8),
-    db
-      .select({
-        taskCode: practicalAttempts.taskCode,
-        score: practicalAttempts.score,
-        maxScore: practicalAttempts.maxScore,
-      })
-      .from(practicalAttempts)
-      .where(eq(practicalAttempts.email, email)),
-  ]);
+  } = summary;
 
   const practicalAbility = examBlueprint.practical.modules.map((module) => {
     const rows = practicalRows.filter((row) => {
@@ -91,7 +172,7 @@ export async function getProgressData(email: string) {
     const bestScore = rows.reduce(
       (bestValue, row) => Math.max(
         bestValue,
-        row.maxScore ? (row.score / row.maxScore) * module.maxScore : 0,
+        row.bestRatio * module.maxScore,
       ),
       0,
     );
@@ -100,7 +181,7 @@ export async function getProgressData(email: string) {
       label: module.label,
       maxScore: module.maxScore,
       bestScore: Math.round(bestScore * 10) / 10,
-      attempts: rows.length,
+      attempts: rows.reduce((total, row) => total + row.attempts, 0),
     };
   });
 
@@ -158,15 +239,15 @@ export async function getProgressData(email: string) {
   });
 
   return {
-    answered: answered.value,
-    wrong: wrong.value,
-    favorites: saved.value,
-    practicalAttempts: practical.value,
-    mockAttempts: mocks.value,
-    bestTheoryScore: best.value ?? 0,
+    answered: summary.answered,
+    wrong: summary.wrong,
+    favorites: summary.favorites,
+    practicalAttempts: summary.practicalAttempts,
+    mockAttempts: summary.mockAttempts,
+    bestTheoryScore: summary.bestTheoryScore,
     practicalAbility,
     estimatedPracticalScore: practicalAbility.reduce((sum, module) => sum + module.bestScore, 0),
-    drafts: drafts.value,
+    drafts: summary.drafts,
     wrongItems,
     favoriteItems,
     recentMocks: recentMockRows,

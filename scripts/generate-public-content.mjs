@@ -29,10 +29,39 @@ const files = [
       officialTaskCodes: content.officialPracticalMockCodes,
     },
   },
+  {
+    name: `practical-catalog-${content.version}.json`,
+    payload: {
+      version: content.version,
+      tasks: content.practical.map((task) => {
+        const descriptionExcerpt = task.description.length > 92
+          ? `${task.description.slice(0, 92)}…`
+          : task.description;
+        const materialSummary = task.materials.length
+          ? `${task.materials[0].label}${task.materials.length > 1 ? ` 等 ${task.materials.length} 份` : ""}`
+          : "手册未配套文件";
+        return {
+          answerBasis: task.answerBasis,
+          answerSource: task.answerSource,
+          category: task.category,
+          code: task.code,
+          descriptionExcerpt,
+          durationMinutes: task.durationMinutes,
+          group: task.group,
+          hasNotebook: task.hasNotebook,
+          materialSummary,
+          maxScore: task.maxScore,
+          rubricCount: task.rubric.length,
+          title: task.title,
+          unit: task.unit,
+        };
+      }),
+    },
+  },
 ];
 
 await Promise.all(files.map(({ name, payload }) => (
   writeFile(join(outputDirectory, name), JSON.stringify(payload))
 )));
 
-console.log(`Generated ${files.map(({ name }) => name).join(" and ")}`);
+console.log(`Generated ${files.map(({ name }) => name).join(", ")}`);

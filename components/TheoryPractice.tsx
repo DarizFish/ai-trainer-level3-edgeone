@@ -94,8 +94,13 @@ export default function TheoryPractice({ questions, contentVersion }: { question
   const pageSize = 10;
 
   const questionById = useMemo(() => new Map(questions.map((question) => [question.id, question])), [questions]);
-  const categories = useMemo(() => [...new Set(questions.map((question) => question.category))], [questions]);
-  const categoryCounts = useMemo(() => new Map(categories.map((item) => [item, questions.filter((question) => question.category === item).length])), [categories, questions]);
+  const { categories, categoryCounts } = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const question of questions) {
+      counts.set(question.category, (counts.get(question.category) ?? 0) + 1);
+    }
+    return { categories: [...counts.keys()], categoryCounts: counts };
+  }, [questions]);
 
   useEffect(() => {
     const requestedId = new URLSearchParams(window.location.search).get("question");
@@ -181,11 +186,20 @@ export default function TheoryPractice({ questions, contentVersion }: { question
     return question ? [question] : [];
   }), [questionById, sessionIds]);
   const currentQuestion = sessionQuestions[currentIndex];
-  const answeredCount = sessionQuestions.filter((question) => feedback[question.id] !== undefined).length;
-  const correctCount = sessionQuestions.filter((question) => feedback[question.id] === true).length;
+  const { answeredCount, correctCount, sessionWrongIds } = useMemo(() => {
+    let answered = 0;
+    let correct = 0;
+    const wrongIds: string[] = [];
+    for (const question of sessionQuestions) {
+      const result = feedback[question.id];
+      if (result !== undefined) answered += 1;
+      if (result === true) correct += 1;
+      if (result === false) wrongIds.push(question.id);
+    }
+    return { answeredCount: answered, correctCount: correct, sessionWrongIds: wrongIds };
+  }, [feedback, sessionQuestions]);
   const correctRate = answeredCount ? Math.round(correctCount / answeredCount * 100) : 0;
-  const favoriteCount = Object.values(favorites).filter(Boolean).length;
-  const sessionWrongIds = sessionQuestions.filter((question) => feedback[question.id] === false).map((question) => question.id);
+  const favoriteCount = useMemo(() => Object.values(favorites).filter(Boolean).length, [favorites]);
 
   useEffect(() => {
     if (screen !== "practice") return;

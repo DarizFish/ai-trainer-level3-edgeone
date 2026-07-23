@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import type { AnswerSource, PracticalAnswerBasis } from "@/lib/content";
 import { examBlueprint } from "@/lib/exam-blueprint";
+import IntentLink from "./IntentLink";
 import { SourceBadge } from "./SourceBadge";
 
 export type PracticalCatalogTask = {
@@ -11,13 +11,13 @@ export type PracticalCatalogTask = {
   answerSource: AnswerSource;
   category: string;
   code: string;
-  description: string;
+  descriptionExcerpt: string;
   durationMinutes: number;
   group: string;
   hasNotebook: boolean;
-  materials: { label: string }[];
+  materialSummary: string;
   maxScore: number;
-  rubric: { id: string }[];
+  rubricCount: number;
   title: string;
   unit: string;
 };
@@ -34,7 +34,7 @@ export default function PracticalCatalog({ tasks }: { tasks: PracticalCatalogTas
   }, []);
   const groups = useMemo(() => [...new Set(tasks.map((task) => task.group))], [tasks]);
   const selectedModule = examBlueprint.practical.modules.find((item) => item.key === moduleKey);
-  const filtered = useMemo(() => tasks.filter((task) => (!query || `${task.code}${task.title}${task.description}`.toLowerCase().includes(query.toLowerCase())) && (!selectedModule || (selectedModule.groups as readonly string[]).includes(task.group)) && (!labOnly || task.hasNotebook)), [tasks, query, selectedModule, labOnly]);
+  const filtered = useMemo(() => tasks.filter((task) => (!query || `${task.code}${task.title}${task.descriptionExcerpt}`.toLowerCase().includes(query.toLowerCase())) && (!selectedModule || (selectedModule.groups as readonly string[]).includes(task.group)) && (!labOnly || task.hasNotebook)), [tasks, query, selectedModule, labOnly]);
   const visibleGroups = groups.filter((item) => filtered.some((task) => task.group === item));
   const hasActiveFilters = Boolean(query.trim() || moduleKey !== "all" || labOnly);
 
@@ -43,10 +43,10 @@ export default function PracticalCatalog({ tasks }: { tasks: PracticalCatalogTas
   return <div id="practical-results" className="practical-catalog">
     <aside className="practical-catalog-sidebar" aria-label="实操题库导航">
       <header className="catalog-sidebar-head">
-        <div className="breadcrumbs"><Link href="/">首页</Link>　/　实操题库</div>
+        <div className="breadcrumbs"><IntentLink href="/">首页</IntentLink>　/　实操题库</div>
         <h1>实操题库</h1>
         <p><b>40</b> 道题 · 8 个模块 · 20 个 Python 实验</p>
-        <nav aria-label="实操题库快捷入口"><Link href="/practical/mock">实操组卷</Link><Link href="/progress">学习档案</Link></nav>
+        <nav aria-label="实操题库快捷入口"><IntentLink href="/practical/mock">实操组卷</IntentLink><IntentLink href="/progress">学习档案</IntentLink></nav>
       </header>
       <section className="practical-score-map" aria-labelledby="practical-score-map-title">
         <header><div><p className="eyebrow">100 分构成</p><h2 id="practical-score-map-title">正式实操六模块分值</h2></div><p>点击模块筛选；业务分析与培训/指导各二选一。</p></header>
@@ -71,7 +71,7 @@ export default function PracticalCatalog({ tasks }: { tasks: PracticalCatalogTas
           <div className="card-grid">{groupTasks.map((task) => {
             const href = task.hasNotebook ? `/practical/${task.code}/lab` : `/practical/${task.code}`;
             const weight = Math.round(task.maxScore / examBlueprint.practical.maxScore * 100);
-            return <Link className="task-card" href={href} key={task.code}><div className="task-card-head"><div className="question-meta-left"><span className="question-number">{task.code}</span><span className="chip">{task.category}</span>{task.hasNotebook && <span className="chip">Python 实验</span>}</div><span className="task-score-weight"><strong>{task.maxScore}</strong> 分<small>占总分 {weight}%</small></span></div><h3>{task.title}</h3><p>{task.description.slice(0, 92)}{task.description.length > 92 ? "…" : ""}</p><div className="task-card-facts"><span>{task.rubric.length} 个官方评分项</span><span>{task.materials.length ? `${task.materials[0].label}${task.materials.length > 1 ? ` 等 ${task.materials.length} 份` : ""}` : "手册未配套文件"}</span><span>建议 {task.durationMinutes} 分钟</span></div><div className="task-card-foot"><SourceBadge source={task.answerSource} basis={task.answerBasis} /><b>{task.hasNotebook ? "进入实验室 →" : "查看题目 →"}</b></div></Link>;
+            return <IntentLink className="task-card" href={href} key={task.code}><div className="task-card-head"><div className="question-meta-left"><span className="question-number">{task.code}</span><span className="chip">{task.category}</span>{task.hasNotebook && <span className="chip">Python 实验</span>}</div><span className="task-score-weight"><strong>{task.maxScore}</strong> 分<small>占总分 {weight}%</small></span></div><h3>{task.title}</h3><p>{task.descriptionExcerpt}</p><div className="task-card-facts"><span>{task.rubricCount} 个官方评分项</span><span>{task.materialSummary}</span><span>建议 {task.durationMinutes} 分钟</span></div><div className="task-card-foot"><SourceBadge source={task.answerSource} basis={task.answerBasis} /><b>{task.hasNotebook ? "进入实验室 →" : "查看题目 →"}</b></div></IntentLink>;
           })}</div>
         </section>;
       })}
