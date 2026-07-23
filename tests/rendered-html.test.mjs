@@ -31,19 +31,18 @@ test("theory and practical content pages remain public while progress is protect
 });
 
 test("public route shells are static while answer scoring is immediate and persistence is batched", async () => {
-  const [layout, theoryRoute, practicalRoute, theoryPractice, theoryAnswer, progressPage, dashboard] = await Promise.all([
+  const [layout, publicContent, theoryPractice, theoryAnswer, progressPage, dashboard] = await Promise.all([
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/api/content/theory/route.ts", import.meta.url), "utf8"),
-    readFile(new URL("../app/api/content/practical/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../scripts/generate-public-content.mjs", import.meta.url), "utf8"),
     readFile(new URL("../components/TheoryPractice.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/api/theory/answer/route.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/progress/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/ProgressDashboard.tsx", import.meta.url), "utf8"),
   ]);
   assert.doesNotMatch(layout, /headers\(\)|getAccountUser/);
-  assert.match(layout, /api\/content\/theory/);
-  assert.match(theoryRoute, /force-static/);
-  assert.match(practicalRoute, /force-static/);
+  assert.match(layout, /content\/theory-/);
+  assert.match(publicContent, /theory-\$\{content\.version\}\.json/);
+  assert.match(publicContent, /practical-\$\{content\.version\}\.json/);
   assert.match(theoryPractice, /const correct = isCorrect\(question, answer\)/);
   assert.match(theoryPractice, /pendingAnswersRef/);
   assert.match(theoryPractice, /setTimeout\(\(\) => flushProgress\(\), 900\)/);

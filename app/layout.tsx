@@ -29,8 +29,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="zh-CN">
       <body>
         <AccountProvider>
-          <link rel="prefetch" href={`/api/content/theory?v=${encodeURIComponent(content.version)}`} as="fetch" />
-          <link rel="prefetch" href={`/api/content/practical?v=${encodeURIComponent(content.version)}`} as="fetch" />
+          <link rel="prefetch" href={`/content/theory-${encodeURIComponent(content.version)}.json`} as="fetch" />
+          <link rel="prefetch" href={`/content/practical-${encodeURIComponent(content.version)}.json`} as="fetch" />
           <header className="site-header">
             <div className="container nav-row">
               <Link className="brand" href="/" aria-label="人工智能训练师三级备考站首页">

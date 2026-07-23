@@ -16,7 +16,7 @@ let pendingPracticalBank: Promise<PracticalBank> | null = null;
 function loadPracticalBank(contentVersion: string): Promise<PracticalBank> {
   if (cachedPracticalBank?.version === contentVersion) return Promise.resolve(cachedPracticalBank);
   if (!pendingPracticalBank) {
-    pendingPracticalBank = fetch(`/api/content/practical?v=${encodeURIComponent(contentVersion)}`, {
+    pendingPracticalBank = fetch(`/content/practical-${encodeURIComponent(contentVersion)}.json`, {
       cache: "force-cache",
     })
       .then(async (response) => {

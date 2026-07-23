@@ -17,7 +17,7 @@ let pendingTheoryBank: Promise<TheoryBank> | null = null;
 function loadTheoryBank(contentVersion: string): Promise<TheoryBank> {
   if (cachedTheoryBank?.version === contentVersion) return Promise.resolve(cachedTheoryBank);
   if (!pendingTheoryBank) {
-    pendingTheoryBank = fetch(`/api/content/theory?v=${encodeURIComponent(contentVersion)}`, {
+    pendingTheoryBank = fetch(`/content/theory-${encodeURIComponent(contentVersion)}.json`, {
       cache: "force-cache",
     })
       .then(async (response) => {
