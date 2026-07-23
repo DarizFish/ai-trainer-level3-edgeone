@@ -52,6 +52,20 @@ test("public route shells are static while answer scoring is immediate and persi
   assert.doesNotMatch(dashboard, /fetch\("\/api\/progress"/);
 });
 
+test("versioned public content banks exactly match the source content", async () => {
+  const content = JSON.parse(await readFile(new URL("../data/content.json", import.meta.url), "utf8"));
+  const [theory, practical] = await Promise.all([
+    readFile(new URL(`../public/content/theory-${content.version}.json`, import.meta.url), "utf8").then(JSON.parse),
+    readFile(new URL(`../public/content/practical-${content.version}.json`, import.meta.url), "utf8").then(JSON.parse),
+  ]);
+  assert.equal(theory.version, content.version);
+  assert.deepEqual(theory.questions, content.theory);
+  assert.deepEqual(theory.officialQuestionIds, content.officialTheoryMock.questionIds);
+  assert.equal(practical.version, content.version);
+  assert.deepEqual(practical.tasks, content.practical);
+  assert.deepEqual(practical.officialTaskCodes, content.officialPracticalMockCodes);
+});
+
 test("email accounts use versioned PostgreSQL schema, hashed passwords, and revocable sessions", async () => {
   const migrationName = (await readdir(new URL("../drizzle/", import.meta.url))).find((name) => name.endsWith(".sql"));
   assert.ok(migrationName, "a PostgreSQL migration must be generated");
