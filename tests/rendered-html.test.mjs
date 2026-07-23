@@ -76,8 +76,6 @@ test("versioned public content banks exactly match the source content", async ()
   assert.deepEqual(practical.officialTaskCodes, content.officialPracticalMockCodes);
   assert.equal(catalog.version, content.version);
   assert.deepEqual(catalog.tasks, content.practical.map((task) => ({
-    answerBasis: task.answerBasis,
-    answerSource: task.answerSource,
     category: task.category,
     code: task.code,
     descriptionExcerpt: task.description.length > 92 ? `${task.description.slice(0, 92)}…` : task.description,
@@ -167,9 +165,7 @@ test("theory opens as a direct study console and Python tasks enter a code-first
   assert.match(theory, /专项组题/);
   assert.match(theory, /题库检索/);
   assert.match(theory, /错题/);
-  assert.match(theory, /公开参考题库/);
-  assert.match(theory, /本站知识点整理/);
-  assert.match(theory, /matchesAnswerFilter/);
+  assert.doesNotMatch(theory, /公开参考题库|本站知识点整理|matchesAnswerFilter|SOURCE_OPTIONS/);
   assert.match(theory, /ai-trainer-theory-session-v6/);
   assert.match(theory, /answers\?: Record<string, string\[\]>/);
   assert.match(theory, /feedback\?: Record<string, boolean>/);
@@ -527,8 +523,7 @@ test("derived theory answers use audited reference and hash-bound editorial snap
   assert.match(importer, /apply_editorial_reviews/);
   assert.match(validator, /strict_match/);
   assert.match(validator, /question_fingerprint/);
-  assert.match(practice, /公开参考题库/);
-  assert.match(practice, /本站逐题复核/);
+  assert.doesNotMatch(practice, /公开参考题库|本站逐题复核|matchesAnswerFilter|SOURCE_OPTIONS/);
   assert.deepEqual(content.theory.find((question) => question.id === "judge-197").answer, ["√"]);
   assert.deepEqual(content.theory.find((question) => question.id === "judge-216").answer, ["×"]);
   assert.deepEqual(content.theory.find((question) => question.id === "judge-226").answer, ["√"]);
@@ -536,34 +531,26 @@ test("derived theory answers use audited reference and hash-bound editorial snap
   assert.deepEqual(content.theory.find((question) => question.id === "judge-243").answer, ["×"]);
 });
 
-test("answer provenance uses concrete user-facing sources instead of a generic derived label", async () => {
-  const [badge, theory, theoryMock, practical, practicalMock, practicalExamWorkspace, home, layout] = await Promise.all([
-    readFile(new URL("../components/SourceBadge.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../components/TheoryPractice.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../components/TheoryMock.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../components/PracticalWorkspace.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../components/PracticalMock.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../components/PracticalExamTaskWorkspace.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
-  ]);
-  assert.match(badge, /答案来源：指导手册/);
-  assert.match(badge, /答案来源：公开参考题库/);
-  assert.match(badge, /答案来源：本站逐题复核/);
-  assert.match(badge, /答案来源：本站知识点整理/);
-  assert.match(badge, /参考依据：配套完成版 Notebook/);
-  assert.match(badge, /参考依据：官方数据集实算/);
-  assert.match(badge, /参考依据：官方模板填写示例/);
-  assert.match(badge, /参考依据：题干与官方评分表/);
-  assert.match(badge, /参考依据：官方评分表整理/);
-  assert.match(practical, /basis=\{task\.answerBasis\}/);
+test("user-facing study surfaces omit answer provenance while audit metadata remains internal", async () => {
+  const paths = [
+    "../components/TheoryPractice.tsx",
+    "../components/TheoryMock.tsx",
+    "../components/PracticalCatalog.tsx",
+    "../components/PracticalWorkspace.tsx",
+    "../components/PracticalResponseExercise.tsx",
+    "../components/PracticalExamTaskWorkspace.tsx",
+    "../components/PracticalWordDeliverable.tsx",
+    "../components/WordTemplateExercise.tsx",
+    "../components/BusinessAnalysisAnswerSheet.tsx",
+    "../components/ProgressDashboard.tsx",
+    "../app/page.tsx",
+    "../app/layout.tsx",
+  ];
+  const surfaces = (await Promise.all(paths.map((path) => readFile(new URL(path, import.meta.url), "utf8")))).join("\n");
+  const practicalMock = await readFile(new URL("../components/PracticalMock.tsx", import.meta.url), "utf8");
   assert.match(practicalMock, /PracticalExamTaskWorkspace/);
-  assert.match(practicalExamWorkspace, /basis=\{task\.answerBasis\}/);
-  assert.match(theoryMock, /basis=\{item\.answerBasis\}/);
-  assert.match(home, /答案占位括号只按受限规则规范化/);
-  assert.match(home, /逐题复核并绑定内容哈希/);
-  assert.match(layout, /每道答案标明具体来源/);
-  assert.doesNotMatch(`${badge}${theory}${practical}${practicalMock}${practicalExamWorkspace}${home}${layout}`, /资料推导|未核对推导|规则推导|评分细则推导/);
+  assert.doesNotMatch(surfaces, /SourceBadge|PracticalSourceNote|答案来源|参考依据|公开参考题库|本站逐题复核|本站知识点整理|可信度|官方答案|标准答案|官方卷|官方模拟卷|内容哈希|内容指纹/);
+  await assert.rejects(readFile(new URL("../components/SourceBadge.tsx", import.meta.url), "utf8"), { code: "ENOENT" });
 });
 
 test("official Word templates expose hash-bound fill examples for every blank", async () => {

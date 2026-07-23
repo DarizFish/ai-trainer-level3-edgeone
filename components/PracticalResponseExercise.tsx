@@ -6,7 +6,6 @@ import { createPracticalResponseExercise } from "@/lib/practical-response-exerci
 import type { PracticalRubricScores } from "@/lib/scoring";
 import { PracticalMaterials } from "./PracticalMaterials";
 import { PracticalOutcomeCheck } from "./PracticalOutcomeCheck";
-import { PracticalSourceNote, SourceBadge } from "./SourceBadge";
 
 type ResponseDraft = {
   version: 3;
@@ -126,7 +125,7 @@ export function PracticalResponseExercise({ task, userEmail }: { task: Practical
         })}
       </div>
       <footer className="practical-response-actions">
-        <div>{revealed ? <><SourceBadge source={task.answerSource} basis={task.answerBasis} /><PracticalSourceNote basis={task.answerBasis} /><p className={assessedCount === rubricItems.length ? "correct" : ""}>{assessedCount === rubricItems.length ? `已完成全部核对：${currentScore} / ${task.maxScore} 分` : `还有 ${rubricItems.length - assessedCount} 项待核对`}</p></> : <p>完成两份作答后，再进入答案与评分复盘。</p>}</div>
+        <div>{revealed ? <p className={assessedCount === rubricItems.length ? "correct" : ""}>{assessedCount === rubricItems.length ? `已完成全部核对：${currentScore} / ${task.maxScore} 分` : `还有 ${rubricItems.length - assessedCount} 项待核对`}</p> : <p>完成两份作答后，再进入答案与评分复盘。</p>}</div>
         <button type="button" className={`button ${revealed ? "button-quiet" : "button-primary"}`} onClick={() => setRevealed((value) => !value)}>{revealed ? "返回作答" : "完成作答，进入复盘"}</button>
       </footer>
     </div>

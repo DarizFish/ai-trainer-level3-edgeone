@@ -56,7 +56,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           {children}
           <footer className="site-footer">
             <div className="container footer-row">
-              <div><b>人工智能训练师三级备考站</b><p>依据评价指导手册整理 · 每道答案标明具体来源</p></div>
+              <div><b>人工智能训练师三级备考站</b><p>理论 · 实操 · 模拟 · 学习档案一站完成</p></div>
               <div>{navigation.map(([label, href]) => <IntentLink href={href} key={href}>{label}</IntentLink>)}</div>
             </div>
           </footer>

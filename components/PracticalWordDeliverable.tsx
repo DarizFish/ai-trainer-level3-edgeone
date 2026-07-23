@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 import type { PracticalTask } from "@/lib/content";
 import { getPracticalReferenceNarrative } from "@/lib/practical-reference";
 import { getPracticalWordDeliverable } from "@/lib/practical-word-deliverable";
-import { SourceBadge } from "./SourceBadge";
 
 export function PracticalWordDeliverable({ task, userEmail }: { task: PracticalTask; userEmail: string | null }) {
   const deliverable = useMemo(() => getPracticalWordDeliverable(task), [task]);
@@ -56,7 +55,7 @@ export function PracticalWordDeliverable({ task, userEmail }: { task: PracticalT
     {referenceNarrative && <details className="lab-word-reference">
       <summary><span><b>核对参考答案</b><small>在当前草稿下方直接对比</small></span><strong>显示答案</strong></summary>
       <div>
-        <header><div><p className="eyebrow">参考内容</p><h3>{deliverable.fileName}</h3></div><SourceBadge source={task.answerSource} basis={task.answerBasis} /></header>
+        <header><div><p className="eyebrow">参考内容</p><h3>{deliverable.fileName}</h3></div></header>
         <p>{referenceNarrative}</p>
       </div>
     </details>}

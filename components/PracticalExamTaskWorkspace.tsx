@@ -8,7 +8,6 @@ import { createPracticalWordExercise } from "@/lib/practical-word-exercise";
 import type { PracticalRubricScores } from "@/lib/scoring";
 import { PracticalMaterials } from "./PracticalMaterials";
 import { PracticalOutcomeCheck } from "./PracticalOutcomeCheck";
-import { PracticalSourceNote, SourceBadge } from "./SourceBadge";
 
 export function PracticalExamTaskWorkspace({ task, phase, answers, checks, scores, onAnswerChange, onCheckChange, onScoreChange }: {
   task: PracticalTask;
@@ -55,7 +54,7 @@ export function PracticalExamTaskWorkspace({ task, phase, answers, checks, score
           </article>;
         })}
       </div>
-      {phase === "review" && <footer className="exam-reference-source"><SourceBadge source={task.answerSource} basis={task.answerBasis} /><PracticalSourceNote basis={task.answerBasis} /><b>已核对 {Object.keys(checks).length} / {word.fields.length} 处 · 当前 {word.fields.filter((field) => checks[field.id]).length} / {task.maxScore} 分</b></footer>}
+      {phase === "review" && <footer className="exam-reference-source"><b>已核对 {Object.keys(checks).length} / {word.fields.length} 处 · 当前 {word.fields.filter((field) => checks[field.id]).length} / {task.maxScore} 分</b></footer>}
     </section>}
 
     {response && <section className={`exam-response-workspace ${phase}`}>
@@ -68,12 +67,11 @@ export function PracticalExamTaskWorkspace({ task, phase, answers, checks, score
           <PracticalOutcomeCheck items={section.rubric} scores={scores} onChange={onScoreChange} title={`核对第 ${section.number} 份交付物`} />
         </>}
       </article>)}</div>
-      {phase === "review" && <footer className="exam-reference-source"><SourceBadge source={task.answerSource} basis={task.answerBasis} /><PracticalSourceNote basis={task.answerBasis} /></footer>}
     </section>}
 
     {task.hasNotebook && phase === "review" && <section className="exam-notebook-review">
       <header><div><p className="eyebrow">NOTEBOOK OUTCOME</p><h2>复盘代码与运行成果</h2></div><Link className="button button-small" href={`/practical/${task.code}/lab`}>打开本题 Notebook ↗</Link></header>
-      <div className="exam-notebook-comparison"><section><b>本次运行说明</b><p>{answers.notes?.trim() || "未填写运行结果或生成文件说明；Notebook 草稿仍保存在当前浏览器与账号中。"}</p></section><section><div className="answer-line"><b>参考成果</b><SourceBadge source={task.answerSource} basis={task.answerBasis} /></div><PracticalSourceNote basis={task.answerBasis} /><p>{task.referenceAnswer}</p>{task.notebook?.solutionCells.map((cell, index) => <details key={cell.id} open={index === 0}><summary>参考代码单元 {index + 1}</summary><pre><code>{cell.source}</code></pre></details>)}</section></div>
+      <div className="exam-notebook-comparison"><section><b>本次运行说明</b><p>{answers.notes?.trim() || "未填写运行结果或生成文件说明；Notebook 草稿仍保存在当前浏览器与账号中。"}</p></section><section><div className="answer-line"><b>参考成果</b></div><p>{task.referenceAnswer}</p>{task.notebook?.solutionCells.map((cell, index) => <details key={cell.id} open={index === 0}><summary>参考代码单元 {index + 1}</summary><pre><code>{cell.source}</code></pre></details>)}</section></div>
       <PracticalOutcomeCheck items={task.rubric} scores={scores} onChange={onScoreChange} />
     </section>}
   </div>;

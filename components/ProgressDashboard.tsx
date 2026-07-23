@@ -80,7 +80,7 @@ export default function ProgressDashboard({ initialData }: { initialData: Progre
     <section className="progress-panel progress-history">
       <div className="panel-heading"><div><p className="eyebrow">最近记录</p><h2>考试与实操</h2></div><span>代码草稿 {data.drafts} 份</span></div>
       <div className="history-grid">
-        <div><h3>理论模拟</h3>{data.recentMocks.map((item, index) => <p key={`${item.createdAt}-${index}`}><b>{item.score} / {item.maxScore}</b><span>{item.mode === "official" ? "官方卷" : "随机卷"} · {shortDate(item.createdAt)}</span></p>)}{!data.recentMocks.length && <p className="small-copy">暂无模拟考试记录</p>}</div>
+        <div><h3>理论模拟</h3>{data.recentMocks.map((item, index) => <p key={`${item.createdAt}-${index}`}><b>{item.score} / {item.maxScore}</b><span>{item.mode === "official" ? "标准卷" : "随机卷"} · {shortDate(item.createdAt)}</span></p>)}{!data.recentMocks.length && <p className="small-copy">暂无模拟考试记录</p>}</div>
         <div><h3>实操评分</h3>{data.recentPractical.map((item, index) => <p key={`${item.createdAt}-${index}`}><Link href={item.href}><b>{item.taskCode} · {item.score} / {item.maxScore}</b><span>{item.title} · {shortDate(item.createdAt)}</span></Link></p>)}{!data.recentPractical.length && <p className="small-copy">暂无实操评分记录</p>}</div>
       </div>
     </section>

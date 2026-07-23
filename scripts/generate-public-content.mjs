@@ -41,8 +41,6 @@ const files = [
           ? `${task.materials[0].label}${task.materials.length > 1 ? ` 等 ${task.materials.length} 份` : ""}`
           : "手册未配套文件";
         return {
-          answerBasis: task.answerBasis,
-          answerSource: task.answerSource,
           category: task.category,
           code: task.code,
           descriptionExcerpt,

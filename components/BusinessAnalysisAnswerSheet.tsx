@@ -5,7 +5,6 @@ import type { PracticalTask } from "@/lib/content";
 import { createPracticalResponseExercise } from "@/lib/practical-response-exercise";
 import type { PracticalRubricScores } from "@/lib/scoring";
 import { PracticalOutcomeCheck } from "./PracticalOutcomeCheck";
-import { PracticalSourceNote, SourceBadge } from "./SourceBadge";
 
 type AnswerSheetDraft = {
   version: 1;
@@ -104,7 +103,7 @@ export function BusinessAnalysisAnswerSheet({ task, userEmail }: { task: Practic
         const answered = Boolean(answers[section.id]?.trim());
         return <a href={`#business-answer-${task.code}-${section.number}`} className={answered ? "complete" : "pending"} key={section.id}><span>{section.number}</span><b>{section.number === 1 ? "第一问" : "第二问"}</b><small>{answered ? "已填写" : "待作答"}</small></a>;
       })}</nav>
-      <footer>{reviewing ? <><SourceBadge source={task.answerSource} basis={task.answerBasis} /><small>当前为学习复盘，不是官方考场评分。</small></> : <small>{userEmail ? `已填写 ${answeredCount} / 2 问，草稿自动保存。` : "登录后可填写并保存答题卷。"}</small>}<button type="button" className={`button ${reviewing ? "button-quiet" : "button-primary"}`} onClick={() => setReviewing((value) => !value)}>{reviewing ? "返回作答" : "完成作答，进入复盘"}</button></footer>
+      <footer>{reviewing ? <small>当前为学习复盘，不是官方考场评分。</small> : <small>{userEmail ? `已填写 ${answeredCount} / 2 问，草稿自动保存。` : "登录后可填写并保存答题卷。"}</small>}<button type="button" className={`button ${reviewing ? "button-quiet" : "button-primary"}`} onClick={() => setReviewing((value) => !value)}>{reviewing ? "返回作答" : "完成作答，进入复盘"}</button></footer>
     </aside>
     <div className="business-sheet-paper" role="document" aria-label={`${task.code} 答题卷`}>
       <section className="business-sheet-context">
@@ -121,10 +120,10 @@ export function BusinessAnalysisAnswerSheet({ task, userEmail }: { task: Practic
         {reviewing && <section className="business-sheet-review">
           <header><span>学习复盘</span><small>完成作答后展示；非官方考场信息。</small></header>
           <p>{section.referenceAnswer}</p>
-          <PracticalOutcomeCheck items={section.rubric} scores={scores} onChange={changeScore} title={`第 ${section.number} 问复盘检查`} eyebrow="学习复盘检查" description="依据评价指导手册整理，仅用于本次练习自评，不属于官方考场提示。" />
+          <PracticalOutcomeCheck items={section.rubric} scores={scores} onChange={changeScore} title={`第 ${section.number} 问复盘检查`} eyebrow="学习复盘检查" description="逐项检查本次作答，仅用于练习自评，不属于考场提示。" />
         </section>}
       </section>)}
-      {reviewing && <footer className="business-sheet-review-note"><PracticalSourceNote basis={task.answerBasis} />{assessedCount === rubricItems.length && <p className="correct">✓ 已完成本题全部复盘检查；修改作答会撤销对应的旧自评分。</p>}</footer>}
+      {reviewing && assessedCount === rubricItems.length && <footer className="business-sheet-review-note"><p className="correct">✓ 已完成本题全部复盘检查；修改作答会撤销对应的旧自评分。</p></footer>}
     </div>
   </section>;
 }

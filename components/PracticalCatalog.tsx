@@ -1,14 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import type { AnswerSource, PracticalAnswerBasis } from "@/lib/content";
 import { examBlueprint } from "@/lib/exam-blueprint";
 import IntentLink from "./IntentLink";
-import { SourceBadge } from "./SourceBadge";
 
 export type PracticalCatalogTask = {
-  answerBasis: PracticalAnswerBasis;
-  answerSource: AnswerSource;
   category: string;
   code: string;
   descriptionExcerpt: string;
@@ -71,7 +67,7 @@ export default function PracticalCatalog({ tasks }: { tasks: PracticalCatalogTas
           <div className="card-grid">{groupTasks.map((task) => {
             const href = task.hasNotebook ? `/practical/${task.code}/lab` : `/practical/${task.code}`;
             const weight = Math.round(task.maxScore / examBlueprint.practical.maxScore * 100);
-            return <IntentLink className="task-card" href={href} key={task.code}><div className="task-card-head"><div className="question-meta-left"><span className="question-number">{task.code}</span><span className="chip">{task.category}</span>{task.hasNotebook && <span className="chip">Python 实验</span>}</div><span className="task-score-weight"><strong>{task.maxScore}</strong> 分<small>占总分 {weight}%</small></span></div><h3>{task.title}</h3><p>{task.descriptionExcerpt}</p><div className="task-card-facts"><span>{task.rubricCount} 个官方评分项</span><span>{task.materialSummary}</span><span>建议 {task.durationMinutes} 分钟</span></div><div className="task-card-foot"><SourceBadge source={task.answerSource} basis={task.answerBasis} /><b>{task.hasNotebook ? "进入实验室 →" : "查看题目 →"}</b></div></IntentLink>;
+            return <IntentLink className="task-card" href={href} key={task.code}><div className="task-card-head"><div className="question-meta-left"><span className="question-number">{task.code}</span><span className="chip">{task.category}</span>{task.hasNotebook && <span className="chip">Python 实验</span>}</div><span className="task-score-weight"><strong>{task.maxScore}</strong> 分<small>占总分 {weight}%</small></span></div><h3>{task.title}</h3><p>{task.descriptionExcerpt}</p><div className="task-card-facts"><span>{task.rubricCount} 个评分项</span><span>{task.materialSummary}</span><span>建议 {task.durationMinutes} 分钟</span></div><div className="task-card-foot"><b>{task.hasNotebook ? "进入实验室 →" : "查看题目 →"}</b></div></IntentLink>;
           })}</div>
         </section>;
       })}

@@ -89,10 +89,8 @@ button { color: inherit; }
 .eyebrow.light { color: #e7ac9f; }
 .proof-items { border-top: 1px solid rgba(255,255,255,.25); }
 .proof-items article { display: grid; grid-template-columns: minmax(145px, max-content) 1fr; gap: 28px; padding: 29px 0; border-bottom: 1px solid rgba(255,255,255,.2); }
+.proof-items article > strong { color: #fff; font-family: var(--font-heading), sans-serif; font-size: 22px; line-height: 1.15; }
 .proof-items p { color: #c8d1d8; margin: 0; }
-.source-badge { display: inline-flex; align-items: center; justify-content: center; height: 27px; width: max-content; padding: 0 9px; border-radius: 2px; font-size: 11px; font-weight: 800; letter-spacing: .05em; }
-.source-badge.official { color: #fff; background: var(--red); }
-.source-badge.derived { color: #775e1e; background: #f0dfab; }
 .lab-promo { display: grid; grid-template-columns: 1.2fr .8fr; gap: 70px; align-items: center; }
 .lab-window { border: 1px solid #223e57; background: #0c2032; color: #d8e4ed; box-shadow: 14px 18px 0 var(--paper-deep); border-radius: 5px; overflow: hidden; }
 .lab-window-bar { display: flex; align-items: center; gap: 7px; height: 40px; padding: 0 14px; background: #163149; color: #abc0d0; font-size: 11px; }
@@ -227,7 +225,6 @@ button { color: inherit; }
 .answer-panel { margin-top: 18px; padding: 17px; background: #f2ead7; border-left: 4px solid var(--red); }
 .answer-panel p { margin: 7px 0 0; color: var(--ink-soft); }
 .answer-panel small { display: block; margin-top: 8px; color: #745e27; }
-.practical-source-note { padding: 9px 11px; border: 1px solid rgba(117,86,33,.2); background: rgba(255,253,247,.58); color: #745e27 !important; font-size: 11px; line-height: 1.65; }
 .lab-solution-panel { max-height: 70vh; overflow: auto; }
 .lab-solution-actions { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
 .lab-solution-cells { display: grid; gap: 8px; margin-top: 11px; }
@@ -328,8 +325,7 @@ button { color: inherit; }
 .word-fill-reference button.active.achieved { border-color: #397853; background: #397853; color: #fff; }
 .word-exercise-actions { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 15px 20px; border-top: 1px solid var(--line); }
 .word-exercise-actions > div:first-child { min-width: 0; flex: 1 1 auto; }
-.word-exercise-actions > div:first-child > p:not(.practical-source-note) { margin: 0; color: var(--ink-soft); font-size: 11px; }
-.word-exercise-actions .practical-source-note { margin: 8px 0 0; }
+.word-exercise-actions > div:first-child > p { margin: 0; color: var(--ink-soft); font-size: 11px; }
 .word-exercise-actions > div:last-child { flex: 0 0 auto; display: flex; gap: 8px; }
 .word-exercise-saved { margin: 0; padding: 11px 20px 15px; }
 
@@ -394,8 +390,7 @@ button { color: inherit; }
 .practical-response-reference > p { margin: 12px 0 0; white-space: pre-wrap; color: var(--ink); font-size: 11px; line-height: 1.75; overflow-wrap: anywhere; }
 .practical-response-actions { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 15px 20px; border-top: 1px solid var(--line); }
 .practical-response-actions > div { min-width: 0; flex: 1 1 auto; }
-.practical-response-actions > div > p:not(.practical-source-note) { margin: 0; color: var(--ink-soft); font-size: 11px; }
-.practical-response-actions .practical-source-note { margin: 8px 0 0; }
+.practical-response-actions > div > p { margin: 0; color: var(--ink-soft); font-size: 11px; }
 .practical-response-actions .correct { margin-top: 9px !important; color: #397853 !important; }
 .practical-response-actions > button { flex: 0 0 auto; }
 .practical-study-flow { display: grid; gap: 14px; }
@@ -495,7 +490,6 @@ button { color: inherit; }
 .exam-response-comparison b, .exam-notebook-comparison > section > b { display: block; margin-bottom: 8px; color: var(--ink-soft); font-size: 10px; }
 .exam-response-comparison p, .exam-notebook-comparison p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.75; }
 .exam-reference-source { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 14px; padding: 13px 18px; border-top: 1px solid var(--line); background: #f7f2e7; }
-.exam-reference-source .practical-source-note { flex: 1 1 420px; margin: 0; }
 .exam-reference-source > b { margin-left: auto; font-size: 10px; }
 
 .exam-notebook-comparison { padding: 0 16px; }
@@ -1496,7 +1490,6 @@ button { color: inherit; }
 .word-workbench-progress nav a b { overflow: hidden; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
 .word-side-review { display: grid; gap: 9px; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--line); }
 .word-side-review small { color: var(--ink-soft); font-size: 10px; line-height: 1.55; }
-.word-side-review .source-badge { max-width: 100%; height: auto; min-height: 27px; white-space: normal; text-align: left; }
 .word-side-review .button { width: 100%; min-height: 42px; padding: 0 8px; font-size: 11px; }
 .word-answer-first .word-exercise-actions { display: none; }
 .word-fill-slot { scroll-margin-top: 100px; }
@@ -1732,7 +1725,6 @@ button { color: inherit; }
 .business-sheet-sidebar nav a.complete small { color: #397853; }
 .business-sheet-sidebar > footer { display: grid; gap: 11px; margin-top: auto; padding: 16px 19px 19px; }
 .business-sheet-sidebar > footer > small { color: var(--ink-soft); font-size: 12px; line-height: 1.65; }
-.business-sheet-sidebar > footer .source-badge { max-width: 100%; height: auto; min-height: 28px; white-space: normal; }
 .business-sheet-sidebar > footer .button { width: 100%; min-height: 46px; padding: 0 10px; font-size: 13px; }
 .business-sheet-paper { min-width: 0; border: 1px solid #c8d0d5; background: #fffef9; box-shadow: 0 15px 34px rgba(37,43,48,.09); }
 .business-sheet-context { padding: 32px 52px 28px; border-bottom: 1px solid #c8d0d5; background: #f8f4e9; }
@@ -1760,7 +1752,6 @@ button { color: inherit; }
 .business-sheet-review > p { margin: 16px 0 0; color: var(--ink); font-size: 14px; line-height: 1.85; white-space: pre-wrap; }
 .business-sheet-review .outcome-check { margin-top: 20px; }
 .business-sheet-review-note { padding: 18px 52px 28px; border-top: 1px solid #c8d0d5; background: #fbf8ef; }
-.business-sheet-review-note .practical-source-note { margin: 0; }
 .business-sheet-review-note .correct { margin: 9px 0 0; color: #397853; font-size: 13px; }
 
 @media (max-width: 1080px) {

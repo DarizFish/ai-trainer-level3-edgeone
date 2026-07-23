@@ -5,7 +5,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { TheoryQuestion, TheoryType } from "@/lib/content";
 import { isCorrect } from "@/lib/scoring";
 import { useAccountSession } from "./AccountSession";
-import { SourceBadge } from "./SourceBadge";
 
 const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 const RESUME_KEY = "ai-trainer-theory-session-v6";
@@ -16,16 +15,6 @@ const TYPE_OPTIONS: { value: TheoryType | "all"; label: string }[] = [
   { value: "judge", label: "判断题" },
   { value: "single", label: "单选题" },
   { value: "multi", label: "多选题" },
-];
-
-type AnswerFilter = "all" | "official" | "reference" | "reviewed" | "heuristic";
-
-const SOURCE_OPTIONS: { value: AnswerFilter; label: string }[] = [
-  { value: "all", label: "全部答案" },
-  { value: "official", label: "指导手册" },
-  { value: "reference", label: "公开参考题库" },
-  { value: "reviewed", label: "本站逐题复核" },
-  { value: "heuristic", label: "本站知识点整理" },
 ];
 
 type Screen = "practice" | "result" | "build" | "browse";
@@ -49,14 +38,6 @@ function shuffled<T>(items: T[]): T[] {
   return copy;
 }
 
-function matchesAnswerFilter(question: TheoryQuestion, filter: AnswerFilter): boolean {
-  if (filter === "all") return true;
-  if (filter === "official") return question.answerSource === "official";
-  if (filter === "reference") return question.answerBasis === "third_party_reference";
-  if (filter === "reviewed") return question.answerBasis === "editorial_review";
-  return question.answerBasis === "heuristic";
-}
-
 export default function TheoryPractice({ questions, contentVersion }: { questions: TheoryQuestion[]; contentVersion: string }) {
   const { status: accountStatus } = useAccountSession();
   const signedIn = accountStatus === "authenticated";
@@ -64,7 +45,6 @@ export default function TheoryPractice({ questions, contentVersion }: { question
   const [screen, setScreen] = useState<Screen>("practice");
   const [type, setType] = useState<TheoryType | "all">("all");
   const [category, setCategory] = useState("all");
-  const [source, setSource] = useState<AnswerFilter>("all");
   const [order, setOrder] = useState<PracticeOrder>("sequential");
   const [sessionIds, setSessionIds] = useState<string[]>(defaultIds);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -90,7 +70,6 @@ export default function TheoryPractice({ questions, contentVersion }: { question
   const [browsePage, setBrowsePage] = useState(1);
   const [browseType, setBrowseType] = useState<TheoryType | "all">("all");
   const [browseCategory, setBrowseCategory] = useState("all");
-  const [browseSource, setBrowseSource] = useState<AnswerFilter>("all");
   const pageSize = 10;
 
   const questionById = useMemo(() => new Map(questions.map((question) => [question.id, question])), [questions]);
@@ -178,8 +157,7 @@ export default function TheoryPractice({ questions, contentVersion }: { question
   const configuredQuestions = useMemo(() => questions.filter((question) => (
     (type === "all" || question.type === type)
     && (category === "all" || question.category === category)
-    && matchesAnswerFilter(question, source)
-  )), [category, questions, source, type]);
+  )), [category, questions, type]);
 
   const sessionQuestions = useMemo(() => sessionIds.flatMap((id) => {
     const question = questionById.get(id);
@@ -210,9 +188,8 @@ export default function TheoryPractice({ questions, contentVersion }: { question
     const text = `${question.stem} ${question.section}`.toLowerCase();
     return (!query || text.includes(query.toLowerCase()))
       && (browseType === "all" || question.type === browseType)
-      && (browseCategory === "all" || question.category === browseCategory)
-      && matchesAnswerFilter(question, browseSource);
-  }), [browseCategory, browseSource, browseType, query, questions]);
+      && (browseCategory === "all" || question.category === browseCategory);
+  }), [browseCategory, browseType, query, questions]);
   const browsePages = Math.max(1, Math.ceil(filteredBrowse.length / pageSize));
   const currentBrowsePage = Math.min(browsePage, browsePages);
   const visibleBrowse = filteredBrowse.slice((currentBrowsePage - 1) * pageSize, currentBrowsePage * pageSize);
@@ -503,7 +480,7 @@ export default function TheoryPractice({ questions, contentVersion }: { question
         </section>
         <section>
           <p>题库与考试</p>
-          <button type="button" className={screen === "build" ? "active" : ""} onClick={() => showScreen("build")}><span>专项组题</span><small>按题型、领域和来源组合</small></button>
+          <button type="button" className={screen === "build" ? "active" : ""} onClick={() => showScreen("build")}><span>专项组题</span><small>按题型和知识领域组合</small></button>
           <button type="button" className={screen === "browse" ? "active" : ""} onClick={() => showScreen("browse")}><span>题库检索</span><small>搜索并查看 900 道题</small></button>
           <Link href="/theory/mock"><span>模拟考试</span><small>190 题 · 90 分钟</small></Link>
         </section>
@@ -520,7 +497,7 @@ export default function TheoryPractice({ questions, contentVersion }: { question
         </header>
         <div className="practice-progress" aria-label={`练习进度 ${currentIndex + 1}/${sessionQuestions.length}`}><i style={{ width: `${(currentIndex + 1) / sessionQuestions.length * 100}%` }} /></div>
         <article className="practice-question-card" ref={questionCardRef} tabIndex={-1}>
-          <div className="question-meta"><div className="question-meta-left"><span className="question-number">题库 #{String(currentQuestion.index).padStart(3, "0")}</span><span className="chip">{currentQuestion.typeLabel}</span>{currentQuestion.type === "multi" && <span className="chip">可多选</span>}</div><SourceBadge source={currentQuestion.answerSource} basis={currentQuestion.answerBasis} /></div>
+          <div className="question-meta"><div className="question-meta-left"><span className="question-number">题库 #{String(currentQuestion.index).padStart(3, "0")}</span><span className="chip">{currentQuestion.typeLabel}</span>{currentQuestion.type === "multi" && <span className="chip">可多选</span>}</div></div>
           <h2 className="practice-question-title">{currentQuestion.stem}</h2>
           <div className="practice-options">{(currentQuestion.type === "judge" ? ["√", "×"] : currentQuestion.options.map((_, index) => LETTERS[index])).map((value, index) => {
             const selected = (answers[currentQuestion.id] ?? []).includes(value);
@@ -533,11 +510,8 @@ export default function TheoryPractice({ questions, contentVersion }: { question
           })}</div>
 
           {revealed[currentQuestion.id] && <div className={`practice-feedback ${feedback[currentQuestion.id] ? "correct" : "wrong"}`} aria-live="polite">
-            <div><strong>{feedback[currentQuestion.id] ? "回答正确" : "回答错误"}</strong><b>参考答案：{currentQuestion.answer.join("、")}</b><SourceBadge source={currentQuestion.answerSource} basis={currentQuestion.answerBasis} /></div>
+            <div><strong>{feedback[currentQuestion.id] ? "回答正确" : "回答错误"}</strong><b>参考答案：{currentQuestion.answer.join("、")}</b></div>
             <p>{currentQuestion.explanation}</p>
-            {currentQuestion.answerBasis === "third_party_reference" && <small>核对说明：公开参考题库与本题的题型、序号、题干和选项全部严格匹配；该来源独立于指导手册。</small>}
-            {currentQuestion.answerBasis === "editorial_review" && <small>复核说明：本站已按完整题干和选项逐题复核，并用内容哈希锁定记录；该答案不属于指导手册官方答案。</small>}
-            {currentQuestion.answerBasis === "heuristic" && <small>整理说明：指导手册和公开参考题库均未提供可严格匹配的答案，本站依据对应知识点整理，建议结合解析复核。</small>}
           </div>}
 
           <div className="practice-bottom-bar">
@@ -560,12 +534,11 @@ export default function TheoryPractice({ questions, contentVersion }: { question
       </section>}
 
       {screen === "build" && <section className="theory-builder-panel">
-        <header><div><span className="eyebrow">CUSTOM PRACTICE</span><h2>自定义完整练习</h2><p>按题型、知识领域和答案来源筛选，符合条件的题目一次全部加入。</p></div><strong>{configuredQuestions.length}<small> 道符合条件</small></strong></header>
+        <header><div><span className="eyebrow">CUSTOM PRACTICE</span><h2>自定义完整练习</h2><p>按题型和知识领域筛选，符合条件的题目一次全部加入。</p></div><strong>{configuredQuestions.length}<small> 道符合条件</small></strong></header>
         <div className="theory-builder-grid">
           <fieldset><legend>1. 选择题型</legend><div className="choice-chips">{TYPE_OPTIONS.map((item) => <button type="button" key={item.value} className={type === item.value ? "active" : ""} onClick={() => setType(item.value)}>{item.label}</button>)}</div></fieldset>
           <fieldset className="full"><legend>2. 选择知识领域</legend><div className="choice-chips"><button type="button" className={category === "all" ? "active" : ""} onClick={() => setCategory("all")}>全部领域</button>{categories.map((item) => <button type="button" key={item} className={category === item ? "active" : ""} onClick={() => setCategory(item)}>{item}</button>)}</div></fieldset>
-          <fieldset><legend>3. 答案来源</legend><div className="choice-chips">{SOURCE_OPTIONS.map((item) => <button type="button" key={item.value} className={source === item.value ? "active" : ""} onClick={() => setSource(item.value)}>{item.label}</button>)}</div></fieldset>
-          <fieldset><legend>4. 出题顺序</legend><div className="choice-chips"><button type="button" className={order === "sequential" ? "active" : ""} onClick={() => setOrder("sequential")}>顺序</button><button type="button" className={order === "random" ? "active" : ""} onClick={() => setOrder("random")}>随机</button></div></fieldset>
+          <fieldset><legend>3. 出题顺序</legend><div className="choice-chips"><button type="button" className={order === "sequential" ? "active" : ""} onClick={() => setOrder("sequential")}>顺序</button><button type="button" className={order === "random" ? "active" : ""} onClick={() => setOrder("random")}>随机</button></div></fieldset>
         </div>
         <footer><div><b>将完整加入 {configuredQuestions.length} 道题</b><small>判断和单选选择后立即判分，多选提交后判分。</small></div><button type="button" className="button button-primary" disabled={!configuredQuestions.length || accountStatus === "loading"} onClick={() => startConfiguredPractice()}>{accountStatus === "loading" ? "正在确认账号…" : signedIn ? "开始完整练习" : "登录并开始练习"}</button></footer>
       </section>}
@@ -575,15 +548,14 @@ export default function TheoryPractice({ questions, contentVersion }: { question
           <div className="catalog-search"><label htmlFor="theory-search">搜索题目</label><input id="theory-search" className="field" value={query} onChange={(event) => browseFilter(() => setQuery(event.target.value))} placeholder="题干或知识点…" /></div>
           <div className="browse-filter-row" aria-label="题型筛选">{TYPE_OPTIONS.map((item) => <button type="button" key={item.value} className={browseType === item.value ? "active" : ""} onClick={() => browseFilter(() => setBrowseType(item.value))}>{item.label}</button>)}</div>
           <div className="browse-filter-row" aria-label="知识领域筛选"><button type="button" className={browseCategory === "all" ? "active" : ""} onClick={() => browseFilter(() => setBrowseCategory("all"))}>全部领域</button>{categories.map((item) => <button type="button" key={item} className={browseCategory === item ? "active" : ""} onClick={() => browseFilter(() => setBrowseCategory(item))}>{item}</button>)}</div>
-          <div className="browse-filter-row" aria-label="答案来源筛选">{SOURCE_OPTIONS.map((item) => <button type="button" key={item.value} className={browseSource === item.value ? "active" : ""} onClick={() => browseFilter(() => setBrowseSource(item.value))}>{item.label}</button>)}</div>
         </div>
         <div className="result-bar"><span>找到 <b>{filteredBrowse.length}</b> 道题 · 第 {currentBrowsePage}/{browsePages} 页</span><span className="notice">题库用于检索和查答案；连续作答请使用左侧练习导航。</span></div>
         <div className="theory-browser-list">{visibleBrowse.map((question) => <article className="theory-browser-card" key={question.id}>
-          <div className="question-meta"><div className="question-meta-left"><span className="question-number">#{String(question.index).padStart(3, "0")}</span><span className="chip">{question.typeLabel}</span><span className="chip">{question.category}</span><span className="chip">{question.section}</span></div><SourceBadge source={question.answerSource} basis={question.answerBasis} /></div>
+          <div className="question-meta"><div className="question-meta-left"><span className="question-number">#{String(question.index).padStart(3, "0")}</span><span className="chip">{question.typeLabel}</span><span className="chip">{question.category}</span><span className="chip">{question.section}</span></div></div>
           <h2>{question.stem}</h2>
           {question.type !== "judge" && <ol>{question.options.map((option, index) => <li key={option}><b>{LETTERS[index]}.</b> {option}</li>)}</ol>}
           <div className="question-actions"><button className="button button-primary" disabled={accountStatus === "loading"} onClick={() => beginPractice([question.id], 0, "单题练习")}>{accountStatus === "loading" ? "正在确认账号…" : signedIn ? "练这一题" : "登录后练习"}</button><button className="button button-quiet" onClick={() => setRevealed((current) => ({ ...current, [question.id]: !current[question.id] }))}>{revealed[question.id] ? "收起答案" : "查看参考答案"}</button><button className="button button-quiet" onClick={() => void toggleFavorite(question.id)}>{favorites[question.id] ? "★ 已收藏" : "☆ 收藏"}</button></div>
-          {revealed[question.id] && <div className="answer-panel"><div className="answer-line"><b>参考答案：{question.answer.join("、")}</b><SourceBadge source={question.answerSource} basis={question.answerBasis} /><span className="chip">可信度：{question.confidence === "high" ? "高" : question.confidence === "medium" ? "中" : "低"}</span></div><p>{question.explanation}</p>{question.answerBasis === "third_party_reference" && <small>核对说明：公开参考题库与本题题型、序号、题干和选项全部严格匹配；该来源独立于指导手册。</small>}{question.answerBasis === "editorial_review" && <small>复核说明：本站已按完整题干和选项逐题复核，并用内容哈希锁定记录；该答案不属于指导手册官方答案。</small>}{question.answerBasis === "heuristic" && <small>整理说明：暂无可严格匹配的手册或公开题库答案，本站依据对应知识点整理，建议结合解析复核。</small>}</div>}
+          {revealed[question.id] && <div className="answer-panel"><div className="answer-line"><b>参考答案：{question.answer.join("、")}</b></div><p>{question.explanation}</p></div>}
         </article>)}</div>
         {browsePages > 1 && <div className="pagination"><button disabled={currentBrowsePage === 1} onClick={() => setBrowsePage(currentBrowsePage - 1)}>‹</button><span>第 {currentBrowsePage} / {browsePages} 页</span><button disabled={currentBrowsePage === browsePages} onClick={() => setBrowsePage(currentBrowsePage + 1)}>›</button></div>}
       </section>}

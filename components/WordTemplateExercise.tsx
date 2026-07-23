@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import type { PracticalTask } from "@/lib/content";
 import { createPracticalWordExercise } from "@/lib/practical-word-exercise";
-import { SourceBadge } from "./SourceBadge";
 
 type WordDraft = {
   version: 1;
@@ -106,7 +105,7 @@ export function WordTemplateExercise({ task, userEmail }: { task: PracticalTask;
           const answered = Boolean(answers[field.id]?.trim());
           return <a className={answered ? "complete" : "pending"} href={`#word-field-${task.code}-${field.id}`} key={field.id}><span>{answered ? "✓" : index + 1}</span><b>{field.label}</b></a>;
         })}</nav>
-        <div className="word-side-review">{revealed ? <><SourceBadge source={task.answerSource} basis={task.answerBasis} /><small>参考填写已显示在对应横线下方。</small></> : <small>{userEmail ? "草稿自动保存" : "登录后可填写"}</small>}<button type="button" className={`button ${revealed ? "button-quiet" : "button-primary"}`} onClick={toggleReview}>{revealed ? "返回填写" : "完成并核对"}</button></div>
+        <div className="word-side-review">{revealed ? <small>参考填写已显示在对应横线下方。</small> : <small>{userEmail ? "草稿自动保存" : "登录后可填写"}</small>}<button type="button" className={`button ${revealed ? "button-quiet" : "button-primary"}`} onClick={toggleReview}>{revealed ? "返回填写" : "完成并核对"}</button></div>
       </section>
     </aside>
     <div className="word-document-canvas">
@@ -137,7 +136,7 @@ export function WordTemplateExercise({ task, userEmail }: { task: PracticalTask;
         })}
       </div>
       <footer id={`review-${task.code}`} className="word-exercise-actions">
-        <div className="word-review-status">{revealed ? <><SourceBadge source={task.answerSource} basis={task.answerBasis} /><span>逐处对照参考填写后，确认每空得分。</span></> : <span>{userEmail ? "草稿与核分自动保存在当前浏览器" : "登录后可填写并核分"}</span>}</div>
+        <div className="word-review-status">{revealed ? <span>逐处对照参考填写后，确认每空得分。</span> : <span>{userEmail ? "草稿与核分自动保存在当前浏览器" : "登录后可填写并核分"}</span>}</div>
         <button type="button" className={`button ${revealed ? "button-quiet" : "button-primary"}`} onClick={toggleReview}>{revealed ? "返回填写" : "完成填写，核对答案"}</button>
       </footer>
       {revealed && checkedCount === fieldCount && <p className="correct word-exercise-saved">✓ 本题已完成全部核分，当前 {exercise.fields.filter((field) => checks[field.id]).length} / {task.maxScore} 分；修改填写会撤销对应旧分数。</p>}
