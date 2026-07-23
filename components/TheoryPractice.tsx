@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { TheoryQuestion, TheoryType } from "@/lib/content";
+import { isCorrect } from "@/lib/scoring";
+import { useAccountSession } from "./AccountSession";
 import { SourceBadge } from "./SourceBadge";
 
 const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
@@ -55,8 +57,10 @@ function matchesAnswerFilter(question: TheoryQuestion, filter: AnswerFilter): bo
   return question.answerBasis === "heuristic";
 }
 
-export default function TheoryPractice({ questions, signedIn, contentVersion, initialQuestionId }: { questions: TheoryQuestion[]; signedIn: boolean; contentVersion: string; initialQuestionId?: string }) {
-  const defaultIds = useMemo(() => initialQuestionId ? [initialQuestionId] : questions.filter((question) => question.type === "judge").map((question) => question.id), [initialQuestionId, questions]);
+export default function TheoryPractice({ questions, contentVersion }: { questions: TheoryQuestion[]; contentVersion: string }) {
+  const { status: accountStatus } = useAccountSession();
+  const signedIn = accountStatus === "authenticated";
+  const defaultIds = useMemo(() => questions.filter((question) => question.type === "judge").map((question) => question.id), [questions]);
   const [screen, setScreen] = useState<Screen>("practice");
   const [type, setType] = useState<TheoryType | "all">("all");
   const [category, setCategory] = useState("all");
@@ -64,20 +68,23 @@ export default function TheoryPractice({ questions, signedIn, contentVersion, in
   const [order, setOrder] = useState<PracticeOrder>("sequential");
   const [sessionIds, setSessionIds] = useState<string[]>(defaultIds);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [sessionLabel, setSessionLabel] = useState(initialQuestionId ? "单题练习" : "判断题 · 完整 300 题");
-  const [persistSession, setPersistSession] = useState(!initialQuestionId);
+  const [sessionLabel, setSessionLabel] = useState("判断题 · 完整 300 题");
+  const [persistSession, setPersistSession] = useState(true);
+  const [urlQuestionId, setUrlQuestionId] = useState<string | null>(null);
+  const [urlReady, setUrlReady] = useState(false);
   const [answers, setAnswers] = useState<Record<string, string[]>>({});
   const [revealed, setRevealed] = useState<Record<string, boolean>>({});
   const [feedback, setFeedback] = useState<Record<string, boolean>>({});
   const [favorites, setFavorites] = useState<Record<string, boolean>>({});
   const [wrongIds, setWrongIds] = useState<string[]>([]);
   const [actionError, setActionError] = useState("");
-  const [submittingId, setSubmittingId] = useState<string | null>(null);
   const [navOpen, setNavOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [palettePage, setPalettePage] = useState(0);
   const questionCardRef = useRef<HTMLElement>(null);
   const questionGridRef = useRef<HTMLDivElement>(null);
+  const pendingAnswersRef = useRef(new Map<string, { answer: string[]; attempts: number }>());
+  const progressTimerRef = useRef<number | null>(null);
 
   const [query, setQuery] = useState("");
   const [browsePage, setBrowsePage] = useState(1);
@@ -91,7 +98,21 @@ export default function TheoryPractice({ questions, signedIn, contentVersion, in
   const categoryCounts = useMemo(() => new Map(categories.map((item) => [item, questions.filter((question) => question.category === item).length])), [categories, questions]);
 
   useEffect(() => {
-    if (initialQuestionId || !signedIn) return;
+    const requestedId = new URLSearchParams(window.location.search).get("question");
+    queueMicrotask(() => {
+      if (requestedId && questionById.has(requestedId)) {
+        setUrlQuestionId(requestedId);
+        setSessionIds([requestedId]);
+        setCurrentIndex(0);
+        setSessionLabel("单题练习");
+        setPersistSession(false);
+      }
+      setUrlReady(true);
+    });
+  }, [questionById]);
+
+  useEffect(() => {
+    if (!urlReady || urlQuestionId || !signedIn) return;
     try {
       const stored = JSON.parse(localStorage.getItem(RESUME_KEY) ?? "null") as ResumeState | null;
       if (stored && stored.contentVersion !== contentVersion) {
@@ -126,26 +147,28 @@ export default function TheoryPractice({ questions, signedIn, contentVersion, in
     } catch {
       localStorage.removeItem(RESUME_KEY);
     }
-  }, [contentVersion, initialQuestionId, questionById, signedIn]);
+  }, [contentVersion, questionById, signedIn, urlQuestionId, urlReady]);
 
   useEffect(() => {
     if (!signedIn) return;
-    void Promise.all([
-      fetch("/api/favorites").then(async (response) => response.ok ? await response.json() as { favorites: { itemType: string; itemId: string }[] } : { favorites: [] }),
-      fetch("/api/progress").then(async (response) => response.ok ? await response.json() as { wrongItems?: { id: string }[] } : { wrongItems: [] }),
-    ]).then(([favoriteData, progressData]) => {
-      setFavorites(Object.fromEntries(favoriteData.favorites.filter((item) => item.itemType === "theory").map((item) => [item.itemId, true])));
-      setWrongIds((progressData.wrongItems ?? []).map((item) => item.id));
-    }).catch(() => undefined);
+    void fetch("/api/theory/state")
+      .then(async (response) => response.ok
+        ? await response.json() as { favoriteIds: string[]; wrongIds: string[] }
+        : { favoriteIds: [], wrongIds: [] })
+      .then((state) => {
+        setFavorites(Object.fromEntries(state.favoriteIds.map((id) => [id, true])));
+        setWrongIds(state.wrongIds);
+      })
+      .catch(() => undefined);
   }, [signedIn]);
 
   useEffect(() => {
-    if (screen !== "practice" || !persistSession || sessionIds.length < 2) return;
+    if (!urlReady || screen !== "practice" || !persistSession || sessionIds.length < 2) return;
     const sessionAnswers = Object.fromEntries(sessionIds.flatMap((id) => answers[id]?.length ? [[id, answers[id]]] : []));
     const sessionFeedback = Object.fromEntries(sessionIds.flatMap((id) => typeof feedback[id] === "boolean" ? [[id, feedback[id]]] : []));
     const state: ResumeState = { contentVersion, ids: sessionIds, index: currentIndex, label: sessionLabel, answers: sessionAnswers, feedback: sessionFeedback, updatedAt: Date.now() };
     localStorage.setItem(RESUME_KEY, JSON.stringify(state));
-  }, [answers, contentVersion, currentIndex, feedback, persistSession, screen, sessionIds, sessionLabel]);
+  }, [answers, contentVersion, currentIndex, feedback, persistSession, screen, sessionIds, sessionLabel, urlReady]);
 
   const configuredQuestions = useMemo(() => questions.filter((question) => (
     (type === "all" || question.type === type)
@@ -182,7 +205,7 @@ export default function TheoryPractice({ questions, signedIn, contentVersion, in
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
-      if (screen !== "practice" || !currentQuestion || submittingId) return;
+      if (screen !== "practice" || !currentQuestion) return;
       const target = event.target as HTMLElement | null;
       if (target?.matches("input, textarea, select, button, a")) return;
       const options = currentQuestion.type === "judge" ? ["√", "×"] : currentQuestion.options.map((_, index) => LETTERS[index]);
@@ -206,9 +229,78 @@ export default function TheoryPractice({ questions, signedIn, contentVersion, in
     return () => window.removeEventListener("keydown", handleKeyDown);
   });
 
-  function requireSignIn() {
+  const flushProgress = useCallback((preferBeacon = false) => {
+    if (progressTimerRef.current !== null) {
+      window.clearTimeout(progressTimerRef.current);
+      progressTimerRef.current = null;
+    }
+    const attempts = [...pendingAnswersRef.current].map(([questionId, value]) => ({
+      questionId,
+      answer: value.answer,
+      attempts: value.attempts,
+    }));
+    if (!attempts.length) return;
+    pendingAnswersRef.current.clear();
+    const body = JSON.stringify({ attempts });
+
+    if (preferBeacon && navigator.sendBeacon) {
+      const queued = navigator.sendBeacon("/api/theory/answer", new Blob([body], { type: "application/json" }));
+      if (queued) return;
+    }
+
+    void fetch("/api/theory/answer", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body,
+      keepalive: true,
+    }).then((response) => {
+      if (!response.ok) throw new Error("progress sync failed");
+    }).catch(() => {
+      for (const item of attempts) {
+        const current = pendingAnswersRef.current.get(item.questionId);
+        pendingAnswersRef.current.set(item.questionId, {
+          answer: current?.answer ?? item.answer,
+          attempts: (current?.attempts ?? 0) + item.attempts,
+        });
+      }
+      setActionError("答案已在本机判分，学习记录暂未同步；继续练习时会再次保存。");
+    });
+  }, []);
+
+  useEffect(() => {
+    const flushWhenHidden = () => {
+      if (document.visibilityState === "hidden") flushProgress(true);
+    };
+    const flushOnPageHide = () => flushProgress(true);
+    document.addEventListener("visibilitychange", flushWhenHidden);
+    window.addEventListener("pagehide", flushOnPageHide);
+    return () => {
+      document.removeEventListener("visibilitychange", flushWhenHidden);
+      window.removeEventListener("pagehide", flushOnPageHide);
+      flushProgress(true);
+    };
+  }, [flushProgress]);
+
+  function queueProgress(questionId: string, answer: string[]) {
+    const pending = pendingAnswersRef.current.get(questionId);
+    pendingAnswersRef.current.set(questionId, {
+      answer,
+      attempts: (pending?.attempts ?? 0) + 1,
+    });
+    if (progressTimerRef.current === null) {
+      progressTimerRef.current = window.setTimeout(() => flushProgress(), 900);
+    }
+  }
+
+  function requireSignIn(): boolean {
+    if (accountStatus === "loading") {
+      setActionError("正在确认账号状态，请稍候。");
+      return false;
+    }
+    if (signedIn) return true;
     const returnTo = `${window.location.pathname}${window.location.search}`;
     window.location.assign(`/account?mode=login&return_to=${encodeURIComponent(returnTo)}`);
+    return false;
   }
 
   function focusQuestion() {
@@ -221,7 +313,7 @@ export default function TheoryPractice({ questions, signedIn, contentVersion, in
   }
 
   function beginPractice(ids: string[], startIndex = 0, label = "当前练习") {
-    if (!signedIn) return requireSignIn();
+    if (!requireSignIn()) return;
     const validIds = ids.filter((id) => questionById.has(id));
     if (!validIds.length) {
       setActionError("当前范围没有可练习的题目，请调整条件后重试。");
@@ -257,7 +349,7 @@ export default function TheoryPractice({ questions, signedIn, contentVersion, in
   }
 
   function startSavedPractice(kind: "wrong" | "favorite") {
-    if (!signedIn) return requireSignIn();
+    if (!requireSignIn()) return;
     const ids = kind === "wrong" ? wrongIds : Object.keys(favorites).filter((id) => favorites[id]);
     if (!ids.length) {
       setActionError(kind === "wrong" ? "目前没有错题记录，先完成一些理论练习吧。" : "目前还没有收藏理论题。");
@@ -268,8 +360,8 @@ export default function TheoryPractice({ questions, signedIn, contentVersion, in
   }
 
   function choose(question: TheoryQuestion, value: string) {
-    if (!signedIn) return requireSignIn();
-    if (revealed[question.id] || submittingId === question.id) return;
+    if (!requireSignIn()) return;
+    if (revealed[question.id]) return;
     if (question.type === "multi") {
       setAnswers((current) => {
         const existing = current[question.id] ?? [];
@@ -282,29 +374,21 @@ export default function TheoryPractice({ questions, signedIn, contentVersion, in
     void submit(question, answer);
   }
 
-  async function submit(question: TheoryQuestion, answerOverride?: string[]) {
-    if (!signedIn) return requireSignIn();
+  function submit(question: TheoryQuestion, answerOverride?: string[]) {
+    if (!requireSignIn()) return;
     const answer = answerOverride ?? answers[question.id] ?? [];
-    if (!answer.length || submittingId === question.id) return;
+    if (!answer.length || revealed[question.id]) return;
     setActionError("");
-    setSubmittingId(question.id);
-    try {
-      const response = await fetch("/api/theory/answer", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ questionId: question.id, answer }) });
-      if (!response.ok) return setActionError("提交失败，请稍后重试");
-      const result = await response.json() as { correct: boolean };
-      setFeedback((current) => ({ ...current, [question.id]: result.correct }));
-      setRevealed((current) => ({ ...current, [question.id]: true }));
-      if (!result.correct) setWrongIds((current) => current.includes(question.id) ? current : [question.id, ...current]);
-      else setWrongIds((current) => current.filter((id) => id !== question.id));
-    } catch {
-      setActionError("无法连接答题服务，请检查网络后重试");
-    } finally {
-      setSubmittingId(null);
-    }
+    const correct = isCorrect(question, answer);
+    setFeedback((current) => ({ ...current, [question.id]: correct }));
+    setRevealed((current) => ({ ...current, [question.id]: true }));
+    if (!correct) setWrongIds((current) => current.includes(question.id) ? current : [question.id, ...current]);
+    else setWrongIds((current) => current.filter((id) => id !== question.id));
+    queueProgress(question.id, answer);
   }
 
   async function toggleFavorite(questionId: string) {
-    if (!signedIn) return requireSignIn();
+    if (!requireSignIn()) return;
     setActionError("");
     const active = !favorites[questionId];
     setFavorites((current) => ({ ...current, [questionId]: active }));
@@ -429,12 +513,11 @@ export default function TheoryPractice({ questions, signedIn, contentVersion, in
             const correct = revealed[currentQuestion.id] && currentQuestion.answer.includes(value);
             const incorrect = revealed[currentQuestion.id] && selected && !correct;
             return <label className={`practice-option ${selected ? "selected" : ""} ${correct ? "correct" : ""} ${incorrect ? "incorrect" : ""}`} key={value}>
-              <input type={currentQuestion.type === "multi" ? "checkbox" : "radio"} name={currentQuestion.id} checked={selected} disabled={revealed[currentQuestion.id] || submittingId === currentQuestion.id} onChange={() => choose(currentQuestion, value)} />
+              <input type={currentQuestion.type === "multi" ? "checkbox" : "radio"} name={currentQuestion.id} checked={selected} disabled={revealed[currentQuestion.id]} onChange={() => choose(currentQuestion, value)} />
               <b>{value}</b><span>{currentQuestion.type === "judge" ? (value === "√" ? "正确" : "错误") : currentQuestion.options[index]}</span>
             </label>;
           })}</div>
 
-          {submittingId === currentQuestion.id && <div className="practice-judging" aria-live="polite">正在判分…</div>}
           {revealed[currentQuestion.id] && <div className={`practice-feedback ${feedback[currentQuestion.id] ? "correct" : "wrong"}`} aria-live="polite">
             <div><strong>{feedback[currentQuestion.id] ? "回答正确" : "回答错误"}</strong><b>参考答案：{currentQuestion.answer.join("、")}</b><SourceBadge source={currentQuestion.answerSource} basis={currentQuestion.answerBasis} /></div>
             <p>{currentQuestion.explanation}</p>
@@ -450,8 +533,8 @@ export default function TheoryPractice({ questions, signedIn, contentVersion, in
             {revealed[currentQuestion.id]
               ? <button type="button" className="button button-primary primary-action" onClick={() => currentIndex === sessionQuestions.length - 1 ? completePractice() : goToQuestion(currentIndex + 1)}>{currentIndex === sessionQuestions.length - 1 ? "查看本组结果" : "下一题"}</button>
               : currentQuestion.type === "multi"
-                ? <button type="button" className="button button-primary primary-action" disabled={!(answers[currentQuestion.id] ?? []).length || submittingId === currentQuestion.id} onClick={() => void submit(currentQuestion)}>{submittingId === currentQuestion.id ? "正在判分…" : "提交多选答案"}</button>
-                : <button type="button" className="button button-primary primary-action" disabled>{submittingId === currentQuestion.id ? "正在判分…" : "选择答案后自动判分"}</button>}
+                ? <button type="button" className="button button-primary primary-action" disabled={!(answers[currentQuestion.id] ?? []).length} onClick={() => void submit(currentQuestion)}>提交多选答案</button>
+                : <button type="button" className="button button-primary primary-action" disabled>选择答案后自动判分</button>}
           </div>
         </article>
       </section>}
@@ -470,7 +553,7 @@ export default function TheoryPractice({ questions, signedIn, contentVersion, in
           <fieldset><legend>3. 答案来源</legend><div className="choice-chips">{SOURCE_OPTIONS.map((item) => <button type="button" key={item.value} className={source === item.value ? "active" : ""} onClick={() => setSource(item.value)}>{item.label}</button>)}</div></fieldset>
           <fieldset><legend>4. 出题顺序</legend><div className="choice-chips"><button type="button" className={order === "sequential" ? "active" : ""} onClick={() => setOrder("sequential")}>顺序</button><button type="button" className={order === "random" ? "active" : ""} onClick={() => setOrder("random")}>随机</button></div></fieldset>
         </div>
-        <footer><div><b>将完整加入 {configuredQuestions.length} 道题</b><small>判断和单选选择后立即判分，多选提交后判分。</small></div><button type="button" className="button button-primary" disabled={!configuredQuestions.length} onClick={() => startConfiguredPractice()}>{signedIn ? "开始完整练习" : "登录并开始练习"}</button></footer>
+        <footer><div><b>将完整加入 {configuredQuestions.length} 道题</b><small>判断和单选选择后立即判分，多选提交后判分。</small></div><button type="button" className="button button-primary" disabled={!configuredQuestions.length || accountStatus === "loading"} onClick={() => startConfiguredPractice()}>{accountStatus === "loading" ? "正在确认账号…" : signedIn ? "开始完整练习" : "登录并开始练习"}</button></footer>
       </section>}
 
       {screen === "browse" && <section className="theory-browser">
@@ -485,7 +568,7 @@ export default function TheoryPractice({ questions, signedIn, contentVersion, in
           <div className="question-meta"><div className="question-meta-left"><span className="question-number">#{String(question.index).padStart(3, "0")}</span><span className="chip">{question.typeLabel}</span><span className="chip">{question.category}</span><span className="chip">{question.section}</span></div><SourceBadge source={question.answerSource} basis={question.answerBasis} /></div>
           <h2>{question.stem}</h2>
           {question.type !== "judge" && <ol>{question.options.map((option, index) => <li key={option}><b>{LETTERS[index]}.</b> {option}</li>)}</ol>}
-          <div className="question-actions"><button className="button button-primary" onClick={() => beginPractice([question.id], 0, "单题练习")}>{signedIn ? "练这一题" : "登录后练习"}</button><button className="button button-quiet" onClick={() => setRevealed((current) => ({ ...current, [question.id]: !current[question.id] }))}>{revealed[question.id] ? "收起答案" : "查看参考答案"}</button><button className="button button-quiet" onClick={() => void toggleFavorite(question.id)}>{favorites[question.id] ? "★ 已收藏" : "☆ 收藏"}</button></div>
+          <div className="question-actions"><button className="button button-primary" disabled={accountStatus === "loading"} onClick={() => beginPractice([question.id], 0, "单题练习")}>{accountStatus === "loading" ? "正在确认账号…" : signedIn ? "练这一题" : "登录后练习"}</button><button className="button button-quiet" onClick={() => setRevealed((current) => ({ ...current, [question.id]: !current[question.id] }))}>{revealed[question.id] ? "收起答案" : "查看参考答案"}</button><button className="button button-quiet" onClick={() => void toggleFavorite(question.id)}>{favorites[question.id] ? "★ 已收藏" : "☆ 收藏"}</button></div>
           {revealed[question.id] && <div className="answer-panel"><div className="answer-line"><b>参考答案：{question.answer.join("、")}</b><SourceBadge source={question.answerSource} basis={question.answerBasis} /><span className="chip">可信度：{question.confidence === "high" ? "高" : question.confidence === "medium" ? "中" : "低"}</span></div><p>{question.explanation}</p>{question.answerBasis === "third_party_reference" && <small>核对说明：公开参考题库与本题题型、序号、题干和选项全部严格匹配；该来源独立于指导手册。</small>}{question.answerBasis === "editorial_review" && <small>复核说明：本站已按完整题干和选项逐题复核，并用内容哈希锁定记录；该答案不属于指导手册官方答案。</small>}{question.answerBasis === "heuristic" && <small>整理说明：暂无可严格匹配的手册或公开题库答案，本站依据对应知识点整理，建议结合解析复核。</small>}</div>}
         </article>)}</div>
         {browsePages > 1 && <div className="pagination"><button disabled={currentBrowsePage === 1} onClick={() => setBrowsePage(currentBrowsePage - 1)}>‹</button><span>第 {currentBrowsePage} / {browsePages} 页</span><button disabled={currentBrowsePage === browsePages} onClick={() => setBrowsePage(currentBrowsePage + 1)}>›</button></div>}

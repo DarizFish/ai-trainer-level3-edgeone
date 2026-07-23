@@ -1,15 +1,37 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
-import type { PracticalTask } from "@/lib/content";
+import { useEffect, useMemo, useState } from "react";
+import type { AnswerSource, PracticalAnswerBasis } from "@/lib/content";
 import { examBlueprint } from "@/lib/exam-blueprint";
 import { SourceBadge } from "./SourceBadge";
 
-export default function PracticalCatalog({ tasks, initialLabOnly = false }: { tasks: PracticalTask[]; initialLabOnly?: boolean }) {
+export type PracticalCatalogTask = {
+  answerBasis: PracticalAnswerBasis;
+  answerSource: AnswerSource;
+  category: string;
+  code: string;
+  description: string;
+  durationMinutes: number;
+  group: string;
+  hasNotebook: boolean;
+  materials: { label: string }[];
+  maxScore: number;
+  rubric: { id: string }[];
+  title: string;
+  unit: string;
+};
+
+export default function PracticalCatalog({ tasks }: { tasks: PracticalCatalogTask[] }) {
   const [query, setQuery] = useState("");
   const [moduleKey, setModuleKey] = useState("all");
-  const [labOnly, setLabOnly] = useState(initialLabOnly);
+  const [labOnly, setLabOnly] = useState(false);
+
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("lab") === "1") {
+      queueMicrotask(() => setLabOnly(true));
+    }
+  }, []);
   const groups = useMemo(() => [...new Set(tasks.map((task) => task.group))], [tasks]);
   const selectedModule = examBlueprint.practical.modules.find((item) => item.key === moduleKey);
   const filtered = useMemo(() => tasks.filter((task) => (!query || `${task.code}${task.title}${task.description}`.toLowerCase().includes(query.toLowerCase())) && (!selectedModule || (selectedModule.groups as readonly string[]).includes(task.group)) && (!labOnly || task.hasNotebook)), [tasks, query, selectedModule, labOnly]);

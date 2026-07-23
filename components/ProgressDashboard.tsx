@@ -1,52 +1,35 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import type { ProgressData } from "@/lib/progress-data";
 
-type WrongItem = { id: string; index: number; typeLabel: string; category: string; stem: string; selectedAnswer: string[]; correctAnswer: string[]; attempts: number; updatedAt: string; href: string };
-type FavoriteItem = { itemType: "theory" | "practical"; itemId: string; title: string; meta: string; href: string; updatedAt: string };
-type RecentMock = { mode: string; score: number; maxScore: number; passed: boolean; createdAt: string };
-type RecentPractical = { taskCode: string; title: string; score: number; maxScore: number; createdAt: string; href: string };
-type PracticalAbility = { key: string; label: string; bestScore: number; maxScore: number; attempts: number };
-type Progress = {
-  answered: number;
-  wrong: number;
-  favorites: number;
-  practicalAttempts: number;
-  mockAttempts: number;
-  bestTheoryScore: number;
-  practicalAbility: PracticalAbility[];
-  estimatedPracticalScore: number;
-  drafts: number;
-  wrongItems: WrongItem[];
-  favoriteItems: FavoriteItem[];
-  recentMocks: RecentMock[];
-  recentPractical: RecentPractical[];
-};
+type FavoriteItem = ProgressData["favoriteItems"][number];
 
 function shortDate(value: string) {
   const date = new Date(value.includes("T") ? value : `${value.replace(" ", "T")}Z`);
   return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString("zh-CN", { month: "numeric", day: "numeric" });
 }
 
-export default function ProgressDashboard() {
-  const [data, setData] = useState<Progress | null>(null);
+export default function ProgressDashboard({ initialData }: { initialData: ProgressData }) {
+  const [data, setData] = useState(initialData);
   const [error, setError] = useState("");
-  useEffect(() => {
-    void fetch("/api/progress").then(async (response) => {
-      if (!response.ok) throw new Error("学习档案暂时无法读取");
-      return await response.json() as Progress;
-    }).then(setData).catch((reason: Error) => setError(reason.message));
-  }, []);
 
   async function removeFavorite(item: FavoriteItem) {
+    const previous = data;
+    setData((current) => ({
+      ...current,
+      favorites: Math.max(0, current.favorites - 1),
+      favoriteItems: current.favoriteItems.filter((value) => !(value.itemType === item.itemType && value.itemId === item.itemId)),
+    }));
     const response = await fetch("/api/favorites", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ itemType: item.itemType, itemId: item.itemId, active: false }) });
-    if (!response.ok) return setError("取消收藏失败，请稍后重试");
-    setData((current) => current ? { ...current, favorites: Math.max(0, current.favorites - 1), favoriteItems: current.favoriteItems.filter((value) => !(value.itemType === item.itemType && value.itemId === item.itemId)) } : current);
+    if (!response.ok) {
+      setData(previous);
+      setError("取消收藏失败，请稍后重试");
+    }
   }
 
   if (error) return <div className="notice" role="alert">{error}。</div>;
-  if (!data) return <div className="empty-state">正在汇总学习档案…</div>;
 
   const theoryPassed = data.bestTheoryScore >= 60;
   const practicalPassed = data.estimatedPracticalScore >= 60;

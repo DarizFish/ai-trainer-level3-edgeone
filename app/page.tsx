@@ -1,9 +1,8 @@
 import Link from "next/link";
 import { content } from "@/lib/content";
-import { accountSignInPath, getAccountUser } from "@/lib/account-auth";
+import { HomeAccountCta } from "@/components/AccountSession";
 
-export default async function HomePage() {
-  const user = await getAccountUser();
+export default function HomePage() {
   const stats = content.stats;
   const referenceAnswers = content.theory.filter((question) => question.answerBasis === "third_party_reference").length;
   const reviewedAnswers = content.theory.filter((question) => question.answerBasis === "editorial_review").length;
@@ -17,11 +16,7 @@ export default async function HomePage() {
             <p className="eyebrow">国家职业技能等级 · 三级</p>
             <h1>把厚厚的指导手册，<br /><em>练成你的分数。</em></h1>
             <p className="lede">一站覆盖理论全题库、官方模拟卷、实操评分细则与 20 个浏览器 Python 实验。答案来源逐题标注，复习更有把握。</p>
-            <div className="hero-actions">
-              <Link className="button button-primary" href={user ? "/theory" : accountSignInPath("/theory")}>{user ? "继续理论练习" : "登录并开始练习"}</Link>
-              <Link className="button button-quiet" href="/practical">浏览实操题库 <span aria-hidden>→</span></Link>
-            </div>
-            <p className="hero-note">{user ? "已登录 · 作答、评分、收藏与 Notebook 草稿会同步到学习档案" : "题目与答案可匿名浏览 · 作答、评分与多设备同步需账号登录"}</p>
+            <HomeAccountCta />
           </div>
           <aside className="exam-docket" aria-label="题库概览">
             <div className="docket-head"><span>备考总览</span><small>内容版本 {content.version}</small></div>

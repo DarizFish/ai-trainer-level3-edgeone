@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { PracticalTask } from "@/lib/content";
 import { examBlueprint, practicalModuleForGroup } from "@/lib/exam-blueprint";
 import { formatPracticalExamAnswer, practicalExamAnswerProgress } from "@/lib/practical-exam-answer";
+import { useAccountSession } from "./AccountSession";
 import {
   createPracticalExamSnapshot,
   PRACTICAL_MOCK_STORAGE_KEY,
@@ -36,7 +37,9 @@ function taskReviewRemaining(task: PracticalTask, checks: Record<string, boolean
   return task.rubric.filter((item) => !Object.prototype.hasOwnProperty.call(scores, item.id)).length;
 }
 
-export default function PracticalMock({ allTasks, officialTasks, contentVersion, signedIn }: { allTasks: PracticalTask[]; officialTasks: PracticalTask[]; contentVersion: string; signedIn: boolean }) {
+export default function PracticalMock({ allTasks, officialTasks, contentVersion }: { allTasks: PracticalTask[]; officialTasks: PracticalTask[]; contentVersion: string }) {
+  const { status: accountStatus } = useAccountSession();
+  const signedIn = accountStatus === "authenticated";
   const [mode, setMode] = useState<PracticalExamMode>("official");
   const [tasks, setTasks] = useState(officialTasks);
   const [phase, setPhase] = useState<"idle" | PracticalExamPhase>("idle");
@@ -105,6 +108,10 @@ export default function PracticalMock({ allTasks, officialTasks, contentVersion,
   const reviewedTaskCount = useMemo(() => tasks.filter((task) => taskReviewRemaining(task, checks[task.code] ?? {}, rubric[task.code] ?? {}) === 0).length, [checks, rubric, tasks]);
 
   function start(force = false) {
+    if (accountStatus === "loading") {
+      setSubmitError("正在确认账号状态，请稍候。");
+      return;
+    }
     if (!signedIn) { window.location.assign("/account?mode=login&return_to=%2Fpractical%2Fmock"); return; }
     if (force && !window.confirm("重新开始会清除当前浏览器中保存的本次实操考试进度，确定继续吗？")) return;
     const next = mode === "official" ? officialTasks : randomMock(allTasks);
@@ -183,7 +190,7 @@ export default function PracticalMock({ allTasks, officialTasks, contentVersion,
     })}</nav></section>;
   }
 
-  if (phase === "idle") return <div className="container mock-entry"><section className="practical-mock-start"><header><p className="eyebrow">实操模拟</p><h2>{examBlueprint.practical.totalTasks} 题 · {examBlueprint.practical.durationMinutes} 分钟 · {examBlueprint.practical.maxScore} 分</h2><p>业务分析二选一；数据处理、算法测试、系统优化、人机交互各一题；培训或指导二选一。</p></header><div className="practical-mock-rules"><div><b>作答方式</b><p>每题按“题目与素材 → 交付物作答”顺序完成，六题通过顶部题号条切换。</p></div><div><b>简化计时</b><p>开始后计时；切题和刷新不会重置。同一浏览器可恢复本次进度。</p></div><div><b>考后评分</b><p>交卷后才展示参考答案与官方评分项，逐项核对后生成模拟成绩。</p></div><div><b>合格线</b><strong>{examBlueprint.passingScore}<small> / 100 分</small></strong></div></div><div className="practical-mock-options"><label className={`option ${mode === "official" ? "selected" : ""}`}><input type="radio" checked={mode === "official"} onChange={() => setMode("official")} /><span><b>官方实操模拟卷</b><br />固定采用手册中的官方模拟题，组成完整六题考场。</span></label><label className={`option ${mode === "random" ? "selected" : ""}`}><input type="radio" checked={mode === "random"} onChange={() => setMode("random")} /><span><b>随机实操模拟卷</b><br />按六个官方模块从 40 道题中随机抽取，模块与权重不变。</span></label></div><footer><button className="button button-primary" onClick={() => start()}>{signedIn ? "开始考试" : "登录后开始"}</button></footer></section></div>;
+  if (phase === "idle") return <div className="container mock-entry"><section className="practical-mock-start"><header><p className="eyebrow">实操模拟</p><h2>{examBlueprint.practical.totalTasks} 题 · {examBlueprint.practical.durationMinutes} 分钟 · {examBlueprint.practical.maxScore} 分</h2><p>业务分析二选一；数据处理、算法测试、系统优化、人机交互各一题；培训或指导二选一。</p></header>{submitError && <div className="account-error" role="alert">{submitError}</div>}<div className="practical-mock-rules"><div><b>作答方式</b><p>每题按“题目与素材 → 交付物作答”顺序完成，六题通过顶部题号条切换。</p></div><div><b>简化计时</b><p>开始后计时；切题和刷新不会重置。同一浏览器可恢复本次进度。</p></div><div><b>考后评分</b><p>交卷后才展示参考答案与官方评分项，逐项核对后生成模拟成绩。</p></div><div><b>合格线</b><strong>{examBlueprint.passingScore}<small> / 100 分</small></strong></div></div><div className="practical-mock-options"><label className={`option ${mode === "official" ? "selected" : ""}`}><input type="radio" checked={mode === "official"} onChange={() => setMode("official")} /><span><b>官方实操模拟卷</b><br />固定采用手册中的官方模拟题，组成完整六题考场。</span></label><label className={`option ${mode === "random" ? "selected" : ""}`}><input type="radio" checked={mode === "random"} onChange={() => setMode("random")} /><span><b>随机实操模拟卷</b><br />按六个官方模块从 40 道题中随机抽取，模块与权重不变。</span></label></div><footer><button className="button button-primary" disabled={accountStatus === "loading"} onClick={() => start()}>{accountStatus === "loading" ? "正在确认账号…" : signedIn ? "开始考试" : "登录后开始"}</button></footer></section></div>;
 
   if (phase === "result") return <div className="container workspace mock-result-page"><div className="mock-score"><p>本次实操模拟核对得分</p><strong>{totalScore}</strong><span>/ {examBlueprint.practical.maxScore} 分</span><h2>{totalScore >= examBlueprint.passingScore ? "实操科目模拟合格" : "实操科目暂未合格"}</h2><p>其中人工核对项用于备考复盘，不代表官方认定成绩。</p></div><div className="practical-result-grid">{tasks.map((task) => { const examModule = practicalModuleForGroup(task.group); return <button type="button" key={task.code} onClick={() => { setCurrent(tasks.indexOf(task)); setPhase("review"); }}><span>{examModule?.label ?? task.category}</span><strong>{results[task.code]?.score ?? 0} / {task.maxScore}</strong><small>{task.code} · 查看成果复盘</small></button>; })}</div><div className="separate-pass-note"><b>两科分别判定：</b>理论与实操都需分别达到 {examBlueprint.passingScore} 分，不计算综合平均分；未合格科目可单独补考。</div><div className="hero-actions"><button className="button button-primary" onClick={() => start(true)}>重新组卷</button></div></div>;
 

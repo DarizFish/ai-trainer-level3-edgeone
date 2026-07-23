@@ -13,7 +13,8 @@ test("completed Chinese exam-prep homepage contains product-specific content", a
   assert.match(page, /notebookTasks/);
   assert.match(page, /原始模板 · 一键恢复/);
   assert.doesNotMatch(page, /模板异常/);
-  assert.match(layout, /accountSignInPath/);
+  assert.match(layout, /AccountProvider/);
+  assert.match(layout, /AccountControls/);
   assert.doesNotMatch(`${page}${layout}`, /codex-preview|Your site is taking shape|react-loading-skeleton/);
 });
 
@@ -22,15 +23,40 @@ test("theory and practical content pages remain public while progress is protect
   for (const path of publicPages) {
     const source = await readFile(new URL(path, import.meta.url), "utf8");
     assert.doesNotMatch(source, /requireAccountUser/);
+    assert.doesNotMatch(source, /getAccountUser|searchParams/);
+    assert.match(source, /force-static/);
   }
   const progress = await readFile(new URL("../app/progress/page.tsx", import.meta.url), "utf8");
   assert.match(progress, /requireAccountUser/);
 });
 
+test("public route shells are static while answer scoring is immediate and persistence is batched", async () => {
+  const [layout, theoryRoute, practicalRoute, theoryPractice, theoryAnswer, progressPage, dashboard] = await Promise.all([
+    readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/content/theory/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/content/practical/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../components/TheoryPractice.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/theory/answer/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/progress/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/ProgressDashboard.tsx", import.meta.url), "utf8"),
+  ]);
+  assert.doesNotMatch(layout, /headers\(\)|getAccountUser/);
+  assert.match(layout, /api\/content\/theory/);
+  assert.match(theoryRoute, /force-static/);
+  assert.match(practicalRoute, /force-static/);
+  assert.match(theoryPractice, /const correct = isCorrect\(question, answer\)/);
+  assert.match(theoryPractice, /pendingAnswersRef/);
+  assert.match(theoryPractice, /setTimeout\(\(\) => flushProgress\(\), 900\)/);
+  assert.match(theoryAnswer, /Array\.isArray\(payload\.attempts\)/);
+  assert.match(theoryAnswer, /excluded\.attempts/);
+  assert.match(progressPage, /initialData=\{progress\}/);
+  assert.doesNotMatch(dashboard, /fetch\("\/api\/progress"/);
+});
+
 test("email accounts use versioned PostgreSQL schema, hashed passwords, and revocable sessions", async () => {
   const migrationName = (await readdir(new URL("../drizzle/", import.meta.url))).find((name) => name.endsWith(".sql"));
   assert.ok(migrationName, "a PostgreSQL migration must be generated");
-  const [schema, accountSchema, migration, auth, register, login, logout, accountPage, accountForm, layout, readme] = await Promise.all([
+  const [schema, accountSchema, migration, auth, register, login, logout, accountPage, accountForm, layout, accountSession, readme] = await Promise.all([
     readFile(new URL("../db/schema.ts", import.meta.url), "utf8"),
     readFile(new URL("../lib/account-schema.ts", import.meta.url), "utf8"),
     readFile(new URL(`../drizzle/${migrationName}`, import.meta.url), "utf8"),
@@ -41,6 +67,7 @@ test("email accounts use versioned PostgreSQL schema, hashed passwords, and revo
     readFile(new URL("../app/account/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/AccountForm.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/AccountSession.tsx", import.meta.url), "utf8"),
     readFile(new URL("../README.md", import.meta.url), "utf8"),
   ]);
   assert.match(schema, /passwordHash: text\("password_hash"\)/);
@@ -63,7 +90,8 @@ test("email accounts use versioned PostgreSQL schema, hashed passwords, and revo
   assert.match(accountPage, /force-dynamic/);
   assert.match(accountForm, /autocomplete|autoComplete/i);
   assert.match(accountForm, /无法连接账号服务/);
-  assert.match(layout, /\/api\/auth\/logout/);
+  assert.match(layout, /AccountControls/);
+  assert.match(accountSession, /\/api\/auth\/logout/);
   assert.match(readme, /自建邮箱密码账号/);
   assert.match(readme, /不要改回 ChatGPT 登录/);
   assert.match(readme, /EdgeOne Makers/);

@@ -13,6 +13,7 @@ import {
   type TheoryExamResult,
 } from "@/lib/theory-exam-storage";
 import { getTheoryReviewPage, type TheoryReviewFilter } from "@/lib/theory-review";
+import { useAccountSession } from "./AccountSession";
 import { SourceBadge } from "./SourceBadge";
 
 const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
@@ -33,7 +34,9 @@ function formatTime(seconds: number) {
   return `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
 }
 
-export default function TheoryMock({ allQuestions, officialQuestions, signedIn, contentVersion }: { allQuestions: TheoryQuestion[]; officialQuestions: TheoryQuestion[]; signedIn: boolean; contentVersion: string }) {
+export default function TheoryMock({ allQuestions, officialQuestions, contentVersion }: { allQuestions: TheoryQuestion[]; officialQuestions: TheoryQuestion[]; contentVersion: string }) {
+  const { status: accountStatus } = useAccountSession();
+  const signedIn = accountStatus === "authenticated";
   const [mode, setMode] = useState<Mode>("official");
   const [questions, setQuestions] = useState<TheoryQuestion[]>(officialQuestions);
   const [started, setStarted] = useState(false);
@@ -162,6 +165,10 @@ export default function TheoryMock({ allQuestions, officialQuestions, signedIn, 
   const visibleNavigatorIndexes = useMemo(() => questions.map((_, index) => index).filter((index) => navigatorFilter === "all" || (navigatorFilter === "answered" ? Boolean(answers[questions[index].id]?.length) : !answers[questions[index].id]?.length)), [answers, navigatorFilter, questions]);
 
   function begin(force = false) {
+    if (accountStatus === "loading") {
+      setSubmitError("正在确认账号状态，请稍候。");
+      return;
+    }
     if (!signedIn) { window.location.assign("/account?mode=login&return_to=%2Ftheory%2Fmock"); return; }
     if (force && !window.confirm("重新开始会清除当前浏览器中保存的本次理论考试进度，确定继续吗？")) return;
     const nextQuestions = mode === "official" ? officialQuestions : pickRandom(allQuestions);
@@ -207,7 +214,7 @@ export default function TheoryMock({ allQuestions, officialQuestions, signedIn, 
     if (wrappedIndex >= 0) jump(wrappedIndex);
   }
 
-  if (!started) return <div className="container mock-entry"><div className="detail-layout"><section className="detail-main"><p className="eyebrow">考试说明</p><h2>理论知识模拟考试</h2><div className="notice">倒计时与答案保存在当前浏览器，刷新后可继续。交卷后由服务端按题库重新计分。</div><div className="question-list" style={{ marginTop: 18 }}><label className={`option ${mode === "official" ? "selected" : ""}`}><input type="radio" checked={mode === "official"} onChange={() => setMode("official")} /><span><b>官方模拟卷</b><br />190 道题均来自手册官方模拟题，答案为官方答案。</span></label><label className={`option ${mode === "random" ? "selected" : ""}`}><input type="radio" checked={mode === "random"} onChange={() => setMode("random")} /><span><b>随机模拟卷</b><br />从 900 道题中按官方题型配比随机抽取，无重复。</span></label></div></section><aside className="detail-side"><section><h2>考试规则</h2><p>考试时间 <b>{examBlueprint.theory.durationMinutes} 分钟</b></p>{Object.values(examBlueprint.theory.types).map((type) => <p key={type.label}>{type.label} {type.count} × {type.points} 分</p>)}<p>多选必须完全匹配，不给部分分。</p><div className="score-box"><span>合格线</span><strong>{examBlueprint.passingScore}</strong></div><button className="button button-primary" style={{ width: "100%", marginTop: 18 }} onClick={() => begin()}>{signedIn ? "开始考试" : "登录后开始"}</button></section></aside></div></div>;
+  if (!started) return <div className="container mock-entry"><div className="detail-layout"><section className="detail-main"><p className="eyebrow">考试说明</p><h2>理论知识模拟考试</h2><div className="notice">倒计时与答案保存在当前浏览器，刷新后可继续。交卷后由服务端按题库重新计分。</div>{submitError && <div className="account-error" role="alert">{submitError}</div>}<div className="question-list" style={{ marginTop: 18 }}><label className={`option ${mode === "official" ? "selected" : ""}`}><input type="radio" checked={mode === "official"} onChange={() => setMode("official")} /><span><b>官方模拟卷</b><br />190 道题均来自手册官方模拟题，答案为官方答案。</span></label><label className={`option ${mode === "random" ? "selected" : ""}`}><input type="radio" checked={mode === "random"} onChange={() => setMode("random")} /><span><b>随机模拟卷</b><br />从 900 道题中按官方题型配比随机抽取，无重复。</span></label></div></section><aside className="detail-side"><section><h2>考试规则</h2><p>考试时间 <b>{examBlueprint.theory.durationMinutes} 分钟</b></p>{Object.values(examBlueprint.theory.types).map((type) => <p key={type.label}>{type.label} {type.count} × {type.points} 分</p>)}<p>多选必须完全匹配，不给部分分。</p><div className="score-box"><span>合格线</span><strong>{examBlueprint.passingScore}</strong></div><button className="button button-primary" style={{ width: "100%", marginTop: 18 }} disabled={accountStatus === "loading"} onClick={() => begin()}>{accountStatus === "loading" ? "正在确认账号…" : signedIn ? "开始考试" : "登录后开始"}</button></section></aside></div></div>;
 
   if (finished && result) {
     const reviewIds = [...result.wrongQuestionIds, ...result.unansweredQuestionIds];
