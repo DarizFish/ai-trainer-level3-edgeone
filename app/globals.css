@@ -84,6 +84,10 @@ button { color: inherit; }
 .path-card.featured p { color: #c8d1d8; }
 .path-card b { margin-top: auto; font-size: 13px; color: var(--red); }
 .path-card.featured b { color: #f3b8aa; }
+.home-resource-callout { display: flex; align-items: center; justify-content: space-between; gap: 28px; margin-top: 18px; padding: 18px 22px; border: 1px solid var(--line); background: #fbf8ef; }
+.home-resource-callout span { display: block; color: var(--red); font-size: 11px; font-weight: 800; letter-spacing: .12em; }
+.home-resource-callout p { margin: 2px 0 0; color: var(--ink-soft); font-size: 13px; }
+.home-resource-callout .text-link { flex-shrink: 0; }
 .ink-band { background: var(--ink); color: #fff; padding: 90px 0; }
 .proof-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: 100px; align-items: center; }
 .eyebrow.light { color: #e7ac9f; }
@@ -713,6 +717,44 @@ button { color: inherit; }
 .blueprint-actions h2 { margin: 3px 0 0; }
 .blueprint-actions .hero-actions { margin: 0; }
 
+/* Official reference resources and registration guidance */
+.resources-hero .container > p:last-of-type { max-width: 760px; }
+.resource-verification { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+.resource-verification span { padding: 6px 10px; border: 1px solid var(--line); background: rgba(255,255,255,.35); color: var(--ink-soft); font-size: 11px; font-weight: 700; }
+.resources-page { display: grid; gap: 48px; }
+.resources-section { display: grid; gap: 22px; }
+.resources-heading { display: flex; align-items: end; justify-content: space-between; gap: 48px; }
+.resources-heading h2, .registration-guide h2, .resource-safety h2 { margin: 0; font: 700 clamp(27px, 3vw, 38px)/1.3 "Noto Serif SC", STSong, SimSun, serif; }
+.resources-heading > p { max-width: 480px; margin: 0; color: var(--ink-soft); }
+.official-resource-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.official-resource-card { min-width: 0; display: flex; flex-direction: column; padding: 24px; border: 1px solid var(--line); background: var(--card); box-shadow: 0 5px 18px rgba(38,32,21,.04); }
+.official-resource-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.official-resource-head > span { color: var(--red); font-size: 11px; font-weight: 800; letter-spacing: .13em; }
+.official-resource-head > small { padding: 3px 7px; background: #e8f0ea; color: #35674a; font-weight: 800; }
+.official-resource-card h3 { margin: 24px 0 9px; font: 700 22px/1.45 "Noto Serif SC", STSong, SimSun, serif; }
+.official-resource-card > p { margin: 0 0 24px; color: var(--ink-soft); }
+.official-resource-link { display: flex; align-items: end; justify-content: space-between; gap: 18px; margin-top: auto; padding-top: 15px; border-top: 1px solid var(--line); }
+.official-resource-link > span { min-width: 0; display: grid; }
+.official-resource-link small { color: var(--ink-soft); font-size: 9px; }
+.official-resource-link b { overflow-wrap: anywhere; font: 600 11px/1.45 Consolas, monospace; }
+.official-resource-link strong { flex: 0 0 auto; color: var(--red); font-size: 12px; }
+.official-resource-link:hover strong { text-decoration: underline; }
+.registration-guide { display: grid; grid-template-columns: .75fr 1.25fr; border: 1px solid var(--line); background: var(--ink); color: #fff; }
+.registration-guide-copy { align-self: center; padding: 34px; }
+.registration-guide-copy .eyebrow { color: #f0b3a3; }
+.registration-guide-copy > p:not(.eyebrow) { margin: 14px 0 24px; color: #c8d1d8; }
+.registration-guide-copy .button { color: #fff; }
+.registration-steps { display: grid; margin: 0; padding: 8px 30px; background: var(--card); color: var(--ink); list-style: none; counter-reset: registration; }
+.registration-steps li { display: grid; grid-template-columns: 42px minmax(0, 1fr); gap: 14px; align-items: center; padding: 20px 0; border-bottom: 1px solid var(--line); }
+.registration-steps li:last-child { border-bottom: 0; }
+.registration-steps li > span { width: 36px; height: 36px; display: grid; place-items: center; border: 1px solid var(--red); border-radius: 50%; color: var(--red); font: 800 14px/1 Georgia, serif; }
+.registration-steps b { font-family: "Noto Serif SC", STSong, SimSun, serif; }
+.registration-steps p { margin: 3px 0 0; color: var(--ink-soft); font-size: 12px; }
+.service-resource-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.resource-safety { display: grid; grid-template-columns: .75fr 1.25fr; align-items: center; gap: 42px; padding: 30px 34px; border: 1px solid #d6bd7b; background: #fff4d4; color: #614e21; }
+.resource-safety .eyebrow { color: #9b3b2f; }
+.resource-safety p:last-child { margin: 0; line-height: 1.9; }
+
 .subject-status.passed { border-top: 3px solid #4f9870; }
 .subject-status.pending { border-top: 3px solid var(--red); }
 .ability-panel { margin-bottom: 18px; }
@@ -736,6 +778,9 @@ button { color: inherit; }
   .blueprint-pass-rule { grid-template-columns: 1fr 1fr; }
   .blueprint-pass-rule p { grid-column: 1 / -1; }
   .ability-grid { grid-template-columns: repeat(2, 1fr); }
+  .resources-heading { align-items: start; flex-direction: column; gap: 10px; }
+  .registration-guide { grid-template-columns: 1fr; }
+  .resource-safety { grid-template-columns: 1fr; gap: 12px; }
 }
 
 @media (max-width: 640px) {
@@ -775,6 +820,12 @@ button { color: inherit; }
   .blueprint-module-list article > b { grid-column: 2; text-align: left; }
   .blueprint-module-list article > strong { grid-column: 3; grid-row: 1 / span 2; }
   .blueprint-actions { align-items: stretch; flex-direction: column; padding: 20px 15px; }
+  .home-resource-callout { align-items: flex-start; flex-direction: column; gap: 12px; padding: 18px; }
+  .official-resource-grid, .service-resource-grid { grid-template-columns: 1fr; }
+  .official-resource-card { padding: 20px 17px; }
+  .registration-guide-copy { padding: 26px 18px; }
+  .registration-steps { padding: 6px 18px; }
+  .resource-safety { padding: 24px 18px; }
 }
 
 @media (max-width: 980px) {
@@ -885,7 +936,8 @@ button { color: inherit; }
 .mobile-lab-hint { display: none; margin: 0; border-width: 0 0 1px; }
 .jupyter-host-toolbar .lab-toolbar-actions { row-gap: 7px; }
 
-@media (max-width: 980px) {
+@media (max-width: 1080px) {
+  .main-nav { display: none; }
   .desktop-account { display: none; }
   .mobile-menu { position: relative; display: block; margin-left: auto; }
   .mobile-menu > summary { display: flex; align-items: center; gap: 7px; min-height: 38px; padding: 0 12px; border: 1px solid var(--line); border-radius: 3px; background: rgba(255,255,255,.35); cursor: pointer; font-size: 13px; font-weight: 800; }

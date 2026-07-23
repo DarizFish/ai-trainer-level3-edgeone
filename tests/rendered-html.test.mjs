@@ -18,6 +18,32 @@ test("completed Chinese exam-prep homepage contains product-specific content", a
   assert.doesNotMatch(`${page}${layout}`, /codex-preview|Your site is taking shape|react-loading-skeleton/);
 });
 
+test("official resources page provides verified preparation, registration, and certificate links", async () => {
+  const [resources, layout, homepage, blueprint] = await Promise.all([
+    readFile(new URL("../app/resources/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/blueprint/page.tsx", import.meta.url), "utf8"),
+  ]);
+  assert.match(resources, /W020211227626977039770\.pdf/);
+  assert.match(resources, /https:\/\/www\.osta\.org\.cn\/skillStandard/);
+  assert.match(resources, /https:\/\/www\.osta\.org\.cn\//);
+  assert.match(resources, /https:\/\/pjjg\.osta\.org\.cn\//);
+  assert.match(resources, /https:\/\/jndj\.osta\.org\.cn\//);
+  assert.match(resources, /https:\/\/xzy\.mohrss\.gov\.cn\/lesson/);
+  assert.match(resources, /target="_blank"/);
+  assert.match(resources, /rel="noopener noreferrer"/);
+  assert.match(resources, /全国没有统一报名按钮/);
+  assert.match(resources, /输入“人工智能训练师”/);
+  assert.match(resources, /等级筛选为三级/);
+  assert.match(resources, /包过.*免考拿证.*全国统一代报名/);
+  assert.match(resources, /本站不代办报名、不收集身份证件、不推荐收费机构/);
+  assert.doesNotMatch(resources, /搜狐|百度百科|知乎|培训学校/);
+  assert.match(layout, /\["参考资料", "\/resources"\]/);
+  assert.match(homepage, /href="\/resources"/);
+  assert.match(blueprint, /href="\/resources"/);
+});
+
 test("theory and practical content pages remain public while progress is protected", async () => {
   const publicPages = ["../app/theory/page.tsx", "../app/practical/page.tsx", "../app/theory/mock/page.tsx", "../app/practical/mock/page.tsx"];
   for (const path of publicPages) {

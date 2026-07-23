@@ -9,11 +9,12 @@ const navigation = [
   ["实操题库", "/practical"],
   ["实操组卷", "/practical/mock"],
   ["认定方案", "/blueprint"],
+  ["参考资料", "/resources"],
   ["学习档案", "/progress"],
 ] as const;
 
 const title = "人工智能训练师三级全题库备考站";
-const description = "900 道理论题、190 道官方模拟题、40 道实操题与 20 个在线 Python 实验。";
+const description = "900 道理论题、190 道标准模拟题、40 道实操题与 20 个在线 Python 实验。";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.aitrainer3.xyz"),
@@ -56,7 +57,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           {children}
           <footer className="site-footer">
             <div className="container footer-row">
-              <div><b>人工智能训练师三级备考站</b><p>理论 · 实操 · 模拟 · 学习档案一站完成</p></div>
+              <div><b>人工智能训练师三级备考站</b><p>理论 · 实操 · 模拟 · 官方资料 · 学习档案一站完成</p></div>
               <div>{navigation.map(([label, href]) => <IntentLink href={href} key={href}>{label}</IntentLink>)}</div>
             </div>
           </footer>

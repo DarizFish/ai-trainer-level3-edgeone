@@ -39,6 +39,10 @@ export default function HomePage() {
           <IntentLink className="path-card featured" href="/theory/mock"><span className="path-number">贰</span><h3>90 分钟模拟</h3><p>标准卷或随机卷，190 题、100 分，完全按规则计分。</p><b>进入模拟考场 →</b></IntentLink>
           <IntentLink className="path-card" href="/practical"><span className="path-number">叁</span><h3>实操与实验</h3><p>逐项对照官方评分表，Python 代码直接在浏览器运行。</p><b>40 道实操题 →</b></IntentLink>
         </div>
+        <div className="home-resource-callout">
+          <div><span>官方办事导航</span><p>国家职业标准、备案评价机构、报名咨询路径与证书全国联网查询。</p></div>
+          <IntentLink className="text-link" href="/resources">查看官方资料与报名入口 →</IntentLink>
+        </div>
       </section>
 
       <section className="ink-band">
