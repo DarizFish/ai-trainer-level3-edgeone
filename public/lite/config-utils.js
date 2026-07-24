@@ -141,9 +141,19 @@ function mergeOneConfig(memo, config) {
 }
 
 function applyQueryOverrides(config) {
-  const workspace = new URLSearchParams(window.location.search).get('workspace');
+  const params = new URLSearchParams(window.location.search);
+  const workspace = params.get('workspace');
   if (workspace && /^[A-Za-z0-9_-]{1,80}$/.test(workspace)) {
     config.workspace = workspace;
+  }
+  const runtime = params.get('ui');
+  const attempt = params.get('attempt');
+  const pyodideSettings = config.litePluginSettings?.['@jupyterlite/pyodide-kernel-extension:kernel'];
+  if (pyodideSettings?.pyodideUrl && runtime && /^[A-Za-z0-9_-]{1,80}$/.test(runtime)) {
+    const pyodideUrl = new URL(pyodideSettings.pyodideUrl, window.location.href);
+    pyodideUrl.searchParams.set('runtime', runtime);
+    if (attempt && /^\d{1,3}$/.test(attempt)) pyodideUrl.searchParams.set('attempt', attempt);
+    pyodideSettings.pyodideUrl = pyodideUrl.toString();
   }
   return config;
 }

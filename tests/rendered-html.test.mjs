@@ -974,7 +974,7 @@ test("starter preview is fully removed and social metadata asset exists", async 
 });
 
 test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes, and both site bridge extensions", async () => {
-  const [content, lite, host, labShell, configUtils, bridgeExtension, bridgePackage, buildScript, extensionBuildScript, runtimeCopyScript, packageJson] = await Promise.all([
+  const [content, lite, host, labShell, configUtils, bridgeExtension, bridgePackage, buildScript, patchScript, extensionBuildScript, runtimeCopyScript, packageJson, edgeOneConfig] = await Promise.all([
     readFile(new URL("../data/content.json", import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL("../public/lite/jupyter-lite.json", import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL("../components/JupyterLiteLab.tsx", import.meta.url), "utf8"),
@@ -983,9 +983,11 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
     readFile(new URL("../jupyterlite-extension/src/index.ts", import.meta.url), "utf8"),
     readFile(new URL("../jupyterlite-extension/package.json", import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL("../scripts/build-jupyterlite.ps1", import.meta.url), "utf8"),
+    readFile(new URL("../scripts/patch-jupyterlite-config.py", import.meta.url), "utf8"),
     readFile(new URL("../scripts/build-jupyterlite-extension.ps1", import.meta.url), "utf8"),
     readFile(new URL("../scripts/copy-onnxruntime-web.mjs", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8").then(JSON.parse),
+    readFile(new URL("../edgeone.json", import.meta.url), "utf8").then(JSON.parse),
   ]);
   const extensions = lite["jupyter-config-data"].federated_extensions;
   const notebookOverrides = lite["jupyter-config-data"].settingsOverrides["@jupyterlab/notebook-extension:tracker"];
@@ -995,10 +997,16 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
   assert.match(labShell, /build\/lab\/bundle\.js/);
   assert.match(labShell, /data-notebook="lab"/);
   assert.match(host, /workspace=\$\{workspaceSlug\}-embed/);
-  assert.match(host, /20260722-runtime6/);
+  assert.match(host, /20260724-runtime7/);
   assert.match(host, /path: notebookPath/);
+  assert.match(host, /connectionTimer/);
+  assert.match(host, /JupyterLite 主界面加载超时/);
+  assert.match(host, /bridge\.ready\.then[\s\S]*\.catch/);
   assert.match(configUtils, /applyQueryOverrides/);
   assert.match(configUtils, /config\.workspace = workspace/);
+  assert.match(configUtils, /pyodideUrl\.searchParams\.set\('runtime', runtime\)/);
+  assert.match(configUtils, /pyodideUrl\.searchParams\.set\('attempt', attempt\)/);
+  assert.match(labShell, /config-utils\.js\?_=20260724-runtime7/);
   assert.match(bridgeExtension, /kernelStarts/);
   assert.match(bridgeExtension, /IKernelSpecs/);
   assert.match(bridgeExtension, /kernelSpecs\.specs/);
@@ -1020,12 +1028,27 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
   assert.match(buildScript, /JUPYTERLITE_PYTHON/);
   assert.match(buildScript, /jupyterlite_core\.app/);
   assert.match(buildScript, /labs:runtime/);
+  assert.match(patchScript, /RUNTIME_REVISION = "20260724-runtime7"/);
+  assert.match(patchScript, /pyodideSettings\.pyodideUrl/);
   assert.match(extensionBuildScript, /ItemType Junction/);
   assert.match(extensionBuildScript, /jupyterlite-extension/);
   assert.equal(bridgePackage.dependencies["@jupyterlite/services"], "0.8.1");
   assert.deepEqual(bridgePackage.jupyterlab.sharedPackages["@jupyterlite/services"], { bundled: false, singleton: true });
   assert.equal(packageJson.dependencies["onnxruntime-web"], "1.27.0");
   assert.match(runtimeCopyScript, /Expected onnxruntime-web/);
+  const JavaScriptModuleMime = "application/javascript; charset=utf-8";
+  const moduleHeaderSources = new Set(edgeOneConfig.headers
+    .filter(rule => rule.headers.some(header => header.key === "Content-Type" && header.value === JavaScriptModuleMime))
+    .map(rule => rule.source));
+  for (const source of [
+    "/lite/static/pyodide/pyodide.mjs",
+    "/lite/static/pyodide/pyodide.asm.mjs",
+    "/lite/static/pyodide/python_cli_entry.mjs",
+    "/labs/runtime/onnxruntime-web/1.27.0/ort.wasm.bundle.min.mjs",
+    "/labs/runtime/onnxruntime-web/1.27.0/ort-wasm-simd-threaded.mjs",
+  ]) {
+    assert.ok(moduleHeaderSources.has(source), `${source} must be served as JavaScript`);
+  }
   const names = new Set(extensions.map(extension => extension.name));
   assert.ok(names.has("@jupyterlite/pyodide-kernel-extension"));
   assert.ok(names.has("jupyter-iframe-commands"));

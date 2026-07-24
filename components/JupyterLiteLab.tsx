@@ -173,7 +173,7 @@ function buildFillReferences(templateCells: Array<{ id: string; source: string }
 }
 
 export default function JupyterLiteLab({ task, signedIn, userEmail = null, examMode = false, activeSurface = "notebook" }: { task: PracticalTask; signedIn: boolean; userEmail?: string | null; examMode?: boolean; activeSurface?: "notebook" | "document" }) {
-  const labRevision = "20260722-runtime6";
+  const labRevision = "20260724-runtime7";
   const iframeId = useMemo(() => `jupyterlite-${task.code.replaceAll(".", "-")}`, [task.code]);
   const notebookPath = `${task.code}/${task.code}.ipynb`;
   const workspaceSlug = `ai-trainer-${task.code.replaceAll(".", "-")}-${labRevision}`;
@@ -360,8 +360,16 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
     const bridge = createBridge({ iframeId });
     bridgeRef.current = bridge;
     let cancelled = false;
+    let bridgeConnected = false;
     let startupTimer: number | null = null;
+    const connectionTimer = window.setTimeout(() => {
+      if (cancelled || bridgeConnected) return;
+      setStartupSlow(true);
+      setError("JupyterLite 主界面加载超时。可能是网络波动或旧运行时缓存；点击“重新加载环境”会发起新的资源请求，草稿不会被删除。");
+    }, 30000);
     void bridge.ready.then(async () => {
+      bridgeConnected = true;
+      window.clearTimeout(connectionTimer);
       for (let attempt = 0; attempt < 60 && !cancelled; attempt += 1) {
         try {
           const state = await bridge.execute("ai-trainer:get-state", { path: notebookPath }) as { kernel?: string };
@@ -402,6 +410,12 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
         setStartupSlow(true);
         setError("JupyterLite 环境未能连接，可点击“重新加载环境”自动恢复；你的本机草稿不会被删除。");
       }
+    }).catch(cause => {
+      if (cancelled) return;
+      window.clearTimeout(connectionTimer);
+      setStartupSlow(true);
+      const message = cause instanceof Error ? cause.message : String(cause);
+      setError(`JupyterLite 主界面加载失败：${message || "请重新加载环境重试"}`);
     });
 
     const onMessage = (event: MessageEvent) => {
@@ -433,6 +447,7 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
     window.addEventListener("message", onMessage);
     return () => {
       cancelled = true;
+      window.clearTimeout(connectionTimer);
       window.removeEventListener("message", onMessage);
       if (startupTimer) clearTimeout(startupTimer);
       if (autosaveRef.current) clearTimeout(autosaveRef.current);
