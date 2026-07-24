@@ -6,7 +6,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG_UTILS = ROOT / "public" / "lite" / "config-utils.js"
 LAB_INDEX = ROOT / "public" / "lite" / "lab" / "index.html"
-RUNTIME_REVISION = "20260724-runtime7"
+JUPYTER_LITE_CONFIG = ROOT / "public" / "lite" / "jupyter-lite.json"
+RUNTIME_REVISION = "20260724-runtime8"
+PYODIDE_CONFIG_URL = "./static/pyodide/pyodide.esm.js"
 CALL_ANCHOR = "  finalConfig = dedupFederatedExtensions(finalConfig);"
 PATCHED_CALL = "  finalConfig = applyQueryOverrides(finalConfig);"
 FUNCTION_ANCHOR = "function dedupFederatedExtensions(config) {"
@@ -19,9 +21,11 @@ PATCH_FUNCTION = """function applyQueryOverrides(config) {
   const runtime = params.get('ui');
   const attempt = params.get('attempt');
   const pyodideSettings = config.litePluginSettings?.['@jupyterlite/pyodide-kernel-extension:kernel'];
-  if (pyodideSettings?.pyodideUrl && runtime && /^[A-Za-z0-9_-]{1,80}$/.test(runtime)) {
-    const pyodideUrl = new URL(pyodideSettings.pyodideUrl, window.location.href);
-    pyodideUrl.searchParams.set('runtime', runtime);
+  if (pyodideSettings) {
+    const pyodideUrl = new URL('/lite/static/pyodide/pyodide.esm.js', window.location.origin);
+    if (runtime && /^[A-Za-z0-9_-]{1,80}$/.test(runtime)) {
+      pyodideUrl.searchParams.set('runtime', runtime);
+    }
     if (attempt && /^\\d{1,3}$/.test(attempt)) pyodideUrl.searchParams.set('attempt', attempt);
     pyodideSettings.pyodideUrl = pyodideUrl.toString();
   }
@@ -56,6 +60,14 @@ def main() -> None:
         raise RuntimeError("JupyterLite config-utils.js import cache key is malformed")
     lab_index = f"{lab_index[:query_start]}{query_anchor}{RUNTIME_REVISION}{lab_index[query_end:]}"
     LAB_INDEX.write_text(lab_index, encoding="utf-8", newline="\n")
+
+    lite_config = JUPYTER_LITE_CONFIG.read_text(encoding="utf-8")
+    old_pyodide_url = '"pyodideUrl": "./static/pyodide/pyodide.mjs"'
+    new_pyodide_url = f'"pyodideUrl": "{PYODIDE_CONFIG_URL}"'
+    if old_pyodide_url not in lite_config and new_pyodide_url not in lite_config:
+        raise RuntimeError("JupyterLite pyodideUrl changed; the EdgeOne-safe JavaScript path was not applied")
+    lite_config = lite_config.replace(old_pyodide_url, new_pyodide_url)
+    JUPYTER_LITE_CONFIG.write_text(lite_config, encoding="utf-8", newline="\n")
     print(f"Applied JupyterLite workspace and runtime retry support ({RUNTIME_REVISION})")
 
 

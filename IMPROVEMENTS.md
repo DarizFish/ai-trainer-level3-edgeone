@@ -1075,3 +1075,22 @@
 - `390 × 844` 实测：目录退化为 `351px` 单列，六模块为 3×2（每格约 `116 × 81px`），题卡为单列；页面 `scrollWidth = clientWidth = 375px`，无横向溢出。
 - `/practical/1.2.1`、`/practical/1.1.1/lab` 和 `/practical/mock` 均为 0 个 `aside`，没有引入题库侧栏或旧评分侧栏。
 - 生产构建、ESLint、`git diff --check` 和 23/23 自动测试通过。本轮只做本地实现和测试，不发布，不修改邮箱密码账号、数据库、题库内容或托管配置。
+
+## 2026-07-24：EdgeOne 实操运行时模块兼容
+
+### 根因
+
+EdgeOne 对 `.mjs` 静态文件返回 `application/octet-stream`，同时全站启用了 `X-Content-Type-Options: nosniff`。文件本身存在且响应为 200，但浏览器会拒绝把它作为 JavaScript 动态导入，导致 Pyodide 内核和 ONNX 实操环境偶发或持续加载失败。
+
+### 修复
+
+- Pyodide 主入口、WASM 装载模块和命令行入口发布为 `.js`，并同步修正它们之间的内部引用。
+- ONNX Runtime 主模块和线程装载模块发布为 `.js`；五道 ONNX Notebook 及生成脚本同步使用新路径。
+- JupyterLite 在合并配置后强制覆盖为 EdgeOne 兼容的 Pyodide 地址，不再受旧 `jupyter-lite.json` 长缓存影响。
+- 运行时修订号升级到 `20260724-runtime8`，使现有浏览器创建新工作区并重新请求 Lab 配置；手动重试仍附加 `attempt` 缓存键。
+- JupyterLite 重建与 ONNX 运行时复制脚本会自动重复文件改名、内部引用替换和源文件哈希校验，避免下次重建回退到 `.mjs`。
+
+### 验证
+
+- Pyodide 和 ONNX 新入口均可作为 ES Module 导入，内部加载路径不再包含执行用 `.mjs`。
+- ESLint、内容校验、生产构建和 28/28 自动测试通过；测试同时覆盖新入口、Notebook 引用、运行时文件哈希和缓存修订号。

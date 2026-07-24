@@ -1,4 +1,4 @@
-import { loadPyodide } from "./pyodide.mjs";
+import { loadPyodide } from "./pyodide.esm.js";
 import { readdirSync, statSync } from "fs";
 
 /**

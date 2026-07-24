@@ -417,7 +417,7 @@
           "./pypi/all.json?sha256=761df90e8db365b07d7e3791cedd2c01e07d963592ff3f89665e0de97e04a468",
           "./extensions/@jupyterlite/pyodide-kernel-extension/static/pypi/all.json?sha256=abc6abfd99ca6c5205df602041ad2de375b435a3747749223fe0b9dbd9d0e826"
         ],
-        "pyodideUrl": "./static/pyodide/pyodide.mjs"
+        "pyodideUrl": "./static/pyodide/pyodide.esm.js"
       }
     },
     "settingsOverrides": {

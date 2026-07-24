@@ -32,6 +32,15 @@ function Get-NormalizedPackageName([string]$Name) {
   return $Name.ToLowerInvariant().Replace("_", "-").Replace(".", "-")
 }
 
+function Move-JavaScriptModule([string]$Directory, [string]$SourceName, [string]$TargetName) {
+  $source = Join-Path $Directory $SourceName
+  $target = Join-Path $Directory $TargetName
+  if (-not (Test-Path -LiteralPath $source)) {
+    throw "Expected JavaScript module is missing: $source"
+  }
+  Move-Item -LiteralPath $source -Destination $target -Force
+}
+
 if (-not $Python) {
   $localPython = Join-Path $projectRoot ".jupyterlite-venv\Scripts\python.exe"
   if (Test-Path $localPython) {
@@ -112,12 +121,42 @@ try {
     Pop-Location
   }
 
+  $pyodideDir = Join-Path $projectRoot "public\lite\static\pyodide"
+  Move-JavaScriptModule $pyodideDir "pyodide.mjs" "pyodide.esm.js"
+  Move-JavaScriptModule $pyodideDir "pyodide.asm.mjs" "pyodide.asm.js"
+  Move-JavaScriptModule $pyodideDir "python_cli_entry.mjs" "python_cli_entry.js"
+
+  $moduleReferences = @{
+    "pyodide.esm.js" = @{
+      "pyodide.asm.mjs" = "pyodide.asm.js"
+    }
+    "pyodide.js" = @{
+      "pyodide.asm.mjs" = "pyodide.asm.js"
+    }
+    "python_cli_entry.js" = @{
+      "pyodide.mjs" = "pyodide.esm.js"
+    }
+    "python" = @{
+      "python_cli_entry.mjs" = "python_cli_entry.js"
+    }
+    "python.bat" = @{
+      "python_cli_entry.mjs" = "python_cli_entry.js"
+    }
+  }
+  foreach ($fileName in $moduleReferences.Keys) {
+    $path = Join-Path $pyodideDir $fileName
+    $source = Get-Content -Raw -LiteralPath $path
+    foreach ($reference in $moduleReferences[$fileName].GetEnumerator()) {
+      $source = $source.Replace($reference.Key, $reference.Value)
+    }
+    [System.IO.File]::WriteAllText($path, $source, [System.Text.UTF8Encoding]::new($false))
+  }
+
   & $Python (Join-Path $projectRoot "scripts\patch-jupyterlite-config.py")
   if ($LASTEXITCODE -ne 0) {
     throw "JupyterLite workspace patch failed with exit code $LASTEXITCODE"
   }
 
-  $pyodideDir = Join-Path $projectRoot "public\lite\static\pyodide"
   $lockPath = Join-Path $pyodideDir "pyodide-lock.json"
   $lock = Get-Content -Raw $lockPath | ConvertFrom-Json
   $packages = @{}

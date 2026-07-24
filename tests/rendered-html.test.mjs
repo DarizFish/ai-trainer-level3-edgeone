@@ -992,21 +992,26 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
   const extensions = lite["jupyter-config-data"].federated_extensions;
   const notebookOverrides = lite["jupyter-config-data"].settingsOverrides["@jupyterlab/notebook-extension:tracker"];
   assert.equal(lite["jupyter-config-data"].appUrl, "./lab");
+  assert.equal(
+    lite["jupyter-config-data"].litePluginSettings["@jupyterlite/pyodide-kernel-extension:kernel"].pyodideUrl,
+    "./static/pyodide/pyodide.esm.js",
+  );
   assert.equal(notebookOverrides.autoStartDefaultKernel, true);
   assert.equal(Object.hasOwn(notebookOverrides, "autoStartDefault"), false);
   assert.match(labShell, /build\/lab\/bundle\.js/);
   assert.match(labShell, /data-notebook="lab"/);
   assert.match(host, /workspace=\$\{workspaceSlug\}-embed/);
-  assert.match(host, /20260724-runtime7/);
+  assert.match(host, /20260724-runtime8/);
   assert.match(host, /path: notebookPath/);
   assert.match(host, /connectionTimer/);
   assert.match(host, /JupyterLite 主界面加载超时/);
   assert.match(host, /bridge\.ready\.then[\s\S]*\.catch/);
   assert.match(configUtils, /applyQueryOverrides/);
   assert.match(configUtils, /config\.workspace = workspace/);
+  assert.match(configUtils, /\/lite\/static\/pyodide\/pyodide\.esm\.js/);
   assert.match(configUtils, /pyodideUrl\.searchParams\.set\('runtime', runtime\)/);
   assert.match(configUtils, /pyodideUrl\.searchParams\.set\('attempt', attempt\)/);
-  assert.match(labShell, /config-utils\.js\?_=20260724-runtime7/);
+  assert.match(labShell, /config-utils\.js\?_=20260724-runtime8/);
   assert.match(bridgeExtension, /kernelStarts/);
   assert.match(bridgeExtension, /IKernelSpecs/);
   assert.match(bridgeExtension, /kernelSpecs\.specs/);
@@ -1028,8 +1033,9 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
   assert.match(buildScript, /JUPYTERLITE_PYTHON/);
   assert.match(buildScript, /jupyterlite_core\.app/);
   assert.match(buildScript, /labs:runtime/);
-  assert.match(patchScript, /RUNTIME_REVISION = "20260724-runtime7"/);
+  assert.match(patchScript, /RUNTIME_REVISION = "20260724-runtime8"/);
   assert.match(patchScript, /pyodideSettings\.pyodideUrl/);
+  assert.match(buildScript, /Move-JavaScriptModule/);
   assert.match(extensionBuildScript, /ItemType Junction/);
   assert.match(extensionBuildScript, /jupyterlite-extension/);
   assert.equal(bridgePackage.dependencies["@jupyterlite/services"], "0.8.1");
@@ -1041,11 +1047,11 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
     .filter(rule => rule.headers.some(header => header.key === "Content-Type" && header.value === JavaScriptModuleMime))
     .map(rule => rule.source));
   for (const source of [
-    "/lite/static/pyodide/pyodide.mjs",
-    "/lite/static/pyodide/pyodide.asm.mjs",
-    "/lite/static/pyodide/python_cli_entry.mjs",
-    "/labs/runtime/onnxruntime-web/1.27.0/ort.wasm.bundle.min.mjs",
-    "/labs/runtime/onnxruntime-web/1.27.0/ort-wasm-simd-threaded.mjs",
+    "/lite/static/pyodide/pyodide.esm.js",
+    "/lite/static/pyodide/pyodide.asm.js",
+    "/lite/static/pyodide/python_cli_entry.js",
+    "/labs/runtime/onnxruntime-web/1.27.0/ort.wasm.bundle.min.js",
+    "/labs/runtime/onnxruntime-web/1.27.0/ort-wasm-simd-threaded.js",
   ]) {
     assert.ok(moduleHeaderSources.has(source), `${source} must be served as JavaScript`);
   }
@@ -1076,21 +1082,25 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
     onnxNotebooks += Number(isOnnx);
     if (isOnnx) {
       assert.match(notebookSource, /\/labs\/runtime\/onnxruntime-web\/1\.27\.0\//);
-      assert.match(notebookSource, /ort\.wasm\.bundle\.min\.mjs/);
+      assert.match(notebookSource, /ort\.wasm\.bundle\.min\.js/);
       assert.doesNotMatch(notebookSource, /cdn\.jsdelivr\.net/);
     }
   }
   assert.equal(onnxNotebooks, 5);
 
   const onnxRuntimeFiles = {
-    "ort.wasm.bundle.min.mjs": "1db5e1c5cd2b860eed85e6eeff23e2aaa7cffcc407f67093bcc888f631b94ba9",
-    "ort-wasm-simd-threaded.mjs": "0a1e718d99c41b22c21f2520ff4f9e883a6b5533856e398d21816ee8eb8185d3",
+    "ort.wasm.bundle.min.js": "260f89cdf194fda484154d7a7ed3e3c88ee88dcf2ff4b0568085e5d2f72a1dd3",
+    "ort-wasm-simd-threaded.js": "0a1e718d99c41b22c21f2520ff4f9e883a6b5533856e398d21816ee8eb8185d3",
     "ort-wasm-simd-threaded.wasm": "d1ab1b94b16a65b29d710d0b587b29e7bed336827577623913479b8afe8113e6",
   };
   for (const [name, expectedHash] of Object.entries(onnxRuntimeFiles)) {
     const payload = await readFile(new URL(`../public/labs/runtime/onnxruntime-web/1.27.0/${name}`, import.meta.url));
     assert.equal(createHash("sha256").update(payload).digest("hex"), expectedHash, `${name} has an invalid runtime hash`);
   }
+  const pyodideEntry = await readFile(new URL("../public/lite/static/pyodide/pyodide.esm.js", import.meta.url), "utf8");
+  assert.match(pyodideEntry, /pyodide\.asm\.js/);
+  assert.doesNotMatch(pyodideEntry, /pyodide\.asm\.mjs/);
+  await readFile(new URL("../public/lite/static/pyodide/pyodide.asm.js", import.meta.url));
   assert.match(host, /ai-trainer:get-notebook/);
   assert.match(host, /ai-trainer:set-notebook/);
   assert.match(host, /notebook:run-all-cells/);

@@ -22,19 +22,19 @@
       ]
     },
     {
-      "source": "/lite/static/pyodide/pyodide.mjs",
+      "source": "/lite/static/pyodide/pyodide.esm.js",
       "headers": [
         { "key": "Content-Type", "value": "application/javascript; charset=utf-8" }
       ]
     },
     {
-      "source": "/lite/static/pyodide/pyodide.asm.mjs",
+      "source": "/lite/static/pyodide/pyodide.asm.js",
       "headers": [
         { "key": "Content-Type", "value": "application/javascript; charset=utf-8" }
       ]
     },
     {
-      "source": "/lite/static/pyodide/python_cli_entry.mjs",
+      "source": "/lite/static/pyodide/python_cli_entry.js",
       "headers": [
         { "key": "Content-Type", "value": "application/javascript; charset=utf-8" }
       ]
@@ -58,13 +58,13 @@
       ]
     },
     {
-      "source": "/labs/runtime/onnxruntime-web/1.27.0/ort.wasm.bundle.min.mjs",
+      "source": "/labs/runtime/onnxruntime-web/1.27.0/ort.wasm.bundle.min.js",
       "headers": [
         { "key": "Content-Type", "value": "application/javascript; charset=utf-8" }
       ]
     },
     {
-      "source": "/labs/runtime/onnxruntime-web/1.27.0/ort-wasm-simd-threaded.mjs",
+      "source": "/labs/runtime/onnxruntime-web/1.27.0/ort-wasm-simd-threaded.js",
       "headers": [
         { "key": "Content-Type", "value": "application/javascript; charset=utf-8" }
       ]

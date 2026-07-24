@@ -111,6 +111,6 @@ if ERRORLEVEL 1 (
 REM Compute our own path, not following symlinks and pass it in so that
 REM node_entry.mjs can set sys.executable correctly.
 REM Intentionally allow word splitting on %NODEFLAGS%.
-call node %NODEFLAGS% !NODE_ARGS! "%RESOLVED_DIR%python_cli_entry.mjs" --this-program="%THIS_PROGRAM%" %*
+call node %NODEFLAGS% !NODE_ARGS! "%RESOLVED_DIR%python_cli_entry.js" --this-program="%THIS_PROGRAM%" %*
 
 exit /b %ERRORLEVEL%

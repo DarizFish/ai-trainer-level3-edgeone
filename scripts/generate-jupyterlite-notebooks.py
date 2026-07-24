@@ -142,7 +142,7 @@ async (taskCode) => {{
   }}
 
   const runtimeBase = `${{origin}}/labs/runtime/onnxruntime-web/1.27.0/`;
-  const ort = await import(`${{runtimeBase}}ort.wasm.bundle.min.mjs`);
+  const ort = await import(`${{runtimeBase}}ort.wasm.bundle.min.js`);
   ort.env.wasm.numThreads = 1;
   ort.env.wasm.wasmPaths = runtimeBase;
   const session = await ort.InferenceSession.create(modelBytes, {{ executionProviders: ["wasm"] }});

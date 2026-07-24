@@ -149,9 +149,11 @@ function applyQueryOverrides(config) {
   const runtime = params.get('ui');
   const attempt = params.get('attempt');
   const pyodideSettings = config.litePluginSettings?.['@jupyterlite/pyodide-kernel-extension:kernel'];
-  if (pyodideSettings?.pyodideUrl && runtime && /^[A-Za-z0-9_-]{1,80}$/.test(runtime)) {
-    const pyodideUrl = new URL(pyodideSettings.pyodideUrl, window.location.href);
-    pyodideUrl.searchParams.set('runtime', runtime);
+  if (pyodideSettings) {
+    const pyodideUrl = new URL('/lite/static/pyodide/pyodide.esm.js', window.location.origin);
+    if (runtime && /^[A-Za-z0-9_-]{1,80}$/.test(runtime)) {
+      pyodideUrl.searchParams.set('runtime', runtime);
+    }
     if (attempt && /^\d{1,3}$/.test(attempt)) pyodideUrl.searchParams.set('attempt', attempt);
     pyodideSettings.pyodideUrl = pyodideUrl.toString();
   }
