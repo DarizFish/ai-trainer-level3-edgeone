@@ -974,7 +974,7 @@ test("starter preview is fully removed and social metadata asset exists", async 
 });
 
 test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes, and both site bridge extensions", async () => {
-  const [content, lite, host, labShell, configUtils, bridgeExtension, bridgePackage, buildScript, patchScript, extensionBuildScript, runtimeCopyScript, packageJson, edgeOneConfig] = await Promise.all([
+  const [content, lite, host, labShell, configUtils, bridgeExtension, bridgePackage, buildScript, patchScript, extensionBuildScript, runtimeCopyScript, packageJson, edgeOneConfig, labManifest] = await Promise.all([
     readFile(new URL("../data/content.json", import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL("../public/lite/jupyter-lite.json", import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL("../components/JupyterLiteLab.tsx", import.meta.url), "utf8"),
@@ -988,6 +988,7 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
     readFile(new URL("../scripts/copy-onnxruntime-web.mjs", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL("../edgeone.json", import.meta.url), "utf8").then(JSON.parse),
+    readFile(new URL("../public/labs/manifest.json", import.meta.url), "utf8").then(JSON.parse),
   ]);
   const extensions = lite["jupyter-config-data"].federated_extensions;
   const notebookOverrides = lite["jupyter-config-data"].settingsOverrides["@jupyterlab/notebook-extension:tracker"];
@@ -1001,7 +1002,7 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
   assert.match(labShell, /build\/lab\/bundle\.js/);
   assert.match(labShell, /data-notebook="lab"/);
   assert.match(host, /workspace=\$\{workspaceSlug\}-embed/);
-  assert.match(host, /20260724-runtime8/);
+  assert.match(host, /20260724-runtime9/);
   assert.match(host, /path: notebookPath/);
   assert.match(host, /connectionTimer/);
   assert.match(host, /JupyterLite 主界面加载超时/);
@@ -1013,6 +1014,9 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
   assert.match(configUtils, /pyodideUrl\.searchParams\.set\('attempt', attempt\)/);
   assert.match(labShell, /config-utils\.js\?_=20260724-runtime8/);
   assert.match(bridgeExtension, /kernelStarts/);
+  assert.match(bridgeExtension, /kernel\.info|existing\.info/);
+  assert.match(bridgeExtension, /preparationRuns/);
+  assert.match(bridgeExtension, /preparationFailure/);
   assert.match(bridgeExtension, /IKernelSpecs/);
   assert.match(bridgeExtension, /kernelSpecs\.specs/);
   assert.doesNotMatch(bridgeExtension, /sessionContext\.ready/);
@@ -1104,7 +1108,15 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
   assert.match(host, /ai-trainer:get-notebook/);
   assert.match(host, /ai-trainer:set-notebook/);
   assert.match(host, /notebook:run-all-cells/);
+  assert.match(host, /重试准备/);
   assert.match(host, /\/lite\/lab\/index\.html/);
+  for (const task of Object.values(labManifest.tasks)) {
+    for (const asset of task.assets ?? []) {
+      const payload = await readFile(new URL(`../public${decodeURIComponent(asset.url)}`, import.meta.url));
+      assert.equal(payload.length, asset.size, `${asset.url} has a stale manifest size`);
+      assert.equal(createHash("sha256").update(payload).digest("hex"), asset.sha256, `${asset.url} has a stale manifest hash`);
+    }
+  }
 
   // These lazy shared chunks are required during JupyterLab startup. The
   // JupyterLite shared-package pruning option incorrectly removes them.

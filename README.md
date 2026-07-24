@@ -50,16 +50,17 @@ npm run dev
 
 Windows PowerShell 若阻止执行 `npm.ps1`，使用 `npm.cmd`。
 
-## 上线前检查
+## 测试与上线前检查
 
 ```bash
-npm run build
-npm run lint
-npm run content:validate
 npm test
+npm run test:full
+npm run test:smoke
 ```
 
-`npm test` 会再次执行生产构建，再检查页面、账号系统、题库、模拟考场、JupyterLite 与浏览器模型资源。所有检查通过后再推送到 GitHub 和触发 EdgeOne 部署。
+`npm test` 是日常快速门禁，执行 ESLint、TypeScript、内容完整性和 28 项合同测试。`npm run test:full` 额外执行生产构建与真实 Chromium 回归，包括 Pyodide 内核启动、ONNX 动态导入和移动端横向溢出检查。`npm run test:smoke` 只读验证已上线正式站的路由、EdgeOne MIME、安全头和运行时文件哈希。
+
+首次运行浏览器测试前执行 `npm run test:install-browser`。完整分层、CI 行为和失败定位见 `TESTING.md`。所有检查通过后再推送到 GitHub 和触发 EdgeOne 部署。
 
 ## EdgeOne Makers 部署
 

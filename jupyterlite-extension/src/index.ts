@@ -284,11 +284,25 @@ const plugin: JupyterFrontEndPlugin<void> = {
   activate: (app: JupyterFrontEnd, tracker: INotebookTracker, kernelSpecs: IKernelSpecs) => {
     const kernelStarts = new WeakMap<NotebookPanel, Promise<{ status: string; name: string }>>();
     const preparedPanels = new WeakSet<NotebookPanel>();
+    const preparationRuns = new WeakMap<NotebookPanel, Promise<void>>();
     const examMode = new URLSearchParams(window.location.search).get("exam") === "1";
     const panelFillReferences = new WeakMap<NotebookPanel, FillReferenceCell[]>();
     const panelFillVisible = new WeakMap<NotebookPanel, boolean>();
     const fillReferenceButtons = new WeakMap<NotebookPanel, ToolbarButton>();
     const injectedEditors = new WeakSet<EditorView>();
+
+    const preparationFailure = (cells: Array<{ model: { toJSON: () => unknown } }>): string | null => {
+      for (const cell of cells) {
+        const json = cell.model.toJSON() as { outputs?: Array<Record<string, unknown>> };
+        for (const output of json.outputs ?? []) {
+          if (output.output_type !== "error") continue;
+          const name = typeof output.ename === "string" ? output.ename : "Python 错误";
+          const value = typeof output.evalue === "string" ? output.evalue : "";
+          return `${name}${value ? `：${value}` : ""}`;
+        }
+      }
+      return null;
+    };
 
     const applyFillReferences = async (panel: NotebookPanel, visible: boolean): Promise<number> => {
       const references = panelFillReferences.get(panel) ?? [];
@@ -380,7 +394,11 @@ const plugin: JupyterFrontEndPlugin<void> = {
         app.shell.activateById(panel.id);
         await withTimeout(panel.context.ready, "Notebook 准备", 15000);
         const existing = panel.sessionContext.session?.kernel;
-        if (existing) return { status: existing.status, name: existing.name };
+        if (existing) {
+          if (existing.status === "dead") throw new Error("Python 内核已停止，请重新加载环境");
+          await withTimeout(existing.info, "Python 内核握手", 60000);
+          return { status: existing.status, name: existing.name };
+        }
 
         const inFlight = kernelStarts.get(panel);
         if (inFlight) return inFlight;
@@ -392,6 +410,8 @@ const plugin: JupyterFrontEndPlugin<void> = {
           notifyParent("AI_TRAINER_KERNEL_STATUS", { path: panel.context.path, status: "starting" });
           try {
             const kernel = await withTimeout(panel.sessionContext.changeKernel({ name: preferred }), "Python 内核启动", 60000);
+            if (!kernel) throw new Error("Python 内核启动后未返回连接");
+            await withTimeout(kernel.info, "Python 内核握手", 60000);
             const status = kernel?.status ?? "starting";
             notifyParent("AI_TRAINER_KERNEL_STATUS", { path: panel.context.path, status });
             return { status, name: preferred };
@@ -440,18 +460,36 @@ const plugin: JupyterFrontEndPlugin<void> = {
         const exerciseIndex = cells.findIndex((_cell, index) => hasTag(index, "ai-trainer-exercise"));
 
         if (!preparedPanels.has(panel) && preparationCells.length > 0) {
-          preparedPanels.add(panel);
-          notifyParent("AI_TRAINER_EXERCISE_PREPARING", { path: panel.context.path });
+          let preparation = preparationRuns.get(panel);
+          if (!preparation) {
+            preparation = (async () => {
+              notifyParent("AI_TRAINER_EXERCISE_PREPARING", { path: panel.context.path });
+              let lastFailure: string | null = null;
+              for (let attempt = 1; attempt <= 2; attempt += 1) {
+                const succeeded = await withTimeout(
+                  NotebookActions.runCells(panel.content, preparationCells, panel.sessionContext),
+                  "题目依赖与素材准备",
+                  180000
+                );
+                if (succeeded) {
+                  preparedPanels.add(panel);
+                  return;
+                }
+                lastFailure = preparationFailure(preparationCells);
+                if (attempt < 2) await new Promise(resolve => window.setTimeout(resolve, 1200));
+              }
+              throw new Error(lastFailure ?? "环境准备单元未能成功执行");
+            })();
+            preparationRuns.set(panel, preparation);
+          }
           try {
-            const succeeded = await withTimeout(
-              NotebookActions.runCells(panel.content, preparationCells, panel.sessionContext),
-              "题目依赖与素材准备",
-              180000
-            );
-            if (!succeeded) throw new Error("环境准备单元未能成功执行");
+            await preparation;
           } catch (error) {
-            preparedPanels.delete(panel);
+            const message = error instanceof Error ? error.message : String(error);
+            notifyParent("AI_TRAINER_EXERCISE_ERROR", { path: panel.context.path, message });
             throw error;
+          } finally {
+            if (preparationRuns.get(panel) === preparation) preparationRuns.delete(panel);
           }
         }
 

@@ -7,7 +7,7 @@ ROOT = Path(__file__).resolve().parents[1]
 CONFIG_UTILS = ROOT / "public" / "lite" / "config-utils.js"
 LAB_INDEX = ROOT / "public" / "lite" / "lab" / "index.html"
 JUPYTER_LITE_CONFIG = ROOT / "public" / "lite" / "jupyter-lite.json"
-RUNTIME_REVISION = "20260724-runtime8"
+RUNTIME_REVISION = "20260724-runtime9"
 PYODIDE_CONFIG_URL = "./static/pyodide/pyodide.esm.js"
 CALL_ANCHOR = "  finalConfig = dedupFederatedExtensions(finalConfig);"
 PATCHED_CALL = "  finalConfig = applyQueryOverrides(finalConfig);"

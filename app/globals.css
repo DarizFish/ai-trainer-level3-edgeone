@@ -580,7 +580,8 @@ button { color: inherit; }
 .jupyter-host-toolbar .lab-toolbar-actions > .button:first-child { background: var(--red); border-color: var(--red); }
 .lab-toolbar-divider { width: 1px; height: 20px; margin: 0 2px; background: #73889a; }
 .jupyter-host-toolbar .button:disabled { opacity: .45; cursor: wait; }
-.jupyter-error { padding: 9px 14px; color: #7c2118; background: #fee8e4; border-bottom: 1px solid #eab3ab; font-size: 12px; }
+.jupyter-error { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 9px 14px; color: #7c2118; background: #fee8e4; border-bottom: 1px solid #eab3ab; font-size: 12px; }
+.jupyter-error .button { flex: 0 0 auto; }
 .jupyter-frame { display: block; width: 100%; height: max(640px, calc(100dvh - 222px)); border: 0; background: #fff; }
 .lab-flow-nav { width: min(1540px, calc(100% - 32px)); margin: 10px auto 0; }
 .lab-inline-section { min-width: 0; scroll-margin-top: 90px; border: 1px solid var(--line); background: var(--card); box-shadow: 0 4px 18px rgba(40,35,25,.04); }

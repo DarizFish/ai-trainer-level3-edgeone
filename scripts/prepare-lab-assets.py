@@ -11,6 +11,7 @@ from urllib.parse import quote
 
 CHUNK_SIZE = 16 * 1024 * 1024
 SKIP_SUFFIXES = {".doc", ".docx", ".ipynb", ".zip", ".rar", ".pyc"}
+CANONICAL_TEXT_SUFFIXES = {".csv", ".txt", ".py"}
 
 def sha256(path: Path) -> str:
     h = hashlib.sha256()
@@ -18,6 +19,13 @@ def sha256(path: Path) -> str:
         for block in iter(lambda: stream.read(1024 * 1024), b""):
             h.update(block)
     return h.hexdigest()
+
+
+def canonical_asset_bytes(source: Path) -> bytes:
+    payload = source.read_bytes()
+    if source.suffix.lower() in CANONICAL_TEXT_SUFFIXES:
+        return payload.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+    return payload
 
 def main() -> None:
     parser = argparse.ArgumentParser()
@@ -73,9 +81,15 @@ def main() -> None:
                 continue
             target = task_dir / relative
             target.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(source, target)
+            payload = canonical_asset_bytes(source)
+            target.write_bytes(payload)
             url_path = "/".join(quote(part) for part in relative.parts)
-            entry["assets"].append({"name": str(relative).replace("\\", "/"), "url": f"/labs/{code}/{url_path}", "size": target.stat().st_size, "sha256": sha256(target)})
+            entry["assets"].append({
+                "name": str(relative).replace("\\", "/"),
+                "url": f"/labs/{code}/{url_path}",
+                "size": len(payload),
+                "sha256": hashlib.sha256(payload).hexdigest(),
+            })
         task_manifest[code] = entry
     manifest = {"version": content["version"], "chunkSize": CHUNK_SIZE, "tasks": task_manifest, "models": model_manifest}
     (args.output / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")

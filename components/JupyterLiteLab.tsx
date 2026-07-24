@@ -173,7 +173,7 @@ function buildFillReferences(templateCells: Array<{ id: string; source: string }
 }
 
 export default function JupyterLiteLab({ task, signedIn, userEmail = null, examMode = false, activeSurface = "notebook" }: { task: PracticalTask; signedIn: boolean; userEmail?: string | null; examMode?: boolean; activeSurface?: "notebook" | "document" }) {
-  const labRevision = "20260724-runtime8";
+  const labRevision = "20260724-runtime9";
   const iframeId = useMemo(() => `jupyterlite-${task.code.replaceAll(".", "-")}`, [task.code]);
   const notebookPath = `${task.code}/${task.code}.ipynb`;
   const workspaceSlug = `ai-trainer-${task.code.replaceAll(".", "-")}-${labRevision}`;
@@ -439,6 +439,10 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
         setError(null);
         setSaveState(signedIn ? "代码区已就绪；修改会自动同步" : "代码区已就绪；登录后可云端同步");
       }
+      if (data.type === "AI_TRAINER_EXERCISE_ERROR" && data.message) {
+        setStartupSlow(true);
+        setError(`题目环境准备失败：${data.message}`);
+      }
       if (data.type === "AI_TRAINER_KERNEL_ERROR" && data.message) {
         setStartupSlow(true);
         setError(`Python 内核启动失败：${data.message}`);
@@ -490,6 +494,21 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
     setIframeGeneration((value) => value + 1);
   }
 
+  async function retryPreparation() {
+    if (!bridgeRef.current) return;
+    setError(null);
+    setStartupSlow(true);
+    setSaveState("正在重试题目依赖与素材准备…");
+    try {
+      await bridgeRef.current.execute("ai-trainer:prepare-exercise", { path: notebookPath });
+      setStartupSlow(false);
+      setSaveState(signedIn ? "代码区已就绪；修改会自动同步" : "代码区已就绪；登录后可云端同步");
+    } catch (cause) {
+      const message = cause instanceof Error ? cause.message : String(cause);
+      setError(`题目环境准备失败：${message}`);
+    }
+  }
+
   async function execute(command: string) {
     if (!bridgeRef.current) return;
     setError(null);
@@ -526,7 +545,7 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
           <a className="button button-small" href={fullNotebookUrl} target="_blank" rel="noreferrer">全屏打开 ↗</a>
         </div>
       </div>
-      {error && <div className="jupyter-error" role="alert">{error}</div>}
+      {error && <div className="jupyter-error" role="alert"><span>{error}</span>{error.startsWith("题目环境准备失败") && <button type="button" className="button button-small" onClick={() => void retryPreparation()}>重试准备</button>}</div>}
       {startupSlow && !error && <div className="jupyter-warning" role="status">Python 内核仍在准备。页面会保留当前环境，不再自动重载；若长时间没有响应，可手动点击“重新加载环境”。</div>}
       <div className="mobile-lab-hint">手机端适合查看和轻量编辑；长时间编码建议横屏或使用“全屏打开”。</div>
       <iframe key={iframeGeneration} id={iframeId} className="jupyter-frame" src={`${notebookUrl}&attempt=${iframeGeneration}`} title={`${task.code} JupyterLite JupyterLab`} allow="clipboard-read; clipboard-write; fullscreen" />

@@ -16,6 +16,7 @@ from openpyxl import load_workbook
 
 SKIP_SUFFIXES = {".pyc"}
 IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".webp", ".gif"}
+CANONICAL_TEXT_SUFFIXES = {".csv", ".txt", ".py"}
 
 
 def sha256(path: Path) -> str:
@@ -24,6 +25,13 @@ def sha256(path: Path) -> str:
         for block in iter(lambda: stream.read(1024 * 1024), b""):
             digest.update(block)
     return digest.hexdigest()
+
+
+def canonical_delivery_bytes(path: Path) -> bytes:
+    payload = path.read_bytes()
+    if path.suffix.lower() in CANONICAL_TEXT_SUFFIXES:
+        return payload.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+    return payload
 
 
 def encoded_path(relative: Path) -> str:
@@ -177,19 +185,26 @@ def main() -> None:
                     target.parent.mkdir(parents=True, exist_ok=True)
                     shutil.copy2(source, target)
                     url = f"/materials/{code}/{encoded_path(relative)}"
+                source_size = source.stat().st_size
+                source_sha256 = sha256(source)
+                canonical_delivery = url and url.startswith("/labs/") and source.suffix.lower() in CANONICAL_TEXT_SUFFIXES
+                delivery_payload = canonical_delivery_bytes(source) if canonical_delivery else None
                 entry = {
                     "name": str(relative).replace("\\", "/"),
                     "kind": kind,
                     "label": label,
-                    "size": source.stat().st_size,
-                    "sha256": sha256(source),
+                    "size": len(delivery_payload) if delivery_payload is not None else source_size,
+                    "sha256": hashlib.sha256(delivery_payload).hexdigest() if delivery_payload is not None else source_sha256,
                     "note": material_note(source, kind),
                     "url": url,
                 }
+                if entry["size"] != source_size or entry["sha256"] != source_sha256:
+                    entry["sourceSize"] = source_size
+                    entry["sourceSha256"] = source_sha256
                 if task["group"] in {"4.1", "4.2"} and kind == "document" and source.suffix.lower() == ".docx":
                     entry["preview"] = docx_preview(source)
                 entries.append(entry)
-                source_manifest.append(f"{code}/{relative.as_posix()}\0{entry['size']}\0{entry['sha256']}")
+                source_manifest.append(f"{code}/{relative.as_posix()}\0{source_size}\0{source_sha256}")
                 kind_counts[kind] = kind_counts.get(kind, 0) + 1
                 total_files += 1
                 total_bytes += entry["size"]

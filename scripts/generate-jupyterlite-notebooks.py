@@ -71,6 +71,7 @@ def browser_safe_source(source: str) -> str:
 def setup_source(code: str, assets: list[dict], packages: list[str]) -> str:
     return f'''# JupyterLite 环境准备：安装本题依赖，并按需下载本题素材
 from pathlib import Path
+import asyncio
 import hashlib
 import piplite
 from pyodide.http import pyfetch
@@ -78,16 +79,32 @@ from pyodide.http import pyfetch
 PACKAGES = {json.dumps(packages, ensure_ascii=False)}
 ASSETS = {json.dumps(assets, ensure_ascii=False)}
 
+async def _retry(label, operation, attempts=3):
+    last_error = None
+    for attempt in range(1, attempts + 1):
+        try:
+            return await operation()
+        except Exception as error:
+            last_error = error
+            if attempt < attempts:
+                await asyncio.sleep(0.8 * attempt)
+    raise RuntimeError(f"{{label}}失败（已重试 {{attempts}} 次）：{{last_error}}") from last_error
+
 if PACKAGES:
-    await piplite.install(PACKAGES)
+    await _retry("依赖安装", lambda: piplite.install(PACKAGES))
 
 for asset in ASSETS:
     target = Path(asset["name"])
     target.parent.mkdir(parents=True, exist_ok=True)
     if target.exists() and hashlib.sha256(target.read_bytes()).hexdigest() == asset["sha256"]:
         continue
-    response = await pyfetch(asset["url"])
-    payload = await response.bytes()
+    async def _download():
+        separator = "&" if "?" in asset["url"] else "?"
+        response = await pyfetch(f'{{asset["url"]}}{{separator}}sha256={{asset["sha256"][:16]}}')
+        if response.status < 200 or response.status >= 300:
+            raise RuntimeError(f'HTTP {{response.status}}：{{asset["url"]}}')
+        return await response.bytes()
+    payload = await _retry(f'素材下载 {{asset["name"]}}', _download)
     digest = hashlib.sha256(payload).hexdigest()
     if digest != asset["sha256"]:
         raise RuntimeError(f"素材校验失败：{{asset['name']}}")

@@ -186,7 +186,7 @@ async function main() {
     try {
       py.runPython("import sys, gc; sys.modules.clear(); gc.collect()");
     } catch (e) {
-      // Best-effort — proceed to finalization even if this fails.
+      // Best-effort 鈥?proceed to finalization even if this fails.
     }
     try {
       if (py._module._Py_FinalizeEx() < 0) {
