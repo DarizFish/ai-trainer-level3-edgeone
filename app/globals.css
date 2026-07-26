@@ -1501,11 +1501,37 @@ button { color: inherit; }
 .practical-brief > summary small { display: inline-flex; align-items: center; gap: 7px; color: var(--ink-soft); font-size: 10px; font-weight: 500; }
 .practical-brief > summary small::after { color: var(--red); content: "＋"; font-size: 13px; font-weight: 500; }
 .practical-brief[open] > summary small::after { content: "−"; }
-.practical-brief-body { max-height: min(46vh, 420px); overflow: auto; padding: 2px 2px 14px 35px; }
-.practical-brief-body .task-description { color: var(--ink-soft); font-size: 12px; line-height: 1.75; white-space: pre-wrap; }
-.practical-brief-sheet { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line); }
-.practical-brief-sheet h4 { margin: 0 0 4px; color: var(--red); font-size: 11px; font-weight: 800; }
-.practical-brief-sheet p { margin: 0; color: var(--ink-soft); font-size: 12px; line-height: 1.7; white-space: pre-wrap; }
+.practical-brief-body { padding: 2px 2px 14px; }
+.practical-requirement-list { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
+.practical-requirement-list li { min-width: 0; display: grid; grid-template-columns: 33px minmax(0, 1fr); gap: 8px; padding: 10px 0; border-top: 1px solid rgba(16,42,67,.1); }
+.practical-requirement-list li:first-child { border-top: 0; }
+.practical-requirement-list li > span { width: 31px; min-height: 24px; display: grid; place-items: center; align-self: start; border-left: 3px solid var(--red); background: #f3ecde; color: var(--ink); font: 800 10px/1.2 Georgia, "Noto Serif SC", serif; }
+.practical-requirement-list p, .practical-brief-empty { margin: 0; color: var(--ink-soft); font-size: 11px; line-height: 1.7; overflow-wrap: anywhere; white-space: pre-wrap; }
+.practical-brief-empty { padding: 7px 0 11px; }
+.practical-full-prompt-trigger { width: 100%; min-height: 38px; display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 5px 0 8px; padding: 0 10px; border: 1px solid rgba(180,59,47,.36); background: #fffaf1; color: var(--red); font-size: 11px; font-weight: 800; text-align: left; cursor: pointer; transition: border-color .15s, background .15s, color .15s; }
+.practical-full-prompt-trigger:hover { border-color: var(--red); background: var(--red); color: #fff; }
+.practical-full-prompt-trigger > span { font-size: 14px; font-weight: 500; }
+
+/* 完整题面离开窄侧栏，以独立阅读层逐字呈现官方原文和任务单。 */
+.practical-prompt-dialog { width: min(900px, calc(100vw - 40px)); max-width: none; height: min(820px, calc(100dvh - 40px)); max-height: none; padding: 0; overflow: hidden; border: 0; background: transparent; color: var(--ink); }
+.practical-prompt-dialog::backdrop { background: rgba(11,25,37,.62); backdrop-filter: blur(3px); }
+.practical-prompt-document { height: 100%; display: flex; flex-direction: column; overflow: hidden; border: 1px solid rgba(16,42,67,.28); border-top: 4px solid var(--red); background: #fffdf7; box-shadow: 0 24px 80px rgba(7,18,28,.28); }
+.practical-prompt-document > header { flex: 0 0 auto; display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; padding: 24px 28px 20px; border-bottom: 1px solid var(--line); background: #f7f2e7; }
+.practical-prompt-document > header .eyebrow { margin: 0 0 6px; color: var(--red); font-size: 10px; }
+.practical-prompt-document > header h2 { margin: 0 0 5px; color: var(--ink); font: 700 28px/1.25 "Noto Serif SC", STSong, serif; }
+.practical-prompt-document > header p:last-child { margin: 0; color: var(--ink-soft); font-size: 13px; line-height: 1.55; }
+.practical-prompt-close { width: 38px; height: 38px; flex: 0 0 auto; display: grid; place-items: center; border: 1px solid var(--line); background: #fffdf7; color: var(--ink-soft); font-size: 24px; line-height: 1; cursor: pointer; }
+.practical-prompt-close:hover { border-color: var(--red); background: var(--red); color: #fff; }
+.practical-prompt-content { min-height: 0; flex: 1 1 auto; overflow: auto; padding: 8px 28px 32px; overscroll-behavior: contain; }
+.practical-prompt-content section { padding: 22px 0 2px; }
+.practical-prompt-content section + section { margin-top: 8px; border-top: 1px solid var(--line); }
+.practical-prompt-content h3 { display: flex; align-items: center; gap: 10px; margin: 0 0 10px; color: var(--red); font-size: 13px; font-weight: 900; }
+.practical-prompt-content h3::before { width: 22px; height: 2px; background: var(--red); content: ""; }
+.practical-prompt-content p { margin: 0; color: var(--ink); font-size: 15px; line-height: 1.9; overflow-wrap: anywhere; white-space: pre-wrap; }
+.practical-prompt-document > footer { flex: 0 0 auto; min-height: 62px; display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 10px 28px; border-top: 1px solid var(--line); background: #eef2f4; }
+.practical-prompt-document > footer span { color: var(--ink-soft); font-size: 11px; line-height: 1.5; }
+.practical-prompt-document > footer button { min-height: 38px; flex: 0 0 auto; padding: 0 18px; border: 1px solid var(--red); background: var(--red); color: #fff; font-size: 12px; font-weight: 800; cursor: pointer; }
+.practical-prompt-document > footer button:hover { background: #8d2e25; }
 .practical-materials-list { margin: 0 18px 14px; }
 .practical-materials-list > .eyebrow { margin: 0 0 8px; font-size: 10px; }
 .practical-materials-list article { min-height: 58px; display: grid; grid-template-columns: 50px minmax(0, 1fr) auto; align-items: center; gap: 2px 10px; padding: 11px 0; border-top: 1px solid rgba(16,42,67,.1); }
@@ -1537,7 +1563,6 @@ button { color: inherit; }
 .lab-rail-brief summary { min-height: 43px; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 0 15px; color: var(--ink); cursor: pointer; font-size: 12px; font-weight: 800; }
 .lab-rail-brief summary small { color: var(--ink-soft); font-size: 10px; font-weight: 500; }
 .lab-rail-brief .task-description { padding: 0 15px 14px; color: var(--ink-soft); font-size: 12px; line-height: 1.8; }
-.lab-rail-note { margin: 0; padding: 13px 15px 16px; color: var(--ink-soft); font-size: 11px; line-height: 1.75; }
 .lab-page .jupyter-workspace { width: auto; margin: 0; }
 
 /* 左侧切换真实交付物，主工作区只保留当前一种作答内容。 */
@@ -1632,6 +1657,17 @@ button { color: inherit; }
   .response-study-main .practical-response-heading { padding: 17px 14px 12px; }
   .response-save-note { padding: 9px 14px; }
   .response-study-main .practical-response-list { padding: 12px 10px; }
+  .practical-prompt-dialog { width: 100vw; height: 100dvh; margin: 0; }
+  .practical-prompt-document { border-right: 0; border-bottom: 0; border-left: 0; }
+  .practical-prompt-document > header { gap: 14px; padding: 17px 15px 15px; }
+  .practical-prompt-document > header h2 { font-size: 23px; }
+  .practical-prompt-close { width: 36px; height: 36px; }
+  .practical-prompt-content { padding: 3px 16px 25px; }
+  .practical-prompt-content section { padding-top: 18px; }
+  .practical-prompt-content p { font-size: 14px; line-height: 1.85; }
+  .practical-prompt-document > footer { min-height: 68px; padding: 9px 15px max(9px, env(safe-area-inset-bottom)); }
+  .practical-prompt-document > footer span { display: none; }
+  .practical-prompt-document > footer button { width: 100%; }
 }
 .business-sheet-sidebar nav a.complete > span { border-color: #397853; background: #397853; color: #fff; }
 .business-sheet-sidebar nav a b { overflow: hidden; font-size: 14px; text-overflow: ellipsis; white-space: nowrap; }
@@ -1646,6 +1682,7 @@ button { color: inherit; }
 .business-sheet-section > header { display: flex; align-items: baseline; gap: 16px; padding-bottom: 15px; border-bottom: 2px solid var(--ink); }
 .business-sheet-section > header span { color: var(--red); font-size: 13px; font-weight: 900; letter-spacing: .08em; }
 .business-sheet-section > header h2 { margin: 0; font: 700 25px/1 "Noto Serif SC", STSong, serif; }
+.business-sheet-output { min-width: 0; margin-left: auto; overflow-wrap: anywhere; color: var(--ink-soft); font: 700 11px/1.5 Consolas, "Microsoft YaHei", sans-serif; text-align: right; }
 .business-sheet-prompt { margin: 24px 0 20px; color: var(--ink); font-size: 16px; line-height: 1.9; white-space: pre-wrap; }
 .business-sheet-section > label { display: block; }
 .business-sheet-section textarea { width: 100%; min-height: 310px; resize: vertical; padding: 12px 0; border: 0; border-top: 1px solid rgba(16,42,67,.28); background-color: transparent; background-image: repeating-linear-gradient(to bottom, transparent 0, transparent 32px, rgba(16,42,67,.12) 33px); color: var(--ink); font: 15px/2.2 "Noto Sans SC", "Microsoft YaHei", sans-serif; }
@@ -1660,11 +1697,25 @@ button { color: inherit; }
 .business-sheet-review-note { padding: 18px 52px 28px; border-top: 1px solid #c8d0d5; background: #fbf8ef; }
 .business-sheet-review-note .correct { margin: 9px 0 0; color: #397853; font-size: 13px; }
 
+/* 所有 Word 交付物共用 1.2 的纸张式答题体验；模板题仍保留官方文档中的原始填空位置。 */
+.notebook-word-answer-sheet .notebook-word-sheet-section { min-height: calc(100dvh - 204px); }
+.notebook-word-sheet-heading { margin: 22px 0 0; }
+.notebook-word-sheet-heading h3 { margin: 0 0 5px; color: var(--ink); font: 700 22px/1.45 "Noto Serif SC", STSong, serif; }
+.notebook-word-sheet-actions { min-height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 12px 52px; border-top: 1px solid #c8d0d5; background: #eef2f4; }
+.notebook-word-sheet-actions > div { min-width: 0; }
+.notebook-word-sheet-actions b { color: var(--ink); font-size: 13px; }
+.notebook-word-sheet-actions .button { min-height: 44px; flex: 0 0 auto; padding: 0 17px; }
+.word-template-answer-sheet .word-template-sheet-section { min-height: 560px; }
+.word-template-answer-sheet .word-exercise-heading { margin-top: 17px; padding-right: 0; padding-left: 0; }
+.word-template-answer-sheet .word-exercise-document { width: 100%; max-width: none; margin: 0; padding: 8px 0 0; border: 0; background: transparent; box-shadow: none; }
+.word-template-answer-sheet .word-exercise-saved { border-top: 1px solid #c8d0d5; background: #fbf8ef; }
+
 @media (max-width: 1080px) {
   .business-answer-sheet-page .container { width: min(100% - 40px, 1180px); }
   .business-answer-sheet { grid-template-columns: 250px minmax(0, 1fr); gap: 22px; }
   .business-sheet-section { padding: 34px 36px 42px; }
   .business-sheet-review-note { padding-right: 36px; padding-left: 36px; }
+  .notebook-word-sheet-actions { padding-right: 36px; padding-left: 36px; }
 }
 
 @media (max-width: 800px) {
@@ -1675,12 +1726,19 @@ button { color: inherit; }
   .business-sheet-sidebar > footer { margin-top: 0; }
   .business-sheet-section { min-height: 0; padding: 28px 18px 38px; }
   .business-sheet-section > header h2 { font-size: 21px; }
+  .business-sheet-section > header { align-items: flex-start; flex-wrap: wrap; gap: 8px 12px; }
+  .business-sheet-output { flex-basis: 100%; margin-left: 0; text-align: left; }
   .business-sheet-prompt { margin: 18px 0; font-size: 15px; }
   .business-sheet-section textarea { min-height: 280px; font-size: 15px; }
   .business-sheet-review { padding: 17px 14px; }
   .business-sheet-review > header { align-items: flex-start; flex-direction: column; gap: 4px; }
   .business-sheet-review > header small { text-align: left; }
   .business-sheet-review-note { padding: 16px 18px 22px; }
+  .notebook-word-answer-sheet .notebook-word-sheet-section, .word-template-answer-sheet .word-template-sheet-section { min-height: 0; }
+  .notebook-word-sheet-actions { align-items: stretch; flex-direction: column; gap: 11px; padding: 13px 18px 18px; }
+  .notebook-word-sheet-actions .button { width: 100%; }
+  .word-template-answer-sheet .word-exercise-heading { align-items: center; flex-direction: row; }
+  .word-template-answer-sheet .word-exercise-document { padding-top: 3px; }
 }
 
 /* 2026-07 全站设计系统复核：统一导航反馈、紧凑移动端层级，并减少嵌套滚动。 */

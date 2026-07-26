@@ -15,8 +15,8 @@ const manifestLocal = "../public/labs/manifest.json";
 
 const assets = [
   {
-    path: "/lite/static/pyodide/pyodide.esm.js",
-    local: "../public/lite/static/pyodide/pyodide.esm.js",
+    path: "/lite/static/pyodide/pyodide.js",
+    local: "../public/lite/static/pyodide/pyodide.js",
     mime: /^(?:application|text)\/javascript/i,
   },
   {
@@ -212,14 +212,14 @@ test("production JupyterLite configuration points to the cache-busted JS runtime
 }, async () => {
   await waitForExpectedDeployment();
 
-  const lab = await fetchRemote("/lite/lab/index.html?ui=20260724-runtime9");
+  const lab = await fetchRemote("/lite/lab/index.html?ui=20260726-pyodide0277-runtime11");
   const labHtml = await lab.text();
   assert.equal(lab.status, 200);
-  assert.match(labHtml, /config-utils\.js\?_=20260724-runtime9/);
+  assert.match(labHtml, /config-utils\.js\?_=20260726-pyodide0277-runtime11/);
 
-  const config = await fetchRemote("/lite/config-utils.js?_=20260724-runtime9");
+  const config = await fetchRemote("/lite/config-utils.js?_=20260726-pyodide0277-runtime11");
   const configSource = await config.text();
   assert.equal(config.status, 200);
-  assert.match(configSource, /\/lite\/static\/pyodide\/pyodide\.esm\.js/);
+  assert.match(configSource, /\/lite\/static\/pyodide\/pyodide\.js/);
   assert.doesNotMatch(configSource, /new URL\(pyodideSettings\.pyodideUrl/);
 });

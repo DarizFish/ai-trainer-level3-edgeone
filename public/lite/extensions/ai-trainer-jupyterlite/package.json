@@ -11,33 +11,33 @@
   ],
   "scripts": {
     "build:lib": "tsc -b",
-    "build:extension": "build-labextension . --core-path ../public/lite/lab && node normalize-build.mjs",
+    "build:extension": "build-labextension . --development --core-path ../public/lite/lab && node normalize-build.mjs",
     "build": "npm run build:lib && npm run build:extension"
   },
   "jupyterlab": {
     "extension": true,
     "outputDir": "labextension",
     "sharedPackages": {
-      "@jupyterlite/services": {
+      "@jupyterlite/kernel": {
         "bundled": false,
         "singleton": true
       }
     },
     "_build": {
-      "load": "static/remoteEntry.e1c036871c986d7d325f.js",
+      "load": "static/remoteEntry.b45f36c8097a37b031d7.js",
       "extension": "./extension"
     }
   },
   "dependencies": {
     "@codemirror/state": "^6.7.1",
     "@codemirror/view": "^6.43.6",
-    "@jupyterlab/application": "^4.6.0",
-    "@jupyterlab/apputils": "^4.7.0",
-    "@jupyterlab/notebook": "^4.6.0",
-    "@jupyterlite/services": "0.8.1"
+    "@jupyterlab/application": "~4.4.5",
+    "@jupyterlab/apputils": "~4.5.5",
+    "@jupyterlab/notebook": "~4.4.5",
+    "@jupyterlite/kernel": "~0.6.4"
   },
   "devDependencies": {
-    "@jupyterlab/builder": "4.5.9",
+    "@jupyterlab/builder": "4.4.5",
     "typescript": "5.9.3"
   }
 }

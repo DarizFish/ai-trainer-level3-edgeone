@@ -10,7 +10,7 @@ import { PracticalBrief } from "./PracticalBrief";
 import { PracticalMaterialsList } from "./PracticalMaterialsList";
 
 type AnswerSheetDraft = {
-  version: 1;
+  version: 1 | 3;
   answers: Record<string, string>;
   scores: PracticalRubricScores;
 };
@@ -22,7 +22,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 function restoreDraft(serialized: string, sectionIds: Set<string>, scoreLimits: Map<string, number>) {
   try {
     const candidate = JSON.parse(serialized) as Partial<AnswerSheetDraft>;
-    if (candidate.version !== 1 || !isRecord(candidate.answers) || !isRecord(candidate.scores)) return null;
+    if (![1, 3].includes(candidate.version ?? 0) || !isRecord(candidate.answers) || !isRecord(candidate.scores)) return null;
     const answers: Record<string, string> = {};
     const scores: PracticalRubricScores = {};
     for (const sectionId of sectionIds) if (typeof candidate.answers[sectionId] === "string") answers[sectionId] = (candidate.answers[sectionId] as string).slice(0, 10_000);
@@ -49,6 +49,9 @@ export function BusinessAnalysisAnswerSheet({ task, userEmail }: { task: Practic
   const storageKey = useMemo(() => exercise && userEmail
     ? `ai-trainer-business-answer-sheet-v1:${encodeURIComponent(userEmail)}:${task.code}:${exercise.storageVersion}`
     : null, [exercise, task.code, userEmail]);
+  const legacyStorageKey = useMemo(() => exercise && userEmail && task.group === "3.1"
+    ? `ai-trainer-practical-response-v3:${encodeURIComponent(userEmail)}:${task.code}:${exercise.storageVersion}`
+    : null, [exercise, task.code, task.group, userEmail]);
 
   useEffect(() => {
     let cancelled = false;
@@ -56,13 +59,16 @@ export function BusinessAnalysisAnswerSheet({ task, userEmail }: { task: Practic
       if (cancelled) return;
       const sectionIds = new Set(exercise?.sections.map((section) => section.id) ?? []);
       const scoreLimits = new Map(exercise?.sections.flatMap((section) => section.rubric).map((item) => [item.id, item.points]) ?? []);
-      const draft = storageKey ? restoreDraft(localStorage.getItem(storageKey) ?? "", sectionIds, scoreLimits) : null;
+      const serialized = storageKey
+        ? localStorage.getItem(storageKey) ?? (legacyStorageKey ? localStorage.getItem(legacyStorageKey) : null) ?? ""
+        : "";
+      const draft = storageKey ? restoreDraft(serialized, sectionIds, scoreLimits) : null;
       setAnswers(draft?.answers ?? {});
       setScores(draft?.scores ?? {});
       setRestored(true);
     });
     return () => { cancelled = true; };
-  }, [exercise, storageKey]);
+  }, [exercise, legacyStorageKey, storageKey]);
 
   useEffect(() => {
     if (!restored || !storageKey) return;
@@ -94,7 +100,7 @@ export function BusinessAnalysisAnswerSheet({ task, userEmail }: { task: Practic
     setScores((current) => ({ ...current, [itemId]: value }));
   }
 
-  return <section id={`work-${task.code}`} className="business-answer-sheet">
+  return <section id={`work-${task.code}`} className="business-answer-sheet word-answer-sheet">
     <aside className="business-sheet-sidebar">
       <PracticalTaskHeader task={task} variant="rail" />
       <PracticalBrief task={task} open={false} />
@@ -107,7 +113,7 @@ export function BusinessAnalysisAnswerSheet({ task, userEmail }: { task: Practic
     </aside>
     <div className="business-sheet-paper" role="document" aria-label={`${task.code} 答题卷`}>
       {exercise.sections.map((section) => <section id={`business-answer-${task.code}-${section.number}`} className="business-sheet-section" key={section.id}>
-        <header><span>第 {section.number} 问</span><h2>{task.code}-{section.number}</h2></header>
+        <header><span>第 {section.number} 问</span><h2>{task.code}-{section.number}</h2><b className="business-sheet-output">{section.outputLabel}</b></header>
         <p className="business-sheet-prompt">{promptForAnswerSheet(section.prompt)}</p>
         <label><span className="sr-only">{task.code}-{section.number} 作答</span><textarea value={answers[section.id] ?? ""} readOnly={!userEmail} onFocus={() => { if (!userEmail) requireSignIn(); }} onChange={(event) => changeAnswer(section.id, event.target.value)} placeholder="请在此处作答…" /></label>
         {reviewing && <section className="business-sheet-review">

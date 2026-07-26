@@ -1,0 +1,29 @@
+{
+  "content": [
+    {
+      "content": null,
+      "created": "2026-07-26T05:32:25.538226Z",
+      "format": null,
+      "hash": null,
+      "hash_algorithm": null,
+      "last_modified": "2026-07-26T05:32:25.551224Z",
+      "mimetype": null,
+      "name": "utils",
+      "path": "3.2.5/vision/utils",
+      "size": null,
+      "type": "directory",
+      "writable": true
+    }
+  ],
+  "created": "2026-07-26T05:32:25.538226Z",
+  "format": "json",
+  "hash": null,
+  "hash_algorithm": null,
+  "last_modified": "2026-07-26T05:32:25.538226Z",
+  "mimetype": null,
+  "name": "vision",
+  "path": "3.2.5/vision",
+  "size": null,
+  "type": "directory",
+  "writable": true
+}

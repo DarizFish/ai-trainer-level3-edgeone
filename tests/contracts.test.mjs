@@ -179,7 +179,7 @@ test("email accounts use versioned PostgreSQL schema, hashed passwords, and revo
 });
 
 test("theory opens as a direct study console and Python tasks enter a code-first lab", async () => {
-  const [theory, theoryPage, practicalPage, practical, publicContent, detail, labPage, workbench, lab, styles] = await Promise.all([
+  const [theory, theoryPage, practicalPage, practical, publicContent, detail, labPage, workbench, lab, brief, styles] = await Promise.all([
     readFile(new URL("../components/TheoryPractice.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/theory/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/practical/page.tsx", import.meta.url), "utf8"),
@@ -189,6 +189,7 @@ test("theory opens as a direct study console and Python tasks enter a code-first
     readFile(new URL("../app/practical/[code]/lab/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/PracticalLabWorkbench.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/JupyterLiteLab.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/PracticalBrief.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
   ]);
   assert.match(theory, /practice-question-card/);
@@ -249,7 +250,12 @@ test("theory opens as a direct study console and Python tasks enter a code-first
   assert.match(workbench, /lab-task-sidebar/);
   assert.match(workbench, /lab-workspace-switcher/);
   assert.match(workbench, /PracticalBrief task=\{task\} open=\{false\}/);
-  assert.match(workbench, /PracticalMaterialsList task=\{task\}/);
+  assert.doesNotMatch(workbench, /PracticalMaterialsList|lab-rail-note|代码、结果和导出文件在 Notebook 中完成/);
+  assert.ok(
+    brief.indexOf("practical-full-prompt-trigger") < brief.indexOf("practical-requirement-list"),
+    "the full official prompt action should appear before the requirement list",
+  );
+  assert.doesNotMatch(styles, /\.lab-rail-note/);
   assert.match(workbench, /activeSurface/);
   assert.doesNotMatch(workbench, /代码填空核对|activeSurface === "review"/);
   assert.match(lab, /ai-trainer:prepare-exercise/);
@@ -455,13 +461,16 @@ test("Word template practical tasks use five contextual answer fields instead of
   assert.match(component, /达到 · 1 分/);
   assert.match(component, /word-inline-field/);
   assert.match(component, /完成填写，核对答案/);
-  assert.match(component, /待补全文档/);
+  assert.match(component, /exercise\.materialName/);
   assert.match(component, /修改填写会撤销对应旧分数/);
   assert.doesNotMatch(component, /fetch\(|scorePractical|rubric:|保存成绩|自评分/);
   assert.match(workspace, /word-answer-first/);
   assert.match(component, /PracticalTaskHeader/);
   assert.match(component, /PracticalBrief/);
   assert.match(component, /PracticalMaterialsList/);
+  assert.match(component, /business-answer-sheet word-answer-sheet word-template-exercise word-template-answer-sheet/);
+  assert.match(component, /business-sheet-paper word-document-canvas/);
+  assert.match(component, /business-sheet-section word-template-sheet-section/);
   assert.doesNotMatch(component, /sourceDocument/);
   assert.doesNotMatch(workspace, /showDocumentPreview=\{false\}/);
   assert.doesNotMatch(workspace, /practical-rubric-workspace|RubricAssessment/);
@@ -470,13 +479,14 @@ test("Word template practical tasks use five contextual answer fields instead of
   assert.match(detailPage, /userEmail=\{user\?\.email \?\? null\}/);
   assert.match(styles, /\.word-fill-slot/);
   assert.match(styles, /\.word-exercise-document/);
+  assert.match(styles, /\.word-template-answer-sheet \.word-template-sheet-section/);
 });
 
-test("two-deliverable practical tasks support separate drafting, reference comparison, and completion checks", async () => {
+test("two-deliverable Word tasks share the 1.2 paper answer sheet and completion checks", async () => {
   const [content, helper, component, workspace, styles] = await Promise.all([
     readFile(new URL("../data/content.json", import.meta.url), "utf8").then(JSON.parse),
     import(new URL("../lib/practical-response-exercise.ts", import.meta.url)),
-    readFile(new URL("../components/PracticalResponseExercise.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/BusinessAnalysisAnswerSheet.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/PracticalWorkspace.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
   ]);
@@ -491,22 +501,23 @@ test("two-deliverable practical tasks support separate drafting, reference compa
     assert.deepEqual(exercise.sections.flatMap((section) => section.rubric.map((item) => item.id)), task.rubric.map((item) => item.id), task.code);
     assert.equal(helper.createPracticalResponseExercise({ ...task, hasNotebook: true }), null);
   }
-  assert.match(component, /两份 Word 报告/);
-  assert.match(component, /data-response-section/);
-  assert.match(component, /复盘时才显示答案和评分项/);
+  assert.match(component, /business-answer-sheet word-answer-sheet/);
+  assert.match(component, /business-sheet-paper/);
+  assert.match(component, /business-sheet-section/);
   assert.match(component, /PracticalOutcomeCheck/);
-  assert.match(component, /已完成全部核对/);
-  assert.match(component, /修改本份作答会撤销对应的自评结果/);
+  assert.match(component, /已完成本题全部复盘检查/);
+  assert.match(component, /修改作答会撤销对应的旧自评分/);
+  assert.match(component, /ai-trainer-business-answer-sheet-v1/);
   assert.match(component, /ai-trainer-practical-response-v3/);
-  assert.match(component, /response-study-rail/);
+  assert.match(component, /legacyStorageKey/);
+  assert.match(component, /business-sheet-sidebar/);
   assert.match(component, /PracticalBrief task=\{task\} open=\{false\}/);
-  assert.match(component, /完整题面与 Excel 素材保留在左侧/);
   assert.doesNotMatch(component, /fetch\(|scorePractical|RubricAssessment/);
-  assert.match(workspace, /createPracticalResponseExercise/);
-  assert.match(workspace, /<PracticalResponseExercise/);
-  assert.match(workspace, /createPracticalResponseExercise/);
-  assert.match(styles, /\.practical-response-section\.reviewing/);
-  assert.match(styles, /\.practical-response-reference/);
+  assert.match(workspace, /const reportAnswerSheet = task\.group === "1\.2" \|\| task\.group === "3\.1"/);
+  assert.match(workspace, /if \(reportAnswerSheet\) return <BusinessAnalysisAnswerSheet/);
+  assert.doesNotMatch(workspace, /PracticalResponseExercise/);
+  assert.match(styles, /\.business-sheet-section/);
+  assert.match(styles, /\.business-sheet-review/);
 });
 
 test("Notebook Word answer sheets appear only where the official task requires a Word document", async () => {
@@ -531,13 +542,14 @@ test("Notebook Word answer sheets appear only where the official task requires a
   const reportReference = references.getPracticalReferenceNarrative(content.practical.find((task) => task.code === "2.2.1"));
   assert.match(reportReference, /模型性能/);
   assert.doesNotMatch(reportReference, /import pandas/);
-  assert.match(component, /独立的文字交付物，不写入 Notebook/);
-  assert.match(component, /截图、HTML、模型与数据文件仍在实验区按原题保存/);
-  assert.match(component, /lab-word-reference/);
-  assert.match(component, /在当前草稿下方直接对比/);
+  assert.doesNotMatch(component, /独立文字交付物，不写入 Notebook/);
+  assert.doesNotMatch(component, /其他结果文件仍在 Notebook 中完成/);
+  assert.match(component, /business-sheet-paper notebook-word-answer-sheet/);
+  assert.match(component, /business-sheet-section notebook-word-sheet-section/);
+  assert.match(component, /完成作答，进入复盘/);
   assert.match(component, /getPracticalReferenceNarrative/);
   assert.doesNotMatch(component, /type="file"|截图上传|HTML 上传/);
-  assert.match(styles, /\.lab-word-deliverable/);
+  assert.match(styles, /\.notebook-word-answer-sheet/);
 });
 
 test("business-optimization tasks start with the official two-question blank answer sheet", async () => {
@@ -561,16 +573,15 @@ test("business-optimization tasks start with the official two-question blank ans
     assert.ok(task.officialTaskSheet.qualityIndicators, task.code);
   }
   assert.match(workspace, /BusinessAnalysisAnswerSheet/);
-  assert.match(workspace, /task\.group === "1\.2"/);
-  assert.match(workspace, /business-answer-first/);
-  assert.match(workspace, /if \(businessAnswerSheet\) return <BusinessAnalysisAnswerSheet/);
-  assert.ok(workspace.indexOf("if (businessAnswerSheet) return") < workspace.indexOf("if (responseExercise) return"));
+  assert.match(workspace, /task\.group === "1\.2" \|\| task\.group === "3\.1"/);
+  assert.match(workspace, /if \(reportAnswerSheet\) return <BusinessAnalysisAnswerSheet/);
   assert.match(component, /PracticalTaskHeader/);
   assert.match(component, /PracticalBrief task=\{task\} open=\{false\}/);
   assert.match(component, /PracticalMaterialsList/);
   assert.match(component, /role="document"/);
   assert.match(component, /aria-label=\{`\$\{task\.code\} 答题卷`\}/);
-  assert.match(brief, /题干与官方任务单/);
+  assert.match(brief, /查看完整官方题目/);
+  assert.match(brief, /task\.description/);
   assert.match(brief, /场地设备要求/);
   assert.match(brief, /技能要求/);
   assert.match(brief, /质量指标/);
@@ -578,7 +589,7 @@ test("business-optimization tasks start with the official two-question blank ans
   assert.match(component, /非官方考场信息/);
   assert.doesNotMatch(component, /官方评分项/);
   assert.match(detailPage, /business-answer-sheet-page/);
-  assert.match(detailPage, /businessAnswerSheetTask = task\.group === "1\.2"/);
+  assert.match(detailPage, /reportAnswerSheetTask = task\.group === "1\.2" \|\| task\.group === "3\.1"/);
   assert.match(styles, /\.business-answer-sheet \{/);
   assert.match(styles, /\.business-sheet-paper/);
   assert.doesNotMatch(styles, /\.business-sheet-context/);
@@ -1116,7 +1127,7 @@ test("starter preview is fully removed and social metadata asset exists", async 
 });
 
 test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes, and both site bridge extensions", async () => {
-  const [content, lite, host, labShell, configUtils, bridgeExtension, bridgePackage, buildScript, patchScript, extensionBuildScript, runtimeCopyScript, packageJson, edgeOneConfig, labManifest] = await Promise.all([
+  const [content, lite, host, labShell, configUtils, bridgeExtension, bridgePackage, pyodideKernelPackage, buildScript, patchScript, extensionBuildScript, runtimeCopyScript, packageJson, edgeOneConfig, labManifest] = await Promise.all([
     readFile(new URL("../data/content.json", import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL("../public/lite/jupyter-lite.json", import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL("../components/JupyterLiteLab.tsx", import.meta.url), "utf8"),
@@ -1124,6 +1135,7 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
     readFile(new URL("../public/lite/config-utils.js", import.meta.url), "utf8"),
     readFile(new URL("../jupyterlite-extension/src/index.ts", import.meta.url), "utf8"),
     readFile(new URL("../jupyterlite-extension/package.json", import.meta.url), "utf8").then(JSON.parse),
+    readFile(new URL("../public/lite/extensions/@jupyterlite/pyodide-kernel-extension/package.json", import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL("../scripts/build-jupyterlite.ps1", import.meta.url), "utf8"),
     readFile(new URL("../scripts/patch-jupyterlite-config.py", import.meta.url), "utf8"),
     readFile(new URL("../scripts/build-jupyterlite-extension.ps1", import.meta.url), "utf8"),
@@ -1135,26 +1147,27 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
   const extensions = lite["jupyter-config-data"].federated_extensions;
   const notebookOverrides = lite["jupyter-config-data"].settingsOverrides["@jupyterlab/notebook-extension:tracker"];
   assert.equal(lite["jupyter-config-data"].appUrl, "./lab");
+  assert.equal(lite["jupyter-config-data"].appVersion, "0.6.4");
   assert.equal(
     lite["jupyter-config-data"].litePluginSettings["@jupyterlite/pyodide-kernel-extension:kernel"].pyodideUrl,
-    "./static/pyodide/pyodide.esm.js",
+    "./static/pyodide/pyodide.js",
   );
-  assert.equal(notebookOverrides.autoStartDefaultKernel, true);
+  assert.equal(notebookOverrides.autoStartDefaultKernel, false);
   assert.equal(Object.hasOwn(notebookOverrides, "autoStartDefault"), false);
   assert.match(labShell, /build\/lab\/bundle\.js/);
   assert.match(labShell, /data-notebook="lab"/);
   assert.match(host, /workspace=\$\{workspaceSlug\}-embed/);
-  assert.match(host, /20260724-runtime9/);
+  assert.match(host, /20260726-pyodide0277-runtime11/);
   assert.match(host, /path: notebookPath/);
   assert.match(host, /connectionTimer/);
   assert.match(host, /JupyterLite 主界面加载超时/);
   assert.match(host, /bridge\.ready\.then[\s\S]*\.catch/);
   assert.match(configUtils, /applyQueryOverrides/);
   assert.match(configUtils, /config\.workspace = workspace/);
-  assert.match(configUtils, /\/lite\/static\/pyodide\/pyodide\.esm\.js/);
+  assert.match(configUtils, /\/lite\/static\/pyodide\/pyodide\.js/);
   assert.match(configUtils, /pyodideUrl\.searchParams\.set\('runtime', runtime\)/);
   assert.match(configUtils, /pyodideUrl\.searchParams\.set\('attempt', attempt\)/);
-  assert.match(labShell, /config-utils\.js\?_=20260724-runtime9/);
+  assert.match(labShell, /config-utils\.js\?_=20260726-pyodide0277-runtime11/);
   assert.match(bridgeExtension, /kernelStarts/);
   assert.match(bridgeExtension, /kernel\.info|existing\.info/);
   assert.match(bridgeExtension, /preparationRuns/);
@@ -1183,13 +1196,23 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
   assert.match(buildScript, /JUPYTERLITE_PYTHON/);
   assert.match(buildScript, /jupyterlite_core\.app/);
   assert.match(buildScript, /labs:runtime/);
-  assert.match(patchScript, /RUNTIME_REVISION = "20260724-runtime9"/);
+  assert.match(buildScript, /\$pyodideVersion = "0\.27\.7"/);
+  assert.match(buildScript, /"xgboost"/);
+  assert.match(buildScript, /"opencv-python"/);
+  assert.match(buildScript, /"ssl"/);
+  assert.match(buildScript, /Get-ChildItem -LiteralPath \$resolvedPyodideDir -File -Filter "\*\.whl"/);
+  assert.match(patchScript, /RUNTIME_REVISION = "20260726-pyodide0277-runtime11"/);
   assert.match(patchScript, /pyodideSettings\.pyodideUrl/);
-  assert.match(buildScript, /Move-JavaScriptModule/);
+  assert.match(patchScript, /pyodide\.js/);
+  assert.match(patchScript, /pyodide\.mjs/);
+  assert.match(patchScript, /normalize_contents_models/);
+  assert.match(patchScript, /normalized_path = model_path\.replace/);
+  assert.doesNotMatch(buildScript, /Move-JavaScriptModule/);
   assert.match(extensionBuildScript, /ItemType Junction/);
   assert.match(extensionBuildScript, /jupyterlite-extension/);
-  assert.equal(bridgePackage.dependencies["@jupyterlite/services"], "0.8.1");
-  assert.deepEqual(bridgePackage.jupyterlab.sharedPackages["@jupyterlite/services"], { bundled: false, singleton: true });
+  assert.equal(bridgePackage.dependencies["@jupyterlite/kernel"], "~0.6.4");
+  assert.deepEqual(bridgePackage.jupyterlab.sharedPackages["@jupyterlite/kernel"], { bundled: false, singleton: true });
+  assert.equal(pyodideKernelPackage.version, "0.6.1");
   assert.equal(packageJson.dependencies["onnxruntime-web"], "1.27.0");
   assert.match(runtimeCopyScript, /Expected onnxruntime-web/);
   const JavaScriptModuleMime = "application/javascript; charset=utf-8";
@@ -1197,9 +1220,8 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
     .filter(rule => rule.headers.some(header => header.key === "Content-Type" && header.value === JavaScriptModuleMime))
     .map(rule => rule.source));
   for (const source of [
-    "/lite/static/pyodide/pyodide.esm.js",
+    "/lite/static/pyodide/pyodide.js",
     "/lite/static/pyodide/pyodide.asm.js",
-    "/lite/static/pyodide/python_cli_entry.js",
     "/labs/runtime/onnxruntime-web/1.27.0/ort.wasm.bundle.min.js",
     "/labs/runtime/onnxruntime-web/1.27.0/ort-wasm-simd-threaded.js",
   ]) {
@@ -1217,6 +1239,7 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
   const tasks = content.practical.filter(task => task.hasNotebook);
   assert.equal(tasks.length, 20);
   let onnxNotebooks = 0;
+  const nestedWorkspaceIndexes = new Set();
   for (const task of tasks) {
     const notebookSource = await readFile(new URL(`../public/lite/files/${task.code}/${task.code}.ipynb`, import.meta.url), "utf8");
     const notebook = JSON.parse(notebookSource);
@@ -1235,6 +1258,39 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
       assert.match(notebookSource, /ort\.wasm\.bundle\.min\.js/);
       assert.doesNotMatch(notebookSource, /cdn\.jsdelivr\.net/);
     }
+    const manifestTask = labManifest.tasks[task.code] ?? { assets: [] };
+    for (const asset of manifestTask.assets ?? []) {
+      const assetParts = asset.name.split("/");
+      for (let depth = 1; depth < assetParts.length; depth += 1) {
+        nestedWorkspaceIndexes.add(`${task.code}/${assetParts.slice(0, depth).join("/")}/all.json`);
+      }
+      const relativeAssetPath = asset.name.split("/").map(encodeURIComponent).join("/");
+      const [sourcePayload, builtPayload] = await Promise.all([
+        readFile(new URL(`../jupyterlite/content/${task.code}/${relativeAssetPath}`, import.meta.url)),
+        readFile(new URL(`../public/lite/files/${task.code}/${relativeAssetPath}`, import.meta.url)),
+      ]);
+      for (const [location, payload] of [["source workspace", sourcePayload], ["built workspace", builtPayload]]) {
+        assert.equal(payload.length, asset.size, `${asset.name} has a stale size in the ${location}`);
+        assert.equal(
+          createHash("sha256").update(payload).digest("hex"),
+          asset.sha256,
+          `${asset.name} has a stale hash in the ${location}`,
+        );
+      }
+    }
+  }
+  for (const relativeIndex of nestedWorkspaceIndexes) {
+    const encodedIndex = relativeIndex.split("/").map(encodeURIComponent).join("/");
+    const directoryModel = JSON.parse(
+      await readFile(new URL(`../public/lite/api/contents/${encodedIndex}`, import.meta.url), "utf8"),
+    );
+    const pendingModels = [directoryModel];
+    while (pendingModels.length > 0) {
+      const model = pendingModels.pop();
+      assert.doesNotMatch(model.path, /\\/, `${relativeIndex} contains a Windows path separator`);
+      assert.equal(model.name, model.path.split("/").at(-1) ?? "", `${relativeIndex} contains a stale model name`);
+      if (Array.isArray(model.content)) pendingModels.push(...model.content);
+    }
   }
   assert.equal(onnxNotebooks, 5);
 
@@ -1247,9 +1303,8 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
     const payload = await readFile(new URL(`../public/labs/runtime/onnxruntime-web/1.27.0/${name}`, import.meta.url));
     assert.equal(createHash("sha256").update(payload).digest("hex"), expectedHash, `${name} has an invalid runtime hash`);
   }
-  const pyodideEntry = await readFile(new URL("../public/lite/static/pyodide/pyodide.esm.js", import.meta.url), "utf8");
+  const pyodideEntry = await readFile(new URL("../public/lite/static/pyodide/pyodide.js", import.meta.url), "utf8");
   assert.match(pyodideEntry, /pyodide\.asm\.js/);
-  assert.doesNotMatch(pyodideEntry, /pyodide\.asm\.mjs/);
   await readFile(new URL("../public/lite/static/pyodide/pyodide.asm.js", import.meta.url));
   assert.match(host, /ai-trainer:get-notebook/);
   assert.match(host, /ai-trainer:set-notebook/);
@@ -1264,31 +1319,30 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
     }
   }
 
-  // These lazy shared chunks are required during JupyterLab startup. The
-  // JupyterLite shared-package pruning option incorrectly removes them.
-  for (const chunk of [
-    "1263.041eafb.js",
-    "1295.0f4010f.js",
-    "1415.ef78602.js",
-    "2539.75c809c.js",
-    "3687.198294e.js",
-    "3846.3e60f7b.js",
-    "4083.21af322.js",
-    "4396.cf059f5.js",
-    "5961.a12a880.js",
-    "7253.5262743.js",
-    "8838.6d34eed.js",
-  ]) {
-    await readFile(new URL(`../public/lite/build/${chunk}`, import.meta.url));
-  }
+  // Chunk hashes are produced by the selected JupyterLab release. Validate
+  // the generated core dynamically instead of pinning stale 0.8-era names.
+  const buildFiles = await readdir(new URL("../public/lite/build/", import.meta.url));
+  assert.ok(buildFiles.some(name => /^jlab_core\.[a-f0-9]+\.js$/.test(name)));
+  assert.ok(buildFiles.filter(name => name.endsWith(".js")).length > 100);
+  assert.equal(buildFiles.filter(name => name.endsWith(".map")).length, 0);
 
   // The Pyodide core archive includes package metadata, but not the wheels
   // required by either the kernel or the practical notebooks. Keep the full
   // compiled dependency closure local and verify it against Pyodide's lock.
   const pyodideLock = JSON.parse(await readFile(new URL("../public/lite/static/pyodide/pyodide-lock.json", import.meta.url), "utf8"));
+  assert.deepEqual(pyodideLock.info, {
+    abi_version: "2024_0",
+    arch: "wasm32",
+    platform: "emscripten_3_1_58",
+    python: "3.12.7",
+    version: "0.27.7",
+  });
+  assert.equal(pyodideLock.packages.pandas.version, "2.2.3");
+  assert.equal(pyodideLock.packages.xgboost.version, "2.1.2");
+  assert.equal(pyodideLock.packages["opencv-python"].version, "4.10.0.84");
   const normalizePackageName = name => name.toLowerCase().replaceAll("_", "-").replaceAll(".", "-");
   const packages = new Map(Object.entries(pyodideLock.packages).map(([name, metadata]) => [normalizePackageName(name), metadata]));
-  const queue = ["micropip", "ipython", "jedi", "numpy", "pandas", "matplotlib", "scipy", "scikit-learn", "pillow"];
+  const queue = ["micropip", "ipython", "jedi", "numpy", "pandas", "matplotlib", "scipy", "scikit-learn", "pillow", "xgboost", "opencv-python", "ssl"];
   const required = new Set();
   while (queue.length > 0) {
     const name = normalizePackageName(queue.pop());
@@ -1298,7 +1352,9 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
     assert.ok(metadata, `Pyodide lock metadata is missing ${name}`);
     queue.push(...metadata.depends);
   }
-  assert.equal(required.size, 31);
+  assert.equal(required.size, 39);
+  const pyodideFiles = await readdir(new URL("../public/lite/static/pyodide/", import.meta.url));
+  assert.equal(pyodideFiles.some(name => /cp314|pyodide_2025/.test(name)), false);
   for (const name of required) {
     const metadata = packages.get(name);
     const wheel = await readFile(new URL(`../public/lite/static/pyodide/${metadata.file_name}`, import.meta.url));

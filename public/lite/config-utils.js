@@ -150,7 +150,7 @@ function applyQueryOverrides(config) {
   const attempt = params.get('attempt');
   const pyodideSettings = config.litePluginSettings?.['@jupyterlite/pyodide-kernel-extension:kernel'];
   if (pyodideSettings) {
-    const pyodideUrl = new URL('/lite/static/pyodide/pyodide.esm.js', window.location.origin);
+    const pyodideUrl = new URL('/lite/static/pyodide/pyodide.js', window.location.origin);
     if (runtime && /^[A-Za-z0-9_-]{1,80}$/.test(runtime)) {
       pyodideUrl.searchParams.set('runtime', runtime);
     }

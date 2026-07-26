@@ -74,48 +74,33 @@
     "cssOverrides": {
       "type": "object",
       "additionalProperties": false,
-      "description": "CSS override properties for theming",
+      "description": "The description field of each item is the CSS property that will be used to validate an override's value",
       "properties": {
         "code-font-family": {
           "type": ["string", "null"],
-          "description": "Font family used for code"
+          "description": "font-family"
         },
         "code-font-size": {
           "type": ["string", "null"],
-          "description": "Font size used for code"
+          "description": "font-size"
         },
 
         "content-font-family": {
           "type": ["string", "null"],
-          "description": "Font family used for content"
+          "description": "font-family"
         },
         "content-font-size1": {
           "type": ["string", "null"],
-          "description": "Font size used for content"
+          "description": "font-size"
         },
 
         "ui-font-family": {
           "type": ["string", "null"],
-          "description": "Font family used for the UI"
+          "description": "font-family"
         },
         "ui-font-size1": {
           "type": ["string", "null"],
-          "description": "Font size used for the UI"
-        },
-        "rendermime-error-background": {
-          "title": "Error Background Color",
-          "description": "Background color for error output",
-          "type": "object",
-          "properties": {
-            "light": {
-              "type": ["string", "null"],
-              "description": "Background color to use in light theme"
-            },
-            "dark": {
-              "type": ["string", "null"],
-              "description": "Background color to use in dark theme"
-            }
-          }
+          "description": "font-size"
         }
       }
     }
@@ -163,11 +148,7 @@
         "content-font-size1": null,
 
         "ui-font-family": null,
-        "ui-font-size1": null,
-        "rendermime-error-background": {
-          "light": null,
-          "dark": null
-        }
+        "ui-font-size1": null
       }
     }
   }

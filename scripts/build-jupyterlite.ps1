@@ -7,7 +7,9 @@ $ErrorActionPreference = "Stop"
 $PSNativeCommandUseErrorActionPreference = $true
 
 $projectRoot = Split-Path -Parent $PSScriptRoot
-$pyodideVersion = "314.0.1"
+$buildProjectRoot = $projectRoot
+$stagingRoot = $null
+$pyodideVersion = "0.27.7"
 $pyodideArchive = "https://github.com/pyodide/pyodide/releases/download/$pyodideVersion/pyodide-core-$pyodideVersion.tar.bz2"
 $pyodideCdn = "https://fastly.jsdelivr.net/pyodide/v$pyodideVersion/full"
 $pyodidePackages = @(
@@ -19,7 +21,10 @@ $pyodidePackages = @(
   "matplotlib",
   "scipy",
   "scikit-learn",
-  "pillow"
+  "pillow",
+  "xgboost",
+  "opencv-python",
+  "ssl"
 )
 $purePythonRequirements = @(
   "comm==0.2.3+ai.trainer.1",
@@ -31,15 +36,6 @@ $purePythonRequirements = @(
 
 function Get-NormalizedPackageName([string]$Name) {
   return $Name.ToLowerInvariant().Replace("_", "-").Replace(".", "-")
-}
-
-function Move-JavaScriptModule([string]$Directory, [string]$SourceName, [string]$TargetName) {
-  $source = Join-Path $Directory $SourceName
-  $target = Join-Path $Directory $TargetName
-  if (-not (Test-Path -LiteralPath $source)) {
-    throw "Expected JavaScript module is missing: $source"
-  }
-  Move-Item -LiteralPath $source -Destination $target -Force
 }
 
 if (-not $Python) {
@@ -57,15 +53,6 @@ if (-not $Python) {
 
 $useJupyterModule = $false
 if (-not $Jupyter) {
-  $localJupyter = Join-Path $projectRoot ".jupyterlite-venv\Scripts\jupyter.exe"
-  if (Test-Path $localJupyter) {
-    try {
-      & $localJupyter --version 2>$null | Out-Null
-      if ($LASTEXITCODE -eq 0) { $Jupyter = $localJupyter }
-    } catch { $Jupyter = $null }
-  }
-}
-if (-not $Jupyter) {
   $venvSitePackages = Join-Path $projectRoot ".jupyterlite-venv\Lib\site-packages"
   if (-not (Test-Path $venvSitePackages)) {
     throw "JupyterLite Python packages are missing. Recreate .jupyterlite-venv or provide JUPYTERLITE_JUPYTER."
@@ -78,10 +65,50 @@ if (-not $Jupyter) {
   $useJupyterModule = $true
 }
 
+function Invoke-JupyterLiteBuild([bool]$IncludeAiTrainerExtension) {
+  Push-Location (Join-Path $buildProjectRoot "jupyterlite")
+  try {
+    $buildArgs = @(
+      "build",
+      "--output-dir", "..\public\lite",
+      "--contents", "content",
+      "--apps", "lab",
+      "--no-sourcemaps",
+      "--pyodide", $pyodideArchive
+    )
+    if ($IncludeAiTrainerExtension) {
+      $buildArgs += "--LiteBuildConfig.federated_extensions=..\jupyterlite-extension\labextension"
+    }
+    if ($useJupyterModule) {
+      & $Python -m jupyterlite_core.app @buildArgs
+    } else {
+      & $Jupyter lite @buildArgs
+    }
+    if ($LASTEXITCODE -ne 0) {
+      throw "JupyterLite build failed with exit code $LASTEXITCODE"
+    }
+  } finally {
+    Pop-Location
+  }
+}
+
+function Copy-JupyterLiteOutputToProject {
+  if ($buildProjectRoot -eq $projectRoot) {
+    return
+  }
+  $source = [System.IO.Path]::GetFullPath((Join-Path $buildProjectRoot "public\lite"))
+  $target = [System.IO.Path]::GetFullPath((Join-Path $projectRoot "public\lite"))
+  $expectedTarget = [System.IO.Path]::GetFullPath((Join-Path $projectRoot "public\lite"))
+  if ($target -ne $expectedTarget -or -not (Test-Path -LiteralPath $source -PathType Container)) {
+    throw "Refusing to copy an unexpected JupyterLite output: $source -> $target"
+  }
+  New-Item -ItemType Directory -Force -Path $target | Out-Null
+  Copy-Item -Path (Join-Path $source "*") -Destination $target -Recurse -Force
+}
+
 Push-Location $projectRoot
 try {
-  npm run jupyterlite:extension
-  npm run labs:runtime
+  npm.cmd run labs:runtime
   & $Python (Join-Path $projectRoot "scripts\generate-jupyterlite-notebooks.py")
   if ($LASTEXITCODE -ne 0) {
     throw "Notebook generation failed with exit code $LASTEXITCODE"
@@ -108,61 +135,58 @@ try {
     }
   }
 
-  Push-Location (Join-Path $projectRoot "jupyterlite")
-  try {
-    $buildArgs = @(
-      "build",
-      "--output-dir", "..\public\lite",
-      "--contents", "content",
-      "--apps", "lab",
-      "--no-sourcemaps",
-      "--pyodide", $pyodideArchive,
-      "--LiteBuildConfig.federated_extensions=..\jupyterlite-extension\labextension"
-    )
-    if ($useJupyterModule) {
-      & $Python -m jupyterlite_core.app @buildArgs
-    } else {
-      & $Jupyter lite @buildArgs
+  # JupyterLite resolves junctions and subst drives back to their physical
+  # paths. On affected Windows/Python combinations that still corrupts a
+  # Chinese project path before pathlib writes the merged config. Build from
+  # an actual ASCII staging directory, then copy the verified output back.
+  if ($projectRoot -match "[^\x00-\x7F]") {
+    $tempRoot = [System.IO.Path]::GetFullPath([System.IO.Path]::GetTempPath()).TrimEnd("\")
+    $stagingRoot = Join-Path $tempRoot "ai-trainer-jupyterlite-build-$([System.Guid]::NewGuid().ToString('N'))"
+    $resolvedStagingRoot = [System.IO.Path]::GetFullPath($stagingRoot)
+    if (-not $resolvedStagingRoot.StartsWith("$tempRoot\", [System.StringComparison]::OrdinalIgnoreCase)) {
+      throw "Refusing to create JupyterLite staging outside the temporary directory: $resolvedStagingRoot"
     }
-    if ($LASTEXITCODE -ne 0) {
-      throw "JupyterLite build failed with exit code $LASTEXITCODE"
+    New-Item -ItemType Directory -Path (Join-Path $stagingRoot "jupyterlite") -Force | Out-Null
+    foreach ($fileName in @("jupyter-lite.json", "overrides.json")) {
+      Copy-Item -LiteralPath (Join-Path $projectRoot "jupyterlite\$fileName") `
+        -Destination (Join-Path $stagingRoot "jupyterlite\$fileName") -Force
     }
-  } finally {
-    Pop-Location
+    foreach ($directoryName in @("content", "pypi", ".cache")) {
+      $sourceDirectory = Join-Path $projectRoot "jupyterlite\$directoryName"
+      if (Test-Path -LiteralPath $sourceDirectory) {
+        Copy-Item -LiteralPath $sourceDirectory `
+          -Destination (Join-Path $stagingRoot "jupyterlite\$directoryName") -Recurse -Force
+      }
+    }
+    New-Item -ItemType Directory -Path (Join-Path $stagingRoot "scripts") -Force | Out-Null
+    Copy-Item -LiteralPath (Join-Path $projectRoot "scripts\patch-jupyterlite-config.py") `
+      -Destination (Join-Path $stagingRoot "scripts\patch-jupyterlite-config.py") -Force
+    $buildProjectRoot = $stagingRoot
   }
 
-  $pyodideDir = Join-Path $projectRoot "public\lite\static\pyodide"
-  Move-JavaScriptModule $pyodideDir "pyodide.mjs" "pyodide.esm.js"
-  Move-JavaScriptModule $pyodideDir "pyodide.asm.mjs" "pyodide.asm.js"
-  Move-JavaScriptModule $pyodideDir "python_cli_entry.mjs" "python_cli_entry.js"
-
-  $moduleReferences = @{
-    "pyodide.esm.js" = @{
-      "pyodide.asm.mjs" = "pyodide.asm.js"
-    }
-    "pyodide.js" = @{
-      "pyodide.asm.mjs" = "pyodide.asm.js"
-    }
-    "python_cli_entry.js" = @{
-      "pyodide.mjs" = "pyodide.esm.js"
-    }
-    "python" = @{
-      "python_cli_entry.mjs" = "python_cli_entry.js"
-    }
-    "python.bat" = @{
-      "python_cli_entry.mjs" = "python_cli_entry.js"
-    }
+  Invoke-JupyterLiteBuild $false
+  Copy-JupyterLiteOutputToProject
+  npm.cmd run jupyterlite:extension
+  if ($LASTEXITCODE -ne 0) {
+    throw "JupyterLite extension build failed with exit code $LASTEXITCODE"
   }
-  foreach ($fileName in $moduleReferences.Keys) {
-    $path = Join-Path $pyodideDir $fileName
-    $source = Get-Content -Raw -LiteralPath $path
-    foreach ($reference in $moduleReferences[$fileName].GetEnumerator()) {
-      $source = $source.Replace($reference.Key, $reference.Value)
-    }
-    [System.IO.File]::WriteAllText($path, $source, [System.Text.UTF8Encoding]::new($false))
+  if ($buildProjectRoot -ne $projectRoot) {
+    New-Item -ItemType Directory -Path (Join-Path $buildProjectRoot "jupyterlite-extension") -Force | Out-Null
+    Copy-Item -LiteralPath (Join-Path $projectRoot "jupyterlite-extension\labextension") `
+      -Destination (Join-Path $buildProjectRoot "jupyterlite-extension\labextension") -Recurse -Force
+  }
+  Invoke-JupyterLiteBuild $true
+
+  $pyodideDir = Join-Path $buildProjectRoot "public\lite\static\pyodide"
+  $resolvedPyodideDir = [System.IO.Path]::GetFullPath($pyodideDir)
+  $expectedPyodideDir = [System.IO.Path]::GetFullPath(
+    (Join-Path $buildProjectRoot "public\lite\static\pyodide")
+  )
+  if ($resolvedPyodideDir -ne $expectedPyodideDir -or -not (Test-Path -LiteralPath $resolvedPyodideDir -PathType Container)) {
+    throw "Refusing to clean an unexpected Pyodide directory: $resolvedPyodideDir"
   }
 
-  & $Python (Join-Path $projectRoot "scripts\patch-jupyterlite-config.py")
+  & $Python (Join-Path $buildProjectRoot "scripts\patch-jupyterlite-config.py")
   if ($LASTEXITCODE -ne 0) {
     throw "JupyterLite workspace patch failed with exit code $LASTEXITCODE"
   }
@@ -193,6 +217,16 @@ try {
     }
   }
 
+  $requiredFileNames = [System.Collections.Generic.HashSet[string]]::new(
+    [System.StringComparer]::OrdinalIgnoreCase
+  )
+  foreach ($packageName in $required) {
+    [void]$requiredFileNames.Add([string]$packages[$packageName].file_name)
+  }
+  Get-ChildItem -LiteralPath $resolvedPyodideDir -File -Filter "*.whl" |
+    Where-Object { -not $requiredFileNames.Contains($_.Name) } |
+    ForEach-Object { Remove-Item -LiteralPath $_.FullName -Force }
+
   foreach ($packageName in ($required | Sort-Object)) {
     $package = $packages[$packageName]
     $fileName = [string]$package.file_name
@@ -218,7 +252,16 @@ try {
     }
   }
 
+  Copy-JupyterLiteOutputToProject
   Write-Host "JupyterLite build complete with self-hosted Pyodide and ONNX Runtime, $($required.Count) verified Pyodide packages, and $($purePythonRequirements.Count) local pure Python wheels."
 } finally {
   Pop-Location
+  if ($stagingRoot -and (Test-Path -LiteralPath $stagingRoot)) {
+    $tempRoot = [System.IO.Path]::GetFullPath([System.IO.Path]::GetTempPath()).TrimEnd("\")
+    $resolvedStagingRoot = [System.IO.Path]::GetFullPath($stagingRoot)
+    if (-not $resolvedStagingRoot.StartsWith("$tempRoot\ai-trainer-jupyterlite-build-", [System.StringComparison]::OrdinalIgnoreCase)) {
+      throw "Refusing to remove an unexpected JupyterLite staging directory: $resolvedStagingRoot"
+    }
+    Remove-Item -LiteralPath $resolvedStagingRoot -Recurse -Force
+  }
 }

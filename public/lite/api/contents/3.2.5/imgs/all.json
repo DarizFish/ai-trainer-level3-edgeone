@@ -1,0 +1,29 @@
+{
+  "content": [
+    {
+      "content": null,
+      "created": "2026-07-26T05:32:25.536223Z",
+      "format": null,
+      "hash": null,
+      "hash_algorithm": null,
+      "last_modified": "2026-07-26T05:32:08.710349Z",
+      "mimetype": "image/jpeg",
+      "name": "1.jpg",
+      "path": "3.2.5/imgs/1.jpg",
+      "size": 49124,
+      "type": "file",
+      "writable": true
+    }
+  ],
+  "created": "2026-07-26T05:32:25.528224Z",
+  "format": "json",
+  "hash": null,
+  "hash_algorithm": null,
+  "last_modified": "2026-07-26T05:32:25.536223Z",
+  "mimetype": null,
+  "name": "imgs",
+  "path": "3.2.5/imgs",
+  "size": null,
+  "type": "directory",
+  "writable": true
+}

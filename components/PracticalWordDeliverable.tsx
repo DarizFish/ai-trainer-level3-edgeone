@@ -9,6 +9,7 @@ export function PracticalWordDeliverable({ task, userEmail }: { task: PracticalT
   const deliverable = useMemo(() => getPracticalWordDeliverable(task), [task]);
   const referenceNarrative = useMemo(() => getPracticalReferenceNarrative(task), [task]);
   const [answer, setAnswer] = useState("");
+  const [reviewing, setReviewing] = useState(false);
   const [restored, setRestored] = useState(false);
   const storageKey = useMemo(() => deliverable && userEmail
     ? `ai-trainer-practical-word-response-v1:${encodeURIComponent(userEmail)}:${task.code}`
@@ -39,26 +40,27 @@ export function PracticalWordDeliverable({ task, userEmail }: { task: PracticalT
     setAnswer(value.slice(0, 20_000));
   }
 
-  return <section id={`lab-${deliverable.id}`} className="lab-word-deliverable" aria-label={`${deliverable.fileName} 作答区`}>
-    <header>
-      <div><p className="eyebrow">WORD 答题卷</p><h2>{deliverable.title}</h2><p>这部分是独立的文字交付物，不写入 Notebook。</p></div>
-      <b>{deliverable.fileName}</b>
-    </header>
-    <details className="lab-word-requirement">
-      <summary>查看该答题卷的官方要求</summary>
-      <p>{deliverable.requirement}</p>
-    </details>
-    <label>
-      <span>{deliverable.fileName} 作答草稿</span>
-      <textarea value={answer} readOnly={!userEmail} onFocus={() => { if (!userEmail) requireSignIn(); }} onChange={(event) => changeAnswer(event.target.value)} placeholder={deliverable.placeholder} />
-    </label>
-    {referenceNarrative && <details className="lab-word-reference">
-      <summary><span><b>核对参考答案</b><small>在当前草稿下方直接对比</small></span><strong>显示答案</strong></summary>
-      <div>
-        <header><div><p className="eyebrow">参考内容</p><h3>{deliverable.fileName}</h3></div></header>
-        <p>{referenceNarrative}</p>
+  return <section id={`lab-${deliverable.id}`} className="lab-word-deliverable business-sheet-paper notebook-word-answer-sheet" aria-label={`${deliverable.fileName} 作答区`}>
+    <section className="business-sheet-section notebook-word-sheet-section">
+      <header><span>WORD 答题卷</span><h2>{deliverable.fileName}</h2></header>
+      <div className="notebook-word-sheet-heading">
+        <h3>{deliverable.title}</h3>
       </div>
-    </details>}
-    <footer>{userEmail ? "草稿自动保存在当前浏览器。截图、HTML、模型与数据文件仍在实验区按原题保存。" : "登录后可在此起草 Word 答题卷。"}</footer>
+      <p className="business-sheet-prompt">{deliverable.requirement}</p>
+      <label>
+        <span className="sr-only">{deliverable.fileName} 作答草稿</span>
+        <textarea value={answer} readOnly={!userEmail} onFocus={() => { if (!userEmail) requireSignIn(); }} onChange={(event) => changeAnswer(event.target.value)} placeholder={deliverable.placeholder} />
+      </label>
+      {reviewing && referenceNarrative && <section className="business-sheet-review">
+        <header><span>学习复盘</span><small>完成作答后展示；非官方考场信息。</small></header>
+        <p>{referenceNarrative}</p>
+      </section>}
+    </section>
+    <footer className="notebook-word-sheet-actions">
+      <div>
+        <b>{answer.trim() ? "答题卷已填写" : "答题卷待填写"}</b>
+      </div>
+      {referenceNarrative && <button type="button" className={`button ${reviewing ? "button-quiet" : "button-primary"}`} onClick={() => setReviewing((value) => !value)}>{reviewing ? "返回作答" : "完成作答，进入复盘"}</button>}
+    </footer>
   </section>;
 }

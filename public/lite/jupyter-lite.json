@@ -2,27 +2,25 @@
   "jupyter-config-data": {
     "appName": "\u4eba\u5de5\u667a\u80fd\u8bad\u7ec3\u5e08\u4e09\u7ea7 Notebook \u5b9e\u9a8c\u5ba4",
     "appUrl": "./lab",
-    "appVersion": "2026.07",
+    "appVersion": "0.6.4",
     "baseUrl": "./",
     "collaborative": false,
-    "contentsAllJsonFile": "all.json",
     "defaultKernelName": "python",
     "disabledExtensions": [
       "@jupyterlab/apputils-extension:announcements",
       "@jupyterlab/help-extension:about",
-      "@jupyterlab/apputils-extension:announcements",
-      "@jupyterlab/help-extension:about"
+      "@jupyterlite/application-extension:service-worker-manager"
     ],
     "faviconUrl": "./lab/favicon.ico",
     "federated_extensions": [
       {
         "extension": "./extension",
-        "load": "static/remoteEntry.af5d2dda3bb046a0.js",
+        "load": "static/remoteEntry.3745c44cbbd62cec9a73.js",
         "name": "@jupyterlite/pyodide-kernel-extension"
       },
       {
         "extension": "./extension",
-        "load": "static/remoteEntry.e1c036871c986d7d325f.js",
+        "load": "static/remoteEntry.b45f36c8097a37b031d7.js",
         "name": "ai-trainer-jupyterlite"
       },
       {
@@ -38,16 +36,6 @@
       }
     ],
     "fileTypes": {
-      "avi": {
-        "extensions": [
-          ".avi"
-        ],
-        "fileFormat": "base64",
-        "mimeTypes": [
-          "video/x-msvideo"
-        ],
-        "name": "avi"
-      },
       "css": {
         "extensions": [
           ".css"
@@ -77,16 +65,6 @@
           "text/plain"
         ],
         "name": "fasta"
-      },
-      "flac": {
-        "extensions": [
-          ".flac"
-        ],
-        "fileFormat": "base64",
-        "mimeTypes": [
-          "audio/flac"
-        ],
-        "name": "flac"
       },
       "geojson": {
         "extensions": [
@@ -195,16 +173,6 @@
         ],
         "name": "json"
       },
-      "jupyterlab_workspace": {
-        "extensions": [
-          ".jupyterlab-workspace"
-        ],
-        "fileFormat": "json",
-        "mimeTypes": [
-          "application/json"
-        ],
-        "name": "jupyterlab_workspace"
-      },
       "manifest": {
         "extensions": [
           ".manifest"
@@ -225,56 +193,6 @@
           "text/markdown"
         ],
         "name": "md"
-      },
-      "mkv": {
-        "extensions": [
-          ".mkv"
-        ],
-        "fileFormat": "base64",
-        "mimeTypes": [
-          "video/x-matroska"
-        ],
-        "name": "mkv"
-      },
-      "mov": {
-        "extensions": [
-          ".mov"
-        ],
-        "fileFormat": "base64",
-        "mimeTypes": [
-          "video/quicktime"
-        ],
-        "name": "mov"
-      },
-      "mp3": {
-        "extensions": [
-          ".mp3"
-        ],
-        "fileFormat": "base64",
-        "mimeTypes": [
-          "audio/mpeg"
-        ],
-        "name": "mp3"
-      },
-      "mp4": {
-        "extensions": [
-          ".mp4"
-        ],
-        "fileFormat": "base64",
-        "mimeTypes": [
-          "video/mp4"
-        ],
-        "name": "mp4"
-      },
-      "ogg": {
-        "extensions": [
-          ".ogg"
-        ],
-        "fileFormat": "base64",
-        "mimeTypes": [
-          "audio/ogg"
-        ],
-        "name": "ogg"
       },
       "pdf": {
         "extensions": [
@@ -357,26 +275,6 @@
         ],
         "name": "wasm"
       },
-      "wav": {
-        "extensions": [
-          ".wav"
-        ],
-        "fileFormat": "base64",
-        "mimeTypes": [
-          "audio/wav"
-        ],
-        "name": "wav"
-      },
-      "webm": {
-        "extensions": [
-          ".webm"
-        ],
-        "fileFormat": "base64",
-        "mimeTypes": [
-          "video/webm"
-        ],
-        "name": "webm"
-      },
       "wheel": {
         "extensions": [
           ".whl"
@@ -417,9 +315,9 @@
       "@jupyterlite/pyodide-kernel-extension:kernel": {
         "pipliteUrls": [
           "./pypi/all.json?sha256=eaa1d1d4594a34e3ea31d68fd8e19d073aaa7c3e20d5f7828be9ac02cf2be7fc",
-          "./extensions/@jupyterlite/pyodide-kernel-extension/static/pypi/all.json?sha256=abc6abfd99ca6c5205df602041ad2de375b435a3747749223fe0b9dbd9d0e826"
+          "./extensions/@jupyterlite/pyodide-kernel-extension/static/pypi/all.json?sha256=6428e372c283ca4b67a641295c5d9c8abeed5cf341b24ffe41b313fcdcaf9be4"
         ],
-        "pyodideUrl": "./static/pyodide/pyodide.esm.js"
+        "pyodideUrl": "./static/pyodide/pyodide.js"
       }
     },
     "settingsOverrides": {
@@ -427,19 +325,9 @@
         "theme": "JupyterLab Light"
       },
       "@jupyterlab/notebook-extension:tracker": {
-        "autoStartDefaultKernel": true,
+        "autoStartDefaultKernel": false,
         "recordTiming": true,
         "scrollPastEnd": true
-      }
-    },
-    "versionInfo": {
-      "@jupyter-notebook/application": {
-        "label": "Jupyter Notebook",
-        "version": "7.6.0"
-      },
-      "@jupyterlab/application": {
-        "label": "JupyterLab",
-        "version": "4.6.0"
       }
     }
   },

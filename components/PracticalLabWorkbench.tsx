@@ -5,7 +5,6 @@ import type { PracticalTask } from "@/lib/content";
 import { getPracticalWordDeliverable } from "@/lib/practical-word-deliverable";
 import { PracticalTaskHeader } from "./PracticalTaskHeader";
 import { PracticalBrief } from "./PracticalBrief";
-import { PracticalMaterialsList } from "./PracticalMaterialsList";
 import JupyterLiteLab from "./JupyterLiteLab";
 
 type Surface = "notebook" | "document";
@@ -28,11 +27,9 @@ export default function PracticalLabWorkbench({ task, signedIn, userEmail }: { t
       <section className="lab-workspace-switcher" role="tablist" aria-label="作答工作区">
         <p className="eyebrow">作答工作区</p>
         <button type="button" role="tab" aria-selected={activeSurface === "notebook"} aria-controls={`lab-work-${task.code}`} onClick={() => setActiveSurface("notebook")}><span>Notebook</span><small>编写与运行代码</small></button>
-        {wordDeliverable && <button type="button" role="tab" aria-selected={activeSurface === "document"} aria-controls={`lab-${wordDeliverable.id}`} onClick={() => setActiveSurface("document")}><span>{wordDeliverable.fileName}</span><small>撰写测试报告</small></button>}
+        {wordDeliverable && <button type="button" role="tab" aria-selected={activeSurface === "document"} aria-controls={`lab-${wordDeliverable.id}`} onClick={() => setActiveSurface("document")}><span>{wordDeliverable.fileName}</span><small>填写 Word 答题卷</small></button>}
       </section>
-      {wordDeliverable && <p className="lab-rail-note">代码、结果和导出文件在 Notebook 中完成；需要撰写的测试报告，选择上方「{wordDeliverable.fileName}」。</p>}
       <PracticalBrief task={task} open={false} />
-      <PracticalMaterialsList task={task} />
     </aside>}
     <section className="lab-primary-column">
       <JupyterLiteLab task={task} signedIn={signedIn} userEmail={userEmail} activeSurface={activeSurface} />

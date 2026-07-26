@@ -9,7 +9,7 @@ import {
   NotebookActions,
   type NotebookPanel
 } from "@jupyterlab/notebook";
-import { IKernelSpecs } from "@jupyterlite/services";
+import { IKernelSpecs } from "@jupyterlite/kernel";
 
 type NotebookJson = {
   cells: unknown[];

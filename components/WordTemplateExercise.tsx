@@ -91,8 +91,8 @@ export function WordTemplateExercise({ task, userEmail }: { task: PracticalTask;
     setRevealed((value) => !value);
   }
 
-  return <section id={`work-${task.code}`} className="word-template-exercise">
-    <aside id={`task-${task.code}`} className="word-workbench-context">
+  return <section id={`work-${task.code}`} className="business-answer-sheet word-answer-sheet word-template-exercise word-template-answer-sheet">
+    <aside id={`task-${task.code}`} className="business-sheet-sidebar word-workbench-context">
       <PracticalTaskHeader task={task} variant="rail" />
       <p className="practical-rail-intro">直接补全官方 Word 模板中的 {fieldCount} 处横线，每处 1 分。</p>
       <PracticalBrief task={task} open={false} />
@@ -106,9 +106,11 @@ export function WordTemplateExercise({ task, userEmail }: { task: PracticalTask;
         <div className="word-side-review">{revealed ? <small>参考填写已显示在对应横线下方。</small> : <small>{userEmail ? "草稿自动保存" : "登录后可填写"}</small>}<button type="button" className={`button ${revealed ? "button-quiet" : "button-primary"}`} onClick={toggleReview}>{revealed ? "返回填写" : "完成并核对"}</button></div>
       </section>
     </aside>
-    <div className="word-document-canvas">
+    <div className="business-sheet-paper word-document-canvas" role="document" aria-label={`${exercise.materialName} 答题卷`}>
+      <section className="business-sheet-section word-template-sheet-section">
+        <header><span>WORD 答题卷</span><h2>{task.code}</h2></header>
       <header className="word-exercise-heading">
-        <p className="word-document-label">待补全文档</p>
+        <p className="word-document-label">{exercise.materialName}</p>
         <p className="word-exercise-progress" aria-label={`已填写 ${answeredCount} 处，共 ${exercise.fields.length} 处`}>已填写 <strong>{answeredCount}</strong> / {exercise.fields.length}</p>
       </header>
       <div className="document-preview-page word-exercise-document" role="document" aria-label={`${exercise.materialName} 在线填写`}>
@@ -133,6 +135,7 @@ export function WordTemplateExercise({ task, userEmail }: { task: PracticalTask;
           </article>;
         })}
       </div>
+      </section>
       <footer id={`review-${task.code}`} className="word-exercise-actions">
         <div className="word-review-status">{revealed ? <span>逐处对照参考填写后，确认每空得分。</span> : <span>{userEmail ? "草稿与核分自动保存在当前浏览器" : "登录后可填写并核分"}</span>}</div>
         <button type="button" className={`button ${revealed ? "button-quiet" : "button-primary"}`} onClick={toggleReview}>{revealed ? "返回填写" : "完成填写，核对答案"}</button>

@@ -175,7 +175,7 @@ function buildFillReferences(templateCells: Array<{ id: string; source: string }
 }
 
 export default function JupyterLiteLab({ task, signedIn, userEmail = null, examMode = false, activeSurface = "notebook" }: { task: PracticalTask; signedIn: boolean; userEmail?: string | null; examMode?: boolean; activeSurface?: "notebook" | "document" }) {
-  const labRevision = "20260724-runtime9";
+  const labRevision = "20260726-pyodide0277-runtime11";
   const iframeId = useMemo(() => `jupyterlite-${task.code.replaceAll(".", "-")}`, [task.code]);
   const notebookPath = `${task.code}/${task.code}.ipynb`;
   const workspaceSlug = `ai-trainer-${task.code.replaceAll(".", "-")}-${labRevision}`;

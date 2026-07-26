@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
-const runtimeRevision = "20260724-runtime9";
-const pyodideEntryPath = "/lite/static/pyodide/pyodide.esm.js";
+const runtimeRevision = "20260726-pyodide0277-runtime11";
+const pyodideEntryPath = "/lite/static/pyodide/pyodide.js";
 const pyodideWasmLoaderPath = "/lite/static/pyodide/pyodide.asm.js";
 const onnxEntryPath = "/labs/runtime/onnxruntime-web/1.27.0/ort.wasm.bundle.min.js";
 const fatalModulePattern = /Failed to fetch dynamically imported module|application\/octet-stream|MIME type|pyodide\.mjs|pyodide\.asm\.mjs/i;

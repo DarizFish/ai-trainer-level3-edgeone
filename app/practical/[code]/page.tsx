@@ -12,6 +12,6 @@ export default async function PracticalDetailPage({ params }: { params: Promise<
   if (task.hasNotebook) redirect(`/practical/${task.code}/lab`);
   const user = await getAccountUser();
   const wordTemplateTask = task.group === "4.1" || task.group === "4.2";
-  const businessAnswerSheetTask = task.group === "1.2";
-  return <main className={`practical-detail-page ${wordTemplateTask ? "word-template-detail-page" : ""} ${businessAnswerSheetTask ? "business-answer-sheet-page" : ""}`}><section className="container workspace practical-detail-workspace"><PracticalWorkspace task={task} userEmail={user?.email ?? null} /></section></main>;
+  const reportAnswerSheetTask = task.group === "1.2" || task.group === "3.1";
+  return <main className={`practical-detail-page ${wordTemplateTask ? "word-template-detail-page" : ""} ${reportAnswerSheetTask ? "business-answer-sheet-page" : ""}`}><section className="container workspace practical-detail-workspace"><PracticalWorkspace task={task} userEmail={user?.email ?? null} /></section></main>;
 }

@@ -6,18 +6,62 @@ import hashlib
 import json
 import re
 import shutil
-from pathlib import Path
+from pathlib import Path, PurePosixPath
+from urllib.parse import unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTENT_PATH = ROOT / "data" / "content.json"
 MANIFEST_PATH = ROOT / "public" / "labs" / "manifest.json"
 OUTPUT = ROOT / "jupyterlite" / "content"
+PUBLIC = ROOT / "public"
 
 
 def lines(source: str) -> list[str]:
     if not source:
         return []
     return source.splitlines(keepends=True)
+
+
+def safe_child(root: Path, relative: str, label: str) -> Path:
+    normalized = relative.replace("\\", "/")
+    path = PurePosixPath(normalized)
+    if not normalized or path.is_absolute() or ".." in path.parts:
+        raise ValueError(f"Unsafe {label}: {relative!r}")
+    candidate = (root / Path(*path.parts)).resolve()
+    try:
+        candidate.relative_to(root.resolve())
+    except ValueError as error:
+        raise ValueError(f"Unsafe {label}: {relative!r}") from error
+    return candidate
+
+
+def copy_workspace_assets(code: str, assets: list[dict], task_dir: Path) -> int:
+    copied = 0
+    for asset in assets:
+        name = str(asset["name"])
+        parsed_url = urlsplit(str(asset["url"]))
+        if parsed_url.scheme or parsed_url.netloc or not parsed_url.path.startswith("/"):
+            raise ValueError(f"Task {code} has a non-local asset URL: {asset['url']!r}")
+
+        source = safe_child(PUBLIC, unquote(parsed_url.path).lstrip("/"), "asset source path")
+        target = safe_child(task_dir, name, "workspace asset path")
+        payload = source.read_bytes()
+        expected_size = int(asset["size"])
+        expected_hash = str(asset["sha256"]).lower()
+        actual_hash = hashlib.sha256(payload).hexdigest()
+        if len(payload) != expected_size:
+            raise ValueError(
+                f"Task {code} asset {name!r} has size {len(payload)}, expected {expected_size}"
+            )
+        if actual_hash != expected_hash:
+            raise ValueError(
+                f"Task {code} asset {name!r} has SHA-256 {actual_hash}, expected {expected_hash}"
+            )
+
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(source, target)
+        copied += 1
+    return copied
 
 
 def markdown_cell(source: str, **metadata: object) -> dict:
@@ -49,6 +93,8 @@ def dependencies(source: str, assets: list[dict]) -> list[str]:
         (r"\b(import|from)\s+PIL\b", "Pillow"),
         (r"\b(import|from)\s+seaborn\b", "seaborn"),
         (r"\b(import|from)\s+imblearn\b", "imbalanced-learn"),
+        (r"\b(import|from)\s+xgboost\b", "xgboost"),
+        (r"\b(import|from)\s+cv2\b", "opencv-python"),
     ]
     for pattern, package in checks:
         if re.search(pattern, source) and package not in packages:
@@ -421,7 +467,7 @@ def notebook_for(task: dict, manifest_task: dict, version: str) -> dict:
                 "name": "python",
                 "nbconvert_exporter": "python",
                 "pygments_lexer": "ipython3",
-                "version": "3.13",
+                "version": "3.12",
             },
             "ai_trainer": {
                 "task_code": code,
@@ -537,6 +583,7 @@ def main() -> None:
 
     generated = 0
     onnx = 0
+    copied_assets = 0
     for task in content["practical"]:
         if not task.get("hasNotebook") or not task.get("notebook"):
             continue
@@ -549,10 +596,19 @@ def main() -> None:
             json.dumps(notebook, ensure_ascii=False, indent=1) + "\n",
             encoding="utf-8",
         )
+        copied_assets += copy_workspace_assets(code, manifest_task.get("assets", []), task_dir)
         generated += 1
         onnx += int(bool(manifest_task.get("model")))
 
-    print(json.dumps({"notebooks": generated, "onnxNotebooks": onnx, "output": str(OUTPUT)}, ensure_ascii=False))
+    print(json.dumps(
+        {
+            "notebooks": generated,
+            "assets": copied_assets,
+            "onnxNotebooks": onnx,
+            "output": str(OUTPUT),
+        },
+        ensure_ascii=False,
+    ))
 
 
 if __name__ == "__main__":

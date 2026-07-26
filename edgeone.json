@@ -22,19 +22,13 @@
       ]
     },
     {
-      "source": "/lite/static/pyodide/pyodide.esm.js",
+      "source": "/lite/static/pyodide/pyodide.js",
       "headers": [
         { "key": "Content-Type", "value": "application/javascript; charset=utf-8" }
       ]
     },
     {
       "source": "/lite/static/pyodide/pyodide.asm.js",
-      "headers": [
-        { "key": "Content-Type", "value": "application/javascript; charset=utf-8" }
-      ]
-    },
-    {
-      "source": "/lite/static/pyodide/python_cli_entry.js",
       "headers": [
         { "key": "Content-Type", "value": "application/javascript; charset=utf-8" }
       ]
