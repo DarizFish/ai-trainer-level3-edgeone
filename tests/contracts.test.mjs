@@ -1259,14 +1259,13 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
   ]) {
     const values = cacheRuleFor(path);
     assert.ok(values.length > 0, `${path} needs an explicit Cache-Control rule`);
-    assert.ok(
-      values.some(value => /max-age=0/.test(value) && /must-revalidate/.test(value)),
-      `${path} must revalidate; it changes on every rebuild without a hashed name`,
-    );
-    assert.equal(
-      values.findIndex(value => /max-age=0/.test(value)) <= values.findIndex(value => /immutable/.test(value)) || !values.some(value => /immutable/.test(value)),
-      true,
-      `${path} must match its revalidating rule before any immutable rule`,
+    // Verified against production: when several rules match one path, EdgeOne
+    // applies the last one in file order. A specific revalidating rule must
+    // therefore sit after any broad immutable rule that also matches it.
+    assert.match(
+      values.at(-1),
+      /max-age=0[\s\S]*must-revalidate/,
+      `${path} must revalidate; its last matching rule still declares ${values.at(-1)}`,
     );
   }
   const names = new Set(extensions.map(extension => extension.name));
