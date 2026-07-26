@@ -185,8 +185,15 @@ test("production public routes and anonymous redirect stay healthy", {
   }
 
   const practicalMock = await fetchWithTransientRetry("/practical/mock", { redirect: "manual" });
-  assert.equal(practicalMock.status, 307, "/practical/mock must redirect while practical mock is disabled");
-  assert.equal(practicalMock.headers.get("location"), "/practical");
+  if ([302, 303, 307, 308].includes(practicalMock.status)) {
+    assert.equal(practicalMock.headers.get("location"), "/practical");
+  } else {
+    const practicalMockBody = await practicalMock.text();
+    assert.equal(practicalMock.status, 200, "/practical/mock should redirect or return EdgeOne's redirect document");
+    assert.match(practicalMockBody, /id="__next-page-redirect"/);
+    assert.match(practicalMockBody, /url=\/practical/);
+    assert.match(practicalMockBody, /NEXT_REDIRECT;replace;\/practical;307;/);
+  }
 
   const progress = await fetchWithTransientRetry("/progress", { redirect: "manual" });
   if ([302, 303, 307, 308].includes(progress.status)) {
