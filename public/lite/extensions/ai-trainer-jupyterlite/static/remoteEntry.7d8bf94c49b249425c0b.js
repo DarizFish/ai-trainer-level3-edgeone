@@ -11,10 +11,10 @@ var _JUPYTERLAB;
 
 const moduleMap = {
 	"./index": () => {
-		return __webpack_require__.e("Documents_edgeone-site_jupyterlite-extension_lib_index_js").then(() => (() => ((__webpack_require__(/*! ../../../../../Documents/人工智能训练师三级/edgeone-site/jupyterlite-extension/lib/index.js */ "../../../../../Documents/人工智能训练师三级/edgeone-site/jupyterlite-extension/lib/index.js")))));
+		return __webpack_require__.e("lib_index_js").then(() => (() => ((__webpack_require__(/*! ./lib/index.js */ "./lib/index.js")))));
 	},
 	"./extension": () => {
-		return __webpack_require__.e("Documents_edgeone-site_jupyterlite-extension_lib_index_js").then(() => (() => ((__webpack_require__(/*! ../../../../../Documents/人工智能训练师三级/edgeone-site/jupyterlite-extension/lib/index.js */ "../../../../../Documents/人工智能训练师三级/edgeone-site/jupyterlite-extension/lib/index.js")))));
+		return __webpack_require__.e("lib_index_js").then(() => (() => ((__webpack_require__(/*! ./lib/index.js */ "./lib/index.js")))));
 	}
 };
 const get = (module, getScope) => {
@@ -142,7 +142,7 @@ __webpack_require__.d(exports, {
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames based on template
-/******/ 			return "" + chunkId + "." + "bb2bc839b86fe91c4fbb" + ".js";
+/******/ 			return "" + chunkId + "." + "369d83d066df289d2c99" + ".js";
 /******/ 		};
 /******/ 	})();
 /******/ 	
@@ -260,7 +260,7 @@ __webpack_require__.d(exports, {
 /******/ 			const promises = [];
 /******/ 			switch(name) {
 /******/ 				case "default": {
-/******/ 					register("ai-trainer-jupyterlite", "1.0.0", () => (__webpack_require__.e("Documents_edgeone-site_jupyterlite-extension_lib_index_js").then(() => (() => (__webpack_require__(/*! ../../../../../Documents/人工智能训练师三级/edgeone-site/jupyterlite-extension/lib/index.js */ "../../../../../Documents/人工智能训练师三级/edgeone-site/jupyterlite-extension/lib/index.js"))))));
+/******/ 					register("ai-trainer-jupyterlite", "1.0.0", () => (__webpack_require__.e("lib_index_js").then(() => (() => (__webpack_require__(/*! ./lib/index.js */ "./lib/index.js"))))));
 /******/ 				}
 /******/ 				break;
 /******/ 			}
@@ -424,7 +424,7 @@ __webpack_require__.d(exports, {
 /******/ 		};
 /******/ 		// no consumes in initial chunks
 /******/ 		const chunkMapping = {
-/******/ 			"Documents_edgeone-site_jupyterlite-extension_lib_index_js": [
+/******/ 			"lib_index_js": [
 /******/ 				"webpack/sharing/consume/default/@codemirror/state",
 /******/ 				"webpack/sharing/consume/default/@codemirror/view",
 /******/ 				"webpack/sharing/consume/default/@jupyterlab/notebook",

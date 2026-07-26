@@ -1,10 +1,10 @@
 "use strict";
-(self["webpackChunkai_trainer_jupyterlite"] = self["webpackChunkai_trainer_jupyterlite"] || []).push([["Documents_edgeone-site_jupyterlite-extension_lib_index_js"],{
+(self["webpackChunkai_trainer_jupyterlite"] = self["webpackChunkai_trainer_jupyterlite"] || []).push([["lib_index_js"],{
 
-/***/ "../../../../../Documents/人工智能训练师三级/edgeone-site/jupyterlite-extension/lib/index.js"
-/*!******************************************************************************************!*\
-  !*** ../../../../../Documents/人工智能训练师三级/edgeone-site/jupyterlite-extension/lib/index.js ***!
-  \******************************************************************************************/
+/***/ "./lib/index.js"
+/*!**********************!*\
+  !*** ./lib/index.js ***!
+  \**********************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
@@ -24,6 +24,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const PYODIDE_KERNEL_PLUGIN_ID = "@jupyterlite/pyodide-kernel-extension:kernel";
+// 内核启动要在 Worker 里下载并初始化约 9MB 的 pyodide.asm.wasm、标准库和若干
+// wheel。同一条网络上实测就绪耗时在 30 秒到 56.5 秒之间浮动，原先的 60 秒上限
+// 只剩几秒余量，网络稍差就会误报“握手超时”，而内核其实仍在正常加载。
+const KERNEL_BOOT_TIMEOUT_MS = 180000;
 const BLANK_PATTERN = /_{3,}/g;
 // Collapse insignificant whitespace and unify quote style so trivially
 // different spellings of the same code compare equal.
@@ -610,7 +614,7 @@ const plugin = {
                 if (existing) {
                     if (existing.status === "dead")
                         throw new Error("Python 内核已停止，请重新加载环境");
-                    await withTimeout(existing.info, "Python 内核握手", 60000);
+                    await withTimeout(existing.info, "Python 内核握手", KERNEL_BOOT_TIMEOUT_MS);
                     return { status: existing.status, name: existing.name };
                 }
                 const inFlight = kernelStarts.get(panel);
@@ -623,10 +627,10 @@ const plugin = {
                         return { status: afterRegistration.status, name: afterRegistration.name };
                     notifyParent("AI_TRAINER_KERNEL_STATUS", { path: panel.context.path, status: "starting" });
                     try {
-                        const kernel = await withTimeout(panel.sessionContext.changeKernel({ name: preferred }), "Python 内核启动", 60000);
+                        const kernel = await withTimeout(panel.sessionContext.changeKernel({ name: preferred }), "Python 内核启动", KERNEL_BOOT_TIMEOUT_MS);
                         if (!kernel)
                             throw new Error("Python 内核启动后未返回连接");
-                        await withTimeout(kernel.info, "Python 内核握手", 60000);
+                        await withTimeout(kernel.info, "Python 内核握手", KERNEL_BOOT_TIMEOUT_MS);
                         const status = kernel?.status ?? "starting";
                         notifyParent("AI_TRAINER_KERNEL_STATUS", { path: panel.context.path, status });
                         return { status, name: preferred };

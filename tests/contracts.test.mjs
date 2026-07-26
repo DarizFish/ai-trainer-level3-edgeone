@@ -1216,9 +1216,12 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
   assert.equal(packageJson.dependencies["onnxruntime-web"], "1.27.0");
   assert.match(runtimeCopyScript, /Expected onnxruntime-web/);
   const JavaScriptModuleMime = "application/javascript; charset=utf-8";
+  // A rule source may carry a trailing "*" so EdgeOne also matches the
+  // query-string forms of the same file; compare against the bare path.
+  const bareSource = rule => rule.source.replace(/\*$/, "");
   const moduleHeaderSources = new Set(edgeOneConfig.headers
     .filter(rule => rule.headers.some(header => header.key === "Content-Type" && header.value === JavaScriptModuleMime))
-    .map(rule => rule.source));
+    .map(bareSource));
   for (const source of [
     "/lite/static/pyodide/pyodide.js",
     "/lite/static/pyodide/pyodide.asm.js",
@@ -1226,6 +1229,45 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
     "/labs/runtime/onnxruntime-web/1.27.0/ort-wasm-simd-threaded.js",
   ]) {
     assert.ok(moduleHeaderSources.has(source), `${source} must be served as JavaScript`);
+  }
+
+  // Files that change whenever JupyterLite or Pyodide is rebuilt but carry no
+  // content hash in their name must never be served as immutable. A stale
+  // immutable copy pins deleted bundle hashes or a mismatched pyodide-lock.json
+  // and silently breaks kernel startup until the browser cache expires.
+  const cacheRuleFor = path => edgeOneConfig.headers
+    .filter(rule => {
+      const bare = bareSource(rule);
+      return rule.source.endsWith("*") ? path.startsWith(bare) : path === bare;
+    })
+    .flatMap(rule => rule.headers)
+    .filter(header => header.key === "Cache-Control")
+    .map(header => header.value);
+  for (const path of [
+    "/lite/jupyter-lite.json",
+    "/lite/jupyter-lite.ipynb",
+    "/lite/lab/jupyter-lite.json",
+    "/lite/lab/jupyter-lite.ipynb",
+    "/lite/config-utils.js",
+    "/lite/service-worker.js",
+    "/lite/static/pyodide/pyodide.js",
+    "/lite/static/pyodide/pyodide.mjs",
+    "/lite/static/pyodide/pyodide.asm.js",
+    "/lite/static/pyodide/pyodide.asm.wasm",
+    "/lite/static/pyodide/pyodide-lock.json",
+    "/lite/static/pyodide/python_stdlib.zip",
+  ]) {
+    const values = cacheRuleFor(path);
+    assert.ok(values.length > 0, `${path} needs an explicit Cache-Control rule`);
+    assert.ok(
+      values.some(value => /max-age=0/.test(value) && /must-revalidate/.test(value)),
+      `${path} must revalidate; it changes on every rebuild without a hashed name`,
+    );
+    assert.equal(
+      values.findIndex(value => /max-age=0/.test(value)) <= values.findIndex(value => /immutable/.test(value)) || !values.some(value => /immutable/.test(value)),
+      true,
+      `${path} must match its revalidating rule before any immutable rule`,
+    );
   }
   const names = new Set(extensions.map(extension => extension.name));
   assert.ok(names.has("@jupyterlite/pyodide-kernel-extension"));

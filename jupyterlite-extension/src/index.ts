@@ -42,6 +42,10 @@ type InjectableEditor = {
 };
 
 const PYODIDE_KERNEL_PLUGIN_ID = "@jupyterlite/pyodide-kernel-extension:kernel";
+// 内核启动要在 Worker 里下载并初始化约 9MB 的 pyodide.asm.wasm、标准库和若干
+// wheel。同一条网络上实测就绪耗时在 30 秒到 56.5 秒之间浮动，原先的 60 秒上限
+// 只剩几秒余量，网络稍差就会误报“握手超时”，而内核其实仍在正常加载。
+const KERNEL_BOOT_TIMEOUT_MS = 180000;
 const BLANK_PATTERN = /_{3,}/g;
 
 type FillVerdict = "exact" | "different" | "empty";
@@ -646,7 +650,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
         const existing = panel.sessionContext.session?.kernel;
         if (existing) {
           if (existing.status === "dead") throw new Error("Python 内核已停止，请重新加载环境");
-          await withTimeout(existing.info, "Python 内核握手", 60000);
+          await withTimeout(existing.info, "Python 内核握手", KERNEL_BOOT_TIMEOUT_MS);
           return { status: existing.status, name: existing.name };
         }
 
@@ -659,9 +663,9 @@ const plugin: JupyterFrontEndPlugin<void> = {
           if (afterRegistration) return { status: afterRegistration.status, name: afterRegistration.name };
           notifyParent("AI_TRAINER_KERNEL_STATUS", { path: panel.context.path, status: "starting" });
           try {
-            const kernel = await withTimeout(panel.sessionContext.changeKernel({ name: preferred }), "Python 内核启动", 60000);
+            const kernel = await withTimeout(panel.sessionContext.changeKernel({ name: preferred }), "Python 内核启动", KERNEL_BOOT_TIMEOUT_MS);
             if (!kernel) throw new Error("Python 内核启动后未返回连接");
-            await withTimeout(kernel.info, "Python 内核握手", 60000);
+            await withTimeout(kernel.info, "Python 内核握手", KERNEL_BOOT_TIMEOUT_MS);
             const status = kernel?.status ?? "starting";
             notifyParent("AI_TRAINER_KERNEL_STATUS", { path: panel.context.path, status });
             return { status, name: preferred };
