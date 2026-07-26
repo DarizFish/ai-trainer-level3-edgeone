@@ -4,8 +4,10 @@ import { useEffect, useMemo, useState } from "react";
 import type { PracticalTask } from "@/lib/content";
 import { createPracticalResponseExercise } from "@/lib/practical-response-exercise";
 import type { PracticalRubricScores } from "@/lib/scoring";
-import { PracticalMaterials } from "./PracticalMaterials";
 import { PracticalOutcomeCheck } from "./PracticalOutcomeCheck";
+import { PracticalTaskHeader } from "./PracticalTaskHeader";
+import { PracticalBrief } from "./PracticalBrief";
+import { PracticalMaterialsList } from "./PracticalMaterialsList";
 
 type ResponseDraft = {
   version: 3;
@@ -92,13 +94,11 @@ export function PracticalResponseExercise({ task, userEmail }: { task: Practical
 
   return <section className="practical-response-layout" id={`work-${task.code}`}>
     <aside className="response-study-rail" aria-label="本题答题导航">
-      <p className="eyebrow">本题答题卷</p><h2>{task.code}</h2><p>官方题面与 Excel 素材在左侧；右侧直接开始两份 Word 报告。</p>
-      <nav>{exercise.sections.map((section) => <a href={`#response-${task.code}-${section.id}`} key={section.id}><span>{section.number}</span><b>{section.title}</b><small>{section.outputLabel}</small></a>)}</nav>
-      <details className="response-task-requirements">
-        <summary>查看完整官方题面</summary>
-        <div className="task-description">{task.description}</div>
-      </details>
-      <PracticalMaterials materials={task.materials} compact showDocumentPreview={false} />
+      <PracticalTaskHeader task={task} variant="rail" />
+      <p className="practical-rail-intro">完成两份独立的 Word 报告；题目要求与本题文件见下方。</p>
+      <PracticalBrief task={task} open={false} />
+      <PracticalMaterialsList task={task} />
+      <nav className="response-section-nav">{exercise.sections.map((section) => <a href={`#response-${task.code}-${section.id}`} key={section.id}><span>{section.number}</span><b>{section.title}</b><small>{section.outputLabel}</small></a>)}</nav>
     </aside>
     <div className="response-study-main">
       <header className="practical-response-heading">

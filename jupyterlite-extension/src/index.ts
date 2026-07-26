@@ -4,7 +4,6 @@ import type {
 } from "@jupyterlab/application";
 import { StateEffect, StateField, type Extension, type Range, type Text } from "@codemirror/state";
 import { Decoration, EditorView, WidgetType, type DecorationSet } from "@codemirror/view";
-import { ToolbarButton } from "@jupyterlab/apputils";
 import {
   INotebookTracker,
   NotebookActions,
@@ -45,42 +44,188 @@ type InjectableEditor = {
 const PYODIDE_KERNEL_PLUGIN_ID = "@jupyterlite/pyodide-kernel-extension:kernel";
 const BLANK_PATTERN = /_{3,}/g;
 
+type FillVerdict = "exact" | "different" | "empty";
+
+// Collapse insignificant whitespace and unify quote style so trivially
+// different spellings of the same code compare equal.
+function normalizeCode(value: string): string {
+  return value
+    .replaceAll('"', "'")
+    .replace(/\s+/g, " ")
+    .replaceAll(" (", "(")
+    .replaceAll("( ", "(")
+    .replaceAll(" )", ")")
+    .replaceAll(" ,", ",")
+    .replaceAll(", ", ",")
+    .replaceAll(" .", ".")
+    .replaceAll(". ", ".")
+    .replaceAll(" :", ":")
+    .replaceAll(" [", "[")
+    .replaceAll("[ ", "[")
+    .replaceAll(" ]", "]")
+    .replaceAll(" =", "=")
+    .replaceAll("= ", "=")
+    .trim();
+}
+
+function classifyFill(userAnswer: string, referenceAnswer: string): FillVerdict {
+  if (!userAnswer.trim()) return "empty";
+  if (normalizeCode(userAnswer) === normalizeCode(referenceAnswer)) return "exact";
+  return "different";
+}
+
+const VERDICT_META: Record<FillVerdict, { mark: string; label: string; className: string }> = {
+  exact: { mark: "✓", label: "完全一致", className: "is-exact" },
+  different: { mark: "✗", label: "与参考不同", className: "is-different" },
+  empty: { mark: "·", label: "未填写", className: "is-empty" }
+};
+
 const setFillReferenceItems = StateEffect.define<FillReferenceItem[]>();
 const setFillReferenceVisible = StateEffect.define<boolean>();
 
+type BlankComparison = { reference: string; user: string; verdict: FillVerdict };
+
+type FillReviewSummary = { total: number; exact: number; different: number; empty: number };
+
+function emptyFillSummary(): FillReviewSummary {
+  return { total: 0, exact: 0, different: 0, empty: 0 };
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`);
+}
+
+// Given the template line (with ___ blanks) and the user's completed line,
+// pull out what the user wrote in each blank. Returns one entry per blank, or
+// null when the completed line no longer matches the template shape.
+function extractBlankAnswers(templateLine: string, completedLine: string): string[] | null {
+  const matches = [...templateLine.matchAll(BLANK_PATTERN)];
+  if (matches.length === 0) return [];
+  let cursor = 0;
+  let pattern = "^";
+  for (const match of matches) {
+    pattern += escapeRegExp(templateLine.slice(cursor, match.index));
+    pattern += "(.*?)";
+    cursor = (match.index ?? 0) + match[0].length;
+  }
+  pattern += `${escapeRegExp(templateLine.slice(cursor))}$`;
+  const result = new RegExp(pattern).exec(completedLine);
+  return result ? result.slice(1).map(value => value.trim()) : null;
+}
+
+// Compare the user's line against the reference for one template line and
+// produce a per-blank verdict list. Falls back to "empty" verdicts when the
+// user hasn't reshaped the line into the template yet.
+function compareBlanks(item: FillReferenceItem, userLine: string | null): BlankComparison[] {
+  const userAnswers = userLine !== null ? extractBlankAnswers(item.templateLine, userLine) : null;
+  return item.answers.map((reference, index) => {
+    const user = userAnswers?.[index] ?? "";
+    return { reference, user, verdict: classifyFill(user, reference) };
+  });
+}
+
+// Rebuild a line from its template, filling the blank at fillIndex with its
+// reference answer while preserving whatever the user already put in the other
+// blanks. Used by the per-blank "填入参考" button.
+function rebuildLineWithReference(item: FillReferenceItem, userAnswers: string[] | null, fillIndex: number): string {
+  const segments = item.templateLine.split(BLANK_PATTERN);
+  let result = segments[0] ?? "";
+  for (let index = 0; index < item.answers.length; index += 1) {
+    const value = index === fillIndex ? item.answers[index] : (userAnswers?.[index] ?? "");
+    result += value + (segments[index + 1] ?? "");
+  }
+  return result;
+}
+
+// Write the reference answer for one blank into the live editor line, keeping
+// the user's other blanks intact. Re-locates the line at click time so edits
+// made after the widget rendered are respected.
+function fillBlankIntoEditor(view: EditorView, item: FillReferenceItem, fillIndex: number): void {
+  const doc = view.state.doc;
+  const line = doc.line(locateReferenceLine(doc, item));
+  const userAnswers = extractBlankAnswers(item.templateLine, line.text);
+  const rebuilt = rebuildLineWithReference(item, userAnswers, fillIndex);
+  view.dispatch({ changes: { from: line.from, to: line.to, insert: rebuilt } });
+}
+
 class FillReferenceWidget extends WidgetType {
-  constructor(readonly item: FillReferenceItem) {
+  constructor(readonly item: FillReferenceItem, readonly comparisons: BlankComparison[]) {
     super();
   }
 
   eq(other: FillReferenceWidget): boolean {
     return this.item.referenceLine === other.item.referenceLine
-      && this.item.answers.length === other.item.answers.length
-      && this.item.answers.every((answer, index) => answer === other.item.answers[index]);
+      && this.comparisons.length === other.comparisons.length
+      && this.comparisons.every((cmp, index) => {
+        const peer = other.comparisons[index];
+        return cmp.reference === peer?.reference && cmp.user === peer?.user && cmp.verdict === peer?.verdict;
+      });
   }
 
-  toDOM(): HTMLElement {
+  toDOM(view: EditorView): HTMLElement {
+    // Outer host carries the vertical spacing as padding, not margin.
+    // CodeMirror measures block-widget height with getBoundingClientRect,
+    // which counts padding but ignores margin; a margin here would make the
+    // editor under-measure every reference row and progressively offset the
+    // pointer-to-position mapping for all lines below the first widget.
+    const host = document.createElement("div");
+    host.className = "ai-trainer-fill-reference-host";
+    host.contentEditable = "false";
+
     const wrapper = document.createElement("aside");
     wrapper.className = "ai-trainer-fill-reference";
-    wrapper.setAttribute("aria-label", "本行参考填写");
+    wrapper.setAttribute("aria-label", "本行参考填写与自查");
 
-    const label = document.createElement("b");
-    label.textContent = "参考填写";
-    wrapper.append(label);
+    const multi = this.comparisons.length > 1;
+    this.comparisons.forEach((cmp, index) => {
+      const meta = VERDICT_META[cmp.verdict];
+      const row = document.createElement("div");
+      row.className = `ai-trainer-fill-row ${meta.className}`;
 
-    const values = document.createElement("span");
-    values.className = "ai-trainer-fill-reference-values";
-    this.item.answers.forEach((answer, index) => {
-      const code = document.createElement("code");
-      code.textContent = this.item.answers.length > 1 ? `空 ${index + 1}：${answer || "—"}` : answer || "—";
-      values.append(code);
+      const slot = document.createElement("span");
+      slot.className = "ai-trainer-fill-slot";
+      slot.textContent = multi ? `空 ${index + 1}` : "填空";
+      row.append(slot);
+
+      const verdict = document.createElement("span");
+      verdict.className = "ai-trainer-fill-verdict";
+      verdict.textContent = `${meta.mark} ${meta.label}`;
+      row.append(verdict);
+
+      const pair = document.createElement("span");
+      pair.className = "ai-trainer-fill-pair";
+
+      const mine = document.createElement("code");
+      mine.className = "ai-trainer-fill-mine";
+      mine.textContent = cmp.user || "（未填写）";
+      pair.append(mine);
+
+      const arrow = document.createElement("span");
+      arrow.className = "ai-trainer-fill-arrow";
+      arrow.textContent = "对照";
+      pair.append(arrow);
+
+      const ref = document.createElement("code");
+      ref.className = "ai-trainer-fill-ref";
+      ref.textContent = cmp.reference || "—";
+      pair.append(ref);
+
+      row.append(pair);
+
+      const fill = document.createElement("button");
+      fill.type = "button";
+      fill.className = "ai-trainer-fill-apply";
+      fill.textContent = "填入参考";
+      fill.title = "把参考答案写入这一空";
+      fill.disabled = cmp.verdict === "exact" || !cmp.reference;
+      fill.addEventListener("click", () => fillBlankIntoEditor(view, this.item, index));
+      row.append(fill);
+
+      wrapper.append(row);
     });
-    wrapper.append(values);
 
-    const note = document.createElement("small");
-    note.textContent = "参考写法 · 不自动判对错";
-    wrapper.append(note);
-    return wrapper;
+    host.append(wrapper);
+    return host;
   }
 
   ignoreEvent(): boolean {
@@ -108,19 +253,24 @@ function locateReferenceLine(doc: Text, item: FillReferenceItem): number {
   const expectedLine = Math.min(Math.max(item.lineIndex + 1, 1), doc.lines);
   if (lineMatchesTemplate(item.templateLine, doc.line(expectedLine).text)) return expectedLine;
 
-  let located = 0;
+  // The expected line no longer matches (the user inserted or removed lines).
+  // Collect every line that still matches the template anchors and pick the one
+  // closest to the expected position; that is the safest guess when several
+  // lines look alike. Only fall back to the expected line when nothing matches.
+  let best = 0;
   for (let lineNumber = 1; lineNumber <= doc.lines; lineNumber += 1) {
     if (!lineMatchesTemplate(item.templateLine, doc.line(lineNumber).text)) continue;
-    if (located) return expectedLine;
-    located = lineNumber;
+    if (best === 0 || Math.abs(lineNumber - expectedLine) < Math.abs(best - expectedLine)) best = lineNumber;
   }
-  return located || expectedLine;
+  return best || expectedLine;
 }
 
 function buildFillReferenceDecorations(doc: Text, items: FillReferenceItem[]): DecorationSet {
   const ranges: Array<Range<Decoration>> = items.map(item => {
-    const line = doc.line(locateReferenceLine(doc, item));
-    return Decoration.widget({ widget: new FillReferenceWidget(item), block: true, side: 1 }).range(line.to);
+    const lineNumber = locateReferenceLine(doc, item);
+    const line = doc.line(lineNumber);
+    const comparisons = compareBlanks(item, line.text);
+    return Decoration.widget({ widget: new FillReferenceWidget(item, comparisons), block: true, side: 1 }).range(line.to);
   });
   return Decoration.set(ranges, true);
 }
@@ -151,56 +301,147 @@ const fillReferenceField = StateField.define<FillReferenceState>({
 const fillReferenceExtension: Extension = [
   fillReferenceField,
   EditorView.baseTheme({
+    // Make the editor viewport a size container so the reference widget can be
+    // sized to the visible width (100cqw) instead of the content width. Without
+    // this the widget stretches to the longest code line and its right-aligned
+    // "填入参考" button ends up off-screen until the user scrolls horizontally.
+    ".cm-scroller": {
+      containerType: "inline-size"
+    },
+    ".ai-trainer-fill-reference-host": {
+      boxSizing: "border-box",
+      // Pin to the left edge of the visible viewport and cap width to it, so
+      // the widget (and its button) stay in view no matter how wide the code is.
+      position: "sticky",
+      left: "0",
+      width: "100cqw",
+      // Vertical spacing lives here as padding so CodeMirror measures it as
+      // part of the block-widget height (getBoundingClientRect counts padding
+      // but ignores margin); a margin here would offset pointer selection for
+      // every line below the widget.
+      padding: "6px 8px 8px",
+      userSelect: "none",
+      WebkitUserSelect: "none",
+      pointerEvents: "none"
+    },
     ".ai-trainer-fill-reference": {
       boxSizing: "border-box",
-      width: "calc(100% - 16px)",
+      width: "100%",
+      display: "flex",
+      flexDirection: "column",
+      gap: "6px",
+      padding: "8px 10px",
+      border: "1px solid var(--jp-border-color2, #d9d9d9)",
+      borderRadius: "var(--jp-border-radius, 4px)",
+      background: "var(--jp-layout-color2, #f5f5f5)",
+      color: "var(--jp-content-font-color1, #1a1a1a)",
+      fontFamily: "var(--jp-ui-font-family, system-ui, sans-serif)",
+      fontSize: "var(--jp-ui-font-size1, 13px)"
+    },
+    ".ai-trainer-fill-row": {
       display: "grid",
-      gridTemplateColumns: "94px minmax(0, 1fr) auto",
+      gridTemplateColumns: "auto auto minmax(0, 1fr) auto",
       alignItems: "center",
-      gap: "8px 12px",
-      margin: "7px 8px 10px",
-      padding: "10px 12px",
-      border: "1px solid #d7c08b",
-      borderLeft: "4px solid #a63a2a",
-      borderRadius: "3px",
-      background: "#fff8e8",
-      color: "#102a43",
-      fontFamily: '"Noto Sans SC", "Microsoft YaHei", sans-serif'
+      gap: "8px",
+      padding: "4px 6px",
+      borderRadius: "var(--jp-border-radius, 4px)",
+      borderLeft: "3px solid var(--jp-border-color2, #d9d9d9)",
+      background: "var(--jp-layout-color1, #ffffff)"
     },
-    ".ai-trainer-fill-reference > b": {
-      color: "#8b2f22",
-      fontSize: "13px"
+    ".ai-trainer-fill-row.is-exact": {
+      borderLeftColor: "var(--jp-success-color1, #2e7d32)"
     },
-    ".ai-trainer-fill-reference-values": {
+    ".ai-trainer-fill-row.is-different": {
+      borderLeftColor: "var(--jp-error-color1, #d32f2f)"
+    },
+    ".ai-trainer-fill-row.is-empty": {
+      borderLeftColor: "var(--jp-border-color1, #bdbdbd)"
+    },
+    ".ai-trainer-fill-slot": {
+      fontSize: "var(--jp-ui-font-size0, 11px)",
+      fontWeight: "600",
+      color: "var(--jp-ui-font-color2, #616161)",
+      whiteSpace: "nowrap"
+    },
+    ".ai-trainer-fill-verdict": {
+      fontSize: "var(--jp-ui-font-size0, 11px)",
+      fontWeight: "600",
+      whiteSpace: "nowrap"
+    },
+    ".is-exact .ai-trainer-fill-verdict": { color: "var(--jp-success-color1, #2e7d32)" },
+    ".is-different .ai-trainer-fill-verdict": { color: "var(--jp-error-color1, #d32f2f)" },
+    ".is-empty .ai-trainer-fill-verdict": { color: "var(--jp-ui-font-color3, #9e9e9e)" },
+    ".ai-trainer-fill-pair": {
       minWidth: "0",
       display: "flex",
       flexWrap: "wrap",
+      alignItems: "center",
       gap: "6px"
     },
-    ".ai-trainer-fill-reference-values code": {
+    ".ai-trainer-fill-pair code": {
       maxWidth: "100%",
       overflowX: "auto",
-      padding: "4px 8px",
-      border: "1px solid #bdc9d1",
-      borderRadius: "3px",
-      background: "#fff",
-      color: "#15334a",
-      fontFamily: 'Consolas, "SFMono-Regular", monospace',
-      fontSize: "13px",
-      lineHeight: "1.55",
-      whiteSpace: "pre"
+      padding: "2px 6px",
+      borderRadius: "var(--jp-border-radius, 4px)",
+      fontFamily: "var(--jp-code-font-family, monospace)",
+      fontSize: "var(--jp-code-font-size, 13px)",
+      lineHeight: "1.4",
+      whiteSpace: "pre",
+      // The host disables pointer/selection so mouse drags in the editor pass
+      // straight through the widget. Re-enable both on the code snippets only,
+      // so the user can select and copy their own answer or the reference
+      // without the surrounding labels joining the selection.
+      pointerEvents: "auto",
+      userSelect: "text",
+      WebkitUserSelect: "text",
+      cursor: "text"
     },
-    ".ai-trainer-fill-reference > small": {
-      color: "#6f6654",
-      fontSize: "11px",
+    ".ai-trainer-fill-mine": {
+      background: "var(--jp-layout-color2, #f0f0f0)",
+      color: "var(--jp-content-font-color2, #424242)",
+      border: "1px solid var(--jp-border-color2, #e0e0e0)"
+    },
+    ".is-different .ai-trainer-fill-mine, .is-empty .ai-trainer-fill-mine": {
+      color: "var(--jp-ui-font-color3, #9e9e9e)",
+      fontStyle: "italic"
+    },
+    ".ai-trainer-fill-arrow": {
+      fontSize: "var(--jp-ui-font-size0, 11px)",
+      color: "var(--jp-ui-font-color3, #9e9e9e)",
       whiteSpace: "nowrap"
     },
+    ".ai-trainer-fill-ref": {
+      background: "var(--jp-brand-color3, #e3f2fd)",
+      color: "var(--jp-content-font-color1, #1a1a1a)",
+      border: "1px solid var(--jp-brand-color2, #90caf9)"
+    },
+    ".ai-trainer-fill-apply": {
+      justifySelf: "end",
+      whiteSpace: "nowrap",
+      padding: "2px 10px",
+      borderRadius: "var(--jp-border-radius, 4px)",
+      border: "1px solid var(--jp-brand-color1, #1976d2)",
+      background: "var(--jp-brand-color1, #1976d2)",
+      color: "var(--jp-ui-inverse-font-color1, #ffffff)",
+      fontSize: "var(--jp-ui-font-size0, 11px)",
+      fontWeight: "600",
+      cursor: "pointer",
+      pointerEvents: "auto"
+    },
+    ".ai-trainer-fill-apply:hover:not(:disabled)": {
+      background: "var(--jp-brand-color0, #0d47a1)",
+      borderColor: "var(--jp-brand-color0, #0d47a1)"
+    },
+    ".ai-trainer-fill-apply:disabled": {
+      opacity: "0.4",
+      cursor: "default"
+    },
     "@media (max-width: 720px)": {
-      ".ai-trainer-fill-reference": {
+      ".ai-trainer-fill-row": {
         gridTemplateColumns: "1fr"
       },
-      ".ai-trainer-fill-reference > small": {
-        whiteSpace: "normal"
+      ".ai-trainer-fill-apply": {
+        justifySelf: "start"
       }
     }
   })
@@ -288,7 +529,6 @@ const plugin: JupyterFrontEndPlugin<void> = {
     const examMode = new URLSearchParams(window.location.search).get("exam") === "1";
     const panelFillReferences = new WeakMap<NotebookPanel, FillReferenceCell[]>();
     const panelFillVisible = new WeakMap<NotebookPanel, boolean>();
-    const fillReferenceButtons = new WeakMap<NotebookPanel, ToolbarButton>();
     const injectedEditors = new WeakSet<EditorView>();
 
     const preparationFailure = (cells: Array<{ model: { toJSON: () => unknown } }>): string | null => {
@@ -304,9 +544,10 @@ const plugin: JupyterFrontEndPlugin<void> = {
       return null;
     };
 
-    const applyFillReferences = async (panel: NotebookPanel, visible: boolean): Promise<number> => {
+    const applyFillReferences = async (panel: NotebookPanel, visible: boolean): Promise<FillReviewSummary> => {
       const references = panelFillReferences.get(panel) ?? [];
       const byCellId = new Map(references.map(reference => [reference.cellId, reference.items]));
+      const summary = emptyFillSummary();
       await Promise.all(panel.content.widgets.map(async cell => {
         await cell.ready;
         const cellId = cell.model.getMetadata("ai_trainer_cell_id");
@@ -319,6 +560,15 @@ const plugin: JupyterFrontEndPlugin<void> = {
           editor.injectExtension(fillReferenceExtension);
           injectedEditors.add(view);
         }
+        // Tally verdicts from the live document so the summary matches exactly
+        // what the widgets render for this cell.
+        for (const item of items) {
+          const line = view.state.doc.line(locateReferenceLine(view.state.doc, item));
+          for (const comparison of compareBlanks(item, line.text)) {
+            summary.total += 1;
+            summary[comparison.verdict] += 1;
+          }
+        }
         view.dispatch({
           effects: [
             setFillReferenceItems.of(items),
@@ -326,7 +576,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
           ]
         });
       }));
-      return references.reduce((total, reference) => total + reference.items.length, 0);
+      return summary;
     };
 
     const hideInfrastructureCells = (panel: NotebookPanel): void => {
@@ -516,6 +766,12 @@ const plugin: JupyterFrontEndPlugin<void> = {
         panel.content.model!.fromJSON(notebook);
         panel.context.model.dirty = true;
         await panel.context.save();
+        // fromJSON rebuilds every cell widget, so re-hide the infrastructure
+        // cells here rather than relying on the contentChanged listener, whose
+        // timing races the new widgets' DOM (otherwise the setup cell reappears
+        // after "恢复原始模板").
+        await Promise.all(panel.content.widgets.map(cell => cell.ready));
+        hideInfrastructureCells(panel);
         return { ok: true, path: panel.context.path };
       }
     });
@@ -536,18 +792,27 @@ const plugin: JupyterFrontEndPlugin<void> = {
     app.commands.addCommand("ai-trainer:set-fill-review", {
       label: "准备 Notebook 行内参考填写",
       execute: async args => {
-        if (examMode) return { ok: false, count: 0 };
+        if (examMode) return { ok: false, summary: emptyFillSummary() };
         const panel = activePanel(tracker, targetPath(args));
         const references = parseFillReferences(args.references);
         panelFillReferences.set(panel, references);
         panelFillVisible.set(panel, false);
-        const button = fillReferenceButtons.get(panel);
-        if (button) {
-          button.enabled = references.length > 0;
-          button.pressed = false;
-        }
-        const count = await applyFillReferences(panel, false);
-        return { ok: true, count };
+        const summary = await applyFillReferences(panel, false);
+        return { ok: true, summary };
+      }
+    });
+
+    app.commands.addCommand("ai-trainer:toggle-fill-review", {
+      label: "显示或隐藏参考答案",
+      execute: async args => {
+        if (examMode) return { ok: false, visible: false, summary: emptyFillSummary() };
+        const panel = activePanel(tracker, targetPath(args));
+        const visible = typeof args.visible === "boolean"
+          ? args.visible
+          : !(panelFillVisible.get(panel) ?? false);
+        panelFillVisible.set(panel, visible);
+        const summary = await applyFillReferences(panel, visible);
+        return { ok: true, visible, summary };
       }
     });
 
@@ -555,33 +820,6 @@ const plugin: JupyterFrontEndPlugin<void> = {
     const attachPanel = (panel: NotebookPanel) => {
       if (attached.has(panel)) return;
       attached.add(panel);
-      const cloudButton = new ToolbarButton({
-        label: "保存到备考站云端",
-        tooltip: "将完整 .ipynb 草稿同步到备考站账号",
-        onClick: () => notifyParent("AI_TRAINER_SAVE_REQUEST")
-      } as ConstructorParameters<typeof ToolbarButton>[0]);
-      panel.toolbar.insertItem(10, "ai-trainer-cloud-save", cloudButton);
-      if (!examMode) {
-        const fillReferenceButton = new ToolbarButton({
-          label: "核对填空",
-          tooltip: "在代码原位置显示参考填写；不会修改或运行 Notebook",
-          pressedTooltip: "隐藏行内参考填写",
-          enabled: Boolean(panelFillReferences.get(panel)?.length),
-          pressed: false,
-          className: "ai-trainer-fill-review-button",
-          onClick: () => {
-            const visible = !(panelFillVisible.get(panel) ?? false);
-            panelFillVisible.set(panel, visible);
-            fillReferenceButton.pressed = visible;
-            void applyFillReferences(panel, visible).then(count => {
-              notifyParent("AI_TRAINER_FILL_REVIEW_STATUS", { path: panel.context.path, visible, count });
-            });
-          }
-        } as ConstructorParameters<typeof ToolbarButton>[0]);
-        fillReferenceButtons.set(panel, fillReferenceButton);
-        panel.toolbar.insertItem(9, "ai-trainer-fill-review", fillReferenceButton);
-      }
-
       panel.context.model.contentChanged.connect(() => {
         hideInfrastructureCells(panel);
         notifyParent("AI_TRAINER_NOTEBOOK_CHANGED", { path: panel.context.path });
@@ -592,6 +830,11 @@ const plugin: JupyterFrontEndPlugin<void> = {
       panel.context.ready.then(async () => {
         hideInfrastructureCells(panel);
         concealRenderedRubric(panel);
+        // Collapse the left file browser as soon as the notebook is ready so the
+        // single-file exercise gets the full editor width. This is independent
+        // of kernel/exercise-preparation timing, which may run much later.
+        const shell = app.shell as JupyterFrontEnd.IShell & { collapseLeft?: () => void };
+        shell.collapseLeft?.();
         if (examMode) {
           const observer = new MutationObserver(() => concealRenderedRubric(panel));
           observer.observe(panel.content.node, { childList: true, subtree: true });

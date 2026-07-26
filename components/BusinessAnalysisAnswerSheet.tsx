@@ -5,6 +5,9 @@ import type { PracticalTask } from "@/lib/content";
 import { createPracticalResponseExercise } from "@/lib/practical-response-exercise";
 import type { PracticalRubricScores } from "@/lib/scoring";
 import { PracticalOutcomeCheck } from "./PracticalOutcomeCheck";
+import { PracticalTaskHeader } from "./PracticalTaskHeader";
+import { PracticalBrief } from "./PracticalBrief";
+import { PracticalMaterialsList } from "./PracticalMaterialsList";
 
 type AnswerSheetDraft = {
   version: 1;
@@ -35,11 +38,6 @@ function restoreDraft(serialized: string, sectionIds: Set<string>, scoreLimits: 
 
 function promptForAnswerSheet(prompt: string) {
   return prompt.replace(/\n将上述答案写在[^\n]+/g, "").trim();
-}
-
-function backgroundForAnswerSheet(description: string) {
-  const firstQuestion = description.indexOf("（1）");
-  return (firstQuestion > 0 ? description.slice(0, firstQuestion) : description).trim();
 }
 
 export function BusinessAnalysisAnswerSheet({ task, userEmail }: { task: PracticalTask; userEmail: string | null }) {
@@ -98,7 +96,9 @@ export function BusinessAnalysisAnswerSheet({ task, userEmail }: { task: Practic
 
   return <section id={`work-${task.code}`} className="business-answer-sheet">
     <aside className="business-sheet-sidebar">
-      <header><p className="eyebrow">业务优化答题卷</p><h2>{task.code}</h2><p>{task.maxScore} 分 · 建议 {task.durationMinutes} 分钟</p></header>
+      <PracticalTaskHeader task={task} variant="rail" />
+      <PracticalBrief task={task} open={false} />
+      <PracticalMaterialsList task={task} />
       <nav aria-label="大题导航">{exercise.sections.map((section) => {
         const answered = Boolean(answers[section.id]?.trim());
         return <a href={`#business-answer-${task.code}-${section.number}`} className={answered ? "complete" : "pending"} key={section.id}><span>{section.number}</span><b>{section.number === 1 ? "第一问" : "第二问"}</b><small>{answered ? "已填写" : "待作答"}</small></a>;
@@ -106,13 +106,6 @@ export function BusinessAnalysisAnswerSheet({ task, userEmail }: { task: Practic
       <footer>{reviewing ? <small>当前为学习复盘，不是官方考场评分。</small> : <small>{userEmail ? `已填写 ${answeredCount} / 2 问，草稿自动保存。` : "登录后可填写并保存答题卷。"}</small>}<button type="button" className={`button ${reviewing ? "button-quiet" : "button-primary"}`} onClick={() => setReviewing((value) => !value)}>{reviewing ? "返回作答" : "完成作答，进入复盘"}</button></footer>
     </aside>
     <div className="business-sheet-paper" role="document" aria-label={`${task.code} 答题卷`}>
-      <section className="business-sheet-context">
-        <header><span>官方考核任务单</span><small>请阅读完整题面后完成两道大题</small></header>
-        <section><h2>1. 场地设备要求</h2><p>{task.officialTaskSheet.equipmentRequirements}</p></section>
-        <section><h2>2. 工作任务</h2><p>{backgroundForAnswerSheet(task.description)}</p></section>
-        <section><h2>3. 技能要求</h2><p>{task.officialTaskSheet.skillRequirements}</p></section>
-        <section><h2>4. 质量指标</h2><p>{task.officialTaskSheet.qualityIndicators}</p></section>
-      </section>
       {exercise.sections.map((section) => <section id={`business-answer-${task.code}-${section.number}`} className="business-sheet-section" key={section.id}>
         <header><span>第 {section.number} 问</span><h2>{task.code}-{section.number}</h2></header>
         <p className="business-sheet-prompt">{promptForAnswerSheet(section.prompt)}</p>

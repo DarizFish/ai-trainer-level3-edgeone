@@ -27,6 +27,8 @@
     "content:import": "python scripts/import-reference.py",
     "content:reference:snapshot": "python scripts/theory_reference.py snapshot",
     "content:reference:apply": "python scripts/theory_reference.py apply",
+    "content:theory-review:validate": "python scripts/theory_review_state.py validate && python scripts/theory_review_quality.py --require-complete",
+    "content:theory-review:publish": "python scripts/publish_theory_review.py",
     "content:notebook-solutions:snapshot": "python scripts/notebook_solutions.py snapshot",
     "content:notebook-solutions:apply": "python scripts/notebook_solutions.py apply",
     "content:practical-materials": "python scripts/sync-practical-materials.py",

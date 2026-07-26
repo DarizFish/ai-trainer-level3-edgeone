@@ -19,7 +19,6 @@ export default function ProgressDashboard({ initialData }: { initialData: Progre
     const previous = data;
     setData((current) => ({
       ...current,
-      favorites: Math.max(0, current.favorites - 1),
       favoriteItems: current.favoriteItems.filter((value) => !(value.itemType === item.itemType && value.itemId === item.itemId)),
     }));
     const response = await fetch("/api/favorites", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ itemType: item.itemType, itemId: item.itemId, active: false }) });
@@ -31,25 +30,17 @@ export default function ProgressDashboard({ initialData }: { initialData: Progre
 
   if (error) return <div className="notice" role="alert">{error}。</div>;
 
-  const theoryPassed = data.bestTheoryScore >= 60;
-  const practicalPassed = data.estimatedPracticalScore >= 60;
-  const nextTitle = !theoryPassed && practicalPassed ? "优先补强理论科目" : theoryPassed && !practicalPassed ? "优先补强实操科目" : !theoryPassed && !practicalPassed ? "先建立两科稳定得分" : "两科已达到模拟合格线";
-  const nextCopy = !theoryPassed && practicalPassed ? "实操能力估算已过线，建议集中做理论错题和完整模拟卷。" : theoryPassed && !practicalPassed ? "理论最高分已过线，建议按官方权重补齐实操薄弱模块。" : !theoryPassed && !practicalPassed ? "理论与实操分别达到 60 分才合格，先从下方低分模块开始。" : "继续用完整模拟维持速度和稳定性；两科仍需分别参加正式认定。";
-
   return <div>
-    <div className="progress-grid">
-      <div className="progress-stat"><strong>{data.answered}</strong><span>已练理论题 / 900</span></div>
-      <a className="progress-stat" href="#wrong-list"><strong>{data.wrong}</strong><span>待订正错题</span></a>
-      <div className={`progress-stat subject-status ${theoryPassed ? "passed" : "pending"}`}><strong>{data.bestTheoryScore}</strong><span>理论最高分 · {theoryPassed ? "已达 60" : "未达 60"}</span></div>
-      <div className={`progress-stat subject-status ${practicalPassed ? "passed" : "pending"}`}><strong>{Math.round(data.estimatedPracticalScore * 10) / 10}</strong><span>实操能力估算 · {practicalPassed ? "已达 60" : "未达 60"}</span></div>
+    <section className="progress-overview" aria-labelledby="theory-progress-heading">
+      <div className="panel-heading"><div><p className="eyebrow">理论题库</p><h2 id="theory-progress-heading">题型进度</h2></div><Link className="text-link" href="/theory">继续练习 →</Link></div>
+    <div className="progress-grid theory-progress-grid">
+      {data.theoryTypeProgress.map((item) => <div className="progress-stat" key={item.type}>
+        <strong>{item.answered}<small> / {item.total}</small></strong>
+        <span>{item.label}进度</span>
+        <div className="progress-stat-meter" aria-label={`${item.label}已完成 ${item.answered}/${item.total}`}><i style={{ width: `${item.total ? item.answered / item.total * 100 : 0}%` }} /></div>
+      </div>)}
     </div>
-
-    <section className="progress-next">
-      <div><p className="eyebrow">两科分别判定</p><h2>{nextTitle}</h2><p>{nextCopy}</p></div>
-      <div className="hero-actions"><Link className="button button-primary" href={theoryPassed && !practicalPassed ? "/practical/mock" : "/theory"}>{theoryPassed && !practicalPassed ? "开始实操训练" : "继续理论练习"}</Link><Link className="button button-quiet" href="/blueprint">查看认定方案</Link></div>
     </section>
-
-    <section className="progress-panel ability-panel"><div className="panel-heading"><div><p className="eyebrow">实操官方权重</p><h2>六模块能力分布</h2><p>按各模块最好一次逐项自评分折算，合计仅用于训练诊断。</p></div><span>{Math.round(data.estimatedPracticalScore * 10) / 10} / 100</span></div><div className="ability-grid">{data.practicalAbility.map((ability) => <article key={ability.key}><div><b>{ability.label}</b><span>{ability.bestScore} / {ability.maxScore}</span></div><div className="ability-track"><span style={{ width: `${ability.maxScore ? (ability.bestScore / ability.maxScore) * 100 : 0}%` }} /></div><small>{ability.attempts ? `已评分 ${ability.attempts} 次` : "尚未评分"} · 权重 {ability.maxScore}</small></article>)}</div></section>
 
     <div className="progress-detail-grid">
       <section className="progress-panel" id="wrong-list">
@@ -76,13 +67,5 @@ export default function ProgressDashboard({ initialData }: { initialData: Progre
         </div>
       </section>
     </div>
-
-    <section className="progress-panel progress-history">
-      <div className="panel-heading"><div><p className="eyebrow">最近记录</p><h2>考试与实操</h2></div><span>代码草稿 {data.drafts} 份</span></div>
-      <div className="history-grid">
-        <div><h3>理论模拟</h3>{data.recentMocks.map((item, index) => <p key={`${item.createdAt}-${index}`}><b>{item.score} / {item.maxScore}</b><span>{item.mode === "official" ? "标准卷" : "随机卷"} · {shortDate(item.createdAt)}</span></p>)}{!data.recentMocks.length && <p className="small-copy">暂无模拟考试记录</p>}</div>
-        <div><h3>实操评分</h3>{data.recentPractical.map((item, index) => <p key={`${item.createdAt}-${index}`}><Link href={item.href}><b>{item.taskCode} · {item.score} / {item.maxScore}</b><span>{item.title} · {shortDate(item.createdAt)}</span></Link></p>)}{!data.recentPractical.length && <p className="small-copy">暂无实操评分记录</p>}</div>
-      </div>
-    </section>
   </div>;
 }

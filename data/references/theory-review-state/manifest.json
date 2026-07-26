@@ -1,0 +1,364 @@
+{
+  "$schema": "../theory-review-state.schema.json",
+  "schemaVersion": "1.0.0",
+  "batchId": "theory-900-review-2026-07-26-v1",
+  "createdAt": "2026-07-25T16:21:28Z",
+  "updatedAt": "2026-07-25T17:22:54Z",
+  "content": {
+    "path": "data/content.json",
+    "version": "2026-07-19-v7",
+    "sha256": "839c142493e0882c53e52fc5824f5ad101d8601de68ba2f728a70a1916a40871"
+  },
+  "sources": {
+    "officialWord": {
+      "priority": 1,
+      "relativePath": "../3级评价指导手册（上网）/05-评价指导手册（上网）/第5部分_人工智能训练师_3级_理论知识模拟试卷.docx",
+      "sha256": "f7841d937a09770b84a3273119cd4562a3159c1c00a8a429a7fd7a8b964916cd",
+      "matchMethod": "normalized_stem",
+      "matchedQuestions": 190
+    },
+    "secondarySite": {
+      "priority": 2,
+      "sourceUrl": "http://119.28.189.105/questions.js",
+      "snapshotVersion": "2026-07-16-v1",
+      "capturedAt": "2026-07-16",
+      "sourceSha256": "4c0fa4ac6accc6ab335a54f3fe5a04c56485aeeae4dfd46761de960abd6512c8",
+      "strictMatchedQuestions": 830
+    }
+  },
+  "policy": {
+    "answerPriority": [
+      "official_word",
+      "secondary_site",
+      "independent_review"
+    ],
+    "explanationPolicy": "independent_generation_only",
+    "explanationNote": "解析必须独立生成；不得复制官方 Word 或次级站的既有解析。",
+    "publishPolicy": "审校状态不直接发布；确认后另行更新 data/content.json。"
+  },
+  "appliedBatches": [
+    {
+      "batchId": "theory-900-review-2026-07-26-v1",
+      "shardId": "judge-001-100",
+      "inputSha256": "561f047b04f6826601f9ef737d2674480d40c9b093109ba2b3e29ab88ac33651",
+      "appliedAt": "2026-07-25T16:34:55Z",
+      "count": 100,
+      "reviewStage": "generation",
+      "reviewers": [
+        "codex-judge-reviewer"
+      ]
+    },
+    {
+      "batchId": "theory-900-review-2026-07-26-v1",
+      "shardId": "single-001-100",
+      "inputSha256": "db3ab50e4f92da89d87370bc2ce14cb8787fae779f2e3384abc3940f76b5751c",
+      "appliedAt": "2026-07-25T16:35:10Z",
+      "count": 100,
+      "reviewStage": "generation",
+      "reviewers": [
+        "codex-single-reviewer"
+      ]
+    },
+    {
+      "batchId": "theory-900-review-2026-07-26-v1",
+      "shardId": "single-101-200",
+      "inputSha256": "56518c45d8297c41c24b894da0b97328acbd0818a87bcc0e3c01418cd876cd61",
+      "appliedAt": "2026-07-25T16:41:42Z",
+      "count": 100,
+      "reviewStage": "generation",
+      "reviewers": [
+        "codex-single-reviewer"
+      ]
+    },
+    {
+      "batchId": "theory-900-review-2026-07-26-v1",
+      "shardId": "judge-101-200",
+      "inputSha256": "4ad9d39b2767652d7616c260b8c862bed72541460c2f620cdffdb915d978cde5",
+      "appliedAt": "2026-07-25T16:43:03Z",
+      "count": 100,
+      "reviewStage": "generation",
+      "reviewers": [
+        "codex-judge-reviewer"
+      ]
+    },
+    {
+      "batchId": "theory-900-review-2026-07-26-v1",
+      "shardId": "multi-001-100",
+      "inputSha256": "b900f7befea8c4f776ed15d4f2c28801bc7f66f2bd1f59e3c9846a783ae4e7a6",
+      "appliedAt": "2026-07-25T16:45:27Z",
+      "count": 100,
+      "reviewStage": "generation",
+      "reviewers": [
+        "codex-multi-reviewer"
+      ]
+    },
+    {
+      "batchId": "theory-900-review-2026-07-26-v1",
+      "shardId": "single-201-300",
+      "inputSha256": "f5666a9e48498f662f9b65b940316792764908c83ce5e8d74185c77263a57e05",
+      "appliedAt": "2026-07-25T16:47:59Z",
+      "count": 100,
+      "reviewStage": "generation",
+      "reviewers": [
+        "codex-single-reviewer"
+      ]
+    },
+    {
+      "batchId": "theory-900-review-2026-07-26-v1",
+      "shardId": "judge-201-300",
+      "inputSha256": "292cff5c06c5d00be561382c51f680be7837385aa31b19aa07838b6a3a7cf6e4",
+      "appliedAt": "2026-07-25T16:49:14Z",
+      "count": 100,
+      "reviewStage": "generation",
+      "reviewers": [
+        "codex-judge-reviewer"
+      ]
+    },
+    {
+      "batchId": "theory-900-review-2026-07-26-v1",
+      "shardId": "multi-101-200",
+      "inputSha256": "1c31684ba47a148e3060a090d7d823aa8c5cfcd6d7fc0699cc3122d1577bbc03",
+      "appliedAt": "2026-07-25T16:58:44Z",
+      "count": 100,
+      "reviewStage": "generation",
+      "reviewers": [
+        "codex-multi-reviewer"
+      ]
+    },
+    {
+      "batchId": "theory-900-review-2026-07-26-v1",
+      "shardId": "multi-201-300",
+      "inputSha256": "b6c59f00d1f364d0dc0a69017a2982b12d2fa8ab1c8c3bf0c70e25566e064388",
+      "appliedAt": "2026-07-25T17:02:42Z",
+      "count": 100,
+      "reviewStage": "generation",
+      "reviewers": [
+        "codex-multi-reviewer-2"
+      ]
+    },
+    {
+      "batchId": "theory-900-cross-review-2026-07-26-v1",
+      "shardId": "single-001-100",
+      "inputSha256": "927e24df8e95ad9c1fad9d42926d0399d2ca94c18976c8de443338fd9a46ec82",
+      "appliedAt": "2026-07-25T17:05:11Z",
+      "count": 100,
+      "reviewStage": "qa",
+      "reviewers": [
+        "codex-cross-reviewer-single"
+      ]
+    },
+    {
+      "batchId": "theory-900-cross-review-2026-07-26-v1",
+      "shardId": "judge-001-100",
+      "inputSha256": "5884092f992995b9a2839a789e2c7648d67dd6356e646af53ac2f20cce4abdc3",
+      "appliedAt": "2026-07-25T17:06:36Z",
+      "count": 100,
+      "reviewStage": "qa",
+      "reviewers": [
+        "codex-cross-reviewer-judge"
+      ]
+    },
+    {
+      "batchId": "theory-900-cross-review-2026-07-26-v1",
+      "shardId": "single-101-200",
+      "inputSha256": "5c85f51767c4dfa727f2bdfd892305fad23f15e510cd18e09dc5c126f502515c",
+      "appliedAt": "2026-07-25T17:07:35Z",
+      "count": 100,
+      "reviewStage": "qa",
+      "reviewers": [
+        "codex-cross-reviewer-single"
+      ]
+    },
+    {
+      "batchId": "theory-900-cross-review-2026-07-26-v1",
+      "shardId": "single-201-300",
+      "inputSha256": "f2f2a75df029c06f75103ed6fb7a85aaa473c64e04a13cc4468e458930f29683",
+      "appliedAt": "2026-07-25T17:10:26Z",
+      "count": 100,
+      "reviewStage": "qa",
+      "reviewers": [
+        "codex-cross-reviewer-single"
+      ]
+    },
+    {
+      "batchId": "theory-900-cross-review-2026-07-26-v1",
+      "shardId": "multi-001-100",
+      "inputSha256": "54425d9ee9da32d2e6530b7ffde30d506753e15f29789f7642b7ea5dd7c61879",
+      "appliedAt": "2026-07-25T17:12:00Z",
+      "count": 100,
+      "reviewStage": "qa",
+      "reviewers": [
+        "codex-cross-reviewer-multi"
+      ]
+    },
+    {
+      "batchId": "theory-900-qa-2026-07-26-v1",
+      "shardId": "judge-101-200",
+      "inputSha256": "5382ebc53677e9e15e91a6ec47244b62f9ac990673c4fe6b3471f91b4b74caa2",
+      "appliedAt": "2026-07-25T17:15:26Z",
+      "count": 100,
+      "reviewStage": "qa",
+      "reviewers": [
+        "codex-judge-qa-reviewer-2"
+      ]
+    },
+    {
+      "batchId": "theory-900-cross-review-2026-07-26-v1",
+      "shardId": "multi-101-200",
+      "inputSha256": "930f37c3eaad1348282608114ba3b3eadded53aee5747edfd361e58e6fa82192",
+      "appliedAt": "2026-07-25T17:16:42Z",
+      "count": 100,
+      "reviewStage": "qa",
+      "reviewers": [
+        "codex-cross-reviewer-multi"
+      ]
+    },
+    {
+      "batchId": "theory-900-cross-review-2026-07-26-v1",
+      "shardId": "multi-201-300",
+      "inputSha256": "b3ef74b98694bb49b6f72ff7a4c0928d252968f72604b698089d8268d815f56a",
+      "appliedAt": "2026-07-25T17:17:01Z",
+      "count": 100,
+      "reviewStage": "qa",
+      "reviewers": [
+        "codex-cross-reviewer-multi"
+      ]
+    },
+    {
+      "batchId": "theory-900-cross-review-2026-07-26-v1",
+      "shardId": "judge-201-300",
+      "inputSha256": "998511ff3f8e7fe4dce6e50fe171d7333a9c98156a5e71a694584e53e4a91bfd",
+      "appliedAt": "2026-07-25T17:22:54Z",
+      "count": 100,
+      "reviewStage": "qa",
+      "reviewers": [
+        "codex-cross-reviewer-judge"
+      ]
+    }
+  ],
+  "summary": {
+    "total": 900,
+    "byQuestionType": {
+      "judge": 300,
+      "multi": 300,
+      "single": 300
+    },
+    "byProcessingStatus": {
+      "reviewed": 900
+    },
+    "byOfficialWordMatch": {
+      "matched": 190,
+      "not_found": 710
+    },
+    "bySecondarySiteMatch": {
+      "matched": 830,
+      "not_matched": 70
+    },
+    "byAdoptedBasis": {
+      "independent_review": 139,
+      "official_word": 190,
+      "secondary_site": 571
+    },
+    "byConflictStatus": {
+      "none": 895,
+      "resolved": 5
+    },
+    "byExplanationGenerationStatus": {
+      "reviewed": 900
+    },
+    "reviewed": 900,
+    "remaining": 0
+  },
+  "shards": [
+    {
+      "id": "judge-001-100",
+      "path": "judge-001-100.json",
+      "questionType": "judge",
+      "range": {
+        "start": 1,
+        "end": 100
+      },
+      "count": 100
+    },
+    {
+      "id": "judge-101-200",
+      "path": "judge-101-200.json",
+      "questionType": "judge",
+      "range": {
+        "start": 101,
+        "end": 200
+      },
+      "count": 100
+    },
+    {
+      "id": "judge-201-300",
+      "path": "judge-201-300.json",
+      "questionType": "judge",
+      "range": {
+        "start": 201,
+        "end": 300
+      },
+      "count": 100
+    },
+    {
+      "id": "single-001-100",
+      "path": "single-001-100.json",
+      "questionType": "single",
+      "range": {
+        "start": 1,
+        "end": 100
+      },
+      "count": 100
+    },
+    {
+      "id": "single-101-200",
+      "path": "single-101-200.json",
+      "questionType": "single",
+      "range": {
+        "start": 101,
+        "end": 200
+      },
+      "count": 100
+    },
+    {
+      "id": "single-201-300",
+      "path": "single-201-300.json",
+      "questionType": "single",
+      "range": {
+        "start": 201,
+        "end": 300
+      },
+      "count": 100
+    },
+    {
+      "id": "multi-001-100",
+      "path": "multi-001-100.json",
+      "questionType": "multi",
+      "range": {
+        "start": 1,
+        "end": 100
+      },
+      "count": 100
+    },
+    {
+      "id": "multi-101-200",
+      "path": "multi-101-200.json",
+      "questionType": "multi",
+      "range": {
+        "start": 101,
+        "end": 200
+      },
+      "count": 100
+    },
+    {
+      "id": "multi-201-300",
+      "path": "multi-201-300.json",
+      "questionType": "multi",
+      "range": {
+        "start": 201,
+        "end": 300
+      },
+      "count": 100
+    }
+  ]
+}

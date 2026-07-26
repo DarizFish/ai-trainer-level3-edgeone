@@ -1,0 +1,710 @@
+{
+  "$schema": "../theory-review-batch.schema.json",
+  "schemaVersion": "1.0.0",
+  "batchId": "theory-900-qa-2026-07-26-v1",
+  "shardId": "judge-101-200",
+  "reviewedBy": "codex-judge-qa-reviewer-2",
+  "reviewStage": "qa",
+  "reviews": [
+    {
+      "questionId": "judge-101",
+      "questionFingerprint": "1f409ab0d37ae146aa6a3f506e8f76785db76b521e0c06bf31f19517a93d91de",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "知识可以用逻辑规则、框架、语义网络、概率模型、知识图谱等多种形式表达，实际系统也常混合使用这些方式，因此并非只有两个流派。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-102",
+      "questionFingerprint": "c0cc5786c6635f41e327f32fd5e7b1c8b5c5761a072f690236bc36dd6def51db",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "知识图谱以图为基础，实体通常对应节点，实体间的语义联系对应边，可用三元组等形式记录和查询关系。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-103",
+      "questionFingerprint": "b4a531a903d62a61be6af70d0338eff334d65fd63fda41a2e7375f8ee4374745",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "合适的分析软件能够批量完成整理、计算和图形展示，减少手工重复劳动，并让使用者更快获得可用结论。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-104",
+      "questionFingerprint": "84f39c88c4be82afd6a7b0b0912494a77312f6e2130e3d09448a5c6ca0120e91",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "预测性分析从历史样本中建立统计或机器学习模型，用来估计未来数值、事件概率及变化方向，是常见业务分析类型。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-105",
+      "questionFingerprint": "b0fb68152f7ffec3741cff0a07f50696c0e726ab898c4cc877152cf8a72e1971",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "原始业务数据往往存在量纲、格式、编码或质量差异，使用前应按任务进行清洗和必要的标准化，不能默认直接可用。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-106",
+      "questionFingerprint": "6223a21e71e45de2e2139d22334486521cf75f576ab5d5814e73d64cccb9def5",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "基础建模过程确实包含构造或选择特征、挑选适合的模型以及用指标检验效果；题干说的是“包括”，没有声称流程仅限三项。",
+      "notes": ["QA确认一审将答案由×调整为√是合理的。"]
+    },
+    {
+      "questionId": "judge-107",
+      "questionFingerprint": "7894d7c83a52f27679cb99256a48d048d061305c022dfd8a95d82081928da4aa",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "经典卷积网络利用卷积层抽取局部特征、池化层压缩表示，再由全连接层完成输出，最典型的应用对象是图像。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-108",
+      "questionFingerprint": "dec4a265ffdb6f8adea82e9b7ab4846a10728c13f1af36c1b5e35b8b960e174b",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "手工特征是传统方案之一，深度模型还可以从原始输入中自动学习层次化表示，不能将手工设计概括为智能训练的主要通用方法。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-109",
+      "questionFingerprint": "4fcf68eb691fa89667533c3f6ee04c6ca4ec8fd4041cc1807d919e7f7440f00e",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "学习率决定每次参数更新的步幅，适当增大可少走一些迭代，但数值过大容易越过低损失区域并振荡甚至发散。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-110",
+      "questionFingerprint": "5f2e1ae151b3442e2e1c3a0e9ea2831fd22813087b99d95918b67ebda9ef0e5e",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "清理错误、统一表示并减少无关噪声能让模型接收到更有效的训练信号，所以改善预测表现是预处理的重要目标之一。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-111",
+      "questionFingerprint": "29d29dc17d352fe3e49984d796046a9693e09350acbc6caae39890d108f960ec",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "在不改变图像标签含义的前提下加入适量随机噪声，可扩充样本变化并训练模型适应扰动，属于常见增强手段。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-112",
+      "questionFingerprint": "f359f9a9eaa54ba94de16baa1e5544e921ee0c32c19ad1d028576c8609cece12",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "分片按某种键或规则把大规模数据划成较小分区，使各部分可独立存放、查询或分布到不同节点，定义正确。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-113",
+      "questionFingerprint": "05eebccef46abb5a90c18ad3b2292fe4834c6ea7fc730d0badfc746ee0c72627",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "主动学习会优先挑选模型最不确定或最具代表性的未标注样本交给人工，从有限标注预算中获得更高信息价值。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-114",
+      "questionFingerprint": "8bcc80dcfe99f14af7fc2ced5e935f5c9b8c3d4b7e8a521ff5247257ec1a61b9",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "训练准确率与泛化准确率用途不同，最终评估应在未参与拟合的数据上独立计算，而不是必须同时使用训练集和测试集算一个指标。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-115",
+      "questionFingerprint": "6c3b646e70793c1bdf8f7cc478200ac58cdbd6eb9c045ecfbe9d369a2794c70a",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "不同任务的类别比例、错误代价和业务目标不同，应据此选择准确率、召回率、F1或回归误差等合适指标。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-116",
+      "questionFingerprint": "703812f275bb9e3527b9573621c1540af9fd94965f9df52fbd6ff2f705ba40e1",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "TensorFlow和PyTorch都公开源代码，并提供张量运算、自动求导、神经网络组件和加速支持，可用于深度学习。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-117",
+      "questionFingerprint": "3f1e84fcc5cf068b04eb9cedb3d44e19a39bbf2ba0b465cd13f72a1e6aff218e",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "普通NumPy ndarray具有统一dtype，混合输入时元素通常会被提升为共同类型；若要真正混存异构对象需使用object等特殊类型。",
+      "notes": ["题干“不同类型”存在跨数组与同一数组两种理解；按NumPy数组通常同质的考点判×。"]
+    },
+    {
+      "questionId": "judge-118",
+      "questionFingerprint": "55f5573b161eb851121e6a168d43bb3bf566f1e462d12b37e567dd8ee3744c30",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "若渠道、抽样或测量方式系统性偏向某些群体，数据就无法代表目标总体，因此收集设计必须主动控制偏差。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-119",
+      "questionFingerprint": "d147a60965e73ea6b716a2870d70a1f9d19f281701564ddb2499e44b9b4046bb",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "自动标注模型会受训练数据、边界样本和场景变化影响，不可能普遍达到百分之百准确，仍需抽检、复核或纠错。",
+      "notes": ["官方Word答案为×，QA锁定不变。"]
+    },
+    {
+      "questionId": "judge-120",
+      "questionFingerprint": "046a7cd96d8f6917448859d8f4c7af9c6f17739947748bcc5782bba75e9c0673",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "类别编码、数值缩放、文本向量化和图像张量化等操作，都会把原始内容转换为模型能够接收和有效处理的形式。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-121",
+      "questionFingerprint": "0add05972526c13b08a8e0f7be051ce6a6f6d539c26341bf1b567f663387fcd2",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "标准线性回归预测的是连续数值；类别判断通常采用逻辑回归或其他分类算法，所以不能把线性回归归为分类方法。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-122",
+      "questionFingerprint": "661c232b2eaf1eaf23b8929e8650eaba921b4029610b513ad7d94985ea2bf415",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "最小化损失并更新可学习参数属于训练过程；验证阶段使用独立数据估计泛化表现，不直接参与参数更新，因此题干把两种工具的原理混为一谈。",
+      "notes": ["QA推翻一审√：验证工具并非通过不断调整模型参数来工作，改判为×。"]
+    },
+    {
+      "questionId": "judge-123",
+      "questionFingerprint": "be9d68041458a0eec1ba506e387d4b26cff2658839c3418f2e95e1f62d538147",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "自动训练平台可能采用网格、随机、贝叶斯、进化或资源分配式搜索，各工具的搜索空间和策略并不相同。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-124",
+      "questionFingerprint": "919cacf6f68fc5d3d3e6ecc2148ba1f6d058d96530e03e4ec86c563d84e41e9f",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "日志不仅包含报错，还可记录访问、状态、性能、审计和安全事件，分析工具也用于检索、关联和告警。",
+      "notes": ["官方Word答案为×，QA锁定不变。"]
+    },
+    {
+      "questionId": "judge-125",
+      "questionFingerprint": "6a540297a845ff2d61a5de28af04fdb5fffe3d2e9c963079faf109f242ba26a7",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "GAN训练一般在一个对抗循环中交替优化两方：更新判别器时固定生成器，更新生成器时固定判别器，并非同步更新。",
+      "notes": ["QA确认一审由√改为×。"]
+    },
+    {
+      "questionId": "judge-126",
+      "questionFingerprint": "71d26f81fb4ac77f6285b9e94a8de9b4101d8e7b19e78419083ab663b288d504",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "Python和R的实际数据工作主要借助成熟库完成表格处理、统计建模、机器学习、预处理及可视化，题干描述符合常见实践。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-127",
+      "questionFingerprint": "6f0d320f08e5e71305955d42c5b2f683bd83749c9401b527f3f086148994bbc2",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "部署可以把模型交给推理运行时、封装成接口服务或嵌入应用，并不要求将模型转换为独立可执行程序，题干定义过窄。",
+      "notes": ["QA确认一审由√改为×。"]
+    },
+    {
+      "questionId": "judge-128",
+      "questionFingerprint": "82d4d9e832b2805054efb5dd3db1fe1d730b0a85f5db9a013e1cd9e7039ad82e",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "收集、清洗和转换属于数据准备；探索性分析是在已有数据上借助描述统计和图形寻找分布、关系及异常，两者概念不同。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-129",
+      "questionFingerprint": "b847eef6dabbd4cb17b37dc676074fa98cacd0a1f9ee917ed457fb3709597380",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "探索性分析正是利用汇总统计、分布图和变量关系图来形成对数据结构、规律和问题的初步认识。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-130",
+      "questionFingerprint": "bb2583c2be76fde596bdb50292c3eb9b57f0f1f1aea46558c33fc8f69c22df31",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "删除法的一种典型形式是按行移除含缺失项的记录；虽然也可删除缺失严重的字段，但题干描述了常见用法。",
+      "notes": ["“删除法”还包括删列等变体；本题按列表删除记录的基础定义判√。"]
+    },
+    {
+      "questionId": "judge-131",
+      "questionFingerprint": "e4c5e1c6b965bede938a9560c6f682a69f90a10a193d39c6232e3e0943cc9a37",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "缺失记录是否删除要看缺失比例、机制和字段用途，也可采用插补或缺失标记；直接删除可能丢失信息并造成偏差。",
+      "notes": ["官方Word答案为×，QA锁定不变。"]
+    },
+    {
+      "questionId": "judge-132",
+      "questionFingerprint": "9be5550e820fb8add5eb29da38ddeafd455589fb69dc9de62821d0a49ae31ea3",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "箱线图须外点只表示超过四分位距阈值的候选异常，可能仍是真实业务极值，必须核查后决定处理，不能自动删除。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-133",
+      "questionFingerprint": "b3422407bfaa19035af1ab64955871fc99b6473cdac1cbf45d84ac1fb444a20e",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "除统计阈值和模型外，取值范围、字段关系及业务规则也能定义异常；脱离业务语境容易误伤合法极端值。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-134",
+      "questionFingerprint": "af2ca38ed7c97dcd3af660a84fb822dc35a410ec0167d8b70a9fe47a3eaa9a06",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "降噪还应用于语音、传感器序列、文本和表格等数据，例如滤波、平滑和纠错，绝非只服务图像。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-135",
+      "questionFingerprint": "87d86fde530cd28e99fd079d9cf7942c930ae733ab47759c973719485f9e0a06",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "哈希集合适合识别完全相同的记录，但去重还常用排序、主键约束、布隆过滤、相似度匹配和聚类，不能说主要都由哈希表实现。",
+      "notes": ["QA推翻一审√：题干把多类精确及近似去重方法过度限定为哈希表，改判为×。"]
+    },
+    {
+      "questionId": "judge-136",
+      "questionFingerprint": "56cfaccfbb2ae1e70aa69ae4487264cc339cd28043b41ae76fae0a20db6f1ae3",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "归一化改变的是数值尺度或分布，例如映射到固定区间，而非为了改变数据类型；类型编码属于另一类转换。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-137",
+      "questionFingerprint": "4a06d1803b90d00161362c2e41e76572e31cb5137b76e624091f928a7f9fab78",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "白化通常得到单位协方差，使各分量不相关；只有在额外分布条件下，不相关才可推出独立，所以“相互独立”过强。",
+      "notes": ["QA确认一审由√改为×。"]
+    },
+    {
+      "questionId": "judge-138",
+      "questionFingerprint": "3624ec146c32dbca90c2190cb12976ed39db0f700b81ffb2b31a2261518a26ee",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "从原始变量中抽取、编码、组合或变换出更适合建模的输入，正是特征工程的核心工作。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-139",
+      "questionFingerprint": "a788ba9aba3a08d509ce057a9410b190fd86f5e40790daed74823e4c39b99f08",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "首先应确认工具能处理目标数据、支持所需标签和质检流程，并能接入现有系统；价格只是综合评估的一部分。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-140",
+      "questionFingerprint": "38dc2f7abda1ae6b93c53a0afabd4f04a3ba8bea4187fd8e3371374296a26659",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "高质量监督标签通常需要人员理解语义、判断边界并复核机器结果，大规模人力投入会带来较高成本。",
+      "notes": ["自动与弱监督方法可降低部分投入，但高质量基准标签仍常依赖人工，本题按一般场景判√。"]
+    },
+    {
+      "questionId": "judge-141",
+      "questionFingerprint": "086264381640646460407e27bc8d24c101604d437eed07e8e477d839883a43f1",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "数据规模、类别比例、时间顺序和验证方案不同，都会改变划分比例及方式，因此三类数据集没有固定不变的分法。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-142",
+      "questionFingerprint": "ebde17f5801c2c0a93ee0aa8217e9d565dab7f20921ee27dc72b1b1181fa89a1",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "自动标注不仅可统一部分规则，还能批量处理大量样本，提高速度并降低单位成本，题干错误排除了这些优势。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-143",
+      "questionFingerprint": "70fa4100af1aba1ea3842aa8bf8f53a736eb99476d805818bb5327f440842adc",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "分布式处理把数据或计算任务分配到多台机器协同执行，通常借助并行提高吞吐并突破单机资源限制。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-144",
+      "questionFingerprint": "4333a5891b6655c67963e44d7b840435478bc14efbfa979d7a5b99c1f6994f0a",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "可追溯性要求记录数据来自哪里、流向何处以及经过哪些版本和转换，使处理链路能够被还原和核查。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-145",
+      "questionFingerprint": "056347c65a8eb2a8175a71eebe0450210e3a6eb12b359212c4b4c97cbb3fb8a1",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "数据血缘记录有助于透明和问责，也可辅助检查完整性，但不会自动防止篡改或错误；完整性还需校验、权限和审计机制。",
+      "notes": ["QA确认一审由√改为×。"]
+    },
+    {
+      "questionId": "judge-146",
+      "questionFingerprint": "a2e8a6bbac42ffa851ddcd831f37047903e0cf81c0df1612b783c4965fa635eb",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "表格数据在进入标注前通常先去重、处理缺失并核查异常，以免质量问题传入标签，题干描述的是常见基础流程。",
+      "notes": ["严格项目还会先做数据理解与质量画像；本题按预处理是正式清洗标注首环节的口径判√。"]
+    },
+    {
+      "questionId": "judge-147",
+      "questionFingerprint": "929163eccb24957e43917500d4e07ca06f68f12a789763c8a43bac2176b5f7de",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "Pillow的Image模块提供打开、显示和保存常见图片格式的接口，可以直接完成题干列出的操作。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-148",
+      "questionFingerprint": "faf3edfe900a45a37ba07627906e11d146dab727bd962172a9c2f28016223345",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "不同语种、文体和标注目标需要不同的分词、清洗、标签及质检规则，不存在对所有文本固定通用的一套流程。",
+      "notes": ["官方Word答案为×，QA锁定不变。"]
+    },
+    {
+      "questionId": "judge-149",
+      "questionFingerprint": "6a3af3a951d6a1aa5cdd19e0f43a9158702c7ba2feacfa54df656d2bf9806009",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "给视觉对象或像素区域添加监督信息可供模型学习，边界框、多边形和分割掩码都是标准视觉标注类型。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-150",
+      "questionFingerprint": "ddd5cb2661d8343fb8b75b5b0648e5f4d2059c4b21dbec136fdcfcdcce0350fc",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "先准备并拆分数据，再选定模型、训练、评价并根据结果迭代优化，是常见算法训练工作流，所列步骤合理。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-151",
+      "questionFingerprint": "9e16b0a52f67bb05027e1766381385a179a91181c2492f2b8c4f2daa3e07d36f",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "随机比例划分只适用于部分独立同分布数据；时间序列要按时间，关联样本要按组，类别失衡还可能需要分层，不能把随机划分当普遍原则。",
+      "notes": ["QA确认一审由√改为×。"]
+    },
+    {
+      "questionId": "judge-152",
+      "questionFingerprint": "12973da434312d9e00dcb43b9c488770a6823babc90a38dac87e81faa205c39a",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "Pandas可从CSV和Excel读取表格，也能通过数据库连接执行SQL查询，并用DataFrame进行筛选、转换和汇总。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-153",
+      "questionFingerprint": "773e30272f4bf5c148c3f3825aa9bb41e85361184b000246d74c5568b692afdb",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "降维寻找少量新的表示维度，在减少变量数量的同时尽可能保留主要方差、邻域结构或判别信息。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-154",
+      "questionFingerprint": "6cfc41d30e7278def8ebe57ee4835bd32f31598e3bf3a3a23e75ebcecf21218b",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "标注工具只能辅助执行规则，仍可能出现误判和人员理解差异，通过人工复核或抽检才能可靠控制标签质量。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-155",
+      "questionFingerprint": "864049af9e34cb86564adc0166776f259caae339d55967156ceaa730115e6419",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "样本增多只有在数据相关、标签正确且覆盖合理时才可能改善泛化；噪声或偏置数据增加甚至会降低准确率。",
+      "notes": ["官方Word答案为×，QA锁定不变。"]
+    },
+    {
+      "questionId": "judge-156",
+      "questionFingerprint": "604594d58cd57897d13ab1283c3c07f2406ba52ea078a62ec16963da2c7b4a47",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "损失函数规定模型追求什么目标，优化算法决定如何搜索参数；二者应与任务及模型匹配，并直接影响收敛和最终效果。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-157",
+      "questionFingerprint": "2651095b9be586e326f92025c51e4da4345d13e02e14ff488f206d4a86f24609",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "可用硬件并不能保证环境可运行，操作系统、驱动、框架、库及版本之间也必须兼容，且需记录以保证复现。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-158",
+      "questionFingerprint": "534ec5cabbdb53d26fce93238312f3942ccc67d72bf73a71256137248881d8a6",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "框架选择要看任务能力、硬件适配、性能、部署、生态和长期维护，个人使用习惯不能成为主要决定因素。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-159",
+      "questionFingerprint": "7fdcf22267237c1199d26b547eae7fda808d98115793a280f3af906920f057a8",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "时间复杂度评估计算随规模增长的耗时，空间复杂度评估内存需求，两者正用于判断算法能否满足时延和资源预算。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-160",
+      "questionFingerprint": "cb2c73435a5634f19106e6b1e28cb4d062f06708de484c2f858dae3a8761449a",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "超参数还可通过网格搜索、贝叶斯优化、进化算法和多保真资源调度等方式调节，随机搜索只是其中一种。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-161",
+      "questionFingerprint": "bcff5acfabc4567a03f6f74bdca0fd861e4c5c6ed96f3b9e9357f8ecf20ccb09",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "持续显示训练和验证损失、准确率等指标，可及时暴露发散、停滞及泛化差距，并为改动学习率或早停提供依据。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-162",
+      "questionFingerprint": "0fb33109b490091f06326ceca68a3f6a3083fe9a7b874f57f5000a9d09452821",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "训练损失低而验证损失升高常见于过拟合，两者都降不下来则可能容量不足或训练不充分，因此对比曲线可辅助诊断。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-163",
+      "questionFingerprint": "0a54e728413ff1aeb13715d7b5c36a52e636f924ce532c86c93aa69521a86512",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "算法测试还必须考察结果正确性、任务指标、稳定性和鲁棒性，时间与空间复杂度只是效率维度，不能概括主要评价内容。",
+      "notes": ["官方Word答案为×，QA锁定不变。"]
+    },
+    {
+      "questionId": "judge-164",
+      "questionFingerprint": "d533fe00543dcd3313df1e4887d3b551516a504a612f230ea60e9a06c21a1080",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "上线还需配置推理依赖、预处理、服务接口、权限、容量、监控和回滚，单独上传模型文件无法形成可用生产服务。",
+      "notes": ["官方Word答案为×，QA锁定不变。"]
+    },
+    {
+      "questionId": "judge-165",
+      "questionFingerprint": "99ee0bcb0dda65acfecaba2b6b8ba76bbbea2afe366fed5d2ffcea5dcbb71c59",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "TensorFlow Lite提供适合手机和嵌入式设备的轻量推理运行时及模型优化能力，用途描述正确。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-166",
+      "questionFingerprint": "c372cc67fe94942f498dc6f6af4b0aa634b7f61814b519bbce1a7a3a9198d045",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "按需计费、弹性伸缩和托管基础设施可以减少前期采购及部分运维工作，所以在负载合适、治理得当时有机会降低运营成本。",
+      "notes": ["“可以”表示可能性而非保证；云资源失控也可能增加费用。"]
+    },
+    {
+      "questionId": "judge-167",
+      "questionFingerprint": "41e8cd7dc6e4af63287e95b80b1d78c2121af6bd61e3708d69abdd7548c1bbff",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "容器镜像将程序及所需库和配置封装成一致运行单元，使其能在兼容运行时之间重复部署。",
+      "notes": ["官方Word答案为√，QA锁定不变。"]
+    },
+    {
+      "questionId": "judge-168",
+      "questionFingerprint": "e293ff0ed5d78672d2f53ca887eaa884ff5632e48771aa0aa5d0e4d5634364a9",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "容器一般共享宿主机内核，并非每个容器拥有独立内核；虚拟机的客体操作系统隔离通常更完整。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-169",
+      "questionFingerprint": "99822cccd42f20643e103141307c373f61fe17b0f60dba552d070b98a0dfdcd2",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "易用、灵活、性能和扩展性的重要程度取决于数据规模、团队及服务目标，没有场景条件时不能作固定优先排序。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-170",
+      "questionFingerprint": "a486edde98584812f6d1159f667b5caa99add07f585e7d6b3de4c7b307476ad1",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "HPC常根据CPU、GPU、内存和I/O特征安排异构作业，强制所有节点运行同类任务可能让部分资源空闲，不能保证利用率最高。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-171",
+      "questionFingerprint": "96775ebcae16e67a77803910aec43468ec930fcdd125af14503cf0542f419284",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "监控系统能采集指标并按规则告警，但阈值、误报、根因和处置通常还需人工或更深入诊断，无法承诺全自动发现所有问题。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-172",
+      "questionFingerprint": "b19c5d35b4b054b342444bbabc28b6bce8c43877b5e265c6f610849d03e983ef",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "测试范围与执行成本应按风险、发布节奏和资源共同权衡；缺少具体场景时，不能断言覆盖全面始终比执行效率更重要。",
+      "notes": ["QA确认一审由√改为×。"]
+    },
+    {
+      "questionId": "judge-173",
+      "questionFingerprint": "e51aa60839b687418a6e4eadfa21abe22ada9266df90c5f5a35104398c0c20ed",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "按群体检测数据和输出差异，可以定位偏差并为重采样、约束或阈值调整提供依据，再通过复测验证改进，属于公平性保障的重要环节。",
+      "notes": ["官方Word答案为√，QA锁定；测试可促进识别、修正与验证，但公平仍需持续治理。"]
+    },
+    {
+      "questionId": "judge-174",
+      "questionFingerprint": "6af539ad54537c3b36c902f63338862eb5cb65e34663fd81ac9da360c1f9233d",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "人工智能测试还包括白盒、灰盒、单元、集成、性能、安全、鲁棒性和公平性等多种类型，黑盒只是其中一类。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-175",
+      "questionFingerprint": "68c4e8fb04e038c6af70c64270284be24451800e51372974617e4bb78cec6168",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "框架选型还需考察测试类型、维护性、生态集成、运行性能、报告能力和团队成本，自动化支持不可能是唯一条件。",
+      "notes": ["官方Word答案为×，QA锁定不变。"]
+    },
+    {
+      "questionId": "judge-176",
+      "questionFingerprint": "ffc098420896dd39ecac252f36654a679074290f6f99a6cea74fda6d1c9f16b5",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "脚本适合重复且规则明确的场景，但探索性测试、主观体验和未知异常仍需要人工判断，自动化无法覆盖全部情形。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-177",
+      "questionFingerprint": "94ddd5ffdd689e7de0665b17bfb74ae0f56cbb49987ebbaa75f7aec5ce388a2e",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "生产中的延迟、吞吐、资源占用和任务效果反映真实运行状态，长期监测这些数据能为算法或实现优化提供证据。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-178",
+      "questionFingerprint": "7ba84fa6e761fd331b90ff7ad259e2e066f6d27693e20ace8bb4459553c44c95",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "让多个子集轮流作为验证集并汇总结果，可降低一次留出划分的偶然影响，在样本有限时通常能得到更稳健的性能估计。",
+      "notes": ["“确保”措辞偏强；交叉验证提高而非绝对保证评估稳定可靠，本题按常见教学口径判√。"]
+    },
+    {
+      "questionId": "judge-179",
+      "questionFingerprint": "63f55b7164b326cbd5e8fc393398548eb4c75ef3899e9b6cfbd68f3ea7b2c708",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "鲁棒性需要覆盖噪声、缺失、极端值、分布漂移和对抗扰动等多种变化，而非只检查某一类异常。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-180",
+      "questionFingerprint": "c3cafe151b11ae695c4d0afefda616b2ca1b355ac7bfe91f5fd8b4613dfc61df",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "安全测试揭示攻击面、越权、泄露和依赖漏洞后，可据此改进输入防护、权限、模型加固及监控策略。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-181",
+      "questionFingerprint": "6dcf7c630825d1326c4254435d00b611d272b88284982356e448b0c9e0c91fc7",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "检查决策依据能否说明、信息披露是否充分以及结果能否复核，有助于用户、开发者和监管者形成有根据的理解与信任。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-182",
+      "questionFingerprint": "35332a96b3b71050fa21faecbfaa690795aef96d88067b64d0b11caf20b27678",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "公平性还要检查群体覆盖、标签质量、样本代表性和模型在不同群体上的错误率，不能只问数据是否存在偏见。",
+      "notes": ["官方Word答案为×，QA锁定不变。"]
+    },
+    {
+      "questionId": "judge-183",
+      "questionFingerprint": "abc56c07c4409b3dca36ca6273fafda5bbee16afcfc396a7a7d579d985de4970",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "k折方法估计的是模型对未见数据的泛化表现，平均多折结果只能减弱单次划分波动，不能消除类别不平衡的影响。",
+      "notes": ["QA确认一审由√改为×。"]
+    },
+    {
+      "questionId": "judge-184",
+      "questionFingerprint": "b487ddbc4eb00b85dc20230294f78d5170561051bf2db659e30829c52e4631ed",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "线上遥测可揭示真实负载下的性能、故障和漂移，与离线实验互补，是判断是否需要优化的重要依据。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-185",
+      "questionFingerprint": "eda3fddd4518bad5869bb8858587e707f252f47d2092aedacc2d25487a868882",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "将反馈分类并纳入迭代能暴露需求差距和可用性问题，帮助团队更贴近真实使用，从而改善满意度。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-186",
+      "questionFingerprint": "a620f838a985874f12bf8b71d5b55c6a517219737ab4fb90efaecc5da05afe3f",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "必须同时统计正例、负例及各类误判，结合混淆矩阵等指标才能全面判断性能，只看正例会掩盖假阳性等问题。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-187",
+      "questionFingerprint": "f3b59927eb23874f559fa6727455ece8a7bc00c66d1197ddec4e97a5a3b2d0b0",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "为了让测试可复核和复现，报告除结果外还应记录方法、环境、用例、数据、缺陷以及处置情况，题干要求完整合理。",
+      "notes": ["官方Word答案为√，QA锁定不变。"]
+    },
+    {
+      "questionId": "judge-188",
+      "questionFingerprint": "a12700b3110de104744d4a213145e153c74239d4fe41388d50e08956d6876a85",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "可靠调试应先复现故障、缩小范围、定位根因并做最小修复，再执行回归测试；立即重写会扩大变更风险。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-189",
+      "questionFingerprint": "1dc08d2c4fd2fa7ee7b023075435ddc4f3e222277505bed06930d79edef53f07",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "分布图、散点图和指标曲线能把模式、离群点、偏差以及训练变化呈现出来，便于快速发现数据或模型问题。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-190",
+      "questionFingerprint": "36f035dcb1f95ef5714b0482e37ed9851820798bf55d9731292a73d3879201f5",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "安全监测场景需要快速关联日志并告警，实时或近实时处理能够缩短从异常发生到发现和响应的时间。",
+      "notes": ["批量审计日志也有价值；本题限定快速响应安全威胁，故判√。"]
+    },
+    {
+      "questionId": "judge-191",
+      "questionFingerprint": "0e9ac55b5d49b6cef5365f679f9e6579e061125539cdeb54252af97f749b7b83",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "统一平台可记录用例、数据、环境、模型版本和任务编排关系，复杂依赖追踪本就是实验管理的重要能力。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-192",
+      "questionFingerprint": "15a3725a58febaf774fda0f40cae8d992481fafd19bf9f6e72b38c53eae46822",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "修复、回归测试和监控通常交替进行，数据与需求也会持续变化，因此人工智能项目不是一次性清完缺陷后才进入迭代。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-193",
+      "questionFingerprint": "7ae18befc27359aae60a36b006113f0e042ee6674dfa9f931e293a5aca19542a",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "法律或行业标准可能直接规定功能、安全、性能和记录要求，合规测试必须检查产品实际行为，不能完全排除功能与性能。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-194",
+      "questionFingerprint": "2d0094c42a0a77df6ec74ff54c02ed425132fcb62f73dfe180fba0ca704e870e",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "相互独立的子任务可同时分配给多个处理单元，在通信和调度开销可控时，并行或分布式执行能显著缩短总耗时。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-195",
+      "questionFingerprint": "606397fca5e2fc541c458ef766d0cbd84098e17d25d569f2ad638145814c8337",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "伦理评价必须考虑用户、受影响群体和公共利益，权衡权利、公平及潜在伤害，只顾自身利益不符合伦理要求。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-196",
+      "questionFingerprint": "ec8f514d0f7d8ab8505fbdc3c408a32b8de2956e519280bf683e6476e8139127",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "随机拆分按随机规则分配样本，分层拆分维持类别或关键群体比例，两者都是常见数据集拆分方式。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-197",
+      "questionFingerprint": "99c0680df745cf892a4e4779f6fe8760760eb3054f4a6b0f2de0e4eddb4fef4e",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "按字段、层级、样本或业务规则把复杂数据拆成组成部分，再按分析目的组织，可帮助观察结构和关系，题干描述基本成立。",
+      "notes": ["“数据拆解模型”不是统一标准术语；本题按一般数据分解与重组含义判√。"]
+    },
+    {
+      "questionId": "judge-198",
+      "questionFingerprint": "d83d9ed1fae26e2f991cb5cd717569ee85e3d299478559af5ec7939e86aa53dd",
+      "reviewedAnswer": ["×"],
+      "generatedExplanation": "训练集的首要用途是学习参数，验证集用于选模型和调超参数，测试集用于最终评估，三者不能都概括为评估。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-199",
+      "questionFingerprint": "d1369984d8bbb81605028320d1baa1418aa6e0af0bb874cc6c1aabd701d13d56",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "PCA通过对协方差矩阵做特征分解或对数据矩阵做奇异值分解，保留少数主成分以降低特征维度。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-200",
+      "questionFingerprint": "deee0d409f9a383edbeb30c32273d11123535313ec756db7449ca24e2d7c7233",
+      "reviewedAnswer": ["√"],
+      "generatedExplanation": "方差、相关性、显著性检验和统计分解等方法常用于了解特征结构并筛除无效或冗余变量，属于常见特征处理。",
+      "notes": []
+    }
+  ]
+}

@@ -9,7 +9,7 @@ export async function GET() {
   const user = await requireApiUser();
   if (!user) return unauthorized();
   const db = getDb();
-  const [favoriteRows, wrongRows] = await Promise.all([
+  const [favoriteRows, progressRows] = await Promise.all([
     db
       .select({ id: favorites.itemId })
       .from(favorites)
@@ -19,16 +19,23 @@ export async function GET() {
         eq(favorites.active, true),
       )),
     db
-      .select({ id: theoryProgress.questionId })
+      .select({
+        id: theoryProgress.questionId,
+        answerJson: theoryProgress.answerJson,
+        correct: theoryProgress.correct,
+      })
       .from(theoryProgress)
-      .where(and(
-        eq(theoryProgress.email, user.email),
-        eq(theoryProgress.correct, false),
-      )),
+      .where(eq(theoryProgress.email, user.email)),
   ]);
 
   return Response.json({
     favoriteIds: favoriteRows.map(({ id }) => id),
-    wrongIds: wrongRows.map(({ id }) => id),
+    answeredIds: progressRows.map(({ id }) => id),
+    wrongIds: progressRows.filter(({ correct }) => !correct).map(({ id }) => id),
+    progress: progressRows.map(({ id, answerJson, correct }) => ({
+      questionId: id,
+      answer: JSON.parse(answerJson) as string[],
+      correct,
+    })),
   });
 }

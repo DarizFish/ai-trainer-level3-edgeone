@@ -1,0 +1,927 @@
+{
+  "schemaVersion": "1.0.0",
+  "batchId": "theory-900-cross-review-2026-07-26-v1",
+  "shardId": "judge-001-100",
+  "reviewedBy": "codex-cross-reviewer-judge",
+  "reviewStage": "qa",
+  "reviews": [
+    {
+      "questionId": "judge-001",
+      "questionFingerprint": "141a03efcb09f86b11edfade91d22c0cb829c8773acccf92b0fe69b26234aa43",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "道德评价以社会公认的道德原则和规范为尺度，用来判断行为是否正当、善恶，因此题干所述判断标准成立。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-002",
+      "questionFingerprint": "5ca44609dd69b64de0e8c31aa3147981c445d7e13a34cca1446e6012bafa0ac1",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "敏感数据处理必须具备合法、正当、必要的依据，并依法取得相应同意或满足其他法定条件，不能绕过用户授权直接用于训练。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-003",
+      "questionFingerprint": "3297c8082b3129eb7b65a10889dcdadd9d61761c8425e40b435a2cbcbf45b5ab",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "全球化会促进职业道德交流，但不同国家、地区的法律文化、行业传统和社会价值仍有差异，不会形成完全单一的规范。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-004",
+      "questionFingerprint": "9b32b297e8501bed69873834279e6a6a9d0f5f494bbe539437ac16c82474a6e4",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "数据质量和适用性会直接影响模型可靠性、公平性与安全性；职业责任不能只用训练指标衡量，还应核验数据来源、偏差和使用边界。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-005",
+      "questionFingerprint": "f4bce1ff085a4b7527cb337e03fc3caaf05bce43f622420b53456fd4b87e56d4",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "训练师应检测训练数据和模型输出中的偏见，评估歧视风险并采取缓解措施，不能以模型自动生成结果为由免除专业责任。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-006",
+      "questionFingerprint": "2397d421908788a877903d22c1361122cb4e0d844c506312268ab66c561f5c26",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "保护个人信息和用户隐私是数据处理岗位的基本职业义务，贯穿数据采集、标注、存储、训练和交付全过程。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-007",
+      "questionFingerprint": "b28c02f8608ba9e912211d0a14e74fd27afd227d7b2ad08de834b944786144d9",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "人工智能训练师主要围绕数据采集处理、标注、模型训练调优、效果评估等开展工作；设计全新算法通常不是其唯一或主要任务。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-008",
+      "questionFingerprint": "da0833d29e7375c9ad885ec3c7ad3262bc42d9a94b51c9c8862600abf3e31c12",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "职业守则本身通常属于行业或组织的职业行为规范，并非国家立法，因而一般不直接产生法律强制力；违反守则仍可能受到行业或组织处分。",
+      "notes": [
+        "“仅仅”措辞偏绝对；本题按职业守则本身不等同于法律规范的通常口径判断。"
+      ]
+    },
+    {
+      "questionId": "judge-009",
+      "questionFingerprint": "4016dbbf334dd6bed3d319b6c1b6b9b3ec603d27274692d96e0a058869c40814",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "职业守则具有明显的职业和行业针对性，不同行业的职责、风险及行为要求不同，不能把同一套具体守则无差别适用于所有行业。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-010",
+      "questionFingerprint": "317c035ef3d6947d152f4ba7b4b1e6c1f427a44c0bc41815ccec56dd38adc27b",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "遵守国家法律法规是从业行为的底线，也是职业守则的核心内容之一，不能从职业规范中排除。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-011",
+      "questionFingerprint": "9d91e10d0b506907fd7dbb7787a0495147310dce83b2cd6d491776f31992b872",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "人工智能技术快速演进并可能带来隐私、偏见、安全和滥用风险，职业守则必须随技术场景更新并提前约束潜在风险。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-012",
+      "questionFingerprint": "1eaba224545f11d8371ca11b0b2afdc7b04ba449b3e9cd30eb8e9d2d82c3f587",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "职业守则落地既需要个人自律，也需要培训、制度、审查、举报和问责机制；完全依赖个人自觉无法形成有效监督。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-013",
+      "questionFingerprint": "8fd81e6adb93f16f87dfb86d00b8981868e5a900fe89c79ad2805fa54a08726f",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "奉献社会要求正确处理个人、集体与社会利益，在冲突时以社会整体利益和公共责任为重，而不是把个人利益置于首位。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-014",
+      "questionFingerprint": "7a56c9bdf3f4e71173737bf5f5b4e5faf7ecd97ba2cca615d07bd6d2c696822a",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "爱岗敬业首先体现职业态度、责任心和对岗位的尊重，专业技能是履职条件之一，但不能单独决定是否敬业。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-015",
+      "questionFingerprint": "94fba7553d24450f0292c74c060052a36911e340ed14427d8dc5b022d5f97e5a",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "经验可以帮助提出调参假设，但参数调整必须通过实验设计、验证集指标和可复现记录来检验，不能仅凭个人直觉决定。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-016",
+      "questionFingerprint": "4cea75352788d8690632541c5e19601bda491de2d405ac1e397a58ca2a9788bb",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "Windows提供语音键入或听写功能，可把语音识别结果作为文字输入到应用程序中，属于智能输入方式。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-017",
+      "questionFingerprint": "94a08b73f451ab26c0db983c388877dc21ec7b5016ccc89eed2f927602585040",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "系统维护类工具通常集成垃圾清理、启动项或性能优化、故障检测与修复等功能，可辅助用户维护Windows运行状态。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-018",
+      "questionFingerprint": "f9e1178000000de09c55e038639afb9bb46f3b2805becfd2ec21199244c30e8d",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "键盘已经无法使用时就不能依靠按F8操作，而且现代Windows默认也未必启用传统F8启动菜单，应使用恢复环境、安装介质或硬件诊断等途径。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-019",
+      "questionFingerprint": "f813bf010b2082c7c6519822a0648fce30442e3577c417fb76b6bbfa3f11c1b6",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "Windows 10默认不再提供早期Windows桌面小工具体系，因此不存在题干所称内置小工具时钟及其锁定前端功能。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-020",
+      "questionFingerprint": "a2418045cf0f935adf0f601357b7955e91487fd2938ffe6e618064c31600434a",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "地址栏用于接收网址或搜索内容，输入有效URL并确认后，浏览器会向对应服务器发起请求并加载网页。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-021",
+      "questionFingerprint": "f494b2d73bfbad236ffc5f704c5f1a3d4b4919bfd42a0cfb648b4d959e278698",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "浏览器没有统一、规范地命名为“高级探索功能”的标准模块；设置管理应通过设置页、扩展管理或开发者工具等具体功能完成。",
+      "notes": [
+        "题干使用了非标准功能名称，判断依据是术语不明确而非否认浏览器具备高级设置能力。"
+      ]
+    },
+    {
+      "questionId": "judge-022",
+      "questionFingerprint": "d3880304697fe985f6f05c007a6d3f68f9c026aa367609b6cb33e7bc10473117",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "在Windows及多数办公软件中，Ctrl+C是复制命令的通用快捷键，会把当前选中的文本或对象复制到剪贴板。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-023",
+      "questionFingerprint": "5ad58c477d14deb06c2ae925d4d8a3e0025d528ab752b4406b8418630de5a973",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "Word支持在同一应用中打开多个文档窗口，用户可以在窗口间切换、并排查看并分别编辑。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-024",
+      "questionFingerprint": "b90210da84f767d0c5819f265c8903ef70317d2b9f2298e1fe6ad497876311e2",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "样式可集中定义字体、段落和间距等格式，并重复应用到多个段落；文本框内部的段落同样可以套用相应样式。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-025",
+      "questionFingerprint": "e34d384b831fe9fc6e99d1168b7992d922be92cb059b268685e087267e425f8d",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "在Word中将图片设为合适的文字环绕方式后，可通过拖动或位置设置调整图片和文本框在页面中的位置；这里的“随意调整”是指可按版式需要自由定位。",
+      "notes": [
+        "二审修正一审改判：题干的“随意调整”按办公软件常用表述理解为可按排版需要自由移动，并非声称突破页面边界；次级来源答案√具有合理性，恢复为√。"
+      ]
+    },
+    {
+      "questionId": "judge-026",
+      "questionFingerprint": "b3d7e7bdcb4961bc8bebd821ed6bcb8f3a6d705e0c6f4668dd994c17a97f8953",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "Excel公式能够引用单元格、常量和函数执行算术、逻辑、统计等计算，并随引用数据变化更新结果。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-027",
+      "questionFingerprint": "0b5e1679dae04d6f822bb3462617c23da34a707a2050fec563d369de18f413e4",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "MAX函数返回参数或指定单元格区域中的最大数值，因此可用于求一列数值数据的最大值。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-028",
+      "questionFingerprint": "b496ed1931f24d9e7ad8c35a333b54d906ae8b232c6998b7495dc31e4ae11656",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "Excel图表可与源数据联动更新，还能配合数据透视图、切片器和筛选器实现交互分析，并非只能静态展示。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-029",
+      "questionFingerprint": "4f986e5f02d0c9b4ddd066544d457a6ef0df84a4b5f63caa8f656774a7e99214",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": ".xls是旧版Excel工作簿格式之一，现代Excel普通工作簿默认扩展名是.xlsx，含宏工作簿等还使用其他扩展名，不能笼统认定只有.xls。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-030",
+      "questionFingerprint": "94cf9fe89905208bdebf67a5e48d0b9975710b0589fb274feeddf1f2f89da3e3",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "Excel宏可以录制或编写一系列操作并重复执行，适合自动完成格式处理、数据整理和报表生成等重复任务。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-031",
+      "questionFingerprint": "9d1d47e0dbd661b1a1890e90ccf7572398a94c8d1deff4ee8337676f46885e1e",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "试用期包含在劳动合同期限内；只要试用期的约定本身符合法定期限和次数等要求，约定期满后继续按正式岗位履行合同并不违法。",
+      "notes": [
+        "独立审校结论与次级网站答案冲突；现行劳动合同规则并不禁止合法试用期满后自动继续履行，改判为√。"
+      ]
+    },
+    {
+      "questionId": "judge-032",
+      "questionFingerprint": "983e4c013f71ff3dd532ae150c8151c5e4d15f33b36323416b22edc45c04ebe9",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "劳动合同期限属于书面劳动合同的法定必备条款，用于明确固定期限、无固定期限或以完成一定工作任务为期限。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-033",
+      "questionFingerprint": "52d62d1f39ae819f5338e6bce2c0d315bf65e66a42a1c62933f775c293ee2ca5",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "劳动者在试用期解除劳动合同通常应提前三日通知用人单位，并非可以在任何时候不履行通知程序立即解除。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-034",
+      "questionFingerprint": "e9c5d519c289ec1bf62ae9270a4290c7afadf71329651a165dcffb4576581dcb",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "网络运营者对所收集个人信息负有安全保护义务，应采取技术和管理措施防止泄露、毁损或丢失，并在事件发生时及时补救。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-035",
+      "questionFingerprint": "fe0f5ce75b52706fad3673f1aaa686b44957f3f03f262225457d33837e7cc161",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "提供网络接入等依法要求实名的服务时，运营者应核验并登记用户真实身份信息；用户不提供真实身份信息时不得提供相应服务。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-036",
+      "questionFingerprint": "f797f7b3dfff24cc1d10b1b328ac7266a8f4c445b4b4170349fcd4983e368442",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "关键信息基础设施运营者负有定期安全检测评估义务，可以自行或委托专业机构实施，频率至少为每年一次。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-037",
+      "questionFingerprint": "e9816e5bb00c602ea542967ee2dc080e57224578c9d6d958fe31464a28d22937",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "专利申请权可以依法归属于单位，也可以通过合同转让或由继承人承受，因此申请权主体不限于实际发明人或设计人。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-038",
+      "questionFingerprint": "96d3fe7a5097bb0da6082f8eccc2ee37edecc8115557480b747515dee3a208af",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "除新颖性、创造性和实用性外，发明还必须属于可授予专利权的客体，并满足充分公开、文件规范等法定条件，不能据此断定一定授权。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-039",
+      "questionFingerprint": "b8ec5630fadaa7c6ed7ba032f974d37e54e22f1d593165d50fc9434f924f5e1e",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "发明或实用新型专利申请通常需要提交请求书、说明书及其摘要、权利要求书等文件，以界定技术方案和保护范围。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-040",
+      "questionFingerprint": "99c2d46b86f027c4d609afcb1c240220811385ce11e73e646d7c4caa0b4330a6",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "法律法规是社会行为的基本规范，社会成员负有遵守义务；自觉守法是维护公共秩序和他人合法权益的基本要求。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-041",
+      "questionFingerprint": "11faa6e74d2d8cda67fc891abe1a11bf69b40495350114116bb1d1fb278c76ea",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "劳动安全卫生、职业健康和工时休息等法定劳动保护适用于符合劳动关系条件的劳动者，不因其从事人工智能训练工作而被排除。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-042",
+      "questionFingerprint": "8a2b26c11e3433cbd725cac47f2250dca343fcf8c92589b22be85b9232433448",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "数据、代码、算法实现和模型可能受著作权、专利、商业秘密或合同许可约束，使用、复制和分发前必须确认权利归属及授权范围。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-043",
+      "questionFingerprint": "0e9d3c059c99fe1bbd1326d1f9b51b7e198fdcee6bd5aaf4db39093117a0f0b5",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "受著作权保护的作品须具有独创性并能以一定形式表现；单纯思想、事实或缺乏独创性的表达不属于作品保护范围。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-044",
+      "questionFingerprint": "e4835f1713712fc3f6ceec074baeef67653076d0d90120a0fc0d1129ac96b1fb",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "专利权人可以是依法取得权利的单位、受让人或其他主体，发明人、设计人也不必当然就是最终专利权人。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-045",
+      "questionFingerprint": "45eefd917656d3b93f27cda74bbb36b61e524379be97b2d516a954fe13352126",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "知识产权保护对象还包括发明创造、商标、商业秘密、地理标志等多种权益，并不只针对具有原创性的作品。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-046",
+      "questionFingerprint": "24f8ea4f40dd812fec2ecef9a8c35ad2d954d5e3342adbc7d38fea8e41500088",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "Python可通过接口或爬虫采集数据，Excel可导入录入表格数据，SQL Server可接收、查询和汇集业务数据，均可参与常见数据采集流程。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-047",
+      "questionFingerprint": "18f7e06f5e1dcc91b7425b124ea513f19c6b0aefc74e85d5ddaba314ed277067",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "requests库能够发送HTTP请求、传递参数并读取响应内容，是Python网络爬虫获取网页或接口数据的常用基础库。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-048",
+      "questionFingerprint": "cb3daef61f3397fb9070ea19cfe65bd6bfb9e2d658d7ef8a05548de30a981385",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "采集工具除提升速度外，还能统一格式、减少人工错误、记录来源、定时执行和增强可追溯性，其价值不只在效率。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-049",
+      "questionFingerprint": "ddb839a0967c847e7606466cf0a897d1e9ff6517af103fde798a4b29392af227",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "数据治理覆盖标准、质量、元数据、权限、安全、合规和全生命周期管理，服务对象也不限于模型训练输入，题干把作用范围缩得过窄。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-050",
+      "questionFingerprint": "0110d4a0551bccd9552edbe8bb71b3db8506b63965e9e971f901ecdf2644d42a",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "ETL依次从一个或多个数据源抽取数据，按目标规则清洗转换，再加载到目标数据库、仓库或其他存储中。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-051",
+      "questionFingerprint": "f30f18a4dbdd5c2fd46fd09a64c7d6914063116657d06eefa59e1daccad527e1",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "数据库、对象存储和文件管理等工具通常提供定时快照、备份策略及恢复机制，以降低误删、故障或灾害导致的数据损失。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-052",
+      "questionFingerprint": "94780db0d1ab39ff7807d875adde808c08362b29740ac88e140f25bd26e2b18f",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "云服务通过网络以按需方式提供共享的计算、存储、软件等资源，用户终端可根据权限和需求获取这些服务。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-053",
+      "questionFingerprint": "e08c21c46aa2bc0f080d09118430e3effad238fd5e032cd2fbaa47ac256d3d4c",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "Excel可以直接打开或保存CSV，但其常规“另存为”格式不包含JSON；转成JSON通常还需脚本、VBA、加载项或其他转换工具。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-054",
+      "questionFingerprint": "21b1511eace61c7c09b1a4b3d072c205b804ef62649b2053890ecaec2d21f7bb",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "大数据平台可处理日志、文本、图片、音视频等半结构化或非结构化数据，“所有平台只能处理结构化数据”明显不成立。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-055",
+      "questionFingerprint": "03584a58bbcdb0761405c84f2d5ef6cd3656faa36c669b7b6c2a257b63c236b7",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "常用数据工具可处理字符串、类别、日期、文本乃至图像张量等多种类型，并不限于数值型数据。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-056",
+      "questionFingerprint": "6f68df1b30827e00b2aa4a7dbd001ae8590b688dd5ad5d7d97123e9872c5e91b",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "自动特征选择依赖算法、数据划分和评价指标，不能保证得到全局最佳特征集；业务含义、泄露风险等仍需领域人员判断。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-057",
+      "questionFingerprint": "8894bb05849fa988361f7131d4d89610b7938188149ea2fb2c325da91d20bdf8",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "数据质量监控旨在持续发现准确性、完整性、一致性、及时性等问题并告警，缩小数据集不是其主要目标。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-058",
+      "questionFingerprint": "01c1ba954a52c709c118fc07d689cee98aec561a52fafbce0b2201683ff85c56",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "数据审核平台的核心是按规则审查、校验、发现异常并保留审核流程记录，不能笼统等同于负责各种“审核和处理数据”的通用软件。",
+      "notes": [
+        "独立判断认为题干作为宽泛定义具有可成立空间，但官方Word明确答案为×；按来源优先级保留官方答案并标记口径疑点。"
+      ]
+    },
+    {
+      "questionId": "judge-059",
+      "questionFingerprint": "715eecbc8d90cd2b0738b1bf5d0653ffb41891afa487b62ca81a328804604659",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "Power BI是微软的商业智能平台，可连接和转换数据、构建可视化模型，并制作交互式报表和仪表板。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-060",
+      "questionFingerprint": "47c704779a179400db69487e8c6468dad1f13a50743b4a52b260d2d8926f0696",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "流程管理与优化适用于制造、金融、政务、医疗、零售和互联网服务等多种行业，不受制造业场景限制。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-061",
+      "questionFingerprint": "6670851ed4c2df1c74a2517bfb6c2211f6307e4682b0b2b8d720b9b641f045fd",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "合规使用自动化工具可提高采集一致性和可重复性；数据原始性应通过来源记录、只读保存和完整性校验保障，而非排斥自动化。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-062",
+      "questionFingerprint": "7dbcdd6092956ba8e29650d045ee7a7c75f1f8a2ca1c5e62a6ad58d93501340b",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "选择数据源既要看数据值是否准确，也要评估来源是否权威、稳定、可追溯和持续可用，可靠性不能被忽略。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-063",
+      "questionFingerprint": "aac9d68e1fe9123609a949e315635878c7a9f1fbc63b9ec2ad2f2ff0aece3746",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "正则表达式可按模式匹配字符串，适合从网页文本或结构相对稳定的片段中定位并提取特定内容。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-064",
+      "questionFingerprint": "edd96fb9321c9baf15a6c884982f006f64217a75ae55ad8881c343c457df32c5",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "在功能、合规和结果一致的前提下，采用吞吐量更高的抓取工具能够缩短请求与解析时间，属于提升抓取效率的一种优化方法。",
+      "notes": [
+        "独立审校结论与次级网站答案冲突；题干说“包括”而非“仅包括”，更快的合适工具确可作为优化手段，改判为√。"
+      ]
+    },
+    {
+      "questionId": "judge-065",
+      "questionFingerprint": "e6fa9e118dfaa31a757343afd8c45985e690f0a28f96c3d9c92949e1f8674aa3",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "关系型数据库以表、字段和关系约束组织结构化数据；许多非关系型数据库采用文档、键值或列族模型，更便于承载模式灵活的数据。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-066",
+      "questionFingerprint": "5b42155e07a24596753534a3e4127a7a562ec10a50ede5da5a35054a27ecedc7",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "清洗前通常先理解业务目标并对数据进行加载、结构检查和质量画像，确认问题分布后才选择缺失值处理方案，不能固定把它作为第一步。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-067",
+      "questionFingerprint": "06d53d64b22b54100389de7c774b85eb48fc74f9cca976c46391eb2244f48577",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "识别并处理重复、缺失和异常记录是数据清洗的主要工作，可提升数据准确性、完整性和一致性。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-068",
+      "questionFingerprint": "8448e4f04233491599103b4eeffe0e6ea4a9211e3ca50cbaffbaafcc4c5a324e",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "加密能使未授权者难以读懂数据，从而保护机密性，但它本身不能阻止文件被复制、外传或窃取；还需访问控制和防泄漏措施。",
+      "notes": [
+        "独立审校结论与次级网站答案冲突；区分“泄露事件发生”与“泄露内容可读”，加密不等于阻止外传，改判为√。"
+      ]
+    },
+    {
+      "questionId": "judge-069",
+      "questionFingerprint": "ac2f79bddc8dc86b0b2f58ec05dd5584cb18e51b0e83d40b4549f8b1649e8109",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "流式或实时处理系统可以持续接收高吞吐数据，在较低延迟下完成计算并输出告警、统计或决策结果。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-070",
+      "questionFingerprint": "a90d2d11e667fe05d50724580037bd35352607235bea756838020b50c01463c4",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "主成分分析通过正交变换提取主要方差方向，线性判别分析利用类别可分性构造低维表示，二者都是常见特征提取方法。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-071",
+      "questionFingerprint": "9328b84c38d13a32fb66fce0fc26d9b89f9350bb9a90d1ff972c4614de71a521",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "容器共享宿主机内核，启动快、密度高；虚拟机提供独立操作系统和更强隔离。两者适用边界不同，容器不能在所有场景完全替代虚拟化。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-072",
+      "questionFingerprint": "7edb6218cb7961f3db65ac05a2901bfa63fb628a6fbed935b5a0e444b6c6654d",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "面对规模较大的数据集，常通过有代表性的抽样检查估计质量问题，再结合规则校验或全量统计补充验证。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-073",
+      "questionFingerprint": "2ff2a5c7bfd735546cf5ab3ba51d06fce61b4ad5ef5137b59641528c64ade00c",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "数据校验用于检查格式、范围、关联和必填约束，异常检测用于发现偏离正常模式的记录，二者都服务于提高数据准确性与完整性。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-074",
+      "questionFingerprint": "13b0a7f3514ff8050fbc0611fb05f71b61475dc26a74efff5ea1763f0c29bc0c",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "只有先梳理现有流程的角色、输入输出、耗时、控制点和瓶颈，才能有依据地删除浪费、重排活动并设计目标流程。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-075",
+      "questionFingerprint": "6cf0df56629999925ae14e41c6254b29b6a614388980a7cf5e392787c814405b",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "合规检查除安全性外，还会核验数据完整性、可用性、隐私、授权、保存期限和行业监管要求，范围远不止单一安全维度。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-076",
+      "questionFingerprint": "f7d14c1bbedc346636e9aaba171e51c37f93f15ed0d900d8c924c6d9ac3fa1d2",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "企业内部的生产、财务、人事等流程和外部的采购、销售、客户及合作伙伴交互都会形成业务记录和业务数据。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-077",
+      "questionFingerprint": "27f751f3a0243c314e18d715a297cde902d296c167ddc9a8db14a2bd53d56c68",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "按应用场景划分，人工智能业务可以覆盖客服、家居、交通驾驶和医疗等领域，这些都是常见的场景类别示例。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-078",
+      "questionFingerprint": "ee91ae190f33d566d7fd5fc8bb1e55508ad54d8e1d3b68da1ef52bee23b20fcf",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "智能控制模块正是依据传感数据、控制规则或学习模型生成控制指令，并通过执行机构实现设备自动或辅助控制。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-079",
+      "questionFingerprint": "4853f590057ffb78671d9687a0ccd644f9cd531ed8181ab882c42e8f579337b3",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "典型推荐系统需要描述用户偏好、刻画候选物品，并由推荐算法计算匹配度或排序结果，三者构成其核心功能。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-080",
+      "questionFingerprint": "51f09311d614f8cf08149d37506c6cd8e20ade20b1c8fa506a959f9e6d558a94",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "智能搜索可以用分词、意图识别、实体抽取和语义匹配等自然语言处理技术理解查询，题干所说“不能”与实际能力相反。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-081",
+      "questionFingerprint": "eab8a8a20c93007651d9334fe1641d0eeab11c179104ff24f85b8abc00614610",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "智能交互系统可结合语音识别和自然语言处理，把语音或文本转化为可解析的意图和参数，从而作出响应。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-082",
+      "questionFingerprint": "1ca2802da3ee22b44b76e979710e43b670bd13e3f4ca865feaee84b429486ada",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "自动数据处理可借助经过验证的人工智能模型和计算资源，从大量数据中持续提取规律并输出较稳定、准确的分析结果；实际质量仍取决于数据、模型与验证过程。",
+      "notes": [
+        "二审修正一审改判：题干的“能够”表述系统具备该能力，不等于对任何数据和模型作无条件保证；结合次级来源答案√，恢复为√并在解析中补充成立条件。"
+      ]
+    },
+    {
+      "questionId": "judge-083",
+      "questionFingerprint": "6cbf8ff56f99d10703a1901847124455817d0977003e6e14c757f85eb2a93cb5",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "最优化决策支持把业务目标、约束和资源表示为优化问题，通过计算寻找使性能或业务指标最优的配置与决策方案。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-084",
+      "questionFingerprint": "98a838a9217c01587d6d3a01392a048ad11732b0e958e582a7432d5fcaa277db",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "智能控制可以基于反馈控制、规则、优化或学习算法实现，不必模拟人脑思维；把其原理一概归结为仿脑并不准确。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-085",
+      "questionFingerprint": "4a34ba1c8103f7dd3f793644e6e68b4372a5192910d8f80e8fddd2f7c6651f2b",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "自然语言处理能够对人类语言进行分词、语义理解、信息抽取和生成，使计算机可以接收并回应人的语言输入。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-086",
+      "questionFingerprint": "69ed9ea9ca6b9597e3fbc2f0a0911c4b0c4aa3da55ef83467c1f3313972534e3",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "生物识别信息属于敏感个人信息，采集和使用应具有特定目的、充分必要性并依法取得单独同意等授权，不能因用于认证就免除许可。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-087",
+      "questionFingerprint": "2d3f03e8b4a1f9190b9b5fbb61412323a723b544abb679bfc1c9fb2598a03db1",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "计算机视觉涵盖图像增强和变换等处理任务，也包括目标定位、分类、识别和场景理解等感知任务。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-088",
+      "questionFingerprint": "b4f89d2984dfd3d7a6baa3547316a443be74c660f7e971a658206a0a73696ffc",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "图像识别利用计算模型从视觉数据中提取特征并判定对象或类别，是计算机视觉和人工智能的重要应用。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-089",
+      "questionFingerprint": "fcaa70eeccf67270f10fdd40659ae7b8a7acbc7696fe5411625165a7151f02a2",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "原始数据常含缺失、噪声、重复和格式不一致，清洗与预处理通常是保证挖掘结果可信的必要环节，不能一般性地视为可有可无。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-090",
+      "questionFingerprint": "6ace37159fdc33c6382f37b01435d808be675ed9aac1272db8afea4972a55e95",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "监督学习从带标签样本学习映射，无监督学习发现数据结构，强化学习从交互反馈学习策略；按广义机器学习口径均可用于数据与知识发现。",
+      "notes": [
+        "强化学习是否列为传统数据挖掘方法存在教材口径差异；本题按广义机器学习与知识发现口径维持√。"
+      ]
+    },
+    {
+      "questionId": "judge-091",
+      "questionFingerprint": "5a390722ec37a94765cb0afced54728ca874d15512efc37584fe26282c1ce598",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "业务模块需要能随需求扩展、在不同场景复用，并便于定位和修改问题；可扩展、可重用、可维护是常见设计原则。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-092",
+      "questionFingerprint": "2d96c47e9b7c28d6ad1679a5e303774db285dfef4af0863897c1a4f19d9d72f2",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "流程分析通常是识别问题的基础阶段，优化手段还包括简化、重排、自动化、持续改进和流程再造等，不能固定概括为题干所列三种。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-093",
+      "questionFingerprint": "791dc094ebbeea5c1c59a831ccdb57332008baf0d77bfdbb19d7743f2825e207",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "业务数据还可通过系统日志、交易记录、访谈、观察、传感器、接口和数据库查询等方式收集，问卷只是其中一种。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-094",
+      "questionFingerprint": "31bcf81440b807a7a7cd5ba358e7fb69023ecd4a8fe2830cb7f6bc9b343bda8f",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "订单、入库单、发票等单据承载业务信息、审批状态和责任凭证，并随业务环节流转，是企业业务流程的重要核心载体之一。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-095",
+      "questionFingerprint": "d35b1261df5bdfc792470f7bb180df4384409301b1ef0c50b0be8ff925799738",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "分析简单流程时，先记录并描述当前流程的步骤、参与者、输入输出和耗时，才能建立现状基线并识别问题。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-096",
+      "questionFingerprint": "f87f2b5cff682bde866b666cc420687783dc4dd98b49248b4005edb677194a78",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "流程简化的目标是消除非增值活动、降低等待和交接成本，同时保留必要控制；它不等于机械地减少所有环节和步骤。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-097",
+      "questionFingerprint": "18bbccf89553641be82bf72a2e39acaca829a2028348a89897072aeb25c0c3df",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "优化目标应在方案设计前确定；监测和评估阶段主要采集指标、比较目标与实际结果，并据此发现偏差和推动后续改进。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-098",
+      "questionFingerprint": "1b41f3ff30bbb836d3c9e6c6d44f06428fcbf2b4b69735188e6ec8ad76fca82e",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "控制图用于观察过程波动和稳定性，帕累托图用于识别造成大部分问题的关键少数因素，二者常用于复杂流程质量分析。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-099",
+      "questionFingerprint": "60d38c1d8e2cc7f43b589224d91e4959d127783ee59c8f91a77928cbfa60f7e0",
+      "reviewedAnswer": [
+        "×"
+      ],
+      "generatedExplanation": "复杂业务系统还可通过流程重构、组织调整、制度完善、数据治理和人员培训等方式改进，技术更新不可能是唯一方法。",
+      "notes": []
+    },
+    {
+      "questionId": "judge-100",
+      "questionFingerprint": "36cc391c05be05a40a7fe022e3547677e18dba020ff3340e0e9e6007d601312d",
+      "reviewedAnswer": [
+        "√"
+      ],
+      "generatedExplanation": "综合流程优化应从客户价值出发，以端到端流程而非部门边界组织改进，并通过监测反馈持续迭代，这三项属于通行原则。",
+      "notes": []
+    }
+  ]
+}

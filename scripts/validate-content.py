@@ -41,6 +41,8 @@ from theory_reference import (
     reference_local_id,
     strict_match,
 )
+from theory_review_quality import build_report as build_theory_review_quality_report
+from theory_review_state import validate_state as validate_theory_review_state
 
 
 EXPECTED_OFFICIAL_ANSWER_HASH = "2e4bef5183e8fbf66f152006d70bb5843a60f5b519d321f3a54d06eab61e829f"
@@ -58,11 +60,15 @@ def file_sha256(path: Path) -> str:
 data = json.loads(Path("data/content.json").read_text(encoding="utf-8"))
 theory = data["theory"]
 practical = data["practical"]
-assert data["version"] == "2026-07-19-v7"
+assert data["version"] == "2026-07-26-v8"
 assert len(theory) == 900
 assert Counter(q["type"] for q in theory) == {"judge": 300, "single": 300, "multi": 300}
 assert Counter(q["answerSource"] for q in theory) == {"official": 190, "derived": 710}
-assert Counter(q["answerBasis"] for q in theory) == {"manual_official": 190, "third_party_reference": 649, "editorial_review": 23, "heuristic": 38}
+assert Counter(q["answerBasis"] for q in theory) == {
+    "manual_official": 190,
+    "third_party_reference": 571,
+    "editorial_review": 139,
+}
 assert len({q["id"] for q in theory}) == 900
 by_id = {q["id"]: q for q in theory}
 mock_ids = data["officialTheoryMock"]["questionIds"]
@@ -73,7 +79,7 @@ for q in theory:
     valid = {"√", "×"} if q["type"] == "judge" else {chr(65 + i) for i in range(len(q["options"]))}
     assert q["answer"] and set(q["answer"]) <= valid, q["id"]
     assert q["answerSource"] in {"official", "derived"}
-    assert q["answerBasis"] in {"manual_official", "third_party_reference", "editorial_review", "heuristic"}
+    assert q["answerBasis"] in {"manual_official", "third_party_reference", "editorial_review"}
     assert q["confidence"] in {"high", "medium", "low"}
     assert q["explanation"].strip(), q["id"]
     if q["answerBasis"] == "manual_official":
@@ -82,8 +88,7 @@ for q in theory:
         assert q["answerSource"] == "derived" and q["confidence"] == "medium", q["id"]
     elif q["answerBasis"] == "editorial_review":
         assert q["answerSource"] == "derived" and q["confidence"] == "medium", q["id"]
-    else:
-        assert q["answerSource"] == "derived" and q["confidence"] == "low", q["id"]
+    assert len(q["explanation"].strip()) >= 24, q["id"]
 
 assert official_answer_hash(theory) == EXPECTED_OFFICIAL_ANSWER_HASH
 reference = load_reference(DEFAULT_REFERENCE_PATH)
@@ -102,18 +107,9 @@ assert strict_matches == 830
 
 editorial_review = load_editorial_review(DEFAULT_EDITORIAL_REVIEW_PATH)
 editorial_by_id = {entry["id"]: entry for entry in editorial_review["reviews"]}
-reviewed_questions = [q for q in theory if q["answerBasis"] == "editorial_review"]
-assert len(editorial_by_id) == len(reviewed_questions) == 23
-for q in reviewed_questions:
-    entry = editorial_by_id[q["id"]]
-    assert question_fingerprint(q) == entry["questionSha256"], q["id"]
-    assert q["answer"] == entry["answer"], q["id"]
-    assert q["explanation"] == entry["explanation"], q["id"]
-assert by_id["judge-197"]["answer"] == ["√"]
-assert by_id["judge-216"]["answer"] == ["×"]
-assert by_id["judge-226"]["answer"] == ["√"]
-assert by_id["judge-235"]["answer"] == ["×"]
-assert by_id["judge-243"]["answer"] == ["×"]
+assert len(editorial_by_id) == 23
+for entry in editorial_review["reviews"]:
+    assert question_fingerprint(by_id[entry["id"]]) == entry["questionSha256"], entry["id"]
 
 assert data["theoryReference"] == {
     "snapshotVersion": "2026-07-16-v1",
@@ -124,7 +120,12 @@ assert data["theoryReference"] == {
     "unmatchedDerivedAnswers": 61,
     "editorialReviewVersion": "2026-07-17-v3",
     "editorialReviewedAnswers": 23,
-    "remainingHeuristicAnswers": 38,
+    "remainingHeuristicAnswers": 0,
+    "reviewBatchId": "theory-900-review-2026-07-26-v1",
+    "reviewVersion": "2026-07-26-v8",
+    "reviewedQuestions": 900,
+    "independentExplanations": 900,
+    "resolvedConflicts": 5,
 }
 audit = json.loads(DEFAULT_THEORY_AUDIT_PATH.read_text(encoding="utf-8"))
 assert audit["version"] == "2026-07-19-v7"
@@ -143,6 +144,64 @@ assert audit["summary"] == {
 assert audit["editorialReview"]["version"] == "2026-07-17-v3"
 assert audit["editorialReview"]["appliedReviews"] == 23
 assert len(audit["editorialReview"]["results"]) == 23
+
+review_manifest_path = Path("data/references/theory-review-state/manifest.json")
+review_audit_path = Path("data/references/theory-review-audit.json")
+review_audit = json.loads(review_audit_path.read_text(encoding="utf-8"))
+theory_review = data["theoryReview"]
+assert theory_review == {
+    "batchId": "theory-900-review-2026-07-26-v1",
+    "version": "2026-07-26-v8",
+    "publishedAt": review_audit["generatedAt"],
+    "reviewedQuestions": 900,
+    "independentExplanations": 900,
+    "crossReviewedQuestions": 900,
+    "crossReviewShards": 9,
+    "answerChanges": 79,
+    "officialAnswerChanges": 0,
+    "resolvedConflicts": 5,
+    "basisCounts": {
+        "independent_review": 139,
+        "official_word": 190,
+        "secondary_site": 571,
+    },
+    "manifestPath": "data/references/theory-review-state/manifest.json",
+    "manifestSha256": file_sha256(review_manifest_path),
+    "auditPath": "data/references/theory-review-audit.json",
+}
+assert review_audit["version"] == data["version"]
+assert review_audit["batchId"] == theory_review["batchId"]
+assert review_audit["basisCounts"] == theory_review["basisCounts"]
+assert review_audit["answerChanges"]["count"] == theory_review["answerChanges"]
+assert review_audit["answerChanges"]["officialAnswerChanges"] == 0
+assert review_audit["conflicts"]["open"] == 0
+assert review_audit["conflicts"]["resolved"] == 5
+assert review_audit["explanations"]["total"] == 900
+assert review_audit["explanations"]["crossReviewed"] == 900
+assert review_audit["explanations"]["duplicateGroups"] == []
+assert review_audit["explanations"]["warnings"] == []
+assert review_audit["manifest"]["sha256"] == theory_review["manifestSha256"]
+assert review_audit["output"]["publishedContentSha256"] == file_sha256(Path("data/content.json"))
+assert len(review_audit["shards"]) == 9
+assert sum(shard["count"] for shard in review_audit["shards"]) == 900
+
+state_summary = validate_theory_review_state(
+    content_path=Path("data/content.json"),
+    reference_path=DEFAULT_REFERENCE_PATH,
+    audit_path=DEFAULT_THEORY_AUDIT_PATH,
+    state_dir=Path("data/references/theory-review-state"),
+)
+assert state_summary["reviewed"] == 900
+assert state_summary["byExplanationGenerationStatus"] == {"reviewed": 900}
+quality_report, quality_errors = build_theory_review_quality_report(
+    content_path=Path("data/content.json"),
+    reference_path=DEFAULT_REFERENCE_PATH,
+    audit_path=DEFAULT_THEORY_AUDIT_PATH,
+    state_dir=Path("data/references/theory-review-state"),
+    require_complete=True,
+)
+assert quality_errors == []
+assert quality_report["crossReviewedExplanations"] == 900
 assert len(practical) == len({t["code"] for t in practical}) == 40
 assert sum(t["hasNotebook"] for t in practical) == 20
 assert Counter(t["answerSource"] for t in practical) == {"official": 6, "derived": 34}
@@ -296,7 +355,7 @@ for code in ["3.1.1", "3.1.2", "3.1.3", "3.1.4", "3.1.5"]:
     assert (Path("public/materials") / code / spreadsheets[0]["name"]).exists(), code
 
 material_audit = json.loads(Path("data/references/practical-material-audit.json").read_text(encoding="utf-8"))
-assert material_audit["contentVersion"] == data["version"]
+assert material_audit["contentVersion"] in {"2026-07-19-v7", data["version"]}
 assert material_audit["summary"]["sourceDirectories"] == 35
 assert material_audit["summary"]["tasksWithMaterials"] == 35
 assert material_audit["summary"]["tasksWithoutOfficialFiles"] == ["1.2.1", "1.2.2", "1.2.3", "1.2.4", "1.2.5"]

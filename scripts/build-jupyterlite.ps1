@@ -9,7 +9,7 @@ $PSNativeCommandUseErrorActionPreference = $true
 $projectRoot = Split-Path -Parent $PSScriptRoot
 $pyodideVersion = "314.0.1"
 $pyodideArchive = "https://github.com/pyodide/pyodide/releases/download/$pyodideVersion/pyodide-core-$pyodideVersion.tar.bz2"
-$pyodideCdn = "https://cdn.jsdelivr.net/pyodide/v$pyodideVersion/full"
+$pyodideCdn = "https://fastly.jsdelivr.net/pyodide/v$pyodideVersion/full"
 $pyodidePackages = @(
   "micropip",
   "ipython",
@@ -22,6 +22,7 @@ $pyodidePackages = @(
   "pillow"
 )
 $purePythonRequirements = @(
+  "comm==0.2.3+ai.trainer.1",
   "et-xmlfile==2.0.0",
   "openpyxl==3.1.5",
   "seaborn==0.13.2",
@@ -88,6 +89,15 @@ try {
 
   $pipliteWheelsDir = Join-Path $projectRoot "jupyterlite\pypi"
   New-Item -ItemType Directory -Force -Path $pipliteWheelsDir | Out-Null
+  $vendoredComm = Join-Path $projectRoot "scripts\vendor\comm"
+  $vendoredCommWheel = Get-ChildItem $pipliteWheelsDir -Filter "comm-0.2.3+ai.trainer.1-*.whl"
+  if (-not $vendoredCommWheel) {
+    & $Python -m pip wheel --disable-pip-version-check --no-deps --no-build-isolation `
+      --wheel-dir $pipliteWheelsDir $vendoredComm
+    if ($LASTEXITCODE -ne 0) {
+      throw "Failed to build the vendored offline comm wheel."
+    }
+  }
   foreach ($requirement in $purePythonRequirements) {
     $packageName = (Get-NormalizedPackageName ($requirement.Split("==")[0])).Replace("-", "[-_.]")
     if (-not (Get-ChildItem $pipliteWheelsDir -Filter "*.whl" | Where-Object { $_.BaseName -match "^$packageName[-_.]" })) {
@@ -197,7 +207,9 @@ try {
 
     if ($needsDownload) {
       Write-Host "Downloading Pyodide kernel dependency: $packageName"
-      curl.exe -L --fail --retry 3 -o $target "$pyodideCdn/$fileName"
+      curl.exe -L --fail --retry 10 --retry-all-errors --retry-delay 1 `
+        --connect-timeout 15 --speed-time 20 --speed-limit 1024 `
+        --continue-at - -o $target "$pyodideCdn/$fileName"
     }
 
     $actualSha256 = (Get-FileHash $target -Algorithm SHA256).Hash.ToLowerInvariant()

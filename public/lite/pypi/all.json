@@ -1,4 +1,30 @@
 {
+  "comm": {
+    "releases": {
+      "0.2.3+ai.trainer.1": [
+        {
+          "comment_text": "",
+          "digests": {
+            "md5": "b699b59cf7a5213cb546778c5d8677ce",
+            "sha256": "117d743c049e005e8cc4f252958b5649281097be4b23d49c54f54278fc11c4e1"
+          },
+          "downloads": -1,
+          "filename": "comm-0.2.3+ai.trainer.1-py3-none-any.whl",
+          "has_sig": false,
+          "md5_digest": "b699b59cf7a5213cb546778c5d8677ce",
+          "packagetype": "bdist_wheel",
+          "python_version": "py3",
+          "requires_python": ">=3.9",
+          "size": 3185,
+          "upload_time": "2026-07-26T01:08:39.243280Z",
+          "upload_time_iso_8601": "2026-07-26T01:08:39.243280Z",
+          "url": "./comm-0.2.3+ai.trainer.1-py3-none-any.whl",
+          "yanked": false,
+          "yanked_reason": null
+        }
+      ]
+    }
+  },
   "et-xmlfile": {
     "releases": {
       "2.0.0": [

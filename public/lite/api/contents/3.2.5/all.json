@@ -6,11 +6,11 @@
       "format": null,
       "hash": null,
       "hash_algorithm": null,
-      "last_modified": "2026-07-24T02:49:00.571898Z",
+      "last_modified": "2026-07-26T01:26:48.520063Z",
       "mimetype": null,
       "name": "3.2.5.ipynb",
       "path": "3.2.5/3.2.5.ipynb",
-      "size": 14710,
+      "size": 22184,
       "type": "notebook",
       "writable": true
     }
@@ -19,7 +19,7 @@
   "format": "json",
   "hash": null,
   "hash_algorithm": null,
-  "last_modified": "2026-07-24T02:49:24.156660Z",
+  "last_modified": "2026-07-26T01:26:51.778898Z",
   "mimetype": null,
   "name": "3.2.5",
   "path": "3.2.5",

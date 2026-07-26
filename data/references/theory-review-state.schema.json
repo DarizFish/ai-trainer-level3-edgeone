@@ -1,0 +1,573 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-trainer.local/schemas/theory-review-state.schema.json",
+  "title": "人工智能训练师三级理论题逐题审校状态",
+  "description": "用于保存 900 道理论题的审校进度、答案依据、来源冲突和独立解析生成状态；不直接发布到题库。",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/manifest"
+    },
+    {
+      "$ref": "#/$defs/shard"
+    }
+  ],
+  "$defs": {
+    "timestamp": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "answer": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "√",
+          "×",
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ]
+      }
+    },
+    "nullableAnswer": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/answer"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "officialWordMatch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "answer",
+        "matchMethod",
+        "sourceQuestionId"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "matched",
+            "not_found",
+            "needs_review",
+            "unavailable"
+          ]
+        },
+        "answer": {
+          "$ref": "#/$defs/nullableAnswer"
+        },
+        "matchMethod": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "sourceQuestionId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "secondarySiteMatch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "answer",
+        "matchMethod",
+        "mismatchReasons",
+        "sourceQuestionId"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "matched",
+            "not_matched",
+            "needs_review",
+            "unavailable"
+          ]
+        },
+        "answer": {
+          "$ref": "#/$defs/answer"
+        },
+        "matchMethod": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "mismatchReasons": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "missing",
+              "type",
+              "sequence",
+              "stem",
+              "options"
+            ]
+          }
+        },
+        "sourceQuestionId": {
+          "type": "string",
+          "pattern": "^(boolean|single|multiple)-[0-9]{3}$"
+        }
+      }
+    },
+    "adoptedBasis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "contentAnswerBasis",
+        "decisionStatus",
+        "evidence"
+      ],
+      "properties": {
+        "source": {
+          "enum": [
+            "official_word",
+            "secondary_site",
+            "independent_editorial",
+            "independent_review",
+            "heuristic",
+            "unresolved"
+          ]
+        },
+        "contentAnswerBasis": {
+          "type": "string"
+        },
+        "decisionStatus": {
+          "enum": [
+            "provisional",
+            "confirmed"
+          ]
+        },
+        "evidence": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "officialWord",
+            "secondarySite",
+            "independentReview"
+          ],
+          "properties": {
+            "officialWord": {
+              "type": "boolean"
+            },
+            "secondarySite": {
+              "type": "boolean"
+            },
+            "independentReview": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "conflict": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "kind",
+        "sources",
+        "details"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "none",
+            "open",
+            "resolved"
+          ]
+        },
+        "kind": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            null,
+            "answer_mismatch",
+            "question_mismatch",
+            "missing_evidence",
+            "other"
+          ]
+        },
+        "sources": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "details": {
+          "type": [
+            "object",
+            "null"
+          ]
+        }
+      }
+    },
+    "questionState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "questionId",
+        "questionType",
+        "questionFingerprint",
+        "evidenceFingerprint",
+        "processingStatus",
+        "currentAnswer",
+        "reviewedAnswer",
+        "officialWordMatch",
+        "secondarySiteMatch",
+        "adoptedBasis",
+        "conflict",
+        "explanationGenerationStatus",
+        "generatedExplanation",
+        "reviewedAt",
+        "reviewedBy",
+        "notes",
+        "lastUpdatedAt"
+      ],
+      "properties": {
+        "questionId": {
+          "type": "string",
+          "pattern": "^(judge|single|multi)-[0-9]{3}$"
+        },
+        "questionType": {
+          "enum": [
+            "judge",
+            "single",
+            "multi"
+          ]
+        },
+        "questionFingerprint": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "evidenceFingerprint": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "processingStatus": {
+          "enum": [
+            "pending",
+            "in_progress",
+            "needs_resolution",
+            "reviewed",
+            "blocked"
+          ]
+        },
+        "currentAnswer": {
+          "$ref": "#/$defs/answer"
+        },
+        "reviewedAnswer": {
+          "$ref": "#/$defs/nullableAnswer"
+        },
+        "officialWordMatch": {
+          "$ref": "#/$defs/officialWordMatch"
+        },
+        "secondarySiteMatch": {
+          "$ref": "#/$defs/secondarySiteMatch"
+        },
+        "adoptedBasis": {
+          "$ref": "#/$defs/adoptedBasis"
+        },
+        "conflict": {
+          "$ref": "#/$defs/conflict"
+        },
+        "explanationGenerationStatus": {
+          "enum": [
+            "pending",
+            "in_progress",
+            "generated",
+            "reviewed"
+          ]
+        },
+        "generatedExplanation": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "reviewedAt": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "reviewedBy": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "notes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "lastUpdatedAt": {
+          "$ref": "#/$defs/timestamp"
+        }
+      }
+    },
+    "shardDescriptor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "path",
+        "questionType",
+        "range",
+        "count"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^(judge|single|multi)-[0-9]{3}-[0-9]{3}$"
+        },
+        "path": {
+          "type": "string"
+        },
+        "questionType": {
+          "enum": [
+            "judge",
+            "single",
+            "multi"
+          ]
+        },
+        "range": {
+          "$ref": "#/$defs/range"
+        },
+        "count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        }
+      }
+    },
+    "range": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "start",
+        "end"
+      ],
+      "properties": {
+        "start": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 300
+        },
+        "end": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 300
+        }
+      }
+    },
+    "manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "$schema",
+        "schemaVersion",
+        "batchId",
+        "createdAt",
+        "updatedAt",
+        "content",
+        "sources",
+        "policy",
+        "appliedBatches",
+        "summary",
+        "shards"
+      ],
+      "properties": {
+        "$schema": {
+          "type": "string"
+        },
+        "schemaVersion": {
+          "const": "1.0.0"
+        },
+        "batchId": {
+          "const": "theory-900-review-2026-07-26-v1"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "content": {
+          "type": "object"
+        },
+        "sources": {
+          "type": "object"
+        },
+        "policy": {
+          "type": "object",
+          "required": [
+            "answerPriority",
+            "explanationPolicy",
+            "explanationNote",
+            "publishPolicy"
+          ],
+          "properties": {
+            "answerPriority": {
+              "const": [
+                "official_word",
+                "secondary_site",
+                "independent_review"
+              ]
+            },
+            "explanationPolicy": {
+              "const": "independent_generation_only"
+            },
+            "explanationNote": {
+              "type": "string"
+            },
+            "publishPolicy": {
+              "type": "string"
+            }
+          }
+        },
+        "appliedBatches": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "batchId",
+              "shardId",
+              "inputSha256",
+              "appliedAt",
+              "count",
+              "reviewStage",
+              "reviewers"
+            ],
+            "properties": {
+              "batchId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "shardId": {
+                "type": "string",
+                "pattern": "^(judge|single|multi)-[0-9]{3}-[0-9]{3}$"
+              },
+              "inputSha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "appliedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "count": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 900
+              },
+              "reviewStage": {
+                "enum": [
+                  "generation",
+                  "qa"
+                ]
+              },
+              "reviewers": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        },
+        "summary": {
+          "type": "object"
+        },
+        "shards": {
+          "type": "array",
+          "minItems": 9,
+          "maxItems": 9,
+          "items": {
+            "$ref": "#/$defs/shardDescriptor"
+          }
+        }
+      }
+    },
+    "shard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "$schema",
+        "schemaVersion",
+        "batchId",
+        "shardId",
+        "questionType",
+        "range",
+        "updatedAt",
+        "questions"
+      ],
+      "properties": {
+        "$schema": {
+          "type": "string"
+        },
+        "schemaVersion": {
+          "const": "1.0.0"
+        },
+        "batchId": {
+          "const": "theory-900-review-2026-07-26-v1"
+        },
+        "shardId": {
+          "type": "string"
+        },
+        "questionType": {
+          "enum": [
+            "judge",
+            "single",
+            "multi"
+          ]
+        },
+        "range": {
+          "$ref": "#/$defs/range"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "questions": {
+          "type": "array",
+          "minItems": 100,
+          "maxItems": 100,
+          "items": {
+            "$ref": "#/$defs/questionState"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-trainer.local/schemas/theory-review-batch.schema.json",
+  "title": "理论题审校批量导入文件",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "batchId",
+    "reviews"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "schemaVersion": {
+      "const": "1.0.0"
+    },
+    "batchId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "shardId": {
+      "type": "string",
+      "pattern": "^(judge|single|multi)-[0-9]{3}-[0-9]{3}$"
+    },
+    "reviewedBy": {
+      "type": "string",
+      "minLength": 1,
+      "description": "批次默认审阅者；逐题 reviewedBy 可覆盖此值。"
+    },
+    "reviewStage": {
+      "type": "string",
+      "enum": [
+        "generation",
+        "qa"
+      ],
+      "default": "generation",
+      "description": "generation 为独立生成一审；qa 为另一审阅者的交叉复核。"
+    },
+    "reviews": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "questionId",
+          "questionFingerprint",
+          "reviewedAnswer",
+          "generatedExplanation",
+          "notes"
+        ],
+        "properties": {
+          "questionId": {
+            "type": "string",
+            "pattern": "^(judge|single|multi)-[0-9]{3}$"
+          },
+          "questionFingerprint": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "reviewedAnswer": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "enum": [
+                "√",
+                "×",
+                "A",
+                "B",
+                "C",
+                "D",
+                "E"
+              ]
+            }
+          },
+          "generatedExplanation": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reviewedBy": {
+            "type": "string",
+            "minLength": 1
+          },
+          "notes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "adoptedSource": {
+            "enum": [
+              "official_word",
+              "secondary_site",
+              "independent_editorial",
+              "independent_review"
+            ]
+          },
+          "resolveConflict": {
+            "type": "boolean",
+            "default": false
+          },
+          "reviewedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  }
+}

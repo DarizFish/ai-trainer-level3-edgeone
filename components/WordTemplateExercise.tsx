@@ -3,6 +3,9 @@
 import { useEffect, useMemo, useState } from "react";
 import type { PracticalTask } from "@/lib/content";
 import { createPracticalWordExercise } from "@/lib/practical-word-exercise";
+import { PracticalTaskHeader } from "./PracticalTaskHeader";
+import { PracticalBrief } from "./PracticalBrief";
+import { PracticalMaterialsList } from "./PracticalMaterialsList";
 
 type WordDraft = {
   version: 1;
@@ -64,7 +67,6 @@ export function WordTemplateExercise({ task, userEmail }: { task: PracticalTask;
   const fieldByBlock = new Map(exercise.fields.map((field) => [field.blockIndex, field]));
   const answeredCount = exercise.fields.filter((field) => answers[field.id]?.trim()).length;
   const checkedCount = exercise.fields.filter((field) => Object.prototype.hasOwnProperty.call(checks, field.id)).length;
-  const sourceDocument = task.materials.find((material) => material.kind === "document");
 
   function requireSignIn() {
     window.location.assign(`/account?mode=login&return_to=${encodeURIComponent(`/practical/${task.code}`)}`);
@@ -91,14 +93,10 @@ export function WordTemplateExercise({ task, userEmail }: { task: PracticalTask;
 
   return <section id={`work-${task.code}`} className="word-template-exercise">
     <aside id={`task-${task.code}`} className="word-workbench-context">
-      <p className="eyebrow">任务与材料</p>
-      <h2>完成这份文档</h2>
-      <p>直接补全官方 Word 模板中的 {fieldCount} 处横线，每处 1 分。</p>
-      <details className="word-task-requirements">
-        <summary>查看完整题目要求</summary>
-        <div className="task-description">{task.description}</div>
-      </details>
-      {sourceDocument?.url && <a className="word-download-link" href={sourceDocument.url} download>下载原始 Word</a>}
+      <PracticalTaskHeader task={task} variant="rail" />
+      <p className="practical-rail-intro">直接补全官方 Word 模板中的 {fieldCount} 处横线，每处 1 分。</p>
+      <PracticalBrief task={task} open={false} />
+      <PracticalMaterialsList task={task} />
       <section className="word-context-progress" aria-label="作答状态">
         <header><p className="eyebrow">作答状态</p><strong>{answeredCount}<small> / {fieldCount}</small></strong><span>处已填写</span></header>
         <nav aria-label="填写位置">{exercise.fields.map((field, index) => {

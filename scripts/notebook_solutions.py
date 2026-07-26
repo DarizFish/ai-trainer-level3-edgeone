@@ -171,7 +171,8 @@ def apply_command(args: argparse.Namespace) -> None:
     content = json.loads(args.content.read_text(encoding="utf-8"))
     snapshot = load_snapshot(args.snapshot)
     audit = apply_notebook_solutions(content["practical"], snapshot)
-    content["version"] = args.content_version
+    if args.content_version:
+        content["version"] = args.content_version
     content["notebookSolutions"] = content_metadata(snapshot, audit)
     write_json(args.content, content, compact=True)
     write_json(args.audit, audit)
@@ -193,7 +194,10 @@ def main() -> None:
     apply_parser.add_argument("--snapshot", type=Path, default=DEFAULT_SNAPSHOT_PATH)
     apply_parser.add_argument("--content", type=Path, default=PROJECT_ROOT / "data" / "content.json")
     apply_parser.add_argument("--audit", type=Path, default=DEFAULT_AUDIT_PATH)
-    apply_parser.add_argument("--content-version", default=CONTENT_VERSION)
+    apply_parser.add_argument(
+        "--content-version",
+        help="可选；省略时保留 data/content.json 的现有版本，避免覆盖已发布审校版本",
+    )
     apply_parser.set_defaults(handler=apply_command)
 
     args = parser.parse_args()

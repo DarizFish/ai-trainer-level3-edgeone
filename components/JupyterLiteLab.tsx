@@ -99,6 +99,8 @@ type FillReferenceItem = {
   answers: string[];
 };
 
+type FillReviewSummary = { total: number; exact: number; different: number; empty: number };
+
 type FillReferenceCell = {
   cellId: string;
   items: FillReferenceItem[];
@@ -199,6 +201,7 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
   const [confirmRestore, setConfirmRestore] = useState(false);
   const [iframeGeneration, setIframeGeneration] = useState(0);
   const [startupSlow, setStartupSlow] = useState(false);
+  const [fillReview, setFillReview] = useState<{ visible: boolean; summary: FillReviewSummary } | null>(null);
   const wordDeliverable = useMemo(() => getPracticalWordDeliverable(task), [task]);
   const solutionCells = task.notebook?.solutionCells;
   const templateCells = task.notebook?.cells;
@@ -301,6 +304,19 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
   const loadDrafts = useCallback(async () => {
     const currentNotebook = await readNotebook();
     const baseline = await loadTemplate();
+    const resetKey = `ai-trainer-practical-reset:${task.code}`;
+    if (localStorage.getItem(resetKey) === "1") {
+      localStorage.removeItem(resetKey);
+      localStorage.removeItem(localKey);
+      localStorage.removeItem(`ai-trainer-draft:${task.code}`);
+      setConflict(null);
+      revisionRef.current = 0;
+      setRevision(0);
+      await applyNotebook(baseline);
+      setSaveState("章节进度已重置，已恢复原始 Notebook");
+      initializedRef.current = true;
+      return;
+    }
     const normalizedCurrent = normalizeDraft(currentNotebook, baseline);
     let local: NotebookJson | null = null;
     const localSerialized = localStorage.getItem(localKey) ?? localStorage.getItem(`ai-trainer-draft:${task.code}`);
@@ -516,6 +532,20 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
     catch (cause) { setError(cause instanceof Error ? cause.message : String(cause)); }
   }
 
+  async function toggleFillReview() {
+    if (!bridgeRef.current) return;
+    setError(null);
+    const next = !(fillReview?.visible ?? false);
+    try {
+      const args = { path: notebookPath, visible: next } as unknown as Parameters<Bridge["execute"]>[1];
+      const result = await bridgeRef.current.execute("ai-trainer:toggle-fill-review", args) as { visible?: boolean; summary?: FillReviewSummary } | undefined;
+      if (result?.summary) setFillReview({ visible: Boolean(result.visible), summary: result.summary });
+      else setFillReview({ visible: next, summary: { total: 0, exact: 0, different: 0, empty: 0 } });
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : String(cause));
+    }
+  }
+
   async function downloadNotebook() {
     try {
       const notebook = await readNotebook();
@@ -537,6 +567,7 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
         <div className="lab-toolbar-actions" aria-label="Notebook 操作">
           <button className="button button-small" disabled={!kernelUsable} onClick={() => void execute("notebook:run-all-cells")}>▶ 运行全部</button>
           <button className="button button-small" disabled={!ready} onClick={() => void saveDraft()}>{signedIn ? "云端保存" : "登录并保存"}</button>
+          {!examMode && fillReferences.length > 0 && <button className={`button button-small ${fillReview?.visible ? "is-active" : ""}`} disabled={!ready} aria-pressed={Boolean(fillReview?.visible)} onClick={() => void toggleFillReview()}>{fillReview?.visible ? "隐藏答案" : "查看答案"}</button>}
           <span className="lab-toolbar-divider" aria-hidden="true"></span>
           <button className="button button-small" disabled={!kernelUsable} onClick={() => void execute("notebook:restart-kernel")}>重启内核</button>
           <button className="button button-small" disabled={!ready} onClick={() => void downloadNotebook()}>导出 .ipynb</button>
@@ -547,6 +578,13 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
       </div>
       {error && <div className="jupyter-error" role="alert"><span>{error}</span>{error.startsWith("题目环境准备失败") && <button type="button" className="button button-small" onClick={() => void retryPreparation()}>重试准备</button>}</div>}
       {startupSlow && !error && <div className="jupyter-warning" role="status">Python 内核仍在准备。页面会保留当前环境，不再自动重载；若长时间没有响应，可手动点击“重新加载环境”。</div>}
+      {fillReview?.visible && fillReview.summary.total > 0 && <div className="jupyter-fill-summary" role="status">
+        <b>核对填空自查</b>
+        <span className="fill-summary-chip is-exact">✓ 完全一致 {fillReview.summary.exact}</span>
+        <span className="fill-summary-chip is-different">✗ 差异较大 {fillReview.summary.different}</span>
+        {fillReview.summary.empty > 0 && <span className="fill-summary-chip is-empty">· 未填写 {fillReview.summary.empty}</span>}
+        <small>共 {fillReview.summary.total} 空 · 自动比对仅供参考，最终以运行结果为准</small>
+      </div>}
       <div className="mobile-lab-hint">手机端适合查看和轻量编辑；长时间编码建议横屏或使用“全屏打开”。</div>
       <iframe key={iframeGeneration} id={iframeId} className="jupyter-frame" src={`${notebookUrl}&attempt=${iframeGeneration}`} title={`${task.code} JupyterLite JupyterLab`} allow="clipboard-read; clipboard-write; fullscreen" />
     </section>

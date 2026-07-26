@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { TheoryQuestion, TheoryType } from "@/lib/content";
 import { isCorrect } from "@/lib/scoring";
@@ -9,16 +8,9 @@ import { useAccountSession } from "./AccountSession";
 const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 const RESUME_KEY = "ai-trainer-theory-session-v6";
 const QUESTION_MAP_PAGE_SIZE = 50;
+const CORRECT_AUTO_ADVANCE_MS = 450;
 
-const TYPE_OPTIONS: { value: TheoryType | "all"; label: string }[] = [
-  { value: "all", label: "全部题型" },
-  { value: "judge", label: "判断题" },
-  { value: "single", label: "单选题" },
-  { value: "multi", label: "多选题" },
-];
-
-type Screen = "practice" | "result" | "build" | "browse";
-type PracticeOrder = "sequential" | "random";
+type Screen = "practice" | "result";
 type ResumeState = {
   contentVersion: string;
   ids: string[];
@@ -43,9 +35,6 @@ export default function TheoryPractice({ questions, contentVersion }: { question
   const signedIn = accountStatus === "authenticated";
   const defaultIds = useMemo(() => questions.filter((question) => question.type === "judge").map((question) => question.id), [questions]);
   const [screen, setScreen] = useState<Screen>("practice");
-  const [type, setType] = useState<TheoryType | "all">("all");
-  const [category, setCategory] = useState("all");
-  const [order, setOrder] = useState<PracticeOrder>("sequential");
   const [sessionIds, setSessionIds] = useState<string[]>(defaultIds);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [sessionLabel, setSessionLabel] = useState("判断题 · 完整 300 题");
@@ -56,8 +45,10 @@ export default function TheoryPractice({ questions, contentVersion }: { question
   const [revealed, setRevealed] = useState<Record<string, boolean>>({});
   const [feedback, setFeedback] = useState<Record<string, boolean>>({});
   const [favorites, setFavorites] = useState<Record<string, boolean>>({});
+  const [answeredIds, setAnsweredIds] = useState<Record<string, boolean>>({});
   const [wrongIds, setWrongIds] = useState<string[]>([]);
   const [actionError, setActionError] = useState("");
+  const [resettingType, setResettingType] = useState<TheoryType | null>(null);
   const [navOpen, setNavOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [palettePage, setPalettePage] = useState(0);
@@ -65,21 +56,9 @@ export default function TheoryPractice({ questions, contentVersion }: { question
   const questionGridRef = useRef<HTMLDivElement>(null);
   const pendingAnswersRef = useRef(new Map<string, { answer: string[]; attempts: number }>());
   const progressTimerRef = useRef<number | null>(null);
-
-  const [query, setQuery] = useState("");
-  const [browsePage, setBrowsePage] = useState(1);
-  const [browseType, setBrowseType] = useState<TheoryType | "all">("all");
-  const [browseCategory, setBrowseCategory] = useState("all");
-  const pageSize = 10;
+  const autoAdvanceTimerRef = useRef<number | null>(null);
 
   const questionById = useMemo(() => new Map(questions.map((question) => [question.id, question])), [questions]);
-  const { categories, categoryCounts } = useMemo(() => {
-    const counts = new Map<string, number>();
-    for (const question of questions) {
-      counts.set(question.category, (counts.get(question.category) ?? 0) + 1);
-    }
-    return { categories: [...counts.keys()], categoryCounts: counts };
-  }, [questions]);
 
   useEffect(() => {
     const requestedId = new URLSearchParams(window.location.search).get("question");
@@ -123,9 +102,12 @@ export default function TheoryPractice({ questions, contentVersion }: { question
         setCurrentIndex(restoredIndex);
         setPalettePage(Math.floor(restoredIndex / QUESTION_MAP_PAGE_SIZE));
         setSessionLabel(stored.label);
-        setAnswers(restoredAnswers);
-        setFeedback(restoredFeedback);
-        setRevealed(Object.fromEntries(Object.keys(restoredFeedback).map((id) => [id, true])));
+        setAnswers((current) => ({ ...current, ...restoredAnswers }));
+        setFeedback((current) => ({ ...current, ...restoredFeedback }));
+        setRevealed((current) => ({
+          ...current,
+          ...Object.fromEntries(Object.keys(restoredFeedback).map((id) => [id, true])),
+        }));
         setPersistSession(true);
       });
     } catch {
@@ -137,11 +119,26 @@ export default function TheoryPractice({ questions, contentVersion }: { question
     if (!signedIn) return;
     void fetch("/api/theory/state")
       .then(async (response) => response.ok
-        ? await response.json() as { favoriteIds: string[]; wrongIds: string[] }
-        : { favoriteIds: [], wrongIds: [] })
+        ? await response.json() as {
+          favoriteIds: string[];
+          answeredIds: string[];
+          wrongIds: string[];
+          progress: { questionId: string; answer: string[]; correct: boolean }[];
+        }
+        : { favoriteIds: [], answeredIds: [], wrongIds: [], progress: [] })
       .then((state) => {
         setFavorites(Object.fromEntries(state.favoriteIds.map((id) => [id, true])));
+        setAnsweredIds((current) => ({
+          ...Object.fromEntries(state.answeredIds.map((id) => [id, true])),
+          ...current,
+        }));
         setWrongIds(state.wrongIds);
+        const storedAnswers = Object.fromEntries(state.progress.map((item) => [item.questionId, item.answer]));
+        const storedFeedback = Object.fromEntries(state.progress.map((item) => [item.questionId, item.correct]));
+        const storedRevealed = Object.fromEntries(state.progress.map((item) => [item.questionId, true]));
+        setAnswers((current) => ({ ...storedAnswers, ...current }));
+        setFeedback((current) => ({ ...storedFeedback, ...current }));
+        setRevealed((current) => ({ ...storedRevealed, ...current }));
       })
       .catch(() => undefined);
   }, [signedIn]);
@@ -153,11 +150,6 @@ export default function TheoryPractice({ questions, contentVersion }: { question
     const state: ResumeState = { contentVersion, ids: sessionIds, index: currentIndex, label: sessionLabel, answers: sessionAnswers, feedback: sessionFeedback, updatedAt: Date.now() };
     localStorage.setItem(RESUME_KEY, JSON.stringify(state));
   }, [answers, contentVersion, currentIndex, feedback, persistSession, screen, sessionIds, sessionLabel, urlReady]);
-
-  const configuredQuestions = useMemo(() => questions.filter((question) => (
-    (type === "all" || question.type === type)
-    && (category === "all" || question.category === category)
-  )), [category, questions, type]);
 
   const sessionQuestions = useMemo(() => sessionIds.flatMap((id) => {
     const question = questionById.get(id);
@@ -178,21 +170,20 @@ export default function TheoryPractice({ questions, contentVersion }: { question
   }, [feedback, sessionQuestions]);
   const correctRate = answeredCount ? Math.round(correctCount / answeredCount * 100) : 0;
   const favoriteCount = useMemo(() => Object.values(favorites).filter(Boolean).length, [favorites]);
+  const typeProgress = useMemo(() => ([
+    { type: "judge" as const, label: "判断题" },
+    { type: "single" as const, label: "单选题" },
+    { type: "multi" as const, label: "多选题" },
+  ]).map((item) => {
+    const typedQuestions = questions.filter((question) => question.type === item.type);
+    const answered = typedQuestions.filter((question) => answeredIds[question.id]).length;
+    return { ...item, answered, total: typedQuestions.length };
+  }), [answeredIds, questions]);
 
   useEffect(() => {
     if (screen !== "practice") return;
     questionGridRef.current?.querySelector<HTMLElement>('[aria-current="step"]')?.scrollIntoView({ block: "nearest", inline: "nearest" });
   }, [currentIndex, palettePage, screen]);
-
-  const filteredBrowse = useMemo(() => questions.filter((question) => {
-    const text = `${question.stem} ${question.section}`.toLowerCase();
-    return (!query || text.includes(query.toLowerCase()))
-      && (browseType === "all" || question.type === browseType)
-      && (browseCategory === "all" || question.category === browseCategory);
-  }), [browseCategory, browseType, query, questions]);
-  const browsePages = Math.max(1, Math.ceil(filteredBrowse.length / pageSize));
-  const currentBrowsePage = Math.min(browsePage, browsePages);
-  const visibleBrowse = filteredBrowse.slice((currentBrowsePage - 1) * pageSize, currentBrowsePage * pageSize);
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
@@ -272,6 +263,10 @@ export default function TheoryPractice({ questions, contentVersion }: { question
     };
   }, [flushProgress]);
 
+  useEffect(() => () => {
+    if (autoAdvanceTimerRef.current !== null) window.clearTimeout(autoAdvanceTimerRef.current);
+  }, []);
+
   function queueProgress(questionId: string, answer: string[]) {
     const pending = pendingAnswersRef.current.get(questionId);
     pendingAnswersRef.current.set(questionId, {
@@ -303,7 +298,7 @@ export default function TheoryPractice({ questions, contentVersion }: { question
     setPaletteOpen(false);
   }
 
-  function beginPractice(ids: string[], startIndex = 0, label = "当前练习") {
+  function beginPractice(ids: string[], startIndex = 0, label = "练习", resetResponses = true) {
     if (!requireSignIn()) return;
     const validIds = ids.filter((id) => questionById.has(id));
     if (!validIds.length) {
@@ -317,26 +312,72 @@ export default function TheoryPractice({ questions, contentVersion }: { question
     setPalettePage(Math.floor(boundedIndex / QUESTION_MAP_PAGE_SIZE));
     setSessionLabel(label);
     setPersistSession(validIds.length > 1);
-    setAnswers({});
-    setRevealed({});
-    setFeedback({});
+    if (resetResponses) {
+      const resetIds = new Set(validIds);
+      setAnswers((current) => Object.fromEntries(Object.entries(current).filter(([id]) => !resetIds.has(id))));
+      setRevealed((current) => Object.fromEntries(Object.entries(current).filter(([id]) => !resetIds.has(id))));
+      setFeedback((current) => Object.fromEntries(Object.entries(current).filter(([id]) => !resetIds.has(id))));
+    }
     setScreen("practice");
     closeDrawers();
     focusQuestion();
   }
 
-  function startConfiguredPractice(selectedOrder: PracticeOrder = order) {
-    let selected = configuredQuestions.map((question) => question.id);
-    if (selectedOrder === "random") selected = shuffled(selected);
-    const typeLabel = TYPE_OPTIONS.find((item) => item.value === type)?.label ?? "全部题型";
-    const scopeLabel = category === "all" ? typeLabel : `${category} · ${typeLabel}`;
-    beginPractice(selected, 0, `${scopeLabel} · ${selectedOrder === "random" ? "随机" : "顺序"}`);
+  function startTypePractice(selectedType: TheoryType, label: string) {
+    const typedQuestions = questions.filter((question) => question.type === selectedType);
+    const firstUnanswered = typedQuestions.findIndex((question) => !answeredIds[question.id]);
+    beginPractice(
+      typedQuestions.map((question) => question.id),
+      firstUnanswered < 0 ? 0 : firstUnanswered,
+      `${label} · 完整 ${typedQuestions.length} 题`,
+      false,
+    );
   }
 
-  function startQuickPractice(predicate: (question: TheoryQuestion) => boolean, label: string, random = false) {
-    const pool = questions.filter(predicate);
-    const selected = (random ? shuffled(pool) : pool).map((question) => question.id);
-    beginPractice(selected, 0, label);
+  async function resetTypeProgress(selectedType: TheoryType, label: string) {
+    if (!requireSignIn()) return;
+    if (!window.confirm(`确认重置${label}进度？该题型的作答记录将被清除，收藏不会删除。`)) return;
+
+    const questionIds = new Set(questions.filter((question) => question.type === selectedType).map((question) => question.id));
+    const removedPending = [...pendingAnswersRef.current].filter(([id]) => questionIds.has(id));
+    for (const [id] of removedPending) pendingAnswersRef.current.delete(id);
+    if (progressTimerRef.current !== null) {
+      window.clearTimeout(progressTimerRef.current);
+      progressTimerRef.current = null;
+    }
+
+    setResettingType(selectedType);
+    setActionError("");
+    try {
+      const response = await fetch("/api/progress/reset", {
+        method: "DELETE",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ scope: "theory", type: selectedType }),
+      });
+      if (!response.ok) throw new Error("reset failed");
+    } catch {
+      for (const [id, value] of removedPending) pendingAnswersRef.current.set(id, value);
+      if (pendingAnswersRef.current.size) progressTimerRef.current = window.setTimeout(() => flushProgress(), 900);
+      setResettingType(null);
+      setActionError("题型进度重置失败，请稍后重试。");
+      return;
+    }
+
+    if (autoAdvanceTimerRef.current !== null) {
+      window.clearTimeout(autoAdvanceTimerRef.current);
+      autoAdvanceTimerRef.current = null;
+    }
+    const withoutType = <T,>(current: Record<string, T>) => Object.fromEntries(
+      Object.entries(current).filter(([id]) => !questionIds.has(id)),
+    );
+    setAnsweredIds(withoutType);
+    setAnswers(withoutType);
+    setFeedback(withoutType);
+    setRevealed(withoutType);
+    setWrongIds((current) => current.filter((id) => !questionIds.has(id)));
+    localStorage.removeItem(RESUME_KEY);
+    if (pendingAnswersRef.current.size) progressTimerRef.current = window.setTimeout(() => flushProgress(), 900);
+    setResettingType(null);
   }
 
   function startSavedPractice(kind: "wrong" | "favorite") {
@@ -371,11 +412,20 @@ export default function TheoryPractice({ questions, contentVersion }: { question
     if (!answer.length || revealed[question.id]) return;
     setActionError("");
     const correct = isCorrect(question, answer);
+    setAnsweredIds((current) => ({ ...current, [question.id]: true }));
     setFeedback((current) => ({ ...current, [question.id]: correct }));
     setRevealed((current) => ({ ...current, [question.id]: true }));
     if (!correct) setWrongIds((current) => current.includes(question.id) ? current : [question.id, ...current]);
     else setWrongIds((current) => current.filter((id) => id !== question.id));
     queueProgress(question.id, answer);
+    if (correct) {
+      if (autoAdvanceTimerRef.current !== null) window.clearTimeout(autoAdvanceTimerRef.current);
+      autoAdvanceTimerRef.current = window.setTimeout(() => {
+        autoAdvanceTimerRef.current = null;
+        if (currentIndex === sessionQuestions.length - 1) completePractice();
+        else goToQuestion(currentIndex + 1);
+      }, CORRECT_AUTO_ADVANCE_MS);
+    }
   }
 
   async function toggleFavorite(questionId: string) {
@@ -391,6 +441,10 @@ export default function TheoryPractice({ questions, contentVersion }: { question
   }
 
   function goToQuestion(index: number) {
+    if (autoAdvanceTimerRef.current !== null) {
+      window.clearTimeout(autoAdvanceTimerRef.current);
+      autoAdvanceTimerRef.current = null;
+    }
     const boundedIndex = Math.max(0, Math.min(sessionQuestions.length - 1, index));
     setCurrentIndex(boundedIndex);
     setPalettePage(Math.floor(boundedIndex / QUESTION_MAP_PAGE_SIZE));
@@ -404,21 +458,14 @@ export default function TheoryPractice({ questions, contentVersion }: { question
   }
 
   function completePractice() {
+    if (autoAdvanceTimerRef.current !== null) {
+      window.clearTimeout(autoAdvanceTimerRef.current);
+      autoAdvanceTimerRef.current = null;
+    }
     localStorage.removeItem(RESUME_KEY);
     setPersistSession(false);
     setScreen("result");
     closeDrawers();
-  }
-
-  function showScreen(nextScreen: Screen) {
-    setActionError("");
-    setScreen(nextScreen);
-    closeDrawers();
-  }
-
-  function browseFilter(action: () => void) {
-    action();
-    setBrowsePage(1);
   }
 
   function questionState(question: TheoryQuestion, index: number): string {
@@ -455,7 +502,7 @@ export default function TheoryPractice({ questions, contentVersion }: { question
     </>;
   }
 
-  const activeNavLabel = screen === "practice" ? sessionLabel : screen === "result" ? "练习结果" : screen === "build" ? "专项组题" : "题库检索";
+  const activeNavLabel = screen === "practice" ? sessionLabel : "练习结果";
   const drawerVisible = navOpen || paletteOpen;
 
   return <div className={`theory-study-layout ${screen === "practice" ? "with-palette" : ""}`}>
@@ -466,23 +513,20 @@ export default function TheoryPractice({ questions, contentVersion }: { question
       <div className="theory-side-head"><div><span>THEORY DESK</span><b>理论学习台</b></div><button type="button" aria-label="关闭练习导航" onClick={() => setNavOpen(false)}>×</button></div>
       <nav>
         <section>
-          <p>当前与常用</p>
-          <button type="button" className={screen === "practice" || screen === "result" ? "active" : ""} onClick={() => showScreen(screen === "result" ? "result" : "practice")}><span>{screen === "result" ? "本组结果" : "当前练习"}</span><small>{sessionLabel} · {currentIndex + 1}/{sessionQuestions.length}</small></button>
-          <button type="button" onClick={() => startQuickPractice((question) => question.type === "judge", "判断题 · 完整 300 题")}><span>判断题 300 题</span><small>完整刷完判断题题库</small></button>
-          <button type="button" onClick={() => startQuickPractice((question) => question.type === "single", "单选题 · 完整 300 题")}><span>单选题 300 题</span><small>完整刷完单选题题库</small></button>
-          <button type="button" onClick={() => startQuickPractice((question) => question.type === "multi", "多选题 · 完整 300 题")}><span>多选题 300 题</span><small>完整刷完多选题题库</small></button>
+          <p>题型进度</p>
+          {typeProgress.map((item) => <div className="theory-type-progress-row" key={item.type}>
+            <button type="button" className="theory-type-progress-entry" onClick={() => startTypePractice(item.type, item.label)}>
+              <span>{item.label}<em>{item.answered}/{item.total}</em></span>
+              <small>{item.answered === item.total ? "已完成全部题目" : `剩余 ${item.total - item.answered} 题 · 点击继续`}</small>
+              <i className="theory-type-progress-track" aria-hidden="true"><i style={{ width: `${item.total ? item.answered / item.total * 100 : 0}%` }} /></i>
+            </button>
+            <button type="button" className="theory-type-progress-reset" disabled={resettingType !== null || item.answered === 0} onClick={() => void resetTypeProgress(item.type, item.label)}>{resettingType === item.type ? "…" : "重置"}</button>
+          </div>)}
+        </section>
+        <section>
+          <p>复习清单</p>
           <button type="button" onClick={() => startSavedPractice("wrong")}><span>错题重练 <em>{wrongIds.length}</em></span><small>答对后移出错题集</small></button>
           <button type="button" onClick={() => startSavedPractice("favorite")}><span>收藏练习 <em>{favoriteCount}</em></span><small>集中复习重点题</small></button>
-        </section>
-        <section>
-          <p>知识领域</p>
-          {categories.map((item) => <button type="button" key={item} onClick={() => startQuickPractice((question) => question.category === item, `${item} · 完整 ${categoryCounts.get(item)} 题`)}><span>{item}</span><small>完整练习 {categoryCounts.get(item)} 道题</small></button>)}
-        </section>
-        <section>
-          <p>题库与考试</p>
-          <button type="button" className={screen === "build" ? "active" : ""} onClick={() => showScreen("build")}><span>专项组题</span><small>按题型和知识领域组合</small></button>
-          <button type="button" className={screen === "browse" ? "active" : ""} onClick={() => showScreen("browse")}><span>题库检索</span><small>搜索并查看 900 道题</small></button>
-          <Link href="/theory/mock"><span>模拟考试</span><small>190 题 · 90 分钟</small></Link>
         </section>
       </nav>
     </aside>
@@ -491,13 +535,12 @@ export default function TheoryPractice({ questions, contentVersion }: { question
       {actionError && <div className="account-error theory-action-error" role="alert">{actionError}</div>}
 
       {screen === "practice" && currentQuestion && <section className="practice-session">
-        <header className="practice-focus-head">
-          <div><span className="eyebrow">{sessionLabel} · 第 {currentIndex + 1}/{sessionQuestions.length} 题</span><h2>{currentQuestion.category} · {currentQuestion.section}</h2></div>
+        <div className="practice-question-toolbar">
+          <div className="practice-progress" aria-label={`练习进度 ${currentIndex + 1}/${sessionQuestions.length}`}><i style={{ width: `${(currentIndex + 1) / sessionQuestions.length * 100}%` }} /></div>
           <button type="button" className="question-map-trigger" aria-expanded={paletteOpen} onClick={openQuestionMap}><b>{currentIndex + 1}</b> / {sessionQuestions.length}<span>题号导航</span></button>
-        </header>
-        <div className="practice-progress" aria-label={`练习进度 ${currentIndex + 1}/${sessionQuestions.length}`}><i style={{ width: `${(currentIndex + 1) / sessionQuestions.length * 100}%` }} /></div>
+        </div>
         <article className="practice-question-card" ref={questionCardRef} tabIndex={-1}>
-          <div className="question-meta"><div className="question-meta-left"><span className="question-number">题库 #{String(currentQuestion.index).padStart(3, "0")}</span><span className="chip">{currentQuestion.typeLabel}</span>{currentQuestion.type === "multi" && <span className="chip">可多选</span>}</div></div>
+          <div className="question-meta"><div className="question-meta-left"><span className="question-number">题库 #{String(currentQuestion.index).padStart(3, "0")}</span><span className="chip">{currentQuestion.typeLabel}</span>{currentQuestion.type === "multi" && <span className="chip">可多选</span>}</div><small className="practice-question-context">{currentQuestion.category} · {currentQuestion.section}</small></div>
           <h2 className="practice-question-title">{currentQuestion.stem}</h2>
           <div className="practice-options">{(currentQuestion.type === "judge" ? ["√", "×"] : currentQuestion.options.map((_, index) => LETTERS[index])).map((value, index) => {
             const selected = (answers[currentQuestion.id] ?? []).includes(value);
@@ -530,34 +573,7 @@ export default function TheoryPractice({ questions, contentVersion }: { question
       {screen === "result" && <section className="theory-result-panel">
         <span className="eyebrow">PRACTICE COMPLETE</span><h2>本组练习完成</h2><p>{sessionLabel}</p>
         <div><article><strong>{answeredCount}</strong><span>已答题</span></article><article><strong>{correctCount}</strong><span>答对题</span></article><article><strong>{correctRate}%</strong><span>正确率</span></article></div>
-        <div className="hero-actions">{sessionWrongIds.length > 0 && <button type="button" className="button button-primary" onClick={() => beginPractice(sessionWrongIds, 0, `本组错题 · ${sessionWrongIds.length} 题`)}>重练本组错题</button>}<button type="button" className="button button-primary" onClick={() => beginPractice(shuffled(sessionIds), 0, `${sessionLabel} · 随机重排`)}>随机重排本组</button><button type="button" className="button button-quiet" onClick={() => showScreen("build")}>选择其他题型</button></div>
-      </section>}
-
-      {screen === "build" && <section className="theory-builder-panel">
-        <header><div><span className="eyebrow">CUSTOM PRACTICE</span><h2>自定义完整练习</h2><p>按题型和知识领域筛选，符合条件的题目一次全部加入。</p></div><strong>{configuredQuestions.length}<small> 道符合条件</small></strong></header>
-        <div className="theory-builder-grid">
-          <fieldset><legend>1. 选择题型</legend><div className="choice-chips">{TYPE_OPTIONS.map((item) => <button type="button" key={item.value} className={type === item.value ? "active" : ""} onClick={() => setType(item.value)}>{item.label}</button>)}</div></fieldset>
-          <fieldset className="full"><legend>2. 选择知识领域</legend><div className="choice-chips"><button type="button" className={category === "all" ? "active" : ""} onClick={() => setCategory("all")}>全部领域</button>{categories.map((item) => <button type="button" key={item} className={category === item ? "active" : ""} onClick={() => setCategory(item)}>{item}</button>)}</div></fieldset>
-          <fieldset><legend>3. 出题顺序</legend><div className="choice-chips"><button type="button" className={order === "sequential" ? "active" : ""} onClick={() => setOrder("sequential")}>顺序</button><button type="button" className={order === "random" ? "active" : ""} onClick={() => setOrder("random")}>随机</button></div></fieldset>
-        </div>
-        <footer><div><b>将完整加入 {configuredQuestions.length} 道题</b><small>判断和单选选择后立即判分，多选提交后判分。</small></div><button type="button" className="button button-primary" disabled={!configuredQuestions.length || accountStatus === "loading"} onClick={() => startConfiguredPractice()}>{accountStatus === "loading" ? "正在确认账号…" : signedIn ? "开始完整练习" : "登录并开始练习"}</button></footer>
-      </section>}
-
-      {screen === "browse" && <section className="theory-browser">
-        <div className="browse-toolbar">
-          <div className="catalog-search"><label htmlFor="theory-search">搜索题目</label><input id="theory-search" className="field" value={query} onChange={(event) => browseFilter(() => setQuery(event.target.value))} placeholder="题干或知识点…" /></div>
-          <div className="browse-filter-row" aria-label="题型筛选">{TYPE_OPTIONS.map((item) => <button type="button" key={item.value} className={browseType === item.value ? "active" : ""} onClick={() => browseFilter(() => setBrowseType(item.value))}>{item.label}</button>)}</div>
-          <div className="browse-filter-row" aria-label="知识领域筛选"><button type="button" className={browseCategory === "all" ? "active" : ""} onClick={() => browseFilter(() => setBrowseCategory("all"))}>全部领域</button>{categories.map((item) => <button type="button" key={item} className={browseCategory === item ? "active" : ""} onClick={() => browseFilter(() => setBrowseCategory(item))}>{item}</button>)}</div>
-        </div>
-        <div className="result-bar"><span>找到 <b>{filteredBrowse.length}</b> 道题 · 第 {currentBrowsePage}/{browsePages} 页</span><span className="notice">题库用于检索和查答案；连续作答请使用左侧练习导航。</span></div>
-        <div className="theory-browser-list">{visibleBrowse.map((question) => <article className="theory-browser-card" key={question.id}>
-          <div className="question-meta"><div className="question-meta-left"><span className="question-number">#{String(question.index).padStart(3, "0")}</span><span className="chip">{question.typeLabel}</span><span className="chip">{question.category}</span><span className="chip">{question.section}</span></div></div>
-          <h2>{question.stem}</h2>
-          {question.type !== "judge" && <ol>{question.options.map((option, index) => <li key={option}><b>{LETTERS[index]}.</b> {option}</li>)}</ol>}
-          <div className="question-actions"><button className="button button-primary" disabled={accountStatus === "loading"} onClick={() => beginPractice([question.id], 0, "单题练习")}>{accountStatus === "loading" ? "正在确认账号…" : signedIn ? "练这一题" : "登录后练习"}</button><button className="button button-quiet" onClick={() => setRevealed((current) => ({ ...current, [question.id]: !current[question.id] }))}>{revealed[question.id] ? "收起答案" : "查看参考答案"}</button><button className="button button-quiet" onClick={() => void toggleFavorite(question.id)}>{favorites[question.id] ? "★ 已收藏" : "☆ 收藏"}</button></div>
-          {revealed[question.id] && <div className="answer-panel"><div className="answer-line"><b>参考答案：{question.answer.join("、")}</b></div><p>{question.explanation}</p></div>}
-        </article>)}</div>
-        {browsePages > 1 && <div className="pagination"><button disabled={currentBrowsePage === 1} onClick={() => setBrowsePage(currentBrowsePage - 1)}>‹</button><span>第 {currentBrowsePage} / {browsePages} 页</span><button disabled={currentBrowsePage === browsePages} onClick={() => setBrowsePage(currentBrowsePage + 1)}>›</button></div>}
+        <div className="hero-actions">{sessionWrongIds.length > 0 && <button type="button" className="button button-primary" onClick={() => beginPractice(sessionWrongIds, 0, `本组错题 · ${sessionWrongIds.length} 题`)}>重练本组错题</button>}<button type="button" className="button button-primary" onClick={() => beginPractice(shuffled(sessionIds), 0, `${sessionLabel} · 随机重排`)}>随机重排本组</button></div>
       </section>}
     </div>
 

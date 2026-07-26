@@ -1,12 +1,16 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { content } from "@/lib/content";
 import PracticalMockLoader from "@/components/PracticalMockLoader";
 import { examBlueprint } from "@/lib/exam-blueprint";
+import { practicalMockEnabled } from "@/lib/features";
 
 export const metadata = { title: "实操模拟组卷" };
 export const dynamic = "force-static";
 
 export default function PracticalMockPage() {
+  if (!practicalMockEnabled) redirect("/practical");
+
   return <main className="mock-page">
     <link rel="preload" href={`/content/practical-${encodeURIComponent(content.version)}.json`} as="fetch" />
     <section className="container mock-page-head">

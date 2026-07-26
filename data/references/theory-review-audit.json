@@ -1,0 +1,1377 @@
+{
+  "version": "2026-07-26-v8",
+  "batchId": "theory-900-review-2026-07-26-v1",
+  "generatedAt": "2026-07-25T17:23:16Z",
+  "output": {
+    "contentPath": "data/content.json",
+    "auditPath": "data/references/theory-review-audit.json",
+    "publishedContentSha256": "6356b0fb32680b64de0390bfb8699eac460f65ce3cedc654ace49d7b36372393"
+  },
+  "sourceHashes": {
+    "content": "839c142493e0882c53e52fc5824f5ad101d8601de68ba2f728a70a1916a40871",
+    "secondaryReferenceSnapshotFile": "ade43a2cbd03f22ce6cb6d93e10f63797e64cc59dd92fb922fe490845cc8414a",
+    "theoryReferenceAudit": "2915a5895f436ffa853e5b3991d9b83192bf61076217a30d54d9ab16c03a72ff",
+    "reviewManifest": "1cfba38e55b18b51f6f3bfd14d7c1644b2859bf94e7b2cf56196461d915c8e2c",
+    "officialWord": "f7841d937a09770b84a3273119cd4562a3159c1c00a8a429a7fd7a8b964916cd",
+    "secondarySiteSource": "4c0fa4ac6accc6ab335a54f3fe5a04c56485aeeae4dfd46761de960abd6512c8"
+  },
+  "manifest": {
+    "path": "data/references/theory-review-state/manifest.json",
+    "sha256": "1cfba38e55b18b51f6f3bfd14d7c1644b2859bf94e7b2cf56196461d915c8e2c",
+    "schemaVersion": "1.0.0"
+  },
+  "basisCounts": {
+    "independent_review": 139,
+    "official_word": 190,
+    "secondary_site": 571
+  },
+  "contentAnswerBasisCounts": {
+    "editorial_review": 139,
+    "manual_official": 190,
+    "third_party_reference": 571
+  },
+  "answerChanges": {
+    "count": 79,
+    "officialAnswerChanges": 0,
+    "details": [
+      {
+        "questionId": "judge-031",
+        "from": [
+          "×"
+        ],
+        "to": [
+          "√"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "judge-064",
+        "from": [
+          "×"
+        ],
+        "to": [
+          "√"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "judge-068",
+        "from": [
+          "×"
+        ],
+        "to": [
+          "√"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "judge-106",
+        "from": [
+          "×"
+        ],
+        "to": [
+          "√"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "judge-122",
+        "from": [
+          "√"
+        ],
+        "to": [
+          "×"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "judge-125",
+        "from": [
+          "√"
+        ],
+        "to": [
+          "×"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "judge-127",
+        "from": [
+          "√"
+        ],
+        "to": [
+          "×"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "judge-135",
+        "from": [
+          "√"
+        ],
+        "to": [
+          "×"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "judge-137",
+        "from": [
+          "√"
+        ],
+        "to": [
+          "×"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "judge-145",
+        "from": [
+          "√"
+        ],
+        "to": [
+          "×"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "judge-151",
+        "from": [
+          "√"
+        ],
+        "to": [
+          "×"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "judge-172",
+        "from": [
+          "√"
+        ],
+        "to": [
+          "×"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "judge-183",
+        "from": [
+          "√"
+        ],
+        "to": [
+          "×"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "judge-251",
+        "from": [
+          "√"
+        ],
+        "to": [
+          "×"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "single-045",
+        "from": [
+          "A"
+        ],
+        "to": [
+          "C"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "single-062",
+        "from": [
+          "B"
+        ],
+        "to": [
+          "D"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "single-178",
+        "from": [
+          "B"
+        ],
+        "to": [
+          "A"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-017",
+        "from": [
+          "A",
+          "B",
+          "D"
+        ],
+        "to": [
+          "A",
+          "B",
+          "D",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-026",
+        "from": [
+          "A",
+          "D"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-027",
+        "from": [
+          "A",
+          "D",
+          "E"
+        ],
+        "to": [
+          "A",
+          "B",
+          "D",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-029",
+        "from": [
+          "A",
+          "B"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-032",
+        "from": [
+          "A",
+          "C",
+          "D",
+          "E"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-037",
+        "from": [
+          "B",
+          "C"
+        ],
+        "to": [
+          "B",
+          "C",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-042",
+        "from": [
+          "A",
+          "C"
+        ],
+        "to": [
+          "A",
+          "C",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-053",
+        "from": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-055",
+        "from": [
+          "A",
+          "D",
+          "E"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-057",
+        "from": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-058",
+        "from": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-063",
+        "from": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-065",
+        "from": [
+          "B",
+          "D"
+        ],
+        "to": [
+          "A",
+          "B",
+          "D"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-068",
+        "from": [
+          "A",
+          "B",
+          "C"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-083",
+        "from": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-087",
+        "from": [
+          "A",
+          "B"
+        ],
+        "to": [
+          "A",
+          "B",
+          "D"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-097",
+        "from": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-098",
+        "from": [
+          "D",
+          "E"
+        ],
+        "to": [
+          "B",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-099",
+        "from": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-111",
+        "from": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "to": [
+          "A",
+          "C",
+          "D",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-125",
+        "from": [
+          "A",
+          "B",
+          "E"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-129",
+        "from": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-131",
+        "from": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-137",
+        "from": [
+          "B",
+          "C"
+        ],
+        "to": [
+          "B"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-144",
+        "from": [
+          "B",
+          "D"
+        ],
+        "to": [
+          "D"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-152",
+        "from": [
+          "A",
+          "C"
+        ],
+        "to": [
+          "A",
+          "C",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-154",
+        "from": [
+          "A",
+          "C",
+          "E"
+        ],
+        "to": [
+          "A",
+          "C",
+          "D",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-156",
+        "from": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-157",
+        "from": [
+          "A",
+          "B",
+          "C",
+          "E"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-167",
+        "from": [
+          "A",
+          "B",
+          "C"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-168",
+        "from": [
+          "A",
+          "B",
+          "C",
+          "E"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-171",
+        "from": [
+          "A",
+          "B",
+          "D"
+        ],
+        "to": [
+          "A",
+          "B",
+          "D",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-178",
+        "from": [
+          "A",
+          "B",
+          "C"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-180",
+        "from": [
+          "C",
+          "D"
+        ],
+        "to": [
+          "C",
+          "D",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-181",
+        "from": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-189",
+        "from": [
+          "A",
+          "C"
+        ],
+        "to": [
+          "A",
+          "C",
+          "D"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-196",
+        "from": [
+          "A",
+          "B",
+          "E"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-198",
+        "from": [
+          "B",
+          "C"
+        ],
+        "to": [
+          "B",
+          "C",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-208",
+        "from": [
+          "B",
+          "D"
+        ],
+        "to": [
+          "B",
+          "C",
+          "D",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-210",
+        "from": [
+          "A",
+          "B",
+          "C"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-221",
+        "from": [
+          "A",
+          "B",
+          "E"
+        ],
+        "to": [
+          "A",
+          "B",
+          "D",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-228",
+        "from": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-231",
+        "from": [
+          "A",
+          "B",
+          "C"
+        ],
+        "to": [
+          "A",
+          "C"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-235",
+        "from": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-245",
+        "from": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-257",
+        "from": [
+          "A",
+          "B",
+          "D"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-258",
+        "from": [
+          "A",
+          "B",
+          "C",
+          "E"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-266",
+        "from": [
+          "B",
+          "C",
+          "D"
+        ],
+        "to": [
+          "A",
+          "B",
+          "D",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-275",
+        "from": [
+          "B",
+          "D"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-277",
+        "from": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-278",
+        "from": [
+          "A",
+          "B",
+          "C"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-279",
+        "from": [
+          "B",
+          "E"
+        ],
+        "to": [
+          "A",
+          "B",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-280",
+        "from": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-285",
+        "from": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "to": [
+          "A",
+          "B",
+          "D"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-286",
+        "from": [
+          "A",
+          "B"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-287",
+        "from": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-288",
+        "from": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-289",
+        "from": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-290",
+        "from": [
+          "A",
+          "B",
+          "C",
+          "E"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-294",
+        "from": [
+          "A",
+          "B",
+          "C"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-296",
+        "from": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C"
+        ],
+        "adoptedSource": "independent_review"
+      },
+      {
+        "questionId": "multi-297",
+        "from": [
+          "B",
+          "C",
+          "D"
+        ],
+        "to": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ],
+        "adoptedSource": "independent_review"
+      }
+    ]
+  },
+  "conflicts": {
+    "open": 0,
+    "resolved": 5,
+    "details": [
+      {
+        "questionId": "judge-058",
+        "kind": "answer_mismatch",
+        "sources": [
+          "official_word",
+          "secondary_site"
+        ],
+        "details": {
+          "officialWordAnswer": [
+            "×"
+          ],
+          "secondarySiteAnswer": [
+            "√"
+          ]
+        },
+        "adoptedSource": "official_word"
+      },
+      {
+        "questionId": "judge-292",
+        "kind": "answer_mismatch",
+        "sources": [
+          "official_word",
+          "secondary_site"
+        ],
+        "details": {
+          "officialWordAnswer": [
+            "×"
+          ],
+          "secondarySiteAnswer": [
+            "√"
+          ]
+        },
+        "adoptedSource": "official_word"
+      },
+      {
+        "questionId": "single-082",
+        "kind": "answer_mismatch",
+        "sources": [
+          "official_word",
+          "secondary_site"
+        ],
+        "details": {
+          "officialWordAnswer": [
+            "A"
+          ],
+          "secondarySiteAnswer": [
+            "B"
+          ]
+        },
+        "adoptedSource": "official_word"
+      },
+      {
+        "questionId": "single-291",
+        "kind": "answer_mismatch",
+        "sources": [
+          "official_word",
+          "secondary_site"
+        ],
+        "details": {
+          "officialWordAnswer": [
+            "A"
+          ],
+          "secondarySiteAnswer": [
+            "C"
+          ]
+        },
+        "adoptedSource": "official_word"
+      },
+      {
+        "questionId": "multi-194",
+        "kind": "answer_mismatch",
+        "sources": [
+          "official_word",
+          "secondary_site"
+        ],
+        "details": {
+          "officialWordAnswer": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E"
+          ],
+          "secondarySiteAnswer": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ]
+        },
+        "adoptedSource": "official_word"
+      }
+    ]
+  },
+  "explanations": {
+    "total": 900,
+    "independentlyGenerated": 900,
+    "crossReviewed": 900,
+    "duplicateGroups": [],
+    "length": {
+      "minimum": 39,
+      "median": 71.0,
+      "maximum": 168,
+      "mean": 71.75
+    },
+    "warnings": [],
+    "highestExternalSimilarities": [
+      {
+        "questionId": "judge-060",
+        "ratio": 0.593
+      },
+      {
+        "questionId": "multi-226",
+        "ratio": 0.562
+      },
+      {
+        "questionId": "multi-252",
+        "ratio": 0.556
+      },
+      {
+        "questionId": "multi-046",
+        "ratio": 0.551
+      },
+      {
+        "questionId": "multi-003",
+        "ratio": 0.526
+      },
+      {
+        "questionId": "single-124",
+        "ratio": 0.519
+      },
+      {
+        "questionId": "single-043",
+        "ratio": 0.519
+      },
+      {
+        "questionId": "multi-295",
+        "ratio": 0.517
+      },
+      {
+        "questionId": "multi-272",
+        "ratio": 0.516
+      },
+      {
+        "questionId": "single-090",
+        "ratio": 0.513
+      }
+    ]
+  },
+  "shards": [
+    {
+      "id": "judge-001-100",
+      "path": "data/references/theory-review-state/judge-001-100.json",
+      "questionType": "judge",
+      "count": 100,
+      "sha256": "45dc053c0f682d16240b57d548dfbaebc8c6b67c94b827b704075cf35462aecf"
+    },
+    {
+      "id": "judge-101-200",
+      "path": "data/references/theory-review-state/judge-101-200.json",
+      "questionType": "judge",
+      "count": 100,
+      "sha256": "b2b23c64727291074c6397fd9127035f0a466a1a67ad619224ff268b7c843a33"
+    },
+    {
+      "id": "judge-201-300",
+      "path": "data/references/theory-review-state/judge-201-300.json",
+      "questionType": "judge",
+      "count": 100,
+      "sha256": "b1931e3c55efde5241a2aa6811eba09de92d3ac47a59f1d4253c4d6a779e9633"
+    },
+    {
+      "id": "single-001-100",
+      "path": "data/references/theory-review-state/single-001-100.json",
+      "questionType": "single",
+      "count": 100,
+      "sha256": "c6ee688d1f60390a5ea8817529ca61c0d30f8c75f3b378d0f44a2a04c7a21c13"
+    },
+    {
+      "id": "single-101-200",
+      "path": "data/references/theory-review-state/single-101-200.json",
+      "questionType": "single",
+      "count": 100,
+      "sha256": "84d3ff6b3d67487bc19296bcfeeb086be1ab2f81cf7a5536793f7de0fd741c7a"
+    },
+    {
+      "id": "single-201-300",
+      "path": "data/references/theory-review-state/single-201-300.json",
+      "questionType": "single",
+      "count": 100,
+      "sha256": "e2e6e3ac9fd2532d9ff0fce5af90c4cda5fa044e82004135c2bc86f01b80a8df"
+    },
+    {
+      "id": "multi-001-100",
+      "path": "data/references/theory-review-state/multi-001-100.json",
+      "questionType": "multi",
+      "count": 100,
+      "sha256": "7d4391fca0b9273a06d0dd27e055c60a58a4175ace21c38d8d1e14b976693aea"
+    },
+    {
+      "id": "multi-101-200",
+      "path": "data/references/theory-review-state/multi-101-200.json",
+      "questionType": "multi",
+      "count": 100,
+      "sha256": "a82dd56c0b2099691f12b8e4e48a869aebd21ee73da5b3f465e028d6cdaa3b04"
+    },
+    {
+      "id": "multi-201-300",
+      "path": "data/references/theory-review-state/multi-201-300.json",
+      "questionType": "multi",
+      "count": 100,
+      "sha256": "2a23cb4cb4b71394ab5a90f3bd4efa6904d6dc51e872f31aeba449394fe06900"
+    }
+  ]
+}

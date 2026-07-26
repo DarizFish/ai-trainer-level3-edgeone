@@ -1,0 +1,729 @@
+{
+  "schemaVersion": "1.0.0",
+  "batchId": "theory-900-review-2026-07-26-v1",
+  "shardId": "single-201-300",
+  "reviewedBy": "codex-single-reviewer",
+  "reviews": [
+    {
+      "questionId": "single-201",
+      "questionFingerprint": "5c1a9128506c75c40a2c01bec3714bad92a39c413e4e6b27a7d555b17743f3c6",
+      "reviewedAnswer": ["C"],
+      "generatedExplanation": "基于模型的特征拆解与选择会保留对目标最有判别力的信息、去除无关或干扰特征，初衷是提高模型预测准确性。复杂度和运算量可能随之下降，但只是常见附带收益，存储需求更非主要目标。",
+      "notes": []
+    },
+    {
+      "questionId": "single-202",
+      "questionFingerprint": "b8324cbc1d76bb33f4d3b1c23599f65dff2d82ab170e2685519e39fdb0d5a31f",
+      "reviewedAnswer": ["C"],
+      "generatedExplanation": "差分用当前观测减去前一期或前一季观测，可消除趋势或季节性，使非平稳序列更接近平稳。对数变换稳定方差，标准化和归一化只调整尺度。",
+      "notes": []
+    },
+    {
+      "questionId": "single-203",
+      "questionFingerprint": "e0acc87989a90d4c90d7e9d92f508eb69fc83c415d9621b5d9a52952ececc43a",
+      "reviewedAnswer": ["A"],
+      "generatedExplanation": "分词把连续文本切分为词、子词或短语等可处理单元，是中文文本拆解的基础步骤。实体识别、情感判断和句法分析都建立在这些文本单元之上，属于后续任务。",
+      "notes": []
+    },
+    {
+      "questionId": "single-204",
+      "questionFingerprint": "aaadde31872e061806391dfce50094642675bfcfc8778d6a164afb248c9eca8a",
+      "reviewedAnswer": ["A"],
+      "generatedExplanation": "天气预报利用历史气象序列中的趋势、周期和相关结构推断未来状态，因此主要目的在于预测未来天气变化。分析历史趋势是建模手段，设备改进和公众教育不是时间序列预测任务。",
+      "notes": []
+    },
+    {
+      "questionId": "single-205",
+      "questionFingerprint": "bc78592ae596db3d142c841f1961386bca35ae01447efb4ff5b70e7d5add87f5",
+      "reviewedAnswer": ["C"],
+      "generatedExplanation": "某节点的邻居节点就是与它通过一条边直接相连的节点，直接描述局部连接关系。聚类系数衡量邻居间连接程度，中心性衡量重要性，可达性还包括多跳路径。",
+      "notes": []
+    },
+    {
+      "questionId": "single-206",
+      "questionFingerprint": "74fffd2585d56ed7f9b000e47a84ba802073c266d41650a70afe52a3fa157e40",
+      "reviewedAnswer": ["D"],
+      "generatedExplanation": "度中心性、介数中心性和接近中心性都是衡量单个节点位置重要性的标准指标。平均路径长度通常描述整个网络或节点间距离特征，“平均路径长度中心性”不是规范的中心性名称。",
+      "notes": []
+    },
+    {
+      "questionId": "single-207",
+      "questionFingerprint": "525d0f1de4f7cc7d3469ec37789f8bfd4a33975de9835675bbb96ab4eb08f3e6",
+      "reviewedAnswer": ["D"],
+      "generatedExplanation": "多维数据分解旨在把复杂结构拆成更易处理和解释的成分，从而简化结构、提高效率并增强可解释性。增加数据复杂性与分解的方向相反。",
+      "notes": []
+    },
+    {
+      "questionId": "single-208",
+      "questionFingerprint": "cfd1559bc27b6372d923ce2b40fea2adae20ff51534c9a7020a7bea2c6ef1cc4",
+      "reviewedAnswer": ["B"],
+      "generatedExplanation": "PCA以较少主成分保留图像像素中的主要变化，可降低表示维度并实现有损压缩。它不直接提升亮度、增加真实分辨率或改变色彩。",
+      "notes": []
+    },
+    {
+      "questionId": "single-209",
+      "questionFingerprint": "0e5df35d873c1afb62c9add6c2b05a6632fc149c076ebe8a24dfd4bacbc550d1",
+      "reviewedAnswer": ["D"],
+      "generatedExplanation": "特征构造可依据领域规则、统计汇总或模型输出产生新变量；可视化分析主要帮助发现模式和提出构造思路，本身不是规范的特征构造方法类别。",
+      "notes": []
+    },
+    {
+      "questionId": "single-210",
+      "questionFingerprint": "bcca0056e8098f33053909fcad4ffa758475a005ea7a266e1eb9a0f8af28db9b",
+      "reviewedAnswer": ["C"],
+      "generatedExplanation": "分词把文本拆成处理单元，去停用词移除信息量低的常见词，二者都是典型文本预处理。分类和情感分析是下游任务，TF-IDF则属于数值表示或特征处理。",
+      "notes": []
+    },
+    {
+      "questionId": "single-211",
+      "questionFingerprint": "f82d7e5adee0b1f83db5d0b4099419044cc316908cf15f867fe8c9211821e2ef",
+      "reviewedAnswer": ["D"],
+      "generatedExplanation": "剪枝删除贡献较小的权重、通道或结构，减少推理所需参数和计算量，可直接缩短响应时间。加深加宽模型或使用更复杂函数通常增加计算，正则化主要约束训练。",
+      "notes": []
+    },
+    {
+      "questionId": "single-212",
+      "questionFingerprint": "06c7f807f6c6334c79f846adb58e11dd796bffae25a20f83738c80a7f3e21ac2",
+      "reviewedAnswer": ["A"],
+      "generatedExplanation": "风险评估系统识别资产、威胁和脆弱性，分析发生可能性与影响，再据此选择降低风险的控制措施，完整对应安全性分析原理。漏洞扫描、入侵检测和审计只是其中的具体技术或证据来源。",
+      "notes": []
+    },
+    {
+      "questionId": "single-213",
+      "questionFingerprint": "691245021293a8a8472c1dd9f7b6e7ebc324983a908d11ece584efea76a15238",
+      "reviewedAnswer": ["C"],
+      "generatedExplanation": "按需分配依据用户当前实际工作量或资源申请动态供给，避免固定平均分配造成浪费。先到先得只看顺序，优先级策略看等级，均不直接等同实际需求量。",
+      "notes": []
+    },
+    {
+      "questionId": "single-214",
+      "questionFingerprint": "904baf8ce3b081e1795ce52fd19f65188676857647c2e53999071b322921ff07",
+      "reviewedAnswer": ["A"],
+      "generatedExplanation": "卡方检验比较类别特征与类别目标的联合频数和独立情况下的期望频数，用关联显著性筛选特征。PCA不使用目标变量，决策树和线性回归属于模型式或嵌入式方法。",
+      "notes": []
+    },
+    {
+      "questionId": "single-215",
+      "questionFingerprint": "a212357df4c7727b53dd52cb22e25278b45634cd23e2f6be2e8cb5e11e5623e1",
+      "reviewedAnswer": ["A"],
+      "generatedExplanation": "数据收集后应先处理缺失、错误、重复和格式不一致，形成可信数据，再进行可视化、挖掘和分析。未经清洗直接分析会把原始质量问题带入结论。",
+      "notes": []
+    },
+    {
+      "questionId": "single-216",
+      "questionFingerprint": "c1719ab33e99486203639131a245d89258d9946a8a12175f80c8c1cc0c6ae7df",
+      "reviewedAnswer": ["A"],
+      "generatedExplanation": "MSE、MAE和RSS都通过预测残差衡量拟合误差，可用于评价模型拟合程度；样本均值只描述观测数据中心位置，不能反映预测与实际的差距。",
+      "notes": []
+    },
+    {
+      "questionId": "single-217",
+      "questionFingerprint": "7d7326478b1050bf3d94f1bba0760269d2eeabb64a36516143630af05557b1da",
+      "reviewedAnswer": ["A"],
+      "generatedExplanation": "减小正则化权重会放松对模型复杂度的约束，使模型更容易贴合训练噪声并发生过拟合。优化实现和随机梯度下降不是过拟合的直接原因，学习率主要影响收敛。",
+      "notes": []
+    },
+    {
+      "questionId": "single-218",
+      "questionFingerprint": "7c63eca3ef3158329bfcf97519330fbda727efb0a9095abd86bf1a5f34f91688",
+      "reviewedAnswer": ["A"],
+      "generatedExplanation": "ε定义DBSCAN考察某点邻域时允许的最大距离，距离不超过ε的样本属于该点邻域。MinPts才规定邻域中形成核心点所需的最少点数。",
+      "notes": []
+    },
+    {
+      "questionId": "single-219",
+      "questionFingerprint": "04b3c5c8e5e3d15693d6653e40307e34f04c94218d529d5516e53f53b54afa26",
+      "reviewedAnswer": ["A"],
+      "generatedExplanation": "规则X→Y的置信度应为同时包含X和Y的事务数除以包含X的事务数，即P(Y|X)。选项A是本题预设项，但其文字把分子、分母写成前件次数与后件次数，未表达正确公式。",
+      "notes": [
+        "四个选项均未给出置信度的正确公式；暂保留既定 A，必须将A修订为“前件与后件同时出现的次数 / 前件出现的次数”。"
+      ]
+    },
+    {
+      "questionId": "single-220",
+      "questionFingerprint": "e9646d63624d266fd5d952951f772bc6841309a1d106dadc27316e933965e74e",
+      "reviewedAnswer": ["B"],
+      "generatedExplanation": "普通线性回归通常选择使残差平方和最小的参数，即最小二乘法。最大似然在给定误差分布时也可推导相同结果，但最小二乘是回归参数估计的标准直接表述。",
+      "notes": []
+    },
+    {
+      "questionId": "single-221",
+      "questionFingerprint": "663e828afbd38963a060f176c8ef8f013a2971c82228cac867de69966b133e83",
+      "reviewedAnswer": ["B"],
+      "generatedExplanation": "决策树依据数值指标选择划分特征，并用数据统计形成分支和预测，属于定量分析方法。树结构具有逻辑可读性，但“逻辑推理”描述的是表现形式而非分析类型。",
+      "notes": []
+    },
+    {
+      "questionId": "single-222",
+      "questionFingerprint": "c8fa9800535da07552d910590d3fa2bfc357eaa3f4c541391ab8ff53ad271b65",
+      "reviewedAnswer": ["D"],
+      "generatedExplanation": "激活函数引入非线性，使多层网络能表示复杂的非线性映射，增强表达能力。它不以增加复杂度、缩短训练或直接保证泛化为主要作用。",
+      "notes": []
+    },
+    {
+      "questionId": "single-223",
+      "questionFingerprint": "0cd6f86e54f5ac7caa054a8135e3b1579c3333f6bb39d21c82f3264aba4ac921",
+      "reviewedAnswer": ["D"],
+      "generatedExplanation": "概率链式法则把多个变量的联合概率分解为一系列条件概率乘积，贝叶斯网络再利用图结构简化这些条件。因此它用于计算事件A和B等变量的联合概率，而不是只求某个单一条件概率。",
+      "notes": []
+    },
+    {
+      "questionId": "single-224",
+      "questionFingerprint": "a50cc82d97f9ade4b0cf0c3df4c723da4f4fdd90e2ce8e1faa12c5ab6a244774",
+      "reviewedAnswer": ["B"],
+      "generatedExplanation": "随机森林为每棵树从训练样本中有放回地随机抽样，并在节点划分时随机选取部分特征，从而生成有差异的树。随机抽类别或抽树本身不能形成标准随机森林。",
+      "notes": []
+    },
+    {
+      "questionId": "single-225",
+      "questionFingerprint": "c7e8a26c3a244a1aa6710184304bf02bd423b1ce83b8ec32eba5c8161f9fe0bf",
+      "reviewedAnswer": ["B"],
+      "generatedExplanation": "门控机制让LSTM、GRU等门控循环网络选择保留、更新或遗忘序列信息，能缓解长序列中的梯度和记忆问题，因而按题目预设应选B。反向传播是训练算法，注意力和自编码器不是一般RNN的定义。",
+      "notes": [
+        "保留官方 B；严格来说一般RNN的核心是循环隐藏状态，门控机制只属于LSTM/GRU等变体。建议题干将“RNN”改为“门控循环网络”。"
+      ]
+    },
+    {
+      "questionId": "single-226",
+      "questionFingerprint": "c5ee99707679d6f37d3b9e89ad64db5ee9e568a09e2ea45e97c26c717efc8fb9",
+      "reviewedAnswer": ["A"],
+      "generatedExplanation": "奖励是环境在智能体执行动作后返回的标量反馈，用于衡量该动作或状态转移的即时价值并指导策略学习。惩罚通常只是负奖励，风险和收益不是强化学习反馈信号的标准名称。",
+      "notes": []
+    },
+    {
+      "questionId": "single-227",
+      "questionFingerprint": "b3c68c17e991ea326febd5c235d5d66ac0be64ad6055aaff6d4521d621984cef",
+      "reviewedAnswer": ["C"],
+      "generatedExplanation": "朴素贝叶斯利用词项在各类别中的条件概率进行分类，训练快且适合高维稀疏文本，是经典文本分类算法。决策树、支持向量机和神经网络也能完成文本分类，但朴素贝叶斯是该题所取的传统代表。",
+      "notes": [
+        "四个算法均可用于文本分类，官方 C 只是经典代表而非唯一正确项；建议增加“经典概率模型”等限定。"
+      ]
+    },
+    {
+      "questionId": "single-228",
+      "questionFingerprint": "0eeeab59c26ad25731c93dc617c77364e0dcb00651e74b5cd8f6a4c364f65312",
+      "reviewedAnswer": ["B"],
+      "generatedExplanation": "季节分解把时间序列拆为趋势、季节和残差成分，去除相应成分即可得到调整后的序列。平稳性检验只判断性质，自相关函数描述滞后关系，累积和图用于变化监测。",
+      "notes": []
+    },
+    {
+      "questionId": "single-229",
+      "questionFingerprint": "5a091b64eb7f81956eab65e0507cfbaf00c02de956d12bbe66364cb89d1b40d4",
+      "reviewedAnswer": ["A"],
+      "generatedExplanation": "信息增益衡量某特征对目标不确定性的降低程度，可据此评价保留特征的判别重要性。方差分析、相关系数和卡方检验也可用于特定数据类型，但信息增益适用的目标导向表达更直接。",
+      "notes": []
+    },
+    {
+      "questionId": "single-230",
+      "questionFingerprint": "da7696b03315cca7d2f69786af258230805692ae95b491e9fd9224b1d73b9b61",
+      "reviewedAnswer": ["A"],
+      "generatedExplanation": "离群值检测根据观测相对总体分布的位置、概率或距离识别显著偏离的数据，直接对应基于分布的异常识别。聚类可间接发现异常，相关分析和频繁模式挖掘则不是该类直接方法。",
+      "notes": []
+    },
+    {
+      "questionId": "single-231",
+      "questionFingerprint": "508e160823ede1c3663120f87483b374fd3108893eb9778d420ab420314852e7",
+      "reviewedAnswer": ["C"],
+      "generatedExplanation": "融合前进行清洗、格式统一、去重和冲突处理，能够提升不同来源数据的一致性与可靠性。只取首个来源会丢失信息，忽略冲突或完全依赖自动合并都会放大质量风险。",
+      "notes": []
+    },
+    {
+      "questionId": "single-232",
+      "questionFingerprint": "fcc79c3b684f40cc2167d0d588c882c317762e12e5de09ba91a35c77195f4604",
+      "reviewedAnswer": ["C"],
+      "generatedExplanation": "智能解决方案应利用数据和算法解决传统方法难以处理的复杂问题，并创造新的业务或用户价值。流程优化和降本可以是具体结果，完全替代人工既不现实也不是普遍目标。",
+      "notes": []
+    },
+    {
+      "questionId": "single-233",
+      "questionFingerprint": "a682ff86b91aadd2af699b05b52bf978a26e67eec96ca81d8a742bf0d32a12b7",
+      "reviewedAnswer": ["D"],
+      "generatedExplanation": "数据分析工具可执行范围、逻辑、一致性和交叉来源校验，从而验证需求数据是否准确。问卷、访谈和观察是采集方法，所得信息仍可能存在误差，不能自行保证准确性。",
+      "notes": []
+    },
+    {
+      "questionId": "single-234",
+      "questionFingerprint": "ade82101322a6ca7ae5abc8941421c473ca3014899d171bb5233aab1933ce043",
+      "reviewedAnswer": ["B"],
+      "generatedExplanation": "功能规划应围绕核心用户需求明确范围和优先级，以简单清晰的结构形成可交付产品。无限扩充功能或追求复杂度会造成范围蔓延，追随潮流也不能替代真实需求。",
+      "notes": []
+    },
+    {
+      "questionId": "single-235",
+      "questionFingerprint": "0894584465434fb75ad3902bdbbb35fad4e39e3f1828cae8628fcdac1acc52d5",
+      "reviewedAnswer": ["B"],
+      "generatedExplanation": "数据层选型应先保证采集覆盖业务所需场景并满足时效要求，模型和平台才有可靠输入。流行度、团队单方决定或算法复杂度都不能弥补数据不全、不及时的问题。",
+      "notes": []
+    },
+    {
+      "questionId": "single-236",
+      "questionFingerprint": "0ffcc845b54d7eab927c80e2d4493b64c0a7b0290acab754e3ce769f4a1fdb26",
+      "reviewedAnswer": ["A"],
+      "generatedExplanation": "网格搜索枚举预设的超参数组合，并用验证结果选择表现最佳的一组，是常见参数选择方法。随机搜索和贝叶斯优化也是调参策略，但题目按基础、确定性的常用方法选择网格搜索；线性回归不是搜索器。",
+      "notes": []
+    },
+    {
+      "questionId": "single-237",
+      "questionFingerprint": "1c4be71ca66b2a42c87fc9ac2f3fce574f8cbf198b5cd0756c0ac8fb8fb27922",
+      "reviewedAnswer": ["A"],
+      "generatedExplanation": "开放式架构通过模块化、标准接口和松耦合，使新组件或容量能够在不重构全系统的情况下接入，直接保障可扩展性。非标准接口造成锁定，预留硬件只是短期容量，维护也不改变架构上限。",
+      "notes": []
+    },
+    {
+      "questionId": "single-238",
+      "questionFingerprint": "b3bd9748d8240e01e6eee9e79257448c93fb274503bd1c0cefe60aa7ca0b7100",
+      "reviewedAnswer": ["C"],
+      "generatedExplanation": "文字提示能明确告知保存成功、提交失败等操作结果，语义清楚且适用于多数界面，因此是通用反馈方式。声音、振动和动画也可提供反馈，但受设备、环境或可访问性限制。",
+      "notes": [
+        "四种形式都可作为交互反馈；C仅是最通用、信息最明确的一种，题干宜增加“通用且可明确说明结果”。"
+      ]
+    },
+    {
+      "questionId": "single-239",
+      "questionFingerprint": "6d9ee9d6f5c7e9972b2597939440dfa82ac611fe6abb00e6ca17abade7ee332e",
+      "reviewedAnswer": ["B"],
+      "generatedExplanation": "实用性关注产品是否真正满足需求、解决用户问题并产生使用价值。可用性侧重是否容易使用，可取性偏情感吸引，可信度强调可靠与信任。",
+      "notes": []
+    },
+    {
+      "questionId": "single-240",
+      "questionFingerprint": "5bd73c35d48ff6187b3733ec32b225b60fe88926f13833a87491a072fc696d8a",
+      "reviewedAnswer": ["B"],
+      "generatedExplanation": "独特且高质量的行业数据能形成难以复制的知识覆盖和模型表现，是产品差异化的重要数据壁垒。公共通用数据人人可得，降低清洗标准或回避实时数据反而削弱竞争力。",
+      "notes": []
+    },
+    {
+      "questionId": "single-241",
+      "questionFingerprint": "39f4873ae8d41d7a4d9de5905726853613825370a518656455a68170d801964d",
+      "reviewedAnswer": ["B"],
+      "generatedExplanation": "定期漏洞扫描能发现已知缺陷、错误配置和暴露服务，使团队及时修复并降低攻击面。增加无必要复杂度会增加风险，弱密码显然不安全，减少用户数量也不能替代权限控制。",
+      "notes": []
+    },
+    {
+      "questionId": "single-242",
+      "questionFingerprint": "34d47303095e024c1e3b841fc5833f6b540151408f2c25c695686ebcaf35a408",
+      "reviewedAnswer": ["A"],
+      "generatedExplanation": "API以明确协议暴露云服务能力，使不同供应商的服务通过请求和数据格式互联，是跨云集成的通用技术。SDK是调用API的开发封装，Web服务是API的一种实现，虚拟化不负责服务间接口。",
+      "notes": []
+    },
+    {
+      "questionId": "single-243",
+      "questionFingerprint": "270ff8f28b563d3a3b6e9d5769570965d39727425c3793daae4aeb710877b538",
+      "reviewedAnswer": ["B"],
+      "generatedExplanation": "最少连接数算法把新请求分配给当前活动连接最少的节点，能动态适应各节点负载差异，常用于提升分布式服务性能。轮询、源地址哈希和随机也可分流，但不如它直接反映实时负载。",
+      "notes": [
+        "A、B、C、D均属于可实现负载均衡的算法；当前选B是按动态负载感知效果理解，题干应加入“根据当前连接负载”。"
+      ]
+    },
+    {
+      "questionId": "single-244",
+      "questionFingerprint": "e76b9e6b11e52354a1b3a997c4ffc2a8a890c870ea0cc1036a09dd2e692887a9",
+      "reviewedAnswer": ["B"],
+      "generatedExplanation": "可扩展性设计要求系统在用户量或工作负载增加时，通过扩容仍维持或提升处理能力。降本、简化架构和降低维护难度可能受益于良好设计，但不是可扩展性的定义目标。",
+      "notes": []
+    },
+    {
+      "questionId": "single-245",
+      "questionFingerprint": "a68d2dff1a4eedde411af8c931cddbd010eb18063f2c3c546db8a5af02ffcb0e",
+      "reviewedAnswer": ["B"],
+      "generatedExplanation": "代码审计和优化能发现问题、提高可读性、修复安全风险并改善性能，但任何审查都无法保证彻底消除所有缺陷。绝对化的“所有”使B不属于可实现的重要性。",
+      "notes": []
+    },
+    {
+      "questionId": "single-246",
+      "questionFingerprint": "52549bf6b1cd19815cb2b444167f8633443d07df8b807aed819053958a36641d",
+      "reviewedAnswer": ["A"],
+      "generatedExplanation": "数据泄露后应依法评估影响，并在适用期限内通知受影响个人、向监管机构报告，以便减轻损害并接受处置。内部调查和加强措施也需要，但不能替代法定通知报告义务。",
+      "notes": []
+    },
+    {
+      "questionId": "single-247",
+      "questionFingerprint": "a251e1f41565edc1a966567616bd4320905b886c79bc2811c6d54a6ee604f660",
+      "reviewedAnswer": ["B"],
+      "generatedExplanation": "拓扑决定节点、链路是否存在冗余以及故障后能否绕行，直接影响系统容错和恢复能力。传输速度、资源利用和安全也会受拓扑影响，但不是故障恢复策略的核心。",
+      "notes": []
+    },
+    {
+      "questionId": "single-248",
+      "questionFingerprint": "a6cef24122a6604752e0124ce01bf19fe21c7347eebf179fb86f6546a608bb7c",
+      "reviewedAnswer": ["A"],
+      "generatedExplanation": "详细维护计划明确检查范围、周期、责任人、升级步骤和验收标准，使维护活动可控并持续保障产品质量。审查、反馈和版本控制都是计划中的重要措施，但单独一项不能覆盖全过程。",
+      "notes": []
+    },
+    {
+      "questionId": "single-249",
+      "questionFingerprint": "05a463f82129f0a042dc4f624797dce23237efef432ce67614a2f5657a4a6bb0",
+      "reviewedAnswer": ["C"],
+      "generatedExplanation": "用户反馈暴露真实场景中的错误、速度、易用性和未满足需求，最直接用于优化产品性能和用户体验。功能方向也会参考反馈，但营销评估和市场预测不是其在产品迭代中的主要作用。",
+      "notes": []
+    },
+    {
+      "questionId": "single-250",
+      "questionFingerprint": "63805b30f8eabd15e2860b92ceec61128235acebcc2df129d9b130b004a46bc9",
+      "reviewedAnswer": ["B"],
+      "generatedExplanation": "人机交互产生的点击、语音、意图和纠错数据需要准确标注，才能转化为监督信号改进模型，因此数据标注与训练师提升性能最紧密。算法设计、硬件选型和体验优化分别属于其他侧重。",
+      "notes": []
+    },
+    {
+      "questionId": "single-251",
+      "questionFingerprint": "e8474fe65a6c65f71e50bd3cbcee096762c6eccf194a6e2c9e32423c2b3758a1",
+      "reviewedAnswer": ["D"],
+      "generatedExplanation": "显示器是输出设备，把计算机处理结果以图形和文字呈现给用户。处理器负责计算，内存和硬盘负责临时或持久存储。",
+      "notes": []
+    },
+    {
+      "questionId": "single-252",
+      "questionFingerprint": "f6b7b0168501a8b4d15ff2a2d8c3a961edbb9583f34ad9ecdc21b82e6a6810b8",
+      "reviewedAnswer": ["A"],
+      "generatedExplanation": "交互控制器接收按键、触摸或动作等用户输入，并转换成系统可识别的控制信号。结果处理与显示属于应用和输出环节，资源管理及电源散热是操作系统或硬件控制职责。",
+      "notes": []
+    },
+    {
+      "questionId": "single-253",
+      "questionFingerprint": "caf3855be1a58fe05298b13c77dba1fb44599637cfe023deecb19d595d2b8725",
+      "reviewedAnswer": ["A"],
+      "generatedExplanation": "直观的界面让控件含义和操作路径符合用户预期，用户无需额外学习就能快速理解产品。一致性、反馈和效率也重要，但直观性最直接对应“快速理解如何使用”。",
+      "notes": []
+    },
+    {
+      "questionId": "single-254",
+      "questionFingerprint": "df1fa0a17311cdd9e6cce404f59730521c200f085efdfa0cfeb9e8b792f6c913",
+      "reviewedAnswer": ["A"],
+      "generatedExplanation": "输出设备的首要任务是让用户准确感知结果，因此应保证显示清晰、文字图像可辨。响应、数据安全和格式兼容也可能重要，但并非所有输出设备共同的基础质量要求。",
+      "notes": []
+    },
+    {
+      "questionId": "single-255",
+      "questionFingerprint": "fc93e8248f59c14a06d629ff147f5f37e121dee5ca710ace5278ddf7fc41c060",
+      "reviewedAnswer": ["C"],
+      "generatedExplanation": "监控持续比较进度、成本、质量与计划，及时识别偏差并触发纠正，是确保项目顺利推进的关键环节。规划和执行同样必要，反馈则通常是监控产生的信息。",
+      "notes": []
+    },
+    {
+      "questionId": "single-256",
+      "questionFingerprint": "554eac89439f76a376c52dd73b9ee8eff09f52fdee69808ccb5ef0d814ca6da9",
+      "reviewedAnswer": ["C"],
+      "generatedExplanation": "可访问性要求不同能力、经验和辅助技术条件的用户都能理解并完成操作，因此易于理解和操作是核心原则。简洁、一致和美观可以支持体验，但不能单独保证可访问。",
+      "notes": []
+    },
+    {
+      "questionId": "single-257",
+      "questionFingerprint": "aed740a8ef4a69deac27477f7170e4aeac320da0a694d204d6dd932d52b5f061",
+      "reviewedAnswer": ["A"],
+      "generatedExplanation": "电容式触控通过检测多个接触点引起的电场变化，成熟支持多指缩放、旋转等多点手势。传统电阻式通常偏单点，红外也可实现多点但不是移动终端最典型方案。",
+      "notes": []
+    },
+    {
+      "questionId": "single-258",
+      "questionFingerprint": "7c685294c506c4ea2e592ef1515911a03df9fb98597197a00fccd4828cbe46fe",
+      "reviewedAnswer": ["B"],
+      "generatedExplanation": "语音识别准确率直接决定系统能否正确理解用户说出的内容，是语音交互可用性的基础。响应速度、满意度和情感倾向也可评估，但若识别错误，后续交互首先失效。",
+      "notes": []
+    },
+    {
+      "questionId": "single-259",
+      "questionFingerprint": "e2b8036723a63c7f41ea7924c48dabdaa6d40c903a85a540b0fbf389cdfadd9a",
+      "reviewedAnswer": ["B"],
+      "generatedExplanation": "AR把数字信息叠加到现实场景，并随用户动作或环境变化实时更新反馈和指导，最能体现实时交互。存储、离线分析和长期跟踪都不要求即时响应。",
+      "notes": []
+    },
+    {
+      "questionId": "single-260",
+      "questionFingerprint": "1c98ad3cd19f80049dcf3063ca6bfc466cb1bac033ae700d736bf0f38f8dc207",
+      "reviewedAnswer": ["B"],
+      "generatedExplanation": "运动控制器能追踪手部位置、方向和按键输入，让用户直接指向、抓取和操作虚拟对象，提高效率。头显主要输出画面，手柄空间交互有限，触觉手套成本与适配复杂度较高。",
+      "notes": []
+    },
+    {
+      "questionId": "single-261",
+      "questionFingerprint": "a08838147d22e39952ac2adcd9155801dfb062db61381a2df8c6d367fcc06774",
+      "reviewedAnswer": ["C"],
+      "generatedExplanation": "光照、噪声、移动状态和隐私场景会影响不同交互通道的可用性，系统需根据上下文选择或组合模态，确保交互有效且安全。环境不只影响语音或视觉，也绝非对性能无影响。",
+      "notes": []
+    },
+    {
+      "questionId": "single-262",
+      "questionFingerprint": "17110f1520b207cc925952a0c1d6f3698388f4441a04b3abf14d3a3726132269",
+      "reviewedAnswer": ["C"],
+      "generatedExplanation": "系统分析用户行为、需求和反馈，并以规范用户研究方法解释数据，能把真实使用目标转化为训练与评价标准。个人经验、忽视反馈或随意选工具都无法形成可靠依据。",
+      "notes": []
+    },
+    {
+      "questionId": "single-263",
+      "questionFingerprint": "963402f1746406f7644a385e9544b2256105d081b6a904ebd87897182d6a8d71",
+      "reviewedAnswer": ["B"],
+      "generatedExplanation": "定性反馈解释用户为何困惑或偏好某方案，定量数据衡量成功率、时间和满意度，二者共同指导原型与模型调整。代码结构、硬件指标和数据规模不能直接代表用户测试效果。",
+      "notes": []
+    },
+    {
+      "questionId": "single-264",
+      "questionFingerprint": "08225b27ed3a0c50558e329963771a2cd9b6e83bdd5695e5dc1a9edcf0d489e1",
+      "reviewedAnswer": ["A"],
+      "generatedExplanation": "需求分析阶段明确要回答的问题、目标用户、测试边界和成功标准，为后续用例设计奠定范围。执行和结果分析都依赖这些预先定义。",
+      "notes": []
+    },
+    {
+      "questionId": "single-265",
+      "questionFingerprint": "70c7f1bd5cd9c15f567b0fd7c9b56f6667dcead9e186478d1ca89ca90ea7d798",
+      "reviewedAnswer": ["C"],
+      "generatedExplanation": "情感设计通过外观、行为和意义唤起愉悦、信任或认同，核心是提升用户的情感满意度。功能、价格和品牌可能与情感相关，但不是该概念的直接评价目标。",
+      "notes": []
+    },
+    {
+      "questionId": "single-266",
+      "questionFingerprint": "2e1793ba14ae018574b9ada766f9399508fa2aadc4c4cb3cc96f239163c2f2a8",
+      "reviewedAnswer": ["B"],
+      "generatedExplanation": "降低语音识别错误率能减少误解、重复表达和错误执行，直接提高语音助手的成功率与满意度。增加指令或算法复杂度不必然改善体验，任意限制功能也可能损害价值。",
+      "notes": []
+    },
+    {
+      "questionId": "single-267",
+      "questionFingerprint": "56e90fec299efc61abeda262bd2711940b251e4535be1b1babc5299aadded850",
+      "reviewedAnswer": ["C"],
+      "generatedExplanation": "响应时间、用户满意度和系统稳定性分别反映效率、体验和可靠性，都是交互系统性能指标。输入设备价格属于采购成本，不衡量系统交互表现。",
+      "notes": []
+    },
+    {
+      "questionId": "single-268",
+      "questionFingerprint": "df17dfa889a81c153405abb5d37a1e82a6420b21d05f1aa4debd0f444d439f89",
+      "reviewedAnswer": ["A"],
+      "generatedExplanation": "保持术语、控件和操作模式一致，可降低用户学习与记忆负担，是用户中心设计的基础原则。减少步骤和个性化也能改善体验，但需服从任务与用户需求，复杂界面则通常增加负担。",
+      "notes": [
+        "A、B、D都可能提升用户体验；A作为普适设计原则最稳妥，题干应明确考查“一致性原则”。"
+      ]
+    },
+    {
+      "questionId": "single-269",
+      "questionFingerprint": "0607dcdcad2d5338b2a9167d74ea4c63db59a93b95f52d9b7b315ba3af264208",
+      "reviewedAnswer": ["D"],
+      "generatedExplanation": "可用性通常关注有效性、效率、易学易用和错误情况；多样性不是衡量用户完成任务质量的标准维度。界面可以支持多样用户，但那更接近包容性或可访问性。",
+      "notes": []
+    },
+    {
+      "questionId": "single-270",
+      "questionFingerprint": "f1125e9ebefc85a25ed375400916fc82efbb8db536ee2dbae7e6f90381a049b0",
+      "reviewedAnswer": ["C"],
+      "generatedExplanation": "网站导航栏模板组织主要入口、层级和当前位置，专门帮助用户快速找到内容并提高导航效率。登录、资料编辑和商品详情模板分别服务于单一业务页面。",
+      "notes": []
+    },
+    {
+      "questionId": "single-271",
+      "questionFingerprint": "702dba2db90259b3d3808740f71acdcc09c8cbfe01fe72023ae5419a8d4ff4cd",
+      "reviewedAnswer": ["D"],
+      "generatedExplanation": "访谈、问卷和A/B测试都能直接收集用户表达或行为结果；代码审查检查实现质量，由开发人员针对代码进行，不是用户反馈方法。",
+      "notes": []
+    },
+    {
+      "questionId": "single-272",
+      "questionFingerprint": "2dcc7d597b2f869f5b86b2b6cc0bd6a2d1568ad621474a58e0738b8450ff840d",
+      "reviewedAnswer": ["A"],
+      "generatedExplanation": "任务分解后，每个可执行子任务都应明确唯一责任人或主要负责人，才能避免遗漏和责任重叠。总任务、关键环节和节点是更高层概念，不能替代逐项责任落实。",
+      "notes": []
+    },
+    {
+      "questionId": "single-273",
+      "questionFingerprint": "66758e69f62f4624840d767b0cf9fec5cc9454b71e461e251db8e6656141abbb",
+      "reviewedAnswer": ["C"],
+      "generatedExplanation": "流式布局按容器宽度让元素自然排列和换行，能随视口变化重排，适合不同屏幕尺寸。固定相对位置更适合其他布局方式，内容或图片数量不是选择流式布局的决定条件。",
+      "notes": []
+    },
+    {
+      "questionId": "single-274",
+      "questionFingerprint": "a23b12d32fd7af46d780c8bbe98dca0068c12642513c9e83d02f528c181c3848",
+      "reviewedAnswer": ["C"],
+      "generatedExplanation": "使用情境分析考察用户在何时、何地、带着什么目标和限制使用产品，能指导界面与性能取舍，是提升体验的根本依据。界面和性能优化应建立在情境需求上，推广策略则不属于使用体验本身。",
+      "notes": []
+    },
+    {
+      "questionId": "single-275",
+      "questionFingerprint": "7440bd1d0c0e19b7541073adc004913fe9a5d70b07fa1f74c7c7a177eebb474a",
+      "reviewedAnswer": ["B"],
+      "generatedExplanation": "按题目口径，Adobe XD可快速搭建页面框架、连接交互流程并验证结构，因而将快速原型归为低保真原型。用户调查和市场调研不属于原型制作。",
+      "notes": [
+        "保留官方 B；Adobe XD同样广泛用于带视觉细节和交互的高保真原型，A也具技术合理性。建议改问“快速线框原型”以唯一指向B。"
+      ]
+    },
+    {
+      "questionId": "single-276",
+      "questionFingerprint": "d9e7711dabfece75fcdf199b6348fdd7ea14f8b3a544caa6efc64c77b3e12b3e",
+      "reviewedAnswer": ["C"],
+      "generatedExplanation": "Adobe XD的视觉设计工具用于绘制界面、设置文字颜色、组件和布局，直接服务UI设计。用户旅程、访谈和原型测试属于研究或评估活动。",
+      "notes": []
+    },
+    {
+      "questionId": "single-277",
+      "questionFingerprint": "8588b60063a35c50cd80d9cce08539936dd619e1b14bdedbb6ac4058d1cac3b4",
+      "reviewedAnswer": ["C"],
+      "generatedExplanation": "Axure RP的条件逻辑可根据变量、状态或用户动作执行不同分支，用于实现动态交互逻辑。UI绘制只是外观设计，用户旅程和调查不依赖这种条件执行机制。",
+      "notes": []
+    },
+    {
+      "questionId": "single-278",
+      "questionFingerprint": "c92da3f8bbfe5003ee9f02b5d18cd7aa3c399ff0a41778a4a67cfd7469f53a0e",
+      "reviewedAnswer": ["A"],
+      "generatedExplanation": "Axure RP支持变量、条件、动态面板等复杂交互，可模拟接近真实产品的行为，适合制作高保真交互原型。访谈、信息架构和市场调研不是复杂交互模拟的直接产物。",
+      "notes": []
+    },
+    {
+      "questionId": "single-279",
+      "questionFingerprint": "8116def4caaa78ce9df26092dd7c4b7c5c34eb68f2bfabd13fe63992b4969d6e",
+      "reviewedAnswer": ["B"],
+      "generatedExplanation": "Balsamiq采用手绘风格组件，强调快速表达布局和功能而非视觉细节，典型用途是制作低保真原型。它不以高保真设计、访谈或信息架构研究为核心。",
+      "notes": []
+    },
+    {
+      "questionId": "single-280",
+      "questionFingerprint": "ae10a74eefc71f5da31e3e5f3c33bd81608e33f2fa6d0a720a7dc3351c1702e5",
+      "reviewedAnswer": ["B"],
+      "generatedExplanation": "Figma设计系统通过组件、样式、变量和资源库统一界面元素，主要支持团队持续设计UI。它也能产出高保真原型，但设计系统的核心是界面规范和复用，不是访谈或用户旅程。",
+      "notes": []
+    },
+    {
+      "questionId": "single-281",
+      "questionFingerprint": "3fd048efb01b22e0607cf768b88f085c70e241a41f731442bf23ef6aa8cb1a6d",
+      "reviewedAnswer": ["B"],
+      "generatedExplanation": "Marvel可把简单页面草图快速连接成可点击流程，适合低成本验证低保真原型的基本交互。高保真制作和完整UI设计需要更多视觉细节，用户访谈则是研究方法。",
+      "notes": []
+    },
+    {
+      "questionId": "single-282",
+      "questionFingerprint": "b3095c1f708edc0cf35f319f6b973482fce3d3c69aa526cbdcee24a3358bb6cc",
+      "reviewedAnswer": ["C"],
+      "generatedExplanation": "Marvel的设计评审可共享原型、收集评论并观察交互流程，直接支持原型测试和迭代。访谈、UI绘制和用户旅程制作属于其他活动。",
+      "notes": []
+    },
+    {
+      "questionId": "single-283",
+      "questionFingerprint": "e649848e8aa5b546c3abdec5f4419222388d9c87b513007198ba26472fc0921d",
+      "reviewedAnswer": ["A"],
+      "generatedExplanation": "响应式预览让设计师检查界面UI在不同屏幕尺寸下的布局和适配效果。用户旅程、访谈和低保真制作不需要这种跨设备视觉预览。",
+      "notes": []
+    },
+    {
+      "questionId": "single-284",
+      "questionFingerprint": "a554551aa9b915be569548ffb4a39ce7759a67c72c45c1a1b4aace44cbf9bb5f",
+      "reviewedAnswer": ["C"],
+      "generatedExplanation": "Color Palettes插件专门创建、保存和管理配色方案，便于跨页面保持色彩一致。Sketch Measure侧重标注交付，Artboard Snapping处理画板对齐，Auto Layout管理布局。",
+      "notes": []
+    },
+    {
+      "questionId": "single-285",
+      "questionFingerprint": "119fba8ff98a6f2089f60b3992918b122538242cea40ad8fe2db3eb9eb06caf4",
+      "reviewedAnswer": ["A"],
+      "generatedExplanation": "Sketch的矢量编辑用于绘制图标、控件和界面元素，并能无损缩放，主要服务UI设计。高保真原型还需要交互连接，访谈和测试则不属于矢量绘制功能。",
+      "notes": []
+    },
+    {
+      "questionId": "single-286",
+      "questionFingerprint": "cefa6c24f21f7ecff9c8aecf4264fde0e13337bd42a85f0b324513839615c68c",
+      "reviewedAnswer": ["A"],
+      "generatedExplanation": "贴近工作情境的案例能把抽象知识转为具体问题，激发分析和讨论，使讲义更有吸引力。理论、数据和图表也可使用，但若缺少情境，往往不如案例容易形成参与感。",
+      "notes": []
+    },
+    {
+      "questionId": "single-287",
+      "questionFingerprint": "324618a9e14d2ba7881227125c5a86ed8f2875db3d2123c40e2cb05bc640d1ab",
+      "reviewedAnswer": ["B"],
+      "generatedExplanation": "适度使用不同字体或字重可以区分标题、正文和重点，形成视觉层级，按题目口径比单一字体更有吸引力。图片和图表若大量或简单堆砌并不能保证良好排版。",
+      "notes": [
+        "保留官方 B；实际排版应限制字体家族数量并保持一致性，“多种字体”容易导致杂乱，建议改成“有层级的字体与字重组合”。"
+      ]
+    },
+    {
+      "questionId": "single-288",
+      "questionFingerprint": "abc0f00fcd0499d51726e263226010de766cfa3a92cfb37cfb8735a50184842b",
+      "reviewedAnswer": ["B"],
+      "generatedExplanation": "课程大纲确定目标、内容顺序、重点和时间分配，是讲义编写的结构基础，因此至关重要。资料收集、课件制作和试讲都应围绕大纲展开。",
+      "notes": []
+    },
+    {
+      "questionId": "single-289",
+      "questionFingerprint": "24e28e611b6d5295f9cf944440338c401ee74e2fd46a70208da82253967426b4",
+      "reviewedAnswer": ["C"],
+      "generatedExplanation": "工作轮换让员工在不同真实岗位或任务中实践，直接通过参与实际工作扩展技能和知识。角色扮演、案例和模拟训练都在构造情境中学习，不等同于承担真实岗位任务。",
+      "notes": []
+    },
+    {
+      "questionId": "single-290",
+      "questionFingerprint": "f567d341275838163af667fe272b2fb9c8168112fe1f927105f6ce96a8ebbbb3",
+      "reviewedAnswer": ["A"],
+      "generatedExplanation": "研讨会以共同议题为中心，让参训者表达观点、质疑和交流经验，主要优点是促进积极参与讨论。创新、反馈和团队合作可能随讨论产生，但不是研讨会最直接的定义性优势。",
+      "notes": []
+    },
+    {
+      "questionId": "single-291",
+      "questionFingerprint": "5d65f32bcc726a6b5fc8623263db8d3d7ddb04ed0da998b1b2821dceea3f173e",
+      "reviewedAnswer": ["A"],
+      "resolveConflict": true,
+      "generatedExplanation": "高质量案例需选择真实情境、整理背景材料、设置问题并设计讨论引导，准备工作通常耗时较多，因此A描述了案例分析法的典型局限。它并非适合所有学科，也不是无法培养理论素养。",
+      "notes": [
+        "官方答案 A 与次级来源 C 冲突，按官方优先保留 A 并解决冲突；C“可以提高实践能力”同样是案例分析法的常见优点，题干未要求选择优点或缺点，存在双解，建议明确问“主要缺点”。"
+      ]
+    },
+    {
+      "questionId": "single-292",
+      "questionFingerprint": "ff9142224858b40060db55367de0c1d2539ac574ce59fc96020de9556bce853b",
+      "reviewedAnswer": ["A"],
+      "generatedExplanation": "企业培训常用讲授、讨论、角色扮演和案例分析等方法，角色扮演能让员工在模拟角色中练习沟通与处理问题。游戏、考察和实践也可采用，但不属于该固定列举中的对应项。",
+      "notes": []
+    },
+    {
+      "questionId": "single-293",
+      "questionFingerprint": "0970004ff92e7904f10463938327c7c26fc326ad1e0494eca1e7b922309b6385",
+      "reviewedAnswer": ["B"],
+      "generatedExplanation": "典型ETL数据处理先从源系统抽取数据，再进行转换，最后加载到目标系统；因此数据抽取应首先进行。数据探索可用于前期理解，但不是该处理链中的首个执行步骤。",
+      "notes": []
+    },
+    {
+      "questionId": "single-294",
+      "questionFingerprint": "dc0c058ae871286cd0407982b24ee14c4d25d0dca4315e8d18092a2abc3995b9",
+      "reviewedAnswer": ["D"],
+      "generatedExplanation": "按题目预设，数据计算在保留原始数据的前提下产生派生结果，不必删除或改写原记录，因此相对不易导致原始数据丢失。清洗、转换和加载会直接改动、映射或覆盖数据，需要更严格的校验。",
+      "notes": [
+        "保留官方 D；任何步骤包括数据计算都可能因实现错误产生错误结果，题干绝对化的“不会”不严谨，建议改为“通常不直接修改原始数据”。"
+      ]
+    },
+    {
+      "questionId": "single-295",
+      "questionFingerprint": "fdca643f008de359bd699a6a7d22473a5b5cb333a82d0712671f6be6c78b3eb4",
+      "reviewedAnswer": ["B"],
+      "generatedExplanation": "优化算法可降低时间复杂度、减少重复计算和改善并行方式，从根本上提高数据处理效率。更强硬件或更多人员只扩大资源，集中式计算在大规模任务中还可能形成瓶颈。",
+      "notes": []
+    },
+    {
+      "questionId": "single-296",
+      "questionFingerprint": "c79f8ea41ea9271046edb267400ab7d41c7c12550599d926f7ef0b2c20c8e70e",
+      "reviewedAnswer": ["C"],
+      "generatedExplanation": "标注不一致时应依据统一规范重新审核争议样本并校正标签，同时分析规则理解差异。忽略、随意修改或全部删除都会损害数据质量或造成不必要损失。",
+      "notes": []
+    },
+    {
+      "questionId": "single-297",
+      "questionFingerprint": "5bfe0a374e528ba4d2c24277260243f55d01d3559bc08719458b255375a8a3a6",
+      "reviewedAnswer": ["C"],
+      "generatedExplanation": "标注把样本与正确语义或目标关联起来，是监督学习能否获得可靠训练信号的核心，主要体现为确保数据可用质量。它不直接提高计算速度或降低存储，鲁棒性也需靠覆盖和训练策略共同实现。",
+      "notes": []
+    },
+    {
+      "questionId": "single-298",
+      "questionFingerprint": "d8020dadc8c9a7910a5029c185ff4510a0aef795f7fe3ca5cac5f60974d20fd3",
+      "reviewedAnswer": ["C"],
+      "generatedExplanation": "半自动标注先由模型或规则生成候选标签，再由人工重点复核复杂样本，能显著提高大量数据的处理效率。单纯增加人员带来协调成本，减少任务或忽略复杂数据会损害覆盖。",
+      "notes": []
+    },
+    {
+      "questionId": "single-299",
+      "questionFingerprint": "cffc67cc11d59c15480ccce74376afc4ab9e663a80bc8604a8f9de097916982f",
+      "reviewedAnswer": ["B"],
+      "generatedExplanation": "不同标注员若对类别边界和规则理解不同，会对相同样本作出不同判断，是结果不一致的主要原因。工具新旧、数据划分均匀或预算结余都不会直接造成语义标准分歧。",
+      "notes": []
+    },
+    {
+      "questionId": "single-300",
+      "questionFingerprint": "9922c38b44e0327a403dc8806caf1c84f5a0fcac4070edc5a228bb90cfc5d3d9",
+      "reviewedAnswer": ["B"],
+      "generatedExplanation": "只增加人工人数不能解决标准不统一、质量控制和复杂样本筛选问题，还可能放大协调成本，因此不是系统性有效方法。自动化、主动学习以及预标注加人工审核都能减少重复劳动并聚焦高价值样本。",
+      "notes": []
+    }
+  ]
+}

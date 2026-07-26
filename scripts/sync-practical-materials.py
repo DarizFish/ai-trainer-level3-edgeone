@@ -253,7 +253,6 @@ def main() -> None:
             "materials": audited_entries,
         })
 
-    content["version"] = "2026-07-19-v7"
     args.content.write_text(json.dumps(content, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     if lab_manifest_path.exists():
         manifest = json.loads(lab_manifest_path.read_text(encoding="utf-8"))

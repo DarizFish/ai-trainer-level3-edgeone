@@ -1,0 +1,14 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "comm"
+version = "0.2.3+ai.trainer.1"
+description = "Offline Jupyter comm primitives for the AI Trainer JupyterLite runtime"
+requires-python = ">=3.9"
+license = "BSD-3-Clause"
+dependencies = ["traitlets>=5.3"]
+
+[tool.setuptools]
+packages = ["comm"]

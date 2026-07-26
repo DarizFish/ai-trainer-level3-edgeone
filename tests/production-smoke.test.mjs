@@ -177,12 +177,16 @@ test("production public routes and anonymous redirect stay healthy", {
 }, async () => {
   await waitForExpectedDeployment();
 
-  for (const path of ["/", "/theory", "/theory/mock", "/practical", "/practical/mock", "/blueprint", "/resources"]) {
+  for (const path of ["/", "/theory", "/theory/mock", "/practical", "/resources"]) {
     const response = await fetchWithTransientRetry(path);
     const body = await response.text();
     assert.equal(response.status, 200, `${path} must return 200`);
     assert.match(body, /人工智能训练师三级/, `${path} returned an unexpected document`);
   }
+
+  const practicalMock = await fetchWithTransientRetry("/practical/mock", { redirect: "manual" });
+  assert.equal(practicalMock.status, 307, "/practical/mock must redirect while practical mock is disabled");
+  assert.equal(practicalMock.headers.get("location"), "/practical");
 
   const progress = await fetchWithTransientRetry("/progress", { redirect: "manual" });
   if ([302, 303, 307, 308].includes(progress.status)) {

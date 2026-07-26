@@ -5,6 +5,7 @@ export type AnswerSource = "official" | "derived";
 export type AnswerBasis = "manual_official" | "third_party_reference" | "editorial_review" | "heuristic";
 export type PracticalAnswerBasis = "manual_official" | "completed_reference_notebook" | "official_dataset_analysis" | "official_template_completion" | "official_task_rubric_example" | "official_rubric";
 export type TheoryType = "judge" | "single" | "multi";
+export type TheoryReviewBasis = "official_word" | "secondary_site" | "independent_editorial" | "independent_review";
 
 export type TheoryQuestion = {
   id: string;
@@ -91,6 +92,27 @@ export type ContentBank = {
     editorialReviewVersion: string;
     editorialReviewedAnswers: number;
     remainingHeuristicAnswers: number;
+    reviewBatchId: string;
+    reviewVersion: string;
+    reviewedQuestions: number;
+    independentExplanations: number;
+    resolvedConflicts: number;
+  };
+  theoryReview: {
+    batchId: string;
+    version: string;
+    publishedAt: string;
+    reviewedQuestions: number;
+    independentExplanations: number;
+    crossReviewedQuestions: number;
+    crossReviewShards: number;
+    answerChanges: number;
+    officialAnswerChanges: number;
+    resolvedConflicts: number;
+    basisCounts: Partial<Record<TheoryReviewBasis, number>>;
+    manifestPath: string;
+    manifestSha256: string;
+    auditPath: string;
   };
   notebookSolutions: {
     snapshotVersion: string;
@@ -145,6 +167,22 @@ export const content = rawContent as ContentBank;
 
 export const theoryById = new Map(content.theory.map((question) => [question.id, question]));
 export const practicalByCode = new Map(content.practical.map((task) => [task.code, task]));
+
+// Previous/next task in the natural bank order (1.1.1 → 4.2.5), used by the
+// shared practical header for cross-task navigation. Returns null at the ends.
+export function getPracticalNeighbors(code: string): { prev: PracticalTask | null; next: PracticalTask | null } {
+  const index = content.practical.findIndex((task) => task.code === code);
+  if (index < 0) return { prev: null, next: null };
+  return {
+    prev: index > 0 ? content.practical[index - 1] : null,
+    next: index < content.practical.length - 1 ? content.practical[index + 1] : null,
+  };
+}
+
+// The route a task lives on depends on whether it uses a notebook lab.
+export function practicalTaskHref(task: PracticalTask): string {
+  return task.hasNotebook ? `/practical/${task.code}/lab` : `/practical/${task.code}`;
+}
 
 export function getOfficialTheoryMock(): TheoryQuestion[] {
   return content.officialTheoryMock.questionIds.map((id) => theoryById.get(id)).filter(Boolean) as TheoryQuestion[];

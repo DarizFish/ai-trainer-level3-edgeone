@@ -18,34 +18,27 @@ test("completed Chinese exam-prep homepage contains product-specific content", a
   assert.doesNotMatch(`${page}${layout}`, /codex-preview|Your site is taking shape|react-loading-skeleton/);
 });
 
-test("official resources page provides verified preparation, registration, and certificate links", async () => {
-  const [resources, layout, homepage, blueprint] = await Promise.all([
+test("resources page only keeps the Shanghai Jiao Tong University skill entry", async () => {
+  const [resources, layout, homepage, progress] = await Promise.all([
     readFile(new URL("../app/resources/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/blueprint/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/ProgressDashboard.tsx", import.meta.url), "utf8"),
   ]);
-  assert.match(resources, /W020211227626977039770\.pdf/);
-  assert.match(resources, /https:\/\/www\.osta\.org\.cn\/skillStandard/);
-  assert.match(resources, /https:\/\/www\.osta\.org\.cn\//);
-  assert.match(resources, /https:\/\/pjjg\.osta\.org\.cn\//);
-  assert.match(resources, /https:\/\/jndj\.osta\.org\.cn\//);
-  assert.match(resources, /https:\/\/xzy\.mohrss\.gov\.cn\/lesson/);
+  assert.match(resources, /https:\/\/gjzs\.sjtu\.edu\.cn\/skill/);
+  assert.doesNotMatch(resources, /mohrss\.gov\.cn|osta\.org\.cn|xzy\.mohrss\.gov\.cn/);
   assert.match(resources, /target="_blank"/);
   assert.match(resources, /rel="noopener noreferrer"/);
-  assert.match(resources, /全国没有统一报名按钮/);
-  assert.match(resources, /输入“人工智能训练师”/);
-  assert.match(resources, /等级筛选为三级/);
-  assert.match(resources, /包过.*免考拿证.*全国统一代报名/);
-  assert.match(resources, /本站不代办报名、不收集身份证件、不推荐收费机构/);
-  assert.doesNotMatch(resources, /搜狐|百度百科|知乎|培训学校/);
+  assert.match(resources, /上海交通大学职业技能等级认定/);
   assert.match(layout, /\["参考资料", "\/resources"\]/);
+  assert.match(layout, /人工智能训练师（上海）/);
+  assert.doesNotMatch(layout, /认定方案|\/blueprint/);
   assert.match(homepage, /href="\/resources"/);
-  assert.match(blueprint, /href="\/resources"/);
+  assert.doesNotMatch(progress, /href="\/blueprint"/);
 });
 
 test("theory and practical content pages remain public while progress is protected", async () => {
-  const publicPages = ["../app/theory/page.tsx", "../app/practical/page.tsx", "../app/theory/mock/page.tsx", "../app/practical/mock/page.tsx"];
+  const publicPages = ["../app/theory/page.tsx", "../app/practical/page.tsx", "../app/theory/mock/page.tsx"];
   for (const path of publicPages) {
     const source = await readFile(new URL(path, import.meta.url), "utf8");
     assert.doesNotMatch(source, /requireAccountUser/);
@@ -54,6 +47,27 @@ test("theory and practical content pages remain public while progress is protect
   }
   const progress = await readFile(new URL("../app/progress/page.tsx", import.meta.url), "utf8");
   assert.match(progress, /requireAccountUser/);
+});
+
+test("practical mock is hidden and blocked behind a centralized feature flag", async () => {
+  const [features, layout, catalog, page, proxy, practicalApi] = await Promise.all([
+    readFile(new URL("../lib/features.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/PracticalCatalog.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/practical/mock/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../proxy.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/practical/attempt/route.ts", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(features, /practicalMockEnabled = false/);
+  for (const source of [layout, catalog, page, proxy, practicalApi]) {
+    assert.match(source, /practicalMockEnabled/);
+  }
+  assert.doesNotMatch(catalog, /href="\/progress"/);
+  assert.match(page, /redirect\("\/practical"\)/);
+  assert.match(proxy, /matcher: \["\/practical\/mock\/:path\*"\]/);
+  assert.match(proxy, /NextResponse\.redirect\(new URL\("\/practical"/);
+  assert.match(practicalApi, /status: 404/);
 });
 
 test("public route shells are static while answer scoring is immediate and persistence is batched", async () => {
@@ -182,26 +196,26 @@ test("theory opens as a direct study console and Python tasks enter a code-first
   assert.match(theory, /theory-study-layout/);
   assert.match(theory, /practice-palette/);
   assert.match(theory, /question-number-grid/);
-  assert.match(theory, /theory-builder-panel/);
+  assert.doesNotMatch(theory, /theory-builder-panel|theory-browser|CUSTOM PRACTICE|题库检索/);
   assert.match(theory, /useState<Screen>\("practice"\)/);
   assert.match(theory, /选择答案后自动判分/);
   assert.match(theory, /question\.type === "multi"/);
   assert.match(theory, /void submit\(question, answer\)/);
   assert.match(theory, /键盘快捷键/);
-  assert.match(theory, /专项组题/);
-  assert.match(theory, /题库检索/);
   assert.match(theory, /错题/);
   assert.doesNotMatch(theory, /公开参考题库|本站知识点整理|matchesAnswerFilter|SOURCE_OPTIONS/);
   assert.match(theory, /ai-trainer-theory-session-v6/);
   assert.match(theory, /answers\?: Record<string, string\[\]>/);
   assert.match(theory, /feedback\?: Record<string, boolean>/);
-  assert.match(theory, /setRevealed\(Object\.fromEntries/);
+  assert.match(theory, /setRevealed\(\(current\) => \(\{[\s\S]*Object\.fromEntries/);
   assert.match(theory, /answers: sessionAnswers, feedback: sessionFeedback/);
   assert.match(theory, /stored\.contentVersion !== contentVersion/);
   assert.match(theoryPage, /contentVersion=\{content\.version\}/);
-  assert.match(theory, /判断题 300 题/);
-  assert.match(theory, /单选题 300 题/);
-  assert.match(theory, /多选题 300 题/);
+  assert.match(theory, /题型进度/);
+  assert.match(theory, /typeProgress\.map/);
+  assert.match(theory, /item\.answered\}\/\{item\.total/);
+  assert.match(theory, /firstUnanswered/);
+  assert.doesNotMatch(theory, /<p>知识领域<\/p>|<p>题库与考试<\/p>|当前练习/);
   assert.match(theory, /QUESTION_MAP_PAGE_SIZE = 50/);
   assert.match(theory, /question-map-ranges/);
   assert.match(theory, /sessionQuestions\.slice\(paletteStart, paletteEnd\)/);
@@ -226,15 +240,16 @@ test("theory opens as a direct study console and Python tasks enter a code-first
   assert.match(styles, /\.practical-catalog-sidebar \.practical-score-track \{ grid-template-columns: repeat\(3, minmax\(0, 1fr\)\); \}/);
   assert.match(styles, /\.catalog-results \.card-grid \{ grid-template-columns: 1fr; \}/);
   assert.match(detail, /redirect\(`\/practical\/\$\{task\.code\}\/lab`\)/);
-  assert.match(labPage, /lab-context-bar/);
+  assert.match(labPage, /className="lab-page"/);
   assert.match(labPage, /PracticalLabWorkbench/);
+  assert.doesNotMatch(labPage, /lab-context-bar/);
   assert.doesNotMatch(labPage, /lab-flow-nav/);
   assert.doesNotMatch(labPage, /page-hero|lab-task-instructions/);
   assert.match(workbench, /lab-study-layout/);
   assert.match(workbench, /lab-task-sidebar/);
   assert.match(workbench, /lab-workspace-switcher/);
-  assert.match(workbench, /lab-rail-brief/);
-  assert.match(workbench, /lab-rail-materials/);
+  assert.match(workbench, /PracticalBrief task=\{task\} open=\{false\}/);
+  assert.match(workbench, /PracticalMaterialsList task=\{task\}/);
   assert.match(workbench, /activeSurface/);
   assert.doesNotMatch(workbench, /代码填空核对|activeSurface === "review"/);
   assert.match(lab, /ai-trainer:prepare-exercise/);
@@ -256,6 +271,65 @@ test("theory opens as a direct study console and Python tasks enter a code-first
   assert.match(lab, /不会自动重载/);
   assert.match(lab, /incomingById/);
   assert.match(lab, /normalizedCurrent/);
+});
+
+test("theory sidebar tracks each question type and omits redundant navigation groups", async () => {
+  const [theory, theoryState, styles] = await Promise.all([
+    readFile(new URL("../components/TheoryPractice.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/theory/state/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(theory, /题型进度/);
+  assert.match(theory, /typeProgress\.map/);
+  assert.match(theory, /firstUnanswered/);
+  assert.match(theory, /setAnsweredIds/);
+  assert.match(theoryState, /answeredIds/);
+  assert.match(theoryState, /answerJson/);
+  assert.match(theoryState, /progress: progressRows\.map/);
+  assert.match(theory, /storedAnswers/);
+  assert.match(theory, /resetResponses = true/);
+  assert.match(theory, /typedQuestions\.length\} 题`,\s+false/);
+  assert.match(theory, /CORRECT_AUTO_ADVANCE_MS = 450/);
+  assert.match(theory, /if \(correct\) \{/);
+  assert.match(theory, /goToQuestion\(currentIndex \+ 1\)/);
+  assert.match(theory, /if \(currentIndex === sessionQuestions\.length - 1\) completePractice\(\)/);
+  assert.match(theory, /practice-question-toolbar/);
+  assert.match(theory, /practice-question-context/);
+  assert.doesNotMatch(theory, /practice-focus-head|className="eyebrow">\{sessionLabel\}/);
+  assert.doesNotMatch(theory, /setAnswers\(\{\}\)|setFeedback\(\{\}\)|setRevealed\(\{\}\)/);
+  assert.match(styles, /theory-type-progress-track/);
+  assert.doesNotMatch(theory, /<p>知识领域<\/p>|<p>题库与考试<\/p>|当前练习/);
+});
+
+test("theory types and practical chapters can reset their own progress", async () => {
+  const [resetApi, theory, catalog, lab, styles, content] = await Promise.all([
+    readFile(new URL("../app/api/progress/reset/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../components/TheoryPractice.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/PracticalCatalog.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/JupyterLiteLab.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+    readFile(new URL("../data/content.json", import.meta.url), "utf8").then(JSON.parse),
+  ]);
+
+  assert.match(resetApi, /theoryTypes.*judge.*single.*multi/);
+  assert.match(resetApi, /db\.delete\(theoryProgress\)/);
+  assert.match(resetApi, /inArray\(theoryProgress\.questionId, questionIds\)/);
+  assert.match(resetApi, /db\.transaction/);
+  assert.match(resetApi, /transaction\.delete\(practicalAttempts\)/);
+  assert.match(resetApi, /transaction\.delete\(codeDrafts\)/);
+  assert.match(theory, /resetTypeProgress/);
+  assert.match(theory, /scope: "theory", type: selectedType/);
+  assert.match(theory, /收藏不会删除/);
+  assert.match(catalog, /章节进度重置/);
+  assert.match(catalog, /scope: "practical", group/);
+  assert.match(catalog, /ai-trainer-practical-reset:/);
+  assert.match(catalog, /评分、作答与草稿将被清除/);
+  assert.match(lab, /ai-trainer-practical-reset:/);
+  assert.match(lab, /await applyNotebook\(baseline\)/);
+  assert.match(lab, /章节进度已重置，已恢复原始 Notebook/);
+  assert.match(styles, /\.practical-progress-reset-row/);
+  assert.deepEqual([...new Set(content.practical.map((task) => task.group))], ["1.1", "1.2", "2.1", "2.2", "3.1", "3.2", "4.1", "4.2"]);
 });
 
 test("content and lab manifests contain the complete versioned bank", async () => {
@@ -385,10 +459,14 @@ test("Word template practical tasks use five contextual answer fields instead of
   assert.match(component, /修改填写会撤销对应旧分数/);
   assert.doesNotMatch(component, /fetch\(|scorePractical|rubric:|保存成绩|自评分/);
   assert.match(workspace, /word-answer-first/);
-  assert.match(component, /sourceDocument/);
+  assert.match(component, /PracticalTaskHeader/);
+  assert.match(component, /PracticalBrief/);
+  assert.match(component, /PracticalMaterialsList/);
+  assert.doesNotMatch(component, /sourceDocument/);
   assert.doesNotMatch(workspace, /showDocumentPreview=\{false\}/);
   assert.doesNotMatch(workspace, /practical-rubric-workspace|RubricAssessment/);
-  assert.match(detailPage, /5 处 Word 模板空白/);
+  assert.match(detailPage, /wordTemplateTask = task\.group === "4\.1" \|\| task\.group === "4\.2"/);
+  assert.match(detailPage, /word-template-detail-page/);
   assert.match(detailPage, /userEmail=\{user\?\.email \?\? null\}/);
   assert.match(styles, /\.word-fill-slot/);
   assert.match(styles, /\.word-exercise-document/);
@@ -421,7 +499,8 @@ test("two-deliverable practical tasks support separate drafting, reference compa
   assert.match(component, /修改本份作答会撤销对应的自评结果/);
   assert.match(component, /ai-trainer-practical-response-v3/);
   assert.match(component, /response-study-rail/);
-  assert.match(component, /查看完整官方题面/);
+  assert.match(component, /PracticalBrief task=\{task\} open=\{false\}/);
+  assert.match(component, /完整题面与 Excel 素材保留在左侧/);
   assert.doesNotMatch(component, /fetch\(|scorePractical|RubricAssessment/);
   assert.match(workspace, /createPracticalResponseExercise/);
   assert.match(workspace, /<PracticalResponseExercise/);
@@ -462,12 +541,13 @@ test("Notebook Word answer sheets appear only where the official task requires a
 });
 
 test("business-optimization tasks start with the official two-question blank answer sheet", async () => {
-  const [content, helper, component, workspace, detailPage, styles] = await Promise.all([
+  const [content, helper, component, workspace, detailPage, brief, styles] = await Promise.all([
     readFile(new URL("../data/content.json", import.meta.url), "utf8").then(JSON.parse),
     import(new URL("../lib/practical-response-exercise.ts", import.meta.url)),
     readFile(new URL("../components/BusinessAnalysisAnswerSheet.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/PracticalWorkspace.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/practical/[code]/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/PracticalBrief.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
   ]);
   const tasks = content.practical.filter((task) => task.group === "1.2");
@@ -485,20 +565,23 @@ test("business-optimization tasks start with the official two-question blank ans
   assert.match(workspace, /business-answer-first/);
   assert.match(workspace, /if \(businessAnswerSheet\) return <BusinessAnalysisAnswerSheet/);
   assert.ok(workspace.indexOf("if (businessAnswerSheet) return") < workspace.indexOf("if (responseExercise) return"));
-  assert.match(component, /业务优化答题卷/);
-  assert.match(component, /官方考核任务单/);
-  assert.match(component, /场地设备要求/);
-  assert.match(component, /技能要求/);
-  assert.match(component, /质量指标/);
-  assert.match(component, /backgroundForAnswerSheet/);
+  assert.match(component, /PracticalTaskHeader/);
+  assert.match(component, /PracticalBrief task=\{task\} open=\{false\}/);
+  assert.match(component, /PracticalMaterialsList/);
+  assert.match(component, /role="document"/);
+  assert.match(component, /aria-label=\{`\$\{task\.code\} 答题卷`\}/);
+  assert.match(brief, /题干与官方任务单/);
+  assert.match(brief, /场地设备要求/);
+  assert.match(brief, /技能要求/);
+  assert.match(brief, /质量指标/);
   assert.match(component, /完成作答，进入复盘/);
   assert.match(component, /非官方考场信息/);
   assert.doesNotMatch(component, /官方评分项/);
   assert.match(detailPage, /business-answer-sheet-page/);
-  assert.match(detailPage, /两道大题答题卷/);
+  assert.match(detailPage, /businessAnswerSheetTask = task\.group === "1\.2"/);
   assert.match(styles, /\.business-answer-sheet \{/);
   assert.match(styles, /\.business-sheet-paper/);
-  assert.match(styles, /\.business-sheet-context/);
+  assert.doesNotMatch(styles, /\.business-sheet-context/);
   assert.match(styles, /\.business-sheet-sidebar/);
 });
 
@@ -511,7 +594,7 @@ test("practical rubric scoring preserves partial points and rejects invalid valu
   assert.deepEqual(scorePractical(task, { M1: true, M2: false }), { score: 0, maxScore: 6, rubric: { M1: 0, M2: 0 } });
 });
 
-test("derived theory answers use audited reference and hash-bound editorial snapshots without changing official answers", async () => {
+test("historical theory references remain hash-bound without changing official answers", async () => {
   const [content, reference, editorial, audit, importer, validator, practice] = await Promise.all([
     readFile(new URL("../data/content.json", import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL("../data/references/theory-question-bank-2026-07-16.json", import.meta.url), "utf8").then(JSON.parse),
@@ -525,9 +608,9 @@ test("derived theory answers use audited reference and hash-bound editorial snap
   assert.equal(reference.questions.length, 900);
   assert.equal(reference.sourceSha256, "4c0fa4ac6accc6ab335a54f3fe5a04c56485aeeae4dfd46761de960abd6512c8");
   assert.equal(basisCounts.manual_official.length, 190);
-  assert.equal(basisCounts.third_party_reference.length, 649);
-  assert.equal(basisCounts.editorial_review.length, 23);
-  assert.equal(basisCounts.heuristic.length, 38);
+  assert.equal(basisCounts.third_party_reference.length, 571);
+  assert.equal(basisCounts.editorial_review.length, 139);
+  assert.equal(basisCounts.heuristic, undefined);
   assert.equal(editorial.version, "2026-07-17-v3");
   assert.equal(editorial.reviews.length, 23);
   assert.ok(editorial.reviews.every(item => /^[0-9a-f]{64}$/.test(item.questionSha256)));
@@ -555,6 +638,62 @@ test("derived theory answers use audited reference and hash-bound editorial snap
   assert.deepEqual(content.theory.find((question) => question.id === "judge-226").answer, ["√"]);
   assert.deepEqual(content.theory.find((question) => question.id === "judge-235").answer, ["×"]);
   assert.deepEqual(content.theory.find((question) => question.id === "judge-243").answer, ["×"]);
+});
+
+test("published theory review is complete, independently cross-reviewed, and audit-bound", async () => {
+  const [content, reviewAudit, reviewManifestText, validator] = await Promise.all([
+    readFile(new URL("../data/content.json", import.meta.url), "utf8").then(JSON.parse),
+    readFile(new URL("../data/references/theory-review-audit.json", import.meta.url), "utf8").then(JSON.parse),
+    readFile(new URL("../data/references/theory-review-state/manifest.json", import.meta.url), "utf8"),
+    readFile(new URL("../scripts/validate-content.py", import.meta.url), "utf8"),
+  ]);
+  const reviewManifest = JSON.parse(reviewManifestText);
+  assert.equal(content.version, "2026-07-26-v8");
+  assert.deepEqual(content.theoryReview.basisCounts, {
+    independent_review: 139,
+    official_word: 190,
+    secondary_site: 571,
+  });
+  assert.equal(content.theoryReview.reviewedQuestions, 900);
+  assert.equal(content.theoryReview.independentExplanations, 900);
+  assert.equal(content.theoryReview.crossReviewedQuestions, 900);
+  assert.equal(content.theoryReview.crossReviewShards, 9);
+  assert.equal(content.theoryReview.answerChanges, 79);
+  assert.equal(content.theoryReview.officialAnswerChanges, 0);
+  assert.equal(content.theoryReview.resolvedConflicts, 5);
+  assert.equal(content.theoryReference.appliedDerivedAnswers, 649);
+  assert.equal(content.theoryReference.unmatchedDerivedAnswers, 61);
+  assert.equal(content.theoryReference.remainingHeuristicAnswers, 0);
+  assert.equal(reviewAudit.answerChanges.count, 79);
+  assert.equal(reviewAudit.answerChanges.officialAnswerChanges, 0);
+  assert.equal(reviewAudit.conflicts.open, 0);
+  assert.equal(reviewAudit.conflicts.resolved, 5);
+  assert.equal(reviewAudit.explanations.total, 900);
+  assert.equal(reviewAudit.explanations.crossReviewed, 900);
+  assert.deepEqual(reviewAudit.explanations.duplicateGroups, []);
+  assert.deepEqual(reviewAudit.explanations.warnings, []);
+  assert.equal(
+    content.theoryReview.manifestSha256,
+    createHash("sha256").update(reviewManifestText).digest("hex"),
+  );
+  assert.deepEqual(reviewManifest.summary.byExplanationGenerationStatus, { reviewed: 900 });
+  const qaBatches = reviewManifest.appliedBatches.filter((batch) => batch.reviewStage === "qa");
+  assert.equal(qaBatches.length, 9);
+  assert.equal(new Set(qaBatches.map((batch) => batch.shardId)).size, 9);
+  for (const qaBatch of qaBatches) {
+    const generationBatch = reviewManifest.appliedBatches.find(
+      (batch) => batch.shardId === qaBatch.shardId && batch.reviewStage === "generation",
+    );
+    assert.ok(generationBatch);
+    assert.equal(qaBatch.count, 100);
+    assert.equal(
+      qaBatch.reviewers.some((reviewer) => generationBatch.reviewers.includes(reviewer)),
+      false,
+    );
+  }
+  assert.equal(new Set(content.theory.map((question) => question.explanation)).size, 900);
+  assert.ok(content.theory.every((question) => question.explanation.trim().length >= 24));
+  assert.match(validator, /build_theory_review_quality_report/);
 });
 
 test("user-facing study surfaces omit answer provenance while audit metadata remains internal", async () => {
@@ -658,7 +797,7 @@ test("all Python practical tasks expose audited completed-notebook reference cod
     readFile(new URL("../jupyterlite-extension/src/index.ts", import.meta.url), "utf8"),
   ]);
   const tasks = content.practical.filter(task => task.hasNotebook);
-  assert.equal(content.version, "2026-07-19-v7");
+  assert.equal(content.version, "2026-07-26-v8");
   assert.equal(tasks.length, 20);
   assert.equal(snapshot.solutions.length, 20);
   assert.deepEqual(audit.summary, {
@@ -679,7 +818,10 @@ test("all Python practical tasks expose audited completed-notebook reference cod
   assert.match(lab, /buildFillReferences/);
   assert.match(lab, /ai-trainer:set-fill-review/);
   assert.match(bridgeExtension, /参考填写/);
-  assert.match(bridgeExtension, /不自动判对错/);
+  assert.match(bridgeExtension, /classifyFill/);
+  assert.match(bridgeExtension, /完全一致/);
+  assert.match(bridgeExtension, /与参考不同/);
+  assert.match(bridgeExtension, /填入参考/);
   assert.doesNotMatch(lab, /下载完整参考代码|SourceBadge/);
 });
 
@@ -699,24 +841,19 @@ test("official practical answers stop at their Word answer boundary", async () =
   assert.match(importer, /Missing official practical answer/);
 });
 
-test("exam entry pages expose their start controls from a compact workspace", async () => {
-  const [theoryPage, practicalPage, theoryMock, practicalMock] = await Promise.all([
+test("theory exam entry exposes its start controls from a compact workspace", async () => {
+  const [theoryPage, theoryMock] = await Promise.all([
     readFile(new URL("../app/theory/mock/page.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/practical/mock/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/TheoryMock.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../components/PracticalMock.tsx", import.meta.url), "utf8"),
   ]);
   assert.match(theoryPage, /mock-page-head/);
-  assert.match(practicalPage, /mock-page-head/);
-  assert.doesNotMatch(`${theoryPage}${practicalPage}`, /page-hero/);
+  assert.doesNotMatch(theoryPage, /page-hero/);
   assert.match(theoryMock, /container mock-entry/);
-  assert.match(practicalMock, /container mock-entry/);
 });
 
 test("official exam blueprint is centralized and both mock exams use persistent deadline-based sessions", async () => {
-  const [blueprint, blueprintPage, theoryMock, practicalMock, theoryApi, scoring, lab, workbench, theoryStorage, practicalStorage] = await Promise.all([
+  const [blueprint, theoryMock, practicalMock, theoryApi, scoring, lab, workbench, theoryStorage, practicalStorage] = await Promise.all([
     readFile(new URL("../lib/exam-blueprint.ts", import.meta.url), "utf8"),
-    readFile(new URL("../app/blueprint/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/TheoryMock.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/PracticalMock.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/api/theory/attempt/route.ts", import.meta.url), "utf8"),
@@ -735,8 +872,6 @@ test("official exam blueprint is centralized and both mock exams use persistent 
   assert.match(blueprint, /maxScore: 25/);
   assert.match(blueprint, /maxScore: 15/);
   assert.match(blueprint, /maxScore: 20/);
-  assert.match(blueprintPage, /两科分别判定/);
-  assert.match(blueprintPage, /可只补考该科/);
   assert.match(theoryStorage, /ai-trainer-theory-mock-v2/);
   assert.match(theoryMock, /createFinishedTheoryExamSnapshot/);
   assert.match(theoryMock, /restoreTheoryExamSnapshot/);
@@ -952,18 +1087,25 @@ test("practical mock snapshots and batch submission enforce the six-module bluep
   assert.match(page, /contentVersion=\{content\.version\}/);
 });
 
-test("progress reports theory and practical readiness separately using official practical weights", async () => {
-  const [progressApi, dashboard] = await Promise.all([
+test("progress keeps only theory type progress, wrong answers, and favorites", async () => {
+  const [progressApi, progressData, theoryState, dashboard, page] = await Promise.all([
     readFile(new URL("../app/api/progress/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../lib/progress-data.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/theory/state/route.ts", import.meta.url), "utf8"),
     readFile(new URL("../components/ProgressDashboard.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/progress/page.tsx", import.meta.url), "utf8"),
   ]);
-  assert.match(progressApi, /practicalAbility/);
-  assert.match(progressApi, /estimatedPracticalScore/);
-  assert.match(dashboard, /theoryPassed/);
-  assert.match(dashboard, /practicalPassed/);
-  assert.match(dashboard, /两科分别判定/);
-  assert.match(dashboard, /不计算综合平均分|分别达到 60 分/);
-  assert.match(dashboard, /实操官方权重/);
+  assert.match(progressApi, /getProgressData/);
+  assert.match(progressData, /theoryTypeProgress/);
+  assert.match(progressData, /answeredRows/);
+  assert.match(progressData, /wrongItems/);
+  assert.match(progressData, /favoriteItems/);
+  assert.match(theoryState, /answeredIds/);
+  assert.match(dashboard, /data\.theoryTypeProgress\.map/);
+  assert.match(dashboard, /待订正错题/);
+  assert.match(dashboard, /我的收藏/);
+  assert.match(page, /理论题型进度、待订正错题和收藏内容/);
+  assert.doesNotMatch(`${progressData}${dashboard}`, /practicalAbility|estimatedPracticalScore|recentMocks|recentPractical|progress-next|progress-history|两科分别判定|实操官方权重/);
 });
 
 test("starter preview is fully removed and social metadata asset exists", async () => {
@@ -1012,7 +1154,7 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
   assert.match(configUtils, /\/lite\/static\/pyodide\/pyodide\.esm\.js/);
   assert.match(configUtils, /pyodideUrl\.searchParams\.set\('runtime', runtime\)/);
   assert.match(configUtils, /pyodideUrl\.searchParams\.set\('attempt', attempt\)/);
-  assert.match(labShell, /config-utils\.js\?_=20260724-runtime8/);
+  assert.match(labShell, /config-utils\.js\?_=20260724-runtime9/);
   assert.match(bridgeExtension, /kernelStarts/);
   assert.match(bridgeExtension, /kernel\.info|existing\.info/);
   assert.match(bridgeExtension, /preparationRuns/);
@@ -1029,15 +1171,19 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
   assert.match(bridgeExtension, /ai-trainer:set-fill-review/);
   assert.match(bridgeExtension, /FillReferenceWidget/);
   assert.match(bridgeExtension, /Decoration\.widget/);
-  assert.match(bridgeExtension, /不自动判对错/);
-  assert.match(bridgeExtension, /if \(examMode\) return \{ ok: false, count: 0 \}/);
+  assert.match(bridgeExtension, /classifyFill/);
+  assert.match(bridgeExtension, /完全一致/);
+  assert.match(bridgeExtension, /与参考不同/);
+  assert.match(bridgeExtension, /fillBlankIntoEditor/);
+  assert.match(host, /自动比对仅供参考，最终以运行结果为准/);
+  assert.match(bridgeExtension, /if \(examMode\) return \{ ok: false, summary: emptyFillSummary\(\) \}/);
   assert.match(bridgeExtension, /data\.path|path: panel\.context\.path/);
   assert.doesNotMatch(bridgeExtension, /kernelBootstrap/);
   assert.match(buildScript, /patch-jupyterlite-config\.py/);
   assert.match(buildScript, /JUPYTERLITE_PYTHON/);
   assert.match(buildScript, /jupyterlite_core\.app/);
   assert.match(buildScript, /labs:runtime/);
-  assert.match(patchScript, /RUNTIME_REVISION = "20260724-runtime8"/);
+  assert.match(patchScript, /RUNTIME_REVISION = "20260724-runtime9"/);
   assert.match(patchScript, /pyodideSettings\.pyodideUrl/);
   assert.match(buildScript, /Move-JavaScriptModule/);
   assert.match(extensionBuildScript, /ItemType Junction/);
@@ -1162,7 +1308,7 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
   // Packages missing from the Pyodide lock are pinned as local pure-Python
   // wheels, so Notebook setup never silently succeeds without installing them.
   const pipliteIndex = JSON.parse(await readFile(new URL("../public/lite/pypi/all.json", import.meta.url), "utf8"));
-  assert.deepEqual(Object.keys(pipliteIndex).sort(), ["et-xmlfile", "imbalanced-learn", "openpyxl", "seaborn"]);
+  assert.deepEqual(Object.keys(pipliteIndex).sort(), ["comm", "et-xmlfile", "imbalanced-learn", "openpyxl", "seaborn"]);
   const pipliteUrls = lite["jupyter-config-data"].litePluginSettings["@jupyterlite/pyodide-kernel-extension:kernel"].pipliteUrls;
   assert.ok(pipliteUrls.some(url => /^\.\/pypi\/all\.json\?sha256=/.test(url)));
   for (const [name, project] of Object.entries(pipliteIndex)) {

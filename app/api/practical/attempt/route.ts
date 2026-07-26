@@ -4,6 +4,7 @@ import { getDb } from "@/db";
 import { practicalAttempts } from "@/db/schema";
 import { validatePracticalExamTasks, type PracticalExamResult } from "@/lib/practical-exam-storage";
 import { scorePractical } from "@/lib/scoring";
+import { practicalMockEnabled } from "@/lib/features";
 
 type AttemptInput = {
   taskCode?: unknown;
@@ -33,6 +34,10 @@ function scoreAttempt(input: AttemptInput) {
 }
 
 export async function POST(request: Request) {
+  if (!practicalMockEnabled) {
+    return Response.json({ error: "实操组卷暂未开放" }, { status: 404 });
+  }
+
   const user = await requireApiUser();
   if (!user) return unauthorized();
 

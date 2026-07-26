@@ -35,13 +35,13 @@ export default function HomePage() {
           <p>练习、订正、模拟、实操，所有进度都围绕同一份内容版本保存。</p>
         </div>
         <div className="path-grid">
-          <IntentLink className="path-card" href="/theory"><span className="path-number">壹</span><h3>理论题库</h3><p>判断、单选、多选，按领域筛选；即时评分、错题与收藏。</p><b>900 道全题库 →</b></IntentLink>
+          <IntentLink className="path-card" href="/theory"><span className="path-number">壹</span><h3>理论题库</h3><p>判断、单选、多选独立进度；即时评分、错题与收藏。</p><b>900 道全题库 →</b></IntentLink>
           <IntentLink className="path-card featured" href="/theory/mock"><span className="path-number">贰</span><h3>90 分钟模拟</h3><p>标准卷或随机卷，190 题、100 分，完全按规则计分。</p><b>进入模拟考场 →</b></IntentLink>
           <IntentLink className="path-card" href="/practical"><span className="path-number">叁</span><h3>实操与实验</h3><p>逐项对照官方评分表，Python 代码直接在浏览器运行。</p><b>40 道实操题 →</b></IntentLink>
         </div>
         <div className="home-resource-callout">
-          <div><span>官方办事导航</span><p>国家职业标准、备案评价机构、报名咨询路径与证书全国联网查询。</p></div>
-          <IntentLink className="text-link" href="/resources">查看官方资料与报名入口 →</IntentLink>
+          <div><span>上海认定信息</span><p>查看上海交通大学职业技能等级认定相关信息。</p></div>
+          <IntentLink className="text-link" href="/resources">查看参考资料 →</IntentLink>
         </div>
       </section>
 
@@ -51,7 +51,7 @@ export default function HomePage() {
           <div className="proof-items">
             <article><strong>即时判分</strong><p>选择答案后立即反馈，减少等待，把注意力留给知识点本身。</p></article>
             <article><strong>错题回练</strong><p>自动汇总待订正题目，答对后移出错题集，让复习范围越练越小。</p></article>
-            <article><strong>进度同步</strong><p>理论练习、模拟成绩、实操评分与代码草稿统一保存到学习档案。</p></article>
+            <article><strong>多设备同步</strong><p>账号同步理论作答、错题、收藏与 Notebook 草稿，换台设备也能继续。</p></article>
           </div>
         </div>
       </section>

@@ -326,6 +326,11 @@ def snapshot_command(args: argparse.Namespace) -> None:
 
 def apply_command(args: argparse.Namespace) -> None:
     content = json.loads(args.content.read_text(encoding="utf-8"))
+    if content.get("theoryReview") and not args.allow_review_reset:
+        raise ValueError(
+            "当前题库已发布 900 题审校结果；直接重放次级参考会覆盖答案与原创解析。"
+            "如确需重建基线，请显式传入 --allow-review-reset，并在之后重新执行完整审校与发布。"
+        )
     snapshot = load_reference(args.reference)
     audit = apply_reference_answers(content["theory"], snapshot)
     editorial_review = load_editorial_review(args.editorial_review)
@@ -358,6 +363,7 @@ def main() -> None:
     apply_parser.add_argument("--audit", type=Path, default=DEFAULT_AUDIT_PATH)
     apply_parser.add_argument("--editorial-review", type=Path, default=DEFAULT_EDITORIAL_REVIEW_PATH)
     apply_parser.add_argument("--content-version", default=CONTENT_VERSION)
+    apply_parser.add_argument("--allow-review-reset", action="store_true")
     apply_parser.set_defaults(handler=apply_command)
 
     args = parser.parse_args()

@@ -1,0 +1,5263 @@
+{
+  "$schema": "../theory-review-state.schema.json",
+  "schemaVersion": "1.0.0",
+  "batchId": "theory-900-review-2026-07-26-v1",
+  "shardId": "judge-001-100",
+  "questionType": "judge",
+  "range": {
+    "start": 1,
+    "end": 100
+  },
+  "updatedAt": "2026-07-25T17:15:01Z",
+  "questions": [
+    {
+      "questionId": "judge-001",
+      "questionType": "judge",
+      "questionFingerprint": "141a03efcb09f86b11edfade91d22c0cb829c8773acccf92b0fe69b26234aa43",
+      "evidenceFingerprint": "81019cd12b81883cf74ee698c8b401da26fd2f3ccfbe0c78323f1928783c25e8",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-001"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "道德评价以社会公认的道德原则和规范为尺度，用来判断行为是否正当、善恶，因此题干所述判断标准成立。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-002",
+      "questionType": "judge",
+      "questionFingerprint": "5ca44609dd69b64de0e8c31aa3147981c445d7e13a34cca1446e6012bafa0ac1",
+      "evidenceFingerprint": "30d7b41c446f62a9464db1c076612cdb3631ab9cde5f6fc6476477015d3c232f",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "normalized_stem",
+        "sourceQuestionId": "judge-002"
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-002"
+      },
+      "adoptedBasis": {
+        "source": "official_word",
+        "contentAnswerBasis": "manual_official",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": true,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "敏感数据处理必须具备合法、正当、必要的依据，并依法取得相应同意或满足其他法定条件，不能绕过用户授权直接用于训练。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-003",
+      "questionType": "judge",
+      "questionFingerprint": "3297c8082b3129eb7b65a10889dcdadd9d61761c8425e40b435a2cbcbf45b5ab",
+      "evidenceFingerprint": "14aa84d43aa397f18d567a13ba31dc81d71571a3d705fe62ccc84f3117943598",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-003"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "全球化会促进职业道德交流，但不同国家、地区的法律文化、行业传统和社会价值仍有差异，不会形成完全单一的规范。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-004",
+      "questionType": "judge",
+      "questionFingerprint": "9b32b297e8501bed69873834279e6a6a9d0f5f494bbe539437ac16c82474a6e4",
+      "evidenceFingerprint": "fe5f26b725d2d9cd6b7462854c8d7484937c011f4b5ddc7af309e833d6b6bccd",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "normalized_stem",
+        "sourceQuestionId": "judge-004"
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-004"
+      },
+      "adoptedBasis": {
+        "source": "official_word",
+        "contentAnswerBasis": "manual_official",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": true,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "数据质量和适用性会直接影响模型可靠性、公平性与安全性；职业责任不能只用训练指标衡量，还应核验数据来源、偏差和使用边界。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-005",
+      "questionType": "judge",
+      "questionFingerprint": "f4bce1ff085a4b7527cb337e03fc3caaf05bce43f622420b53456fd4b87e56d4",
+      "evidenceFingerprint": "eb1d79c156b962306c51f63ed7e4ff959597eb4d6a8f42dec7569cb763b34c23",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-005"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "训练师应检测训练数据和模型输出中的偏见，评估歧视风险并采取缓解措施，不能以模型自动生成结果为由免除专业责任。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-006",
+      "questionType": "judge",
+      "questionFingerprint": "2397d421908788a877903d22c1361122cb4e0d844c506312268ab66c561f5c26",
+      "evidenceFingerprint": "6b4d9a0af36d0dca0bcea691a5422c5720d5144804d29d366ffba20293d149e4",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-006"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "保护个人信息和用户隐私是数据处理岗位的基本职业义务，贯穿数据采集、标注、存储、训练和交付全过程。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-007",
+      "questionType": "judge",
+      "questionFingerprint": "b28c02f8608ba9e912211d0a14e74fd27afd227d7b2ad08de834b944786144d9",
+      "evidenceFingerprint": "66dc1be9b9837a08b4a3558e7077221c0a5892427da9f4901f9b2566903aec0f",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-007"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "人工智能训练师主要围绕数据采集处理、标注、模型训练调优、效果评估等开展工作；设计全新算法通常不是其唯一或主要任务。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-008",
+      "questionType": "judge",
+      "questionFingerprint": "da0833d29e7375c9ad885ec3c7ad3262bc42d9a94b51c9c8862600abf3e31c12",
+      "evidenceFingerprint": "d74fa24574e85fd553bb2aa2e90330ed412357195dc53db6495dd51075228f0f",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-008"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "职业守则本身通常属于行业或组织的职业行为规范，并非国家立法，因而一般不直接产生法律强制力；违反守则仍可能受到行业或组织处分。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "“仅仅”措辞偏绝对；本题按职业守则本身不等同于法律规范的通常口径判断。",
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-009",
+      "questionType": "judge",
+      "questionFingerprint": "4016dbbf334dd6bed3d319b6c1b6b9b3ec603d27274692d96e0a058869c40814",
+      "evidenceFingerprint": "94d2f5f91d9efa26baaf744736466a74e5fb89d2a7a36e2ebf76e5d50d3def82",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-009"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "职业守则具有明显的职业和行业针对性，不同行业的职责、风险及行为要求不同，不能把同一套具体守则无差别适用于所有行业。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-010",
+      "questionType": "judge",
+      "questionFingerprint": "317c035ef3d6947d152f4ba7b4b1e6c1f427a44c0bc41815ccec56dd38adc27b",
+      "evidenceFingerprint": "3a918dd075afbe831450adaef746965fd4da8fac8da234657c167bd92506699c",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-010"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "遵守国家法律法规是从业行为的底线，也是职业守则的核心内容之一，不能从职业规范中排除。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-011",
+      "questionType": "judge",
+      "questionFingerprint": "9d91e10d0b506907fd7dbb7787a0495147310dce83b2cd6d491776f31992b872",
+      "evidenceFingerprint": "4d17b8edba96028b46c0d24c4dc902f2b2717e4086b6e55ec2ed276529deab20",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-011"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "人工智能技术快速演进并可能带来隐私、偏见、安全和滥用风险，职业守则必须随技术场景更新并提前约束潜在风险。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-012",
+      "questionType": "judge",
+      "questionFingerprint": "1eaba224545f11d8371ca11b0b2afdc7b04ba449b3e9cd30eb8e9d2d82c3f587",
+      "evidenceFingerprint": "2f4013c99404ce1004ba83e729874053951c2e65e554d5b0ec89fed635c0dc66",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-012"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "职业守则落地既需要个人自律，也需要培训、制度、审查、举报和问责机制；完全依赖个人自觉无法形成有效监督。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-013",
+      "questionType": "judge",
+      "questionFingerprint": "8fd81e6adb93f16f87dfb86d00b8981868e5a900fe89c79ad2805fa54a08726f",
+      "evidenceFingerprint": "a3ef8961896f49a18cd9e53eea3b009c3519fe4fa63e81eccfda98fcbfe82ddc",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-013"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "奉献社会要求正确处理个人、集体与社会利益，在冲突时以社会整体利益和公共责任为重，而不是把个人利益置于首位。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-014",
+      "questionType": "judge",
+      "questionFingerprint": "7a56c9bdf3f4e71173737bf5f5b4e5faf7ecd97ba2cca615d07bd6d2c696822a",
+      "evidenceFingerprint": "479467db5059bdff053f22bf575e20fd8fd08cce2bce806c8f3ccb4e1947ebaa",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-014"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "爱岗敬业首先体现职业态度、责任心和对岗位的尊重，专业技能是履职条件之一，但不能单独决定是否敬业。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-015",
+      "questionType": "judge",
+      "questionFingerprint": "94fba7553d24450f0292c74c060052a36911e340ed14427d8dc5b022d5f97e5a",
+      "evidenceFingerprint": "84706ac84def311c9e9c9bd7f78a987bad2aae3fdb25bf02d0f4d096bcb1afc4",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-015"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "经验可以帮助提出调参假设，但参数调整必须通过实验设计、验证集指标和可复现记录来检验，不能仅凭个人直觉决定。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-016",
+      "questionType": "judge",
+      "questionFingerprint": "4cea75352788d8690632541c5e19601bda491de2d405ac1e397a58ca2a9788bb",
+      "evidenceFingerprint": "30feb8c8c2233aff2165d0e44b8847a3ac19df23da94952cb21c48de379cfcef",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-016"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "Windows提供语音键入或听写功能，可把语音识别结果作为文字输入到应用程序中，属于智能输入方式。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-017",
+      "questionType": "judge",
+      "questionFingerprint": "94a08b73f451ab26c0db983c388877dc21ec7b5016ccc89eed2f927602585040",
+      "evidenceFingerprint": "518cf837afbbc28d4f5ff0c69e04175cf7a02073b8f0c7dce8bd54adc46aef79",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "normalized_stem",
+        "sourceQuestionId": "judge-017"
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-017"
+      },
+      "adoptedBasis": {
+        "source": "official_word",
+        "contentAnswerBasis": "manual_official",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": true,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "系统维护类工具通常集成垃圾清理、启动项或性能优化、故障检测与修复等功能，可辅助用户维护Windows运行状态。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-018",
+      "questionType": "judge",
+      "questionFingerprint": "f9e1178000000de09c55e038639afb9bb46f3b2805becfd2ec21199244c30e8d",
+      "evidenceFingerprint": "08bcd87859bcbb345c17b6ae5c91f05de0e857d9786a06bcc6f975b3a4d47b67",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-018"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "键盘已经无法使用时就不能依靠按F8操作，而且现代Windows默认也未必启用传统F8启动菜单，应使用恢复环境、安装介质或硬件诊断等途径。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-019",
+      "questionType": "judge",
+      "questionFingerprint": "f813bf010b2082c7c6519822a0648fce30442e3577c417fb76b6bbfa3f11c1b6",
+      "evidenceFingerprint": "876433e24a722ac78e3682172a1576d705b5afaa3abcf258f3d193ad101c5de2",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-019"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "Windows 10默认不再提供早期Windows桌面小工具体系，因此不存在题干所称内置小工具时钟及其锁定前端功能。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-020",
+      "questionType": "judge",
+      "questionFingerprint": "a2418045cf0f935adf0f601357b7955e91487fd2938ffe6e618064c31600434a",
+      "evidenceFingerprint": "baa422eae65b1eb35bd566a7798a8a824e08c695a960a83678ea514511f48eb5",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-020"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "地址栏用于接收网址或搜索内容，输入有效URL并确认后，浏览器会向对应服务器发起请求并加载网页。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-021",
+      "questionType": "judge",
+      "questionFingerprint": "f494b2d73bfbad236ffc5f704c5f1a3d4b4919bfd42a0cfb648b4d959e278698",
+      "evidenceFingerprint": "40a029a6c6edd89b5c8889fd848ce169d0f31d8ae942a3d90c5b14a615986721",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-021"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "浏览器没有统一、规范地命名为“高级探索功能”的标准模块；设置管理应通过设置页、扩展管理或开发者工具等具体功能完成。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "题干使用了非标准功能名称，判断依据是术语不明确而非否认浏览器具备高级设置能力。",
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-022",
+      "questionType": "judge",
+      "questionFingerprint": "d3880304697fe985f6f05c007a6d3f68f9c026aa367609b6cb33e7bc10473117",
+      "evidenceFingerprint": "ed6a593aa29d06725ab6b03a74e15ae638300d570d9a61e86234e1c3faec9cda",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-022"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "在Windows及多数办公软件中，Ctrl+C是复制命令的通用快捷键，会把当前选中的文本或对象复制到剪贴板。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-023",
+      "questionType": "judge",
+      "questionFingerprint": "5ad58c477d14deb06c2ae925d4d8a3e0025d528ab752b4406b8418630de5a973",
+      "evidenceFingerprint": "9900c5a26e39820c22a0f079a9ae7e94d8f06a1a945e3acbe7824f8ee98f2abf",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-023"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "Word支持在同一应用中打开多个文档窗口，用户可以在窗口间切换、并排查看并分别编辑。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-024",
+      "questionType": "judge",
+      "questionFingerprint": "b90210da84f767d0c5819f265c8903ef70317d2b9f2298e1fe6ad497876311e2",
+      "evidenceFingerprint": "14215a5767de7279a43bf3d59c41b29ff0f3ca2dd7b107747baedb538fc4b46c",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-024"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "样式可集中定义字体、段落和间距等格式，并重复应用到多个段落；文本框内部的段落同样可以套用相应样式。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-025",
+      "questionType": "judge",
+      "questionFingerprint": "e34d384b831fe9fc6e99d1168b7992d922be92cb059b268685e087267e425f8d",
+      "evidenceFingerprint": "9d3e3160f30f1dbeb871f35d9b55366ed2e0e600a5a0492470e24ddb870daeda",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-025"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "在Word中将图片设为合适的文字环绕方式后，可通过拖动或位置设置调整图片和文本框在页面中的位置；这里的“随意调整”是指可按版式需要自由定位。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "独立审校结论与次级网站答案冲突；“随意”属于绝对化表述，改判为×。",
+        "二审修正一审改判：题干的“随意调整”按办公软件常用表述理解为可按排版需要自由移动，并非声称突破页面边界；次级来源答案√具有合理性，恢复为√。",
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-026",
+      "questionType": "judge",
+      "questionFingerprint": "b3d7e7bdcb4961bc8bebd821ed6bcb8f3a6d705e0c6f4668dd994c17a97f8953",
+      "evidenceFingerprint": "9522cecafa0f12fbbf81e3d1861c2dca8860af520bec65c60c29d151cd5cba03",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-026"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "Excel公式能够引用单元格、常量和函数执行算术、逻辑、统计等计算，并随引用数据变化更新结果。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-027",
+      "questionType": "judge",
+      "questionFingerprint": "0b5e1679dae04d6f822bb3462617c23da34a707a2050fec563d369de18f413e4",
+      "evidenceFingerprint": "406da79b9c377102e0a9fc70ffb2c5e88279274d510b2625cc84debfdfa01b35",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-027"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "MAX函数返回参数或指定单元格区域中的最大数值，因此可用于求一列数值数据的最大值。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-028",
+      "questionType": "judge",
+      "questionFingerprint": "b496ed1931f24d9e7ad8c35a333b54d906ae8b232c6998b7495dc31e4ae11656",
+      "evidenceFingerprint": "a6de5d351cc56a78fecfd0373f018b0287ff7e083bdebe6b2d4a4d04ec737d4e",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "normalized_stem",
+        "sourceQuestionId": "judge-028"
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-028"
+      },
+      "adoptedBasis": {
+        "source": "official_word",
+        "contentAnswerBasis": "manual_official",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": true,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "Excel图表可与源数据联动更新，还能配合数据透视图、切片器和筛选器实现交互分析，并非只能静态展示。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-029",
+      "questionType": "judge",
+      "questionFingerprint": "4f986e5f02d0c9b4ddd066544d457a6ef0df84a4b5f63caa8f656774a7e99214",
+      "evidenceFingerprint": "7a813a25ccdd0b692ccb4c088f0d5dbf4413ef78b6c1960ef67a06137060bf85",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-029"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": ".xls是旧版Excel工作簿格式之一，现代Excel普通工作簿默认扩展名是.xlsx，含宏工作簿等还使用其他扩展名，不能笼统认定只有.xls。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-030",
+      "questionType": "judge",
+      "questionFingerprint": "94cf9fe89905208bdebf67a5e48d0b9975710b0589fb274feeddf1f2f89da3e3",
+      "evidenceFingerprint": "c22790fb1dd66ca8d4f48b22b2d52e3cb54c321e6f337096d2a089550fba43a6",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "normalized_stem",
+        "sourceQuestionId": "judge-030"
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-030"
+      },
+      "adoptedBasis": {
+        "source": "official_word",
+        "contentAnswerBasis": "manual_official",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": true,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "Excel宏可以录制或编写一系列操作并重复执行，适合自动完成格式处理、数据整理和报表生成等重复任务。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-031",
+      "questionType": "judge",
+      "questionFingerprint": "9d1d47e0dbd661b1a1890e90ccf7572398a94c8d1deff4ee8337676f46885e1e",
+      "evidenceFingerprint": "344de22d4023366fcdf662fac093b6090516e7ecf9e5470ddca8913744c1ce3b",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-031"
+      },
+      "adoptedBasis": {
+        "source": "independent_review",
+        "contentAnswerBasis": "editorial_review",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": true
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "试用期包含在劳动合同期限内；只要试用期的约定本身符合法定期限和次数等要求，约定期满后继续按正式岗位履行合同并不违法。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "独立审校结论与次级网站答案冲突；现行劳动合同规则并不禁止合法试用期满后自动继续履行，改判为√。",
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-032",
+      "questionType": "judge",
+      "questionFingerprint": "983e4c013f71ff3dd532ae150c8151c5e4d15f33b36323416b22edc45c04ebe9",
+      "evidenceFingerprint": "18eea3c90d5343770205991bc2c97d9967311c23712c443d12540595c9595263",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-032"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "劳动合同期限属于书面劳动合同的法定必备条款，用于明确固定期限、无固定期限或以完成一定工作任务为期限。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-033",
+      "questionType": "judge",
+      "questionFingerprint": "52d62d1f39ae819f5338e6bce2c0d315bf65e66a42a1c62933f775c293ee2ca5",
+      "evidenceFingerprint": "13edad15ea19b6017dfad37f55885a7290efb95f641596885a5a0e0c8f793fcf",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "normalized_stem",
+        "sourceQuestionId": "judge-033"
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-033"
+      },
+      "adoptedBasis": {
+        "source": "official_word",
+        "contentAnswerBasis": "manual_official",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": true,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "劳动者在试用期解除劳动合同通常应提前三日通知用人单位，并非可以在任何时候不履行通知程序立即解除。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-034",
+      "questionType": "judge",
+      "questionFingerprint": "e9c5d519c289ec1bf62ae9270a4290c7afadf71329651a165dcffb4576581dcb",
+      "evidenceFingerprint": "c37248b853f80e313535a62423075574fc1a44bc4aea5f7aae1b42086e9cf505",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-034"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "网络运营者对所收集个人信息负有安全保护义务，应采取技术和管理措施防止泄露、毁损或丢失，并在事件发生时及时补救。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-035",
+      "questionType": "judge",
+      "questionFingerprint": "fe0f5ce75b52706fad3673f1aaa686b44957f3f03f262225457d33837e7cc161",
+      "evidenceFingerprint": "ebab9a7e9ab5f329349152841ae44a07eafd018dfa0368a8dae4857f3b91bf8a",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-035"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "提供网络接入等依法要求实名的服务时，运营者应核验并登记用户真实身份信息；用户不提供真实身份信息时不得提供相应服务。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-036",
+      "questionType": "judge",
+      "questionFingerprint": "f797f7b3dfff24cc1d10b1b328ac7266a8f4c445b4b4170349fcd4983e368442",
+      "evidenceFingerprint": "ab261d8256d00cd933f7e3f5b96d535bae807c39a1b924993cc3ac7956ffed15",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-036"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "关键信息基础设施运营者负有定期安全检测评估义务，可以自行或委托专业机构实施，频率至少为每年一次。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-037",
+      "questionType": "judge",
+      "questionFingerprint": "e9816e5bb00c602ea542967ee2dc080e57224578c9d6d958fe31464a28d22937",
+      "evidenceFingerprint": "91290889aa2e2aa855be8222155c3de14ac6f923232c1a512fc77fa7da3b2dd9",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-037"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "专利申请权可以依法归属于单位，也可以通过合同转让或由继承人承受，因此申请权主体不限于实际发明人或设计人。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-038",
+      "questionType": "judge",
+      "questionFingerprint": "96d3fe7a5097bb0da6082f8eccc2ee37edecc8115557480b747515dee3a208af",
+      "evidenceFingerprint": "ce48e7bb36ce26d91d1153005e2c5924a051b6c5168319e804a7c4e9bbe0a1fc",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-038"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "除新颖性、创造性和实用性外，发明还必须属于可授予专利权的客体，并满足充分公开、文件规范等法定条件，不能据此断定一定授权。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-039",
+      "questionType": "judge",
+      "questionFingerprint": "b8ec5630fadaa7c6ed7ba032f974d37e54e22f1d593165d50fc9434f924f5e1e",
+      "evidenceFingerprint": "a0e5480557699154c19bec15c86d0385b93c5ce441e80dc5244a62958905d89f",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-039"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "发明或实用新型专利申请通常需要提交请求书、说明书及其摘要、权利要求书等文件，以界定技术方案和保护范围。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-040",
+      "questionType": "judge",
+      "questionFingerprint": "99c2d46b86f027c4d609afcb1c240220811385ce11e73e646d7c4caa0b4330a6",
+      "evidenceFingerprint": "9ab9fcffe632e023361d723576199617c937b1cc0f1aa9f5ec71d4f10ba15322",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-040"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "法律法规是社会行为的基本规范，社会成员负有遵守义务；自觉守法是维护公共秩序和他人合法权益的基本要求。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-041",
+      "questionType": "judge",
+      "questionFingerprint": "11faa6e74d2d8cda67fc891abe1a11bf69b40495350114116bb1d1fb278c76ea",
+      "evidenceFingerprint": "de7763e2bfad87c57ba288d07811e8a266d9559ae1c5d49e81a0838eed961f12",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-041"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "劳动安全卫生、职业健康和工时休息等法定劳动保护适用于符合劳动关系条件的劳动者，不因其从事人工智能训练工作而被排除。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-042",
+      "questionType": "judge",
+      "questionFingerprint": "8a2b26c11e3433cbd725cac47f2250dca343fcf8c92589b22be85b9232433448",
+      "evidenceFingerprint": "3b24e4adc7a7973ca1f41526e58818dc7d6f33aa86a5ae673827df2413c925f3",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-042"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "数据、代码、算法实现和模型可能受著作权、专利、商业秘密或合同许可约束，使用、复制和分发前必须确认权利归属及授权范围。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-043",
+      "questionType": "judge",
+      "questionFingerprint": "0e9d3c059c99fe1bbd1326d1f9b51b7e198fdcee6bd5aaf4db39093117a0f0b5",
+      "evidenceFingerprint": "12add7db1baae77e0cee7e396a080c5623a50838a8a4256bcb680ea1cb0bdf74",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-043"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "受著作权保护的作品须具有独创性并能以一定形式表现；单纯思想、事实或缺乏独创性的表达不属于作品保护范围。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-044",
+      "questionType": "judge",
+      "questionFingerprint": "e4835f1713712fc3f6ceec074baeef67653076d0d90120a0fc0d1129ac96b1fb",
+      "evidenceFingerprint": "f1b3ed38480c7b81b36c755705988d7ee7a3348f051a195014cde4efd865f500",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-044"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "专利权人可以是依法取得权利的单位、受让人或其他主体，发明人、设计人也不必当然就是最终专利权人。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-045",
+      "questionType": "judge",
+      "questionFingerprint": "45eefd917656d3b93f27cda74bbb36b61e524379be97b2d516a954fe13352126",
+      "evidenceFingerprint": "f3d0928adfd93fd3f2e3fb05d3141f6c27268837f420f4f1f9fe09dc9527c4e2",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-045"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "知识产权保护对象还包括发明创造、商标、商业秘密、地理标志等多种权益，并不只针对具有原创性的作品。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-046",
+      "questionType": "judge",
+      "questionFingerprint": "24f8ea4f40dd812fec2ecef9a8c35ad2d954d5e3342adbc7d38fea8e41500088",
+      "evidenceFingerprint": "cd391b0eca63200abca11bdb1d07e63b495039f3a23cfb4c330422d019e41520",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-046"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "Python可通过接口或爬虫采集数据，Excel可导入录入表格数据，SQL Server可接收、查询和汇集业务数据，均可参与常见数据采集流程。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-047",
+      "questionType": "judge",
+      "questionFingerprint": "18f7e06f5e1dcc91b7425b124ea513f19c6b0aefc74e85d5ddaba314ed277067",
+      "evidenceFingerprint": "26fda270b3cd05a7fe074b8fa8e83e1d5708276321e9042f4a183349d29207b6",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-047"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "requests库能够发送HTTP请求、传递参数并读取响应内容，是Python网络爬虫获取网页或接口数据的常用基础库。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-048",
+      "questionType": "judge",
+      "questionFingerprint": "cb3daef61f3397fb9070ea19cfe65bd6bfb9e2d658d7ef8a05548de30a981385",
+      "evidenceFingerprint": "094a72922a335569ccf59b75ca91aef6fce4a89d8b005fcc1ed3babcc7edbb5f",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-048"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "采集工具除提升速度外，还能统一格式、减少人工错误、记录来源、定时执行和增强可追溯性，其价值不只在效率。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-049",
+      "questionType": "judge",
+      "questionFingerprint": "ddb839a0967c847e7606466cf0a897d1e9ff6517af103fde798a4b29392af227",
+      "evidenceFingerprint": "cdadb0bdd74db208d56e9d9b77af951dad0d755d7e98cdb8f76ef24f10976f75",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-049"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "数据治理覆盖标准、质量、元数据、权限、安全、合规和全生命周期管理，服务对象也不限于模型训练输入，题干把作用范围缩得过窄。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-050",
+      "questionType": "judge",
+      "questionFingerprint": "0110d4a0551bccd9552edbe8bb71b3db8506b63965e9e971f901ecdf2644d42a",
+      "evidenceFingerprint": "ba04a2898f2ffc41e8a679495bc136104ccaf2ec45a2a21a00a5810166651e26",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-050"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "ETL依次从一个或多个数据源抽取数据，按目标规则清洗转换，再加载到目标数据库、仓库或其他存储中。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-051",
+      "questionType": "judge",
+      "questionFingerprint": "f30f18a4dbdd5c2fd46fd09a64c7d6914063116657d06eefa59e1daccad527e1",
+      "evidenceFingerprint": "5d888792e8f041531093d37af25c908a62abd019f5415b5f8e623693510247c2",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-051"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "数据库、对象存储和文件管理等工具通常提供定时快照、备份策略及恢复机制，以降低误删、故障或灾害导致的数据损失。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-052",
+      "questionType": "judge",
+      "questionFingerprint": "94780db0d1ab39ff7807d875adde808c08362b29740ac88e140f25bd26e2b18f",
+      "evidenceFingerprint": "79428cd690d0c793ca9c82293300b1796141e481f04bd028364dbb8ec9e524f7",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "normalized_stem",
+        "sourceQuestionId": "judge-052"
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-052"
+      },
+      "adoptedBasis": {
+        "source": "official_word",
+        "contentAnswerBasis": "manual_official",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": true,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "云服务通过网络以按需方式提供共享的计算、存储、软件等资源，用户终端可根据权限和需求获取这些服务。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-053",
+      "questionType": "judge",
+      "questionFingerprint": "e08c21c46aa2bc0f080d09118430e3effad238fd5e032cd2fbaa47ac256d3d4c",
+      "evidenceFingerprint": "2c37cd2694f7b4b9d0ba748b7a623c74102578a3df64e4e1b2de6b4851b1beee",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-053"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "Excel可以直接打开或保存CSV，但其常规“另存为”格式不包含JSON；转成JSON通常还需脚本、VBA、加载项或其他转换工具。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-054",
+      "questionType": "judge",
+      "questionFingerprint": "21b1511eace61c7c09b1a4b3d072c205b804ef62649b2053890ecaec2d21f7bb",
+      "evidenceFingerprint": "1f7438974fdeeb558648a5d0bd683e422dce62ba23100deef2868deb36496453",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-054"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "大数据平台可处理日志、文本、图片、音视频等半结构化或非结构化数据，“所有平台只能处理结构化数据”明显不成立。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-055",
+      "questionType": "judge",
+      "questionFingerprint": "03584a58bbcdb0761405c84f2d5ef6cd3656faa36c669b7b6c2a257b63c236b7",
+      "evidenceFingerprint": "a30ad77bd000195b1fbc7ca2de5fb71d4597ba9ba65da8cd91a4f6f97173b90f",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-055"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "常用数据工具可处理字符串、类别、日期、文本乃至图像张量等多种类型，并不限于数值型数据。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-056",
+      "questionType": "judge",
+      "questionFingerprint": "6f68df1b30827e00b2aa4a7dbd001ae8590b688dd5ad5d7d97123e9872c5e91b",
+      "evidenceFingerprint": "4a3ed0c7e433045cec10eb54f51ff9fde387a087a91523f1b233ecef3764d7a7",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-056"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "自动特征选择依赖算法、数据划分和评价指标，不能保证得到全局最佳特征集；业务含义、泄露风险等仍需领域人员判断。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-057",
+      "questionType": "judge",
+      "questionFingerprint": "8894bb05849fa988361f7131d4d89610b7938188149ea2fb2c325da91d20bdf8",
+      "evidenceFingerprint": "9195fb339d3481b5703bb491e1c0cece9aaa9a18cdc8c23f18ece51deed6fbd7",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-057"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "数据质量监控旨在持续发现准确性、完整性、一致性、及时性等问题并告警，缩小数据集不是其主要目标。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-058",
+      "questionType": "judge",
+      "questionFingerprint": "01c1ba954a52c709c118fc07d689cee98aec561a52fafbce0b2201683ff85c56",
+      "evidenceFingerprint": "b55d4759db8dd1ccdeb047092a840467ad882f789621dc38d3e8eb8251d041f3",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "normalized_stem",
+        "sourceQuestionId": "judge-058"
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-058"
+      },
+      "adoptedBasis": {
+        "source": "official_word",
+        "contentAnswerBasis": "manual_official",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": true,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "resolved",
+        "kind": "answer_mismatch",
+        "sources": [
+          "official_word",
+          "secondary_site"
+        ],
+        "details": {
+          "officialWordAnswer": [
+            "×"
+          ],
+          "secondarySiteAnswer": [
+            "√"
+          ]
+        }
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "数据审核平台的核心是按规则审查、校验、发现异常并保留审核流程记录，不能笼统等同于负责各种“审核和处理数据”的通用软件。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "独立判断认为题干作为宽泛定义具有可成立空间，但官方Word明确答案为×；按来源优先级保留官方答案并标记口径疑点。",
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-059",
+      "questionType": "judge",
+      "questionFingerprint": "715eecbc8d90cd2b0738b1bf5d0653ffb41891afa487b62ca81a328804604659",
+      "evidenceFingerprint": "08e8f850dc5e99fac2870b00bdd016f8a3a56c5fb65c3c2b4856c7479e85e0b3",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "normalized_stem",
+        "sourceQuestionId": "judge-059"
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-059"
+      },
+      "adoptedBasis": {
+        "source": "official_word",
+        "contentAnswerBasis": "manual_official",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": true,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "Power BI是微软的商业智能平台，可连接和转换数据、构建可视化模型，并制作交互式报表和仪表板。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-060",
+      "questionType": "judge",
+      "questionFingerprint": "47c704779a179400db69487e8c6468dad1f13a50743b4a52b260d2d8926f0696",
+      "evidenceFingerprint": "3880450a2746b9e80e7dc3b95b47d3504691bda1f2a6957c0097c0dfaafdd866",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-060"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "流程管理与优化适用于制造、金融、政务、医疗、零售和互联网服务等多种行业，不受制造业场景限制。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-061",
+      "questionType": "judge",
+      "questionFingerprint": "6670851ed4c2df1c74a2517bfb6c2211f6307e4682b0b2b8d720b9b641f045fd",
+      "evidenceFingerprint": "339f835fd8eae8ca721249122cda03b35aebb09997362c1fd337e6a4c1442025",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-061"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "合规使用自动化工具可提高采集一致性和可重复性；数据原始性应通过来源记录、只读保存和完整性校验保障，而非排斥自动化。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-062",
+      "questionType": "judge",
+      "questionFingerprint": "7dbcdd6092956ba8e29650d045ee7a7c75f1f8a2ca1c5e62a6ad58d93501340b",
+      "evidenceFingerprint": "6cf010ee7609f735d017c1b13ce63a805d38f6ea88c3f64539fe919ee7d40afb",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "normalized_stem",
+        "sourceQuestionId": "judge-062"
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-062"
+      },
+      "adoptedBasis": {
+        "source": "official_word",
+        "contentAnswerBasis": "manual_official",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": true,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "选择数据源既要看数据值是否准确，也要评估来源是否权威、稳定、可追溯和持续可用，可靠性不能被忽略。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-063",
+      "questionType": "judge",
+      "questionFingerprint": "aac9d68e1fe9123609a949e315635878c7a9f1fbc63b9ec2ad2f2ff0aece3746",
+      "evidenceFingerprint": "5902716c0d164c0798c4de40aa2d261d5e8649af20590cc379746633b4be6fb4",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-063"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "正则表达式可按模式匹配字符串，适合从网页文本或结构相对稳定的片段中定位并提取特定内容。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-064",
+      "questionType": "judge",
+      "questionFingerprint": "edd96fb9321c9baf15a6c884982f006f64217a75ae55ad8881c343c457df32c5",
+      "evidenceFingerprint": "369c43742726689389290535bc3dc43c8fdf20deff6983ca765c4930dc52551e",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-064"
+      },
+      "adoptedBasis": {
+        "source": "independent_review",
+        "contentAnswerBasis": "editorial_review",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": true
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "在功能、合规和结果一致的前提下，采用吞吐量更高的抓取工具能够缩短请求与解析时间，属于提升抓取效率的一种优化方法。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "独立审校结论与次级网站答案冲突；题干说“包括”而非“仅包括”，更快的合适工具确可作为优化手段，改判为√。",
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-065",
+      "questionType": "judge",
+      "questionFingerprint": "e6fa9e118dfaa31a757343afd8c45985e690f0a28f96c3d9c92949e1f8674aa3",
+      "evidenceFingerprint": "3cc5096114a8534103f2cd3e0e88b60548d1e8c7f5885533ffb71e6a75439b11",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "normalized_stem",
+        "sourceQuestionId": "judge-065"
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-065"
+      },
+      "adoptedBasis": {
+        "source": "official_word",
+        "contentAnswerBasis": "manual_official",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": true,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "关系型数据库以表、字段和关系约束组织结构化数据；许多非关系型数据库采用文档、键值或列族模型，更便于承载模式灵活的数据。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-066",
+      "questionType": "judge",
+      "questionFingerprint": "5b42155e07a24596753534a3e4127a7a562ec10a50ede5da5a35054a27ecedc7",
+      "evidenceFingerprint": "c2800a5fb1e99254aea4f521b20453c635bd987055196c3dfb1bad08b470f08a",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-066"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "清洗前通常先理解业务目标并对数据进行加载、结构检查和质量画像，确认问题分布后才选择缺失值处理方案，不能固定把它作为第一步。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-067",
+      "questionType": "judge",
+      "questionFingerprint": "06d53d64b22b54100389de7c774b85eb48fc74f9cca976c46391eb2244f48577",
+      "evidenceFingerprint": "9660a1a9ff945fb5a2744df08ac54af9b442736ee1f37986529a84db6081ece0",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-067"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "识别并处理重复、缺失和异常记录是数据清洗的主要工作，可提升数据准确性、完整性和一致性。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-068",
+      "questionType": "judge",
+      "questionFingerprint": "8448e4f04233491599103b4eeffe0e6ea4a9211e3ca50cbaffbaafcc4c5a324e",
+      "evidenceFingerprint": "cbfe42abcb79a727e4e25b02b81e7669b87fcf3898d56978bae68997a2fcaa96",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-068"
+      },
+      "adoptedBasis": {
+        "source": "independent_review",
+        "contentAnswerBasis": "editorial_review",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": true
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "加密能使未授权者难以读懂数据，从而保护机密性，但它本身不能阻止文件被复制、外传或窃取；还需访问控制和防泄漏措施。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "独立审校结论与次级网站答案冲突；区分“泄露事件发生”与“泄露内容可读”，加密不等于阻止外传，改判为√。",
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-069",
+      "questionType": "judge",
+      "questionFingerprint": "ac2f79bddc8dc86b0b2f58ec05dd5584cb18e51b0e83d40b4549f8b1649e8109",
+      "evidenceFingerprint": "219ed2e7f970f8b5a1cbe73446e367b98e38c11af2fb1bd936baf35ec8edda89",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-069"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "流式或实时处理系统可以持续接收高吞吐数据，在较低延迟下完成计算并输出告警、统计或决策结果。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-070",
+      "questionType": "judge",
+      "questionFingerprint": "a90d2d11e667fe05d50724580037bd35352607235bea756838020b50c01463c4",
+      "evidenceFingerprint": "5aa6cced9a588bc1dd0064f767cbb61a3a094ce17bf23b3245915019e8613cb2",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-070"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "主成分分析通过正交变换提取主要方差方向，线性判别分析利用类别可分性构造低维表示，二者都是常见特征提取方法。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-071",
+      "questionType": "judge",
+      "questionFingerprint": "9328b84c38d13a32fb66fce0fc26d9b89f9350bb9a90d1ff972c4614de71a521",
+      "evidenceFingerprint": "6ffcf12d7e03b09bb8f17f603a32b1c11b2fa5cfca756f9a9bdbba37d421070e",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "normalized_stem",
+        "sourceQuestionId": "judge-071"
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-071"
+      },
+      "adoptedBasis": {
+        "source": "official_word",
+        "contentAnswerBasis": "manual_official",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": true,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "容器共享宿主机内核，启动快、密度高；虚拟机提供独立操作系统和更强隔离。两者适用边界不同，容器不能在所有场景完全替代虚拟化。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-072",
+      "questionType": "judge",
+      "questionFingerprint": "7edb6218cb7961f3db65ac05a2901bfa63fb628a6fbed935b5a0e444b6c6654d",
+      "evidenceFingerprint": "728e5f4bae2dfad54f56a0345679c0939572d36cba46282a2fef24df41648d80",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-072"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "面对规模较大的数据集，常通过有代表性的抽样检查估计质量问题，再结合规则校验或全量统计补充验证。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-073",
+      "questionType": "judge",
+      "questionFingerprint": "2ff2a5c7bfd735546cf5ab3ba51d06fce61b4ad5ef5137b59641528c64ade00c",
+      "evidenceFingerprint": "48c5d3366629981a6ec696802e13eae1a3a7583555ca5c49939a7c4e48efb189",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-073"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "数据校验用于检查格式、范围、关联和必填约束，异常检测用于发现偏离正常模式的记录，二者都服务于提高数据准确性与完整性。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-074",
+      "questionType": "judge",
+      "questionFingerprint": "13b0a7f3514ff8050fbc0611fb05f71b61475dc26a74efff5ea1763f0c29bc0c",
+      "evidenceFingerprint": "06480a1cdc7c9338d7fd62850a54b5a751726dd118d8ef5b2debf0f549eb656e",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-074"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "只有先梳理现有流程的角色、输入输出、耗时、控制点和瓶颈，才能有依据地删除浪费、重排活动并设计目标流程。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-075",
+      "questionType": "judge",
+      "questionFingerprint": "6cf0df56629999925ae14e41c6254b29b6a614388980a7cf5e392787c814405b",
+      "evidenceFingerprint": "0c62a425aaa311438fbc02b06ee54651dd1938f249f950bf7e3ddbea3ccfba7b",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-075"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "合规检查除安全性外，还会核验数据完整性、可用性、隐私、授权、保存期限和行业监管要求，范围远不止单一安全维度。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-076",
+      "questionType": "judge",
+      "questionFingerprint": "f7d14c1bbedc346636e9aaba171e51c37f93f15ed0d900d8c924c6d9ac3fa1d2",
+      "evidenceFingerprint": "d75c7679fe076624071685ad639bb849339c61933571ce168663755923fa866c",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-076"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "企业内部的生产、财务、人事等流程和外部的采购、销售、客户及合作伙伴交互都会形成业务记录和业务数据。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-077",
+      "questionType": "judge",
+      "questionFingerprint": "27f751f3a0243c314e18d715a297cde902d296c167ddc9a8db14a2bd53d56c68",
+      "evidenceFingerprint": "6f7d3d40825fed7a18f8a1dc947fb18a125026d16ab347ce8e671ab557ed5851",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-077"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "按应用场景划分，人工智能业务可以覆盖客服、家居、交通驾驶和医疗等领域，这些都是常见的场景类别示例。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-078",
+      "questionType": "judge",
+      "questionFingerprint": "ee91ae190f33d566d7fd5fc8bb1e55508ad54d8e1d3b68da1ef52bee23b20fcf",
+      "evidenceFingerprint": "284028c752241d9eda0a5a22a43a8b4002e232ddf1e711e7495ac03186dfd47d",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-078"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "智能控制模块正是依据传感数据、控制规则或学习模型生成控制指令，并通过执行机构实现设备自动或辅助控制。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-079",
+      "questionType": "judge",
+      "questionFingerprint": "4853f590057ffb78671d9687a0ccd644f9cd531ed8181ab882c42e8f579337b3",
+      "evidenceFingerprint": "4b842158e1527e4e53dd0bbba8b5a00cfe8cc0d311cd7e4190bb538c9975c17c",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-079"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "典型推荐系统需要描述用户偏好、刻画候选物品，并由推荐算法计算匹配度或排序结果，三者构成其核心功能。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-080",
+      "questionType": "judge",
+      "questionFingerprint": "51f09311d614f8cf08149d37506c6cd8e20ade20b1c8fa506a959f9e6d558a94",
+      "evidenceFingerprint": "0d5c479a11eeab4b8b5207f7590909638b2bf41d5b9753c22e0f407feb1e768d",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-080"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "智能搜索可以用分词、意图识别、实体抽取和语义匹配等自然语言处理技术理解查询，题干所说“不能”与实际能力相反。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-081",
+      "questionType": "judge",
+      "questionFingerprint": "eab8a8a20c93007651d9334fe1641d0eeab11c179104ff24f85b8abc00614610",
+      "evidenceFingerprint": "f4dfe3d52c59da10ebb120751f01293b51edc9ee3a23a8a97b278863a3825255",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-081"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "智能交互系统可结合语音识别和自然语言处理，把语音或文本转化为可解析的意图和参数，从而作出响应。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-082",
+      "questionType": "judge",
+      "questionFingerprint": "1ca2802da3ee22b44b76e979710e43b670bd13e3f4ca865feaee84b429486ada",
+      "evidenceFingerprint": "39dd593e40da4cffba92f2c4a10af9320cc143c2f0cad6acf5c662c5bef64ae8",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-082"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "自动数据处理可借助经过验证的人工智能模型和计算资源，从大量数据中持续提取规律并输出较稳定、准确的分析结果；实际质量仍取决于数据、模型与验证过程。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "独立审校结论与次级网站答案冲突；“能够挖掘出稳定且准确结果”带有无条件保证，改判为×。",
+        "二审修正一审改判：题干的“能够”表述系统具备该能力，不等于对任何数据和模型作无条件保证；结合次级来源答案√，恢复为√并在解析中补充成立条件。",
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-083",
+      "questionType": "judge",
+      "questionFingerprint": "6cbf8ff56f99d10703a1901847124455817d0977003e6e14c757f85eb2a93cb5",
+      "evidenceFingerprint": "67d050de1563c1d221d078eaad5011b25df31a5861b96c98c23102425be922ac",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-083"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "最优化决策支持把业务目标、约束和资源表示为优化问题，通过计算寻找使性能或业务指标最优的配置与决策方案。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-084",
+      "questionType": "judge",
+      "questionFingerprint": "98a838a9217c01587d6d3a01392a048ad11732b0e958e582a7432d5fcaa277db",
+      "evidenceFingerprint": "1f5be4ef37700f2a8ed8b1ce8191609ee79ae1250ba79c9afd4542675b915354",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "normalized_stem",
+        "sourceQuestionId": "judge-084"
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-084"
+      },
+      "adoptedBasis": {
+        "source": "official_word",
+        "contentAnswerBasis": "manual_official",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": true,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "智能控制可以基于反馈控制、规则、优化或学习算法实现，不必模拟人脑思维；把其原理一概归结为仿脑并不准确。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-085",
+      "questionType": "judge",
+      "questionFingerprint": "4a34ba1c8103f7dd3f793644e6e68b4372a5192910d8f80e8fddd2f7c6651f2b",
+      "evidenceFingerprint": "81e5533728829ee464a8729b9f27009ab21631a1d38c915e04410a5302e19a50",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-085"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "自然语言处理能够对人类语言进行分词、语义理解、信息抽取和生成，使计算机可以接收并回应人的语言输入。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-086",
+      "questionType": "judge",
+      "questionFingerprint": "69ed9ea9ca6b9597e3fbc2f0a0911c4b0c4aa3da55ef83467c1f3313972534e3",
+      "evidenceFingerprint": "a312f3b61bb4b338acb2f90888c206d082fd08623afc7b4373a3510a62961f35",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-086"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "生物识别信息属于敏感个人信息，采集和使用应具有特定目的、充分必要性并依法取得单独同意等授权，不能因用于认证就免除许可。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-087",
+      "questionType": "judge",
+      "questionFingerprint": "2d3f03e8b4a1f9190b9b5fbb61412323a723b544abb679bfc1c9fb2598a03db1",
+      "evidenceFingerprint": "cba9646b9cf88cce26a59f42792f14ffc6c2909e12b35ce3cf6fca38d1740bcf",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-087"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "计算机视觉涵盖图像增强和变换等处理任务，也包括目标定位、分类、识别和场景理解等感知任务。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-088",
+      "questionType": "judge",
+      "questionFingerprint": "b4f89d2984dfd3d7a6baa3547316a443be74c660f7e971a658206a0a73696ffc",
+      "evidenceFingerprint": "463bd6ee796ee5a39ca3059a948f2b25006984f2e872af919680e39c7f77454a",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-088"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "图像识别利用计算模型从视觉数据中提取特征并判定对象或类别，是计算机视觉和人工智能的重要应用。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-089",
+      "questionType": "judge",
+      "questionFingerprint": "fcaa70eeccf67270f10fdd40659ae7b8a7acbc7696fe5411625165a7151f02a2",
+      "evidenceFingerprint": "b7f9420252987b7fc28243ad2478aae5062d7c8fba2dd07e29ab878259c6e797",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-089"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "原始数据常含缺失、噪声、重复和格式不一致，清洗与预处理通常是保证挖掘结果可信的必要环节，不能一般性地视为可有可无。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-090",
+      "questionType": "judge",
+      "questionFingerprint": "6ace37159fdc33c6382f37b01435d808be675ed9aac1272db8afea4972a55e95",
+      "evidenceFingerprint": "c189301b5be50a619ee1c02ba9ec966ef7634723e6c1c1de9056381b71c39f7e",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-090"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "监督学习从带标签样本学习映射，无监督学习发现数据结构，强化学习从交互反馈学习策略；按广义机器学习口径均可用于数据与知识发现。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "强化学习是否列为传统数据挖掘方法存在教材口径差异；本题按广义机器学习与知识发现口径维持√。",
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-091",
+      "questionType": "judge",
+      "questionFingerprint": "5a390722ec37a94765cb0afced54728ca874d15512efc37584fe26282c1ce598",
+      "evidenceFingerprint": "41e542c000e5af1c8cf11117367aa49b17ccbcdbf82e4767f5a3fd9406018b02",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "normalized_stem",
+        "sourceQuestionId": "judge-091"
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-091"
+      },
+      "adoptedBasis": {
+        "source": "official_word",
+        "contentAnswerBasis": "manual_official",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": true,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "业务模块需要能随需求扩展、在不同场景复用，并便于定位和修改问题；可扩展、可重用、可维护是常见设计原则。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-092",
+      "questionType": "judge",
+      "questionFingerprint": "2d96c47e9b7c28d6ad1679a5e303774db285dfef4af0863897c1a4f19d9d72f2",
+      "evidenceFingerprint": "cc2d13ffdab061bdf60cfc5935e90de20444b53bcb1291d5f9b4255a7ae68abd",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-092"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "流程分析通常是识别问题的基础阶段，优化手段还包括简化、重排、自动化、持续改进和流程再造等，不能固定概括为题干所列三种。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-093",
+      "questionType": "judge",
+      "questionFingerprint": "791dc094ebbeea5c1c59a831ccdb57332008baf0d77bfdbb19d7743f2825e207",
+      "evidenceFingerprint": "09d9f7f80e483c7bc63865e6028e16470e20b55eee1dade70dcb4584439292f1",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-093"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "业务数据还可通过系统日志、交易记录、访谈、观察、传感器、接口和数据库查询等方式收集，问卷只是其中一种。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-094",
+      "questionType": "judge",
+      "questionFingerprint": "31bcf81440b807a7a7cd5ba358e7fb69023ecd4a8fe2830cb7f6bc9b343bda8f",
+      "evidenceFingerprint": "9fd13eebf912df826b4ab0dd8b3f1263cc14670abfc75e37369f2d33fc35564f",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-094"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "订单、入库单、发票等单据承载业务信息、审批状态和责任凭证，并随业务环节流转，是企业业务流程的重要核心载体之一。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-095",
+      "questionType": "judge",
+      "questionFingerprint": "d35b1261df5bdfc792470f7bb180df4384409301b1ef0c50b0be8ff925799738",
+      "evidenceFingerprint": "31e6af0375217d6b2f37aacecfc56e1c22d2c5af01e11c1473c5a4f30d34089c",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-095"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "分析简单流程时，先记录并描述当前流程的步骤、参与者、输入输出和耗时，才能建立现状基线并识别问题。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-096",
+      "questionType": "judge",
+      "questionFingerprint": "f87f2b5cff682bde866b666cc420687783dc4dd98b49248b4005edb677194a78",
+      "evidenceFingerprint": "e58fb81928792e17c4835fc0d9fbb4334c1bae775ed65f1e0f604da2742e2ba9",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-096"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "流程简化的目标是消除非增值活动、降低等待和交接成本，同时保留必要控制；它不等于机械地减少所有环节和步骤。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-097",
+      "questionType": "judge",
+      "questionFingerprint": "18bbccf89553641be82bf72a2e39acaca829a2028348a89897072aeb25c0c3df",
+      "evidenceFingerprint": "8ebd48d1aa39203668a99fc4af28aafea03dadee991cc8356ff2e86210c7ce55",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-097"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "优化目标应在方案设计前确定；监测和评估阶段主要采集指标、比较目标与实际结果，并据此发现偏差和推动后续改进。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-098",
+      "questionType": "judge",
+      "questionFingerprint": "1b41f3ff30bbb836d3c9e6c6d44f06428fcbf2b4b69735188e6ec8ad76fca82e",
+      "evidenceFingerprint": "e9e7c0109aafa625f9e2f991e94891f8dbdb4fe89da3831051825c4054549664",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-098"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "控制图用于观察过程波动和稳定性，帕累托图用于识别造成大部分问题的关键少数因素，二者常用于复杂流程质量分析。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-099",
+      "questionType": "judge",
+      "questionFingerprint": "60d38c1d8e2cc7f43b589224d91e4959d127783ee59c8f91a77928cbfa60f7e0",
+      "evidenceFingerprint": "2c59968600d8a0789739e9854c71dd43e2637283a8617619e97fa0edb1742f0c",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "×"
+      ],
+      "reviewedAnswer": [
+        "×"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "×"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-099"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "复杂业务系统还可通过流程重构、组织调整、制度完善、数据治理和人员培训等方式改进，技术更新不可能是唯一方法。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    },
+    {
+      "questionId": "judge-100",
+      "questionType": "judge",
+      "questionFingerprint": "36cc391c05be05a40a7fe022e3547677e18dba020ff3340e0e9e6007d601312d",
+      "evidenceFingerprint": "f140a907f52c98508c556b2fb5a58d06455a3f0b881e3bf626e082095c768dfd",
+      "processingStatus": "reviewed",
+      "currentAnswer": [
+        "√"
+      ],
+      "reviewedAnswer": [
+        "√"
+      ],
+      "officialWordMatch": {
+        "status": "not_found",
+        "answer": null,
+        "matchMethod": null,
+        "sourceQuestionId": null
+      },
+      "secondarySiteMatch": {
+        "status": "matched",
+        "answer": [
+          "√"
+        ],
+        "matchMethod": "type_sequence_stem_options",
+        "mismatchReasons": [],
+        "sourceQuestionId": "boolean-100"
+      },
+      "adoptedBasis": {
+        "source": "secondary_site",
+        "contentAnswerBasis": "third_party_reference",
+        "decisionStatus": "confirmed",
+        "evidence": {
+          "officialWord": false,
+          "secondarySite": true,
+          "independentReview": false
+        }
+      },
+      "conflict": {
+        "status": "none",
+        "kind": null,
+        "sources": [],
+        "details": null
+      },
+      "explanationGenerationStatus": "reviewed",
+      "generatedExplanation": "综合流程优化应从客户价值出发，以端到端流程而非部门边界组织改进，并通过监测反馈持续迭代，这三项属于通行原则。",
+      "reviewedAt": "2026-07-25T17:06:36Z",
+      "reviewedBy": "codex-cross-reviewer-judge",
+      "notes": [
+        "交叉复核通过：codex-cross-reviewer-judge"
+      ],
+      "lastUpdatedAt": "2026-07-25T17:06:36Z"
+    }
+  ]
+}
