@@ -26,4 +26,5 @@
 | UI-009 | 已完成 | 彻底删除实操 40 题、实操模拟的所有“题目与评分”部分，然后再从零分析并实现更好的交互。 | 已物理删除旧组合抽屉、侧栏评分区和对应样式；40 题及模拟考按 Notebook、双交付物、Word 三类真实交付物重建作答、复盘与成果核对。 |
 | UI-010 | 已完成 | 继续聚焦实操题，从根本上围绕题目、答案、评分重构，不要侧栏形式。 | “不要侧栏”限定在单题、Notebook、答案评分和模拟复盘：这些流程统一为纵向闭环；模拟考六题使用顶部题号条。 |
 | UI-011 | 已完成 | 实操题库首页的题库概览、模块分值和搜索筛选可以做成侧边导航栏。 | 桌面题库使用 300px 粘性左侧导航，集中承载概览、入口、六模块与筛选；右侧只显示题组和题卡。平板与手机退化为顶部完整导航面板，单题、Notebook 和模拟考场不增加侧栏。 |
+| UI-012 | 已完成 | 有 Word 答题的题目，答题区都参考 1.2 的形式。 | 4.1/4.2 的 `.word-template-answer-sheet` 与 Notebook docx 页签的 `.notebook-word-answer-sheet` 均采用 1.2 业务答题纸结构（`business-sheet-sidebar` + `business-sheet-paper`）。合同测试 `two-deliverable Word tasks share the 1.2 paper answer sheet and completion checks`、浏览器回归 `every Word practical family uses the 1.2 paper answer-sheet structure` 与 390px 视口检查均通过。 |
  

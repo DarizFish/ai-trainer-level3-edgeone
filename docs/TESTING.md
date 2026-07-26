@@ -20,6 +20,8 @@
 npm.cmd run test:install-browser
 ```
 
+若本机设置了 `HTTP_PROXY`，必须同时设置 `NO_PROXY=localhost,127.0.0.1,::1`。Playwright 的 webServer 探活请求会经代理返回 `400`，它把“收到任何 HTTP 响应”判定为服务已就绪从而跳过启动 `next start`，导致全部浏览器测试报 `ERR_CONNECTION_REFUSED`。
+
 开发过程中运行快速门禁：
 
 ```powershell

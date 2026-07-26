@@ -22,6 +22,22 @@
       ]
     },
     {
+      "source": "/lite/jupyter-lite.json",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" },
+        { "key": "CDN-Cache-Control", "value": "public, max-age=0, must-revalidate" },
+        { "key": "Eo-Cdn-Cache-Control", "value": "public, max-age=0, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/lite/service-worker.js",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" },
+        { "key": "CDN-Cache-Control", "value": "public, max-age=0, must-revalidate" },
+        { "key": "Eo-Cdn-Cache-Control", "value": "public, max-age=0, must-revalidate" }
+      ]
+    },
+    {
       "source": "/lite/static/pyodide/pyodide.js",
       "headers": [
         { "key": "Content-Type", "value": "application/javascript; charset=utf-8" }

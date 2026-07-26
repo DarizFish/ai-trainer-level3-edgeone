@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Playwright writes minified vendor bundles into its report and trace
+    // artifacts. They are gitignored build output, not project source.
+    "playwright-report/**",
+    "test-results/**",
   ]),
 ]);
 

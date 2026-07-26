@@ -8,7 +8,7 @@
 
 - Web 与 API：Next.js 16，部署到 EdgeOne Makers 全球可用区（不含中国大陆）。
 - 服务端函数：EdgeOne Cloud Functions，首选香港区域。
-- 数据库：Supabase PostgreSQL，新加坡区域。
+- 数据库：Supabase PostgreSQL，东京区域（`aws-0-ap-northeast-1`）。
 - 静态资源：题库在构建时打包；JupyterLite、ONNX Runtime 和量化模型保留在 `public/lite`、`public/labs`。
 - 身份验证：本站自建邮箱密码账号，PBKDF2-SHA256 哈希、HttpOnly 会话 Cookie、可撤销数据库会话。
 
@@ -48,7 +48,13 @@ npm install
 npm run dev
 ```
 
-Windows PowerShell 若阻止执行 `npm.ps1`，使用 `npm.cmd`。
+Windows PowerShell 若阻止执行 `npm.ps1`，使用 `npm.cmd`。本机 3000 端口返回 `EACCES` 且原生 SWC 无法加载，本地开发固定使用 Webpack 与其它端口：
+
+```powershell
+npm.cmd run dev -- --webpack -p 3200 -H 127.0.0.1
+```
+
+若环境里设置了 `HTTP_PROXY`，必须同时设置 `NO_PROXY=localhost,127.0.0.1,::1`，否则浏览器测试无法启动本地服务，原因见 `docs/STATUS.md`。
 
 ## 测试与上线前检查
 
@@ -60,7 +66,7 @@ npm run test:smoke
 
 `npm test` 是日常快速门禁，执行 ESLint、TypeScript、内容完整性和 28 项合同测试。`npm run test:full` 额外执行生产构建与真实 Chromium 回归，包括 Pyodide 内核启动、ONNX 动态导入和移动端横向溢出检查。`npm run test:smoke` 只读验证已上线正式站的路由、EdgeOne MIME、安全头和运行时文件哈希。
 
-首次运行浏览器测试前执行 `npm run test:install-browser`。完整分层、CI 行为和失败定位见 `TESTING.md`。所有检查通过后再推送到 GitHub 和触发 EdgeOne 部署。
+首次运行浏览器测试前执行 `npm run test:install-browser`。完整分层、CI 行为和失败定位见 `docs/TESTING.md`。所有检查通过后再推送到 GitHub 和触发 EdgeOne 部署。
 
 ## EdgeOne Makers 部署
 
@@ -96,4 +102,13 @@ npm run test:smoke
 
 内容导入和资源生成命令仍保留在 `package.json`。原始参考资料和大型源压缩包不得提交到网站仓库；只提交已经审计、浏览器可交付的成品资源。
 
-产品改进记录见 `IMPROVEMENTS.md`，产品负责人输入见 `USER_INPUT.md`。
+重建 JupyterLite 扩展后，产物需同步到 `public/lite/extensions/ai-trainer-jupyterlite/`，并更新 `public/lite/jupyter-lite.json` 里的 `remoteEntry.*.js` hash 引用——每次构建 hash 都会变。`public/lite` 带 service worker 缓存，验证扩展改动需用无痕窗口或硬刷新。
+
+## 文档
+
+| 文档 | 用途 |
+| --- | --- |
+| `docs/STATUS.md` | 当前状态、未提交改动、已知问题和下一步；接手项目先读这份 |
+| `docs/TESTING.md` | 五层质量门禁、CI 行为和失败定位顺序 |
+| `docs/USER_INPUT.md` | 产品负责人可直接编辑的需求入口与状态 |
+| `docs/IMPROVEMENTS.md` | 可验证的产品改进记录，按日期倒序 |
