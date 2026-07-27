@@ -407,6 +407,36 @@ test("theory review publisher gates completeness and publishes only to temporary
     assert.notEqual(repeatPublish.status, 0, "the same review batch must not be republished");
     assert.match(repeatPublish.stderr, /theory-900-review-2026-07-26-v1/);
     assert.deepEqual(await readFile(fixture.content), publishedBeforeRepeat);
+
+    // 发布封条绑定的是整份 content 文件，实操素材同步这类与理论审校无关的改动也会
+    // 让它失效，而重新发布是被拒绝的。--restamp 先按首次发布的时间戳确定性重建一
+    // 次发布结果，逐字段比对理论审校写入的键，全部一致才把封条挪到当前文件上。
+    const auditBeforeRestamp = await readJson(fixture.audit);
+    const contentForRestamp = await readJson(fixture.content);
+    contentForRestamp.practical = [{ code: "9.9.9", note: "restamp fixture" }];
+    await writeJson(fixture.content, contentForRestamp);
+    const restamped = assertSuccess(
+      runPython(publishScript, [...publisherArgs(fixture), "--restamp"]),
+    );
+    assert.equal(restamped.restamped, true);
+    assert.equal(restamped.previousSha256, auditBeforeRestamp.output.publishedContentSha256);
+    const auditAfterRestamp = await readJson(fixture.audit);
+    assert.equal(
+      auditAfterRestamp.output.publishedContentSha256,
+      createHash("sha256").update(await readFile(fixture.content)).digest("hex"),
+    );
+    assert.equal(
+      auditAfterRestamp.output.restampedFrom,
+      auditBeforeRestamp.output.publishedContentSha256,
+    );
+
+    // 理论审校范围内的漂移必须被拒绝，并指名具体字段。
+    const tamperedContent = await readJson(fixture.content);
+    tamperedContent.stats.theoryQuestions = 1;
+    await writeJson(fixture.content, tamperedContent);
+    const refusedRestamp = runPython(publishScript, [...publisherArgs(fixture), "--restamp"]);
+    assert.notEqual(refusedRestamp.status, 0, "theory-scope drift must not be restamped");
+    assert.match(refusedRestamp.stderr, /stats\.theoryQuestions/);
   } finally {
     await rm(temporaryRoot, { recursive: true, force: true });
   }

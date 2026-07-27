@@ -475,6 +475,7 @@ def build_publication(
     output_audit_path: Path,
     version: str,
     generated_at: str | None = None,
+    require_unpublished: bool = True,
 ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
     if output_audit_path.resolve() == reference_audit_path.resolve():
         raise ValueError("发布审计不得覆盖原 theory-reference-audit")
@@ -482,7 +483,11 @@ def build_publication(
         raise ValueError("发布审计不得与 content 使用同一路径")
     existing_content = read_json(content_path)
     existing_review = existing_content.get("theoryReview")
-    if isinstance(existing_review, dict) and existing_review.get("batchId") == BATCH_ID:
+    if (
+        require_unpublished
+        and isinstance(existing_review, dict)
+        and existing_review.get("batchId") == BATCH_ID
+    ):
         raise ValueError(
             f"审校批次 {BATCH_ID} 已发布，拒绝重复发布以免覆盖首次发布审计"
         )
@@ -571,6 +576,102 @@ def publish(
     }
 
 
+# publish_content_payload 只写这几个键，所以发布封条保护的也正是它们。
+THEORY_PUBLICATION_KEYS = ("theory", "theoryReference", "theoryReview", "stats", "version")
+
+
+def publication_drift(
+    key: str,
+    current: dict[str, Any],
+    rebuilt: dict[str, Any],
+    audit: dict[str, Any],
+) -> list[str]:
+    """返回该键下有差异的字段路径；完全一致时返回空列表。"""
+
+    left, right = current.get(key), rebuilt.get(key)
+    if not isinstance(left, dict) or not isinstance(right, dict):
+        return [] if left == right else [key]
+    fields = sorted(set(left) | set(right))
+    if key != "theoryReview":
+        return [f"{key}.{field}" for field in fields if left.get(field) != right.get(field)]
+    # answerChanges 记的是发布相对输入的增量：首次发布时 content 里还是审校前的答
+    # 案，重建时 content 已经是发布后的答案，同一份账本必然算出 0。这个字段无法由
+    # 重建复现，改由审计自身记录的数值钉住。
+    drift = [] if left.get("answerChanges") == audit["answerChanges"]["count"] else [
+        f"{key}.answerChanges"
+    ]
+    return drift + [
+        f"{key}.{field}"
+        for field in fields
+        if field != "answerChanges" and left.get(field) != right.get(field)
+    ]
+
+
+def restamp(
+    *,
+    content_path: Path = DEFAULT_CONTENT_PATH,
+    reference_path: Path = DEFAULT_REFERENCE_PATH,
+    reference_audit_path: Path = DEFAULT_REFERENCE_AUDIT_PATH,
+    state_dir: Path = DEFAULT_STATE_DIR,
+    output_audit_path: Path = DEFAULT_OUTPUT_AUDIT_PATH,
+    version: str = DEFAULT_VERSION,
+    dry_run: bool = False,
+) -> dict[str, Any]:
+    """把发布封条重新绑定到当前的 content 文件。
+
+    `output.publishedContentSha256` 是整文件封条：validate-content.py 断言它等于
+    data/content.json 的哈希，任何后续改动都会让它失效——包括实操素材同步这类与
+    理论审校无关的正当改动。重新发布被设计拒绝，于是唯一出路曾是手改哈希，那等于
+    把封条变成橡皮图章。
+
+    这里先按首次发布的时间戳确定性地重建一次发布结果，逐项比对理论审校写入的那几
+    个键；只有它们全都与首次发布一致，才认为漂移发生在理论范围之外，可以重新盖章。
+    """
+    lock = nullcontext() if dry_run else state_lock(state_dir)
+    with lock:
+        audit = read_json(output_audit_path)
+        published_content, _, _ = build_publication(
+            content_path=content_path,
+            reference_path=reference_path,
+            reference_audit_path=reference_audit_path,
+            state_dir=state_dir,
+            output_audit_path=output_audit_path,
+            version=version,
+            generated_at=audit["generatedAt"],
+            require_unpublished=False,
+        )
+        current_content = read_json(content_path)
+        drifted = [
+            field
+            for key in THEORY_PUBLICATION_KEYS
+            for field in publication_drift(key, current_content, published_content, audit)
+        ]
+        if drifted:
+            raise ValueError(
+                "以下理论审校字段已偏离首次发布结果，拒绝重新盖章："
+                + "、".join(drifted)
+            )
+
+        previous = audit["output"].get("publishedContentSha256")
+        current = file_sha256(content_path)
+        if previous == current:
+            raise ValueError("发布封条与当前 content 已经一致，无需重新盖章")
+
+        audit["output"]["publishedContentSha256"] = current
+        audit["output"]["restampedAt"] = utc_now()
+        audit["output"]["restampedFrom"] = previous
+        if not dry_run:
+            output_audit_path.write_bytes(json_bytes(audit, compact=False))
+    return {
+        "restamped": not dry_run,
+        "dryRun": dry_run,
+        "auditPath": display_path(output_audit_path),
+        "previousSha256": previous,
+        "currentSha256": current,
+        "verifiedKeys": list(THEORY_PUBLICATION_KEYS),
+    }
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--content", type=Path, default=DEFAULT_CONTENT_PATH)
@@ -580,13 +681,19 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-audit", type=Path, default=DEFAULT_OUTPUT_AUDIT_PATH)
     parser.add_argument("--version", default=DEFAULT_VERSION)
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument(
+        "--restamp",
+        action="store_true",
+        help="理论审校字段未变时，把发布封条重新绑定到当前 content 文件",
+    )
     return parser.parse_args()
 
 
 def main() -> None:
     args = parse_args()
+    action = restamp if args.restamp else publish
     try:
-        result = publish(
+        result = action(
             content_path=args.content,
             reference_path=args.reference,
             reference_audit_path=args.reference_audit,
