@@ -7,7 +7,7 @@ from typing import Any
 
 
 DEFAULT_SNAPSHOT_PATH = Path("data/references/practical-spreadsheet-answers-2026-07-17.json")
-SNAPSHOT_VERSION = "2026-07-17-v1"
+SNAPSHOT_VERSION = "2026-07-27-v2"
 
 
 def file_sha256(path: Path) -> str:

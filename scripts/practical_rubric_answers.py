@@ -9,7 +9,7 @@ from practical_spreadsheet_answers import task_fingerprint
 
 
 DEFAULT_SNAPSHOT_PATH = Path("data/references/practical-rubric-answers-2026-07-17.json")
-SNAPSHOT_VERSION = "2026-07-17-v1"
+SNAPSHOT_VERSION = "2026-07-27-v2"
 
 
 def load_snapshot(path: Path = DEFAULT_SNAPSHOT_PATH) -> dict[str, Any]:

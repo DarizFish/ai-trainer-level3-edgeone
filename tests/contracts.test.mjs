@@ -737,8 +737,8 @@ test("official Word templates expose hash-bound fill examples for every blank", 
     readFile(new URL("../scripts/validate-content.py", import.meta.url), "utf8"),
   ]);
   assert.deepEqual(content.practicalTemplateReferences, {
-    snapshotVersion: "2026-07-17-v1",
-    capturedAt: "2026-07-17",
+    snapshotVersion: "2026-07-27-v2",
+    capturedAt: "2026-07-27",
     reviewMethod: "official_docx_blank_slots",
     reviewedTasks: 9,
     filledBlankSlots: 45,
@@ -772,8 +772,8 @@ test("material-free business optimization tasks expose complete rubric-bound exa
     readFile(new URL("../scripts/validate-content.py", import.meta.url), "utf8"),
   ]);
   assert.deepEqual(content.practicalRubricReferences, {
-    snapshotVersion: "2026-07-17-v1",
-    capturedAt: "2026-07-17",
+    snapshotVersion: "2026-07-27-v2",
+    capturedAt: "2026-07-27",
     reviewMethod: "official_task_and_rubric_editorial",
     reviewedTasks: 5,
     coveredRubricItems: 26,

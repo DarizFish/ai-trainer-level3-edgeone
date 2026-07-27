@@ -228,8 +228,8 @@ by_code = {t["code"]: t for t in practical}
 assert sum(by_code[code]["maxScore"] for code in data["officialPracticalMockCodes"]) == 100
 spreadsheet_snapshot = load_practical_spreadsheet_snapshot(DEFAULT_PRACTICAL_SPREADSHEET_PATH)
 assert data["practicalReferences"] == {
-    "snapshotVersion": "2026-07-17-v1",
-    "capturedAt": "2026-07-17",
+    "snapshotVersion": "2026-07-27-v2",
+    "capturedAt": "2026-07-27",
     "analysisTool": "@oai/artifact-tool 2.8.6",
     "analyzedTasks": 4,
 }
@@ -251,8 +251,8 @@ assert spreadsheet_entries["3.1.4"]["metrics"]["functions"]["bodyFat"]["count"] 
 assert spreadsheet_entries["3.1.5"]["metrics"]["responseCorrelations"]["temperature"] == 0.004
 template_snapshot = load_practical_template_snapshot(DEFAULT_PRACTICAL_TEMPLATE_PATH)
 assert data["practicalTemplateReferences"] == {
-    "snapshotVersion": "2026-07-17-v1",
-    "capturedAt": "2026-07-17",
+    "snapshotVersion": "2026-07-27-v2",
+    "capturedAt": "2026-07-27",
     "reviewMethod": "official_docx_blank_slots",
     "reviewedTasks": 9,
     "filledBlankSlots": 45,
@@ -274,8 +274,8 @@ for code, entry in template_entries.items():
     assert len(template_blank_slots(published_template)) == entry["template"]["blankCount"] == 5, code
 rubric_snapshot = load_practical_rubric_snapshot(DEFAULT_PRACTICAL_RUBRIC_PATH)
 assert data["practicalRubricReferences"] == {
-    "snapshotVersion": "2026-07-17-v1",
-    "capturedAt": "2026-07-17",
+    "snapshotVersion": "2026-07-27-v2",
+    "capturedAt": "2026-07-27",
     "reviewMethod": "official_task_and_rubric_editorial",
     "reviewedTasks": 5,
     "coveredRubricItems": 26,

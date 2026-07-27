@@ -12,7 +12,7 @@ from practical_spreadsheet_answers import file_sha256, task_fingerprint
 
 
 DEFAULT_SNAPSHOT_PATH = Path("data/references/practical-template-answers-2026-07-17.json")
-SNAPSHOT_VERSION = "2026-07-17-v1"
+SNAPSHOT_VERSION = "2026-07-27-v2"
 WORD_NAMESPACE = {"w": "http://schemas.openxmlformats.org/wordprocessingml/2006/main"}
 UNDERLINE_BLANK = re.compile(r"_{5,}")
 
@@ -52,7 +52,8 @@ def format_reference_answer(entry: dict[str, Any]) -> str:
     lines = [
         f"官方 Word 模板填写示例（{len(fills)} 处空白）",
         "",
-        "以下内容按模板中的空白顺序填写；属于本站依据题干、官方空白模板和评分细则整理的示例，不是指导手册标准答案。",
+        "以下内容按模板中的空白顺序填写，取自官方参考答案中标黄的填空原文。"
+        "评分口径为“回答内容与答案类似得 1 分，每题最多 5 分”，作答时无需标黄。",
         "",
     ]
     for index, fill in enumerate(fills, start=1):
