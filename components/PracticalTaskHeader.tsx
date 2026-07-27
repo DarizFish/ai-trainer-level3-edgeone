@@ -1,6 +1,8 @@
 import Link from "next/link";
 import type { PracticalTask } from "@/lib/content";
-import { getPracticalNeighbors, practicalTaskHref } from "@/lib/content";
+// 本组件被 4 个 "use client" 组件引用，因而属于客户端包。切换按钮只需要 20 条
+// 题号索引，走 lib/practical-nav 而不是 lib/content，避免把整份题库一起打包。
+import { getPracticalNeighbors, practicalTaskHref } from "@/lib/practical-nav";
 
 // Compact previous/next/index pills, shared by both variants.
 function TaskNav({ task }: { task: PracticalTask }) {

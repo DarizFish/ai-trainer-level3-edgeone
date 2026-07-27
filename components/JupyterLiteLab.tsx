@@ -403,6 +403,12 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
             setKernel(state.kernel);
           }
           setReady(true);
+          // 内核启动是这条链路上最长的一段（实测 19–35 秒），而草稿加载要等桥接
+          // 往返、模板 fetch 和云端草稿。先把内核踢起来再去加载草稿，两段就重叠了。
+          // 扩展侧 ensure-kernel 用 kernelStarts 这个 WeakMap 对并发启动做了去重，
+          // 后面 prepare-exercise 会复用同一个 Promise，不会重复启动内核。
+          const kernelStart = bridge.execute("ai-trainer:ensure-kernel", { path: notebookPath });
+          kernelStart.catch(() => undefined);
           await loadDrafts();
           await configureFillReferences(bridge);
           startupTimer = window.setTimeout(() => {

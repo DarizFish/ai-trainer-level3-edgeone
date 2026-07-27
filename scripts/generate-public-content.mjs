@@ -62,4 +62,15 @@ await Promise.all(files.map(({ name, payload }) => (
   writeFile(join(outputDirectory, name), JSON.stringify(payload))
 )));
 
-console.log(`Generated ${files.map(({ name }) => name).join(", ")}`);
+// 题目切换按钮只需要有序的题号、标题和 hasNotebook。它渲染在客户端组件里，若直接
+// 走 lib/content 会把整份 data/content.json（0.89 MB）打进客户端包，所以这里单独
+// 落一份约 1 KB 的索引给 lib/practical-nav.ts 用。contracts 断言两者一致。
+const navIndexPath = join(projectRoot, "data", "practical-nav.json");
+const navIndex = content.practical.map((task) => ({
+  code: task.code,
+  hasNotebook: task.hasNotebook,
+  title: task.title,
+}));
+await writeFile(navIndexPath, `${JSON.stringify(navIndex, null, 2)}\n`);
+
+console.log(`Generated ${files.map(({ name }) => name).join(", ")}, practical-nav.json`);

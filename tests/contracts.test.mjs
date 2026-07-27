@@ -1127,7 +1127,7 @@ test("starter preview is fully removed and social metadata asset exists", async 
 });
 
 test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes, and both site bridge extensions", async () => {
-  const [content, lite, host, labShell, configUtils, bridgeExtension, bridgePackage, pyodideKernelPackage, buildScript, patchScript, extensionBuildScript, runtimeCopyScript, packageJson, edgeOneConfig, labManifest, nextConfig] = await Promise.all([
+  const [content, lite, host, labShell, configUtils, bridgeExtension, bridgePackage, pyodideKernelPackage, buildScript, patchScript, extensionBuildScript, runtimeCopyScript, packageJson, edgeOneConfig, labManifest, nextConfig, notebookGenerator] = await Promise.all([
     readFile(new URL("../data/content.json", import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL("../public/lite/jupyter-lite.json", import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL("../components/JupyterLiteLab.tsx", import.meta.url), "utf8"),
@@ -1144,6 +1144,7 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
     readFile(new URL("../edgeone.json", import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL("../public/labs/manifest.json", import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL("../next.config.ts", import.meta.url), "utf8"),
+    readFile(new URL("../scripts/generate-jupyterlite-notebooks.py", import.meta.url), "utf8"),
   ]);
   const extensions = lite["jupyter-config-data"].federated_extensions;
   const notebookOverrides = lite["jupyter-config-data"].settingsOverrides["@jupyterlab/notebook-extension:tracker"];
@@ -1289,10 +1290,31 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
   assert.match(bridgeExtension, /filterwarnings\('ignore', category=FutureWarning\)/);
   assert.match(bridgeExtension, /piplite\.install/);
   assert.match(bridgeExtension, /silent: true/);
+  // piplite 只该出现在 pyodide 装不了的纯 Python wheel 上；自带包 import 时会由
+  // loadPackagesFromImports 自动加载，装它们是空转。生成器的清单必须与构建脚本
+  // 真正下载的纯 Python wheel 一致。
+  const pipliteOnly = notebookGenerator.match(/PIPLITE_ONLY_PACKAGES = \{([^}]*)\}/)[1]
+    .match(/"([^"]+)"/g).map(entry => entry.slice(1, -1)).sort();
+  const purePythonWheels = buildScript.match(/\$purePythonRequirements = @\(([\s\S]*?)\n\)/)[1]
+    .match(/"([^"=]+)==/g).map(entry => entry.slice(1, -2));
+  assert.deepEqual(
+    pipliteOnly,
+    purePythonWheels.filter(name => pipliteOnly.includes(name)).sort(),
+    "生成器的 piplite 清单必须都是构建脚本下载的纯 Python wheel",
+  );
+  for (const task of content.practical.filter(item => item.hasNotebook)) {
+    const workspaceDir = task.code.replaceAll(".", "-");
+    const notebook = JSON.parse(
+      await readFile(new URL(`../public/lite/files/${workspaceDir}/${task.code}.ipynb`, import.meta.url), "utf8"),
+    );
+    for (const name of notebook.metadata.ai_trainer.pip_packages) {
+      assert.ok(pipliteOnly.includes(name), `${task.code} 不该用 piplite 安装 pyodide 自带的 ${name}`);
+    }
+  }
 
   // isSubstantiveNotebook 挡截断的模板与草稿，但它的下限一旦高于真实题目的单元数，
   // 就会把合法题目判为无效——2.1.3/2.1.4/2.1.5 只有一个习题单元，环境准备单元移出
-  // 后曾因 >= 2 打不开。这里把护栏的阀值与实际产物绑在一起。
+  // 后曾因 >= 2 打不开。这里把护栏的阈值与实际产物绑在一起。
   const [, cellFloor, sourceFloor] = host.match(
     /notebook\.cells\.length >= (\d+) && notebookSourceLength\(notebook\) >= (\d+)/,
   );
@@ -1308,6 +1330,19 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
     );
     assert.ok(sourceLength >= Number(sourceFloor), `${task.code} 源码长度 ${sourceLength} 低于护栏下限`);
   }
+
+  // 题目切换索引渲染在客户端组件里，必须与 content.practical 保持一致，否则上一题
+  // / 下一题会指错。它单独存在的原因见 lib/practical-nav.ts。
+  const navIndex = JSON.parse(await readFile(new URL("../data/practical-nav.json", import.meta.url), "utf8"));
+  assert.deepEqual(
+    navIndex,
+    content.practical.map(task => ({ code: task.code, hasNotebook: task.hasNotebook, title: task.title })),
+  );
+  assert.doesNotMatch(
+    await readFile(new URL("../components/PracticalTaskHeader.tsx", import.meta.url), "utf8"),
+    /^import \{[^}]*\} from "@\/lib\/content"/m,
+    "PracticalTaskHeader 属于客户端包，不能对 lib/content 做值导入",
+  );
 
   const names = new Set(extensions.map(extension => extension.name));
   assert.ok(names.has("@jupyterlite/pyodide-kernel-extension"));

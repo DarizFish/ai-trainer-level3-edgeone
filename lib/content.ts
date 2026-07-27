@@ -168,22 +168,6 @@ export const content = rawContent as ContentBank;
 export const theoryById = new Map(content.theory.map((question) => [question.id, question]));
 export const practicalByCode = new Map(content.practical.map((task) => [task.code, task]));
 
-// Previous/next task in the natural bank order (1.1.1 → 4.2.5), used by the
-// shared practical header for cross-task navigation. Returns null at the ends.
-export function getPracticalNeighbors(code: string): { prev: PracticalTask | null; next: PracticalTask | null } {
-  const index = content.practical.findIndex((task) => task.code === code);
-  if (index < 0) return { prev: null, next: null };
-  return {
-    prev: index > 0 ? content.practical[index - 1] : null,
-    next: index < content.practical.length - 1 ? content.practical[index + 1] : null,
-  };
-}
-
-// The route a task lives on depends on whether it uses a notebook lab.
-export function practicalTaskHref(task: PracticalTask): string {
-  return task.hasNotebook ? `/practical/${task.code}/lab` : `/practical/${task.code}`;
-}
-
 export function getOfficialTheoryMock(): TheoryQuestion[] {
   return content.officialTheoryMock.questionIds.map((id) => theoryById.get(id)).filter(Boolean) as TheoryQuestion[];
 }

@@ -87,6 +87,13 @@ def code_cell(source: str, **metadata: object) -> dict:
     }
 
 
+# pyodide 自带的包在 import 时由 loadPackagesFromImports 自动加载，piplite 装它们
+# 是纯粹的空转。只有 jupyterlite/pypi 里的纯 Python wheel 不在 pyodide-lock 内，
+# 必须显式安装。这份清单与 scripts/build-jupyterlite.ps1 的 $purePythonRequirements
+# 对应，contracts 断言两者一致。
+PIPLITE_ONLY_PACKAGES = {"openpyxl", "seaborn", "imbalanced-learn"}
+
+
 def dependencies(source: str, assets: list[dict]) -> list[str]:
     packages: list[str] = []
     checks = [
@@ -420,8 +427,9 @@ def notebook_for(task: dict, manifest_task: dict, version: str) -> dict:
                 "runtime": "jupyterlite-pyodide",
                 "onnx_runtime": "onnxruntime-web@1.27.0" if is_onnx else None,
                 # Read by the extension, which installs these through piplite in
-                # a silent kernel request before the exercise runs.
-                "pip_packages": packages,
+                # a silent kernel request before the exercise runs. Only the
+                # packages pyodide cannot auto-load on import end up here.
+                "pip_packages": [p for p in packages if p in PIPLITE_ONLY_PACKAGES],
             },
         },
         "nbformat": 4,
