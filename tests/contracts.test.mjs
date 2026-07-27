@@ -836,6 +836,38 @@ test("all Python practical tasks expose audited completed-notebook reference cod
   assert.doesNotMatch(lab, /下载完整参考代码|SourceBadge/);
 });
 
+test("Word deliverable answers never expose Python code to learners", async () => {
+  const [content, narrative] = await Promise.all([
+    readFile(new URL("../data/content.json", import.meta.url), "utf8").then(JSON.parse),
+    readFile(new URL("../lib/practical-reference.ts", import.meta.url), "utf8"),
+  ]);
+  // 官方答案常把完成版 Notebook 放在 Word 正文之前，学员在 Word 题「查看答案」时
+  // 不该看到代码。这里复刻 getPracticalReferenceNarrative 的切分规则，直接校验真实
+  // 数据的输出，而不是只断言源码里存在这段逻辑。
+  assert.match(narrative, /\.docx/);
+  const toNarrative = (task) => {
+    const answer = task.referenceAnswer.trim();
+    if (!task.notebook?.solutionCells?.length) return answer;
+    const deliverable = answer.match(/(?:^|\n)\s*\d+(?:\.\d+)*\.docx\s*(?:\n|$)/);
+    if (deliverable?.index !== undefined) return answer.slice(deliverable.index + deliverable[0].length).trim();
+    const report = answer.match(/(?:^|\n)（2）\s*/);
+    if (report?.index !== undefined) return answer.slice(report.index + report[0].length).trim();
+    const code = answer.indexOf("\nPython 参考代码：");
+    return code >= 0 ? answer.slice(0, code).trim() : answer;
+  };
+  const codeMarkers = /(?:^|\n)\s*(?:import |from \w+ import |def |print\()/;
+  const wordTasks = content.practical.filter(
+    task => task.notebook?.solutionCells?.length
+      && task.description.toLowerCase().includes(`${task.code}.docx`.toLowerCase()),
+  );
+  assert.equal(wordTasks.length, 15);
+  for (const task of wordTasks) {
+    const text = toNarrative(task);
+    assert.ok(text.trim(), `${task.code} 的 Word 参考答案为空`);
+    assert.doesNotMatch(text, codeMarkers, `${task.code} 的 Word 参考答案仍含 Python 代码`);
+  }
+});
+
 test("official practical answers stop at their Word answer boundary", async () => {
   const [content, importer] = await Promise.all([
     readFile(new URL("../data/content.json", import.meta.url), "utf8").then(JSON.parse),
