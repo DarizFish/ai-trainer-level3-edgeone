@@ -468,10 +468,16 @@ export default function TheoryPractice({ questions, contentVersion }: { question
     closeDrawers();
   }
 
+  const wrongIdSet = useMemo(() => new Set(wrongIds), [wrongIds]);
+
   function questionState(question: TheoryQuestion, index: number): string {
     if (feedback[question.id] === true) return "correct";
     if (feedback[question.id] === false) return "wrong";
     if ((answers[question.id] ?? []).length) return "selected";
+    // 进入错题重练会清掉这些题的本轮作答与判分，好让学员重新作答；但错题本身是持久
+    // 记录，不能因此在题号地图上消失。feedback 缺席时回退到错题集，答对后 choose()
+    // 会把题目移出 wrongIds，标记随之消失。
+    if (wrongIdSet.has(question.id)) return "wrong";
     if (index === currentIndex) return "current";
     return "unanswered";
   }
