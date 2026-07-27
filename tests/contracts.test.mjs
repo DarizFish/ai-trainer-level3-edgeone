@@ -1290,6 +1290,25 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
   assert.match(bridgeExtension, /piplite\.install/);
   assert.match(bridgeExtension, /silent: true/);
 
+  // isSubstantiveNotebook 挡截断的模板与草稿，但它的下限一旦高于真实题目的单元数，
+  // 就会把合法题目判为无效——2.1.3/2.1.4/2.1.5 只有一个习题单元，环境准备单元移出
+  // 后曾因 >= 2 打不开。这里把护栏的阀值与实际产物绑在一起。
+  const [, cellFloor, sourceFloor] = host.match(
+    /notebook\.cells\.length >= (\d+) && notebookSourceLength\(notebook\) >= (\d+)/,
+  );
+  for (const task of content.practical.filter(item => item.hasNotebook)) {
+    const workspaceDir = task.code.replaceAll(".", "-");
+    const notebook = JSON.parse(
+      await readFile(new URL(`../public/lite/files/${workspaceDir}/${task.code}.ipynb`, import.meta.url), "utf8"),
+    );
+    const sourceLength = notebook.cells.reduce((total, cell) => total + cell.source.join("").length, 0);
+    assert.ok(
+      notebook.cells.length >= Number(cellFloor),
+      `${task.code} 只有 ${notebook.cells.length} 个单元，会被 isSubstantiveNotebook 的下限 ${cellFloor} 判为无效`,
+    );
+    assert.ok(sourceLength >= Number(sourceFloor), `${task.code} 源码长度 ${sourceLength} 低于护栏下限`);
+  }
+
   const names = new Set(extensions.map(extension => extension.name));
   assert.ok(names.has("@jupyterlite/pyodide-kernel-extension"));
   assert.ok(names.has("jupyter-iframe-commands"));

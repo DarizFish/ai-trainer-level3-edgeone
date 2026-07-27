@@ -49,8 +49,11 @@ function notebookSourceLength(notebook: NotebookJson): number {
   return notebook.cells.reduce((total, cell) => total + (Array.isArray(cell.source) ? cell.source.join("").length : cell.source.length), 0);
 }
 
+// 用来挡住截断或损坏的模板与草稿。单元数下限只能是 1：2.1.3、2.1.4、2.1.5 的官方
+// 题目本来就只有一个习题单元，环境准备单元移出题目文件后它们的总单元数变成 1，
+// 原先的 >= 2 会把这三题的模板和草稿全部判为无效。真正防截断的是源码长度那一条。
 function isSubstantiveNotebook(notebook: NotebookJson): boolean {
-  return notebook.cells.length >= 2 && notebookSourceLength(notebook) >= 100;
+  return notebook.cells.length >= 1 && notebookSourceLength(notebook) >= 100;
 }
 
 function normalizeDraft(value: unknown, baseline: NotebookJson): NotebookJson | null {
