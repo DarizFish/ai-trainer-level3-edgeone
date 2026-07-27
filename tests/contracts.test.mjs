@@ -833,6 +833,11 @@ test("all Python practical tasks expose audited completed-notebook reference cod
   assert.match(bridgeExtension, /完全一致/);
   assert.match(bridgeExtension, /与参考不同/);
   assert.match(bridgeExtension, /填入参考/);
+  // 实验室里靠 display:none 隐藏的基础设施单元不能跟着导出：ai-trainer-onnx 是
+  // onnxruntime 的浏览器垫片，学员把 .ipynb 拿到本地真实 Python 里跑时需要的是真的
+  // onnxruntime，垫片反而会顶掉它。导出的应当只有考试本身的代码。
+  assert.match(lab, /withoutInfrastructureCells\(await readNotebook\(\)\)/);
+  assert.match(lab, /INFRASTRUCTURE_CELL_TAGS = new Set\(\["ai-trainer-setup", "ai-trainer-onnx"\]\)/);
   assert.doesNotMatch(lab, /下载完整参考代码|SourceBadge/);
 });
 
