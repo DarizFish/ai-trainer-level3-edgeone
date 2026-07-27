@@ -46,12 +46,20 @@ export function BusinessAnalysisAnswerSheet({ task, userEmail }: { task: Practic
   const [scores, setScores] = useState<PracticalRubricScores>({});
   const [reviewing, setReviewing] = useState(false);
   const [restored, setRestored] = useState(false);
+  // 键里不再嵌评分表指纹。原先带 `${answerBasis}-${referenceAnswer.length}-M1:6-…`，
+  // 只要参考答案或评分点分值一改，键就变了，用户此前写的内容会静默变成孤儿——补一句
+  // 官方口径都会触发。restoreDraft 本来就按 sectionIds 与 scoreLimits 逐项校验，
+  // 题目结构变化会被安全丢弃，不需要靠换键来防御。旧键仍然读，用于迁移。
   const storageKey = useMemo(() => exercise && userEmail
-    ? `ai-trainer-business-answer-sheet-v1:${encodeURIComponent(userEmail)}:${task.code}:${exercise.storageVersion}`
+    ? `ai-trainer-business-answer-sheet-v2:${encodeURIComponent(userEmail)}:${task.code}`
     : null, [exercise, task.code, userEmail]);
-  const legacyStorageKey = useMemo(() => exercise && userEmail && task.group === "3.1"
-    ? `ai-trainer-practical-response-v3:${encodeURIComponent(userEmail)}:${task.code}:${exercise.storageVersion}`
-    : null, [exercise, task.code, task.group, userEmail]);
+  const legacyStorageKeys = useMemo(() => {
+    if (!exercise || !userEmail) return [];
+    const owner = encodeURIComponent(userEmail);
+    const keys = [`ai-trainer-business-answer-sheet-v1:${owner}:${task.code}:${exercise.storageVersion}`];
+    if (task.group === "3.1") keys.push(`ai-trainer-practical-response-v3:${owner}:${task.code}:${exercise.storageVersion}`);
+    return keys;
+  }, [exercise, task.code, task.group, userEmail]);
 
   useEffect(() => {
     let cancelled = false;
@@ -60,7 +68,9 @@ export function BusinessAnalysisAnswerSheet({ task, userEmail }: { task: Practic
       const sectionIds = new Set(exercise?.sections.map((section) => section.id) ?? []);
       const scoreLimits = new Map(exercise?.sections.flatMap((section) => section.rubric).map((item) => [item.id, item.points]) ?? []);
       const serialized = storageKey
-        ? localStorage.getItem(storageKey) ?? (legacyStorageKey ? localStorage.getItem(legacyStorageKey) : null) ?? ""
+        ? localStorage.getItem(storageKey)
+          ?? legacyStorageKeys.map((key) => localStorage.getItem(key)).find(Boolean)
+          ?? ""
         : "";
       const draft = storageKey ? restoreDraft(serialized, sectionIds, scoreLimits) : null;
       setAnswers(draft?.answers ?? {});
@@ -68,7 +78,7 @@ export function BusinessAnalysisAnswerSheet({ task, userEmail }: { task: Practic
       setRestored(true);
     });
     return () => { cancelled = true; };
-  }, [exercise, legacyStorageKey, storageKey]);
+  }, [exercise, legacyStorageKeys, storageKey]);
 
   useEffect(() => {
     if (!restored || !storageKey) return;
@@ -109,7 +119,7 @@ export function BusinessAnalysisAnswerSheet({ task, userEmail }: { task: Practic
         const answered = Boolean(answers[section.id]?.trim());
         return <a href={`#business-answer-${task.code}-${section.number}`} className={answered ? "complete" : "pending"} key={section.id}><span>{section.number}</span><b>{section.number === 1 ? "第一问" : "第二问"}</b><small>{answered ? "已填写" : "待作答"}</small></a>;
       })}</nav>
-      <footer>{reviewing ? <small>当前为学习复盘，不是官方考场评分。</small> : <small>{userEmail ? `已填写 ${answeredCount} / 2 问，草稿自动保存。` : "登录后可填写并保存答题卷。"}</small>}<button type="button" className={`button ${reviewing ? "button-quiet" : "button-primary"}`} onClick={() => setReviewing((value) => !value)}>{reviewing ? "返回作答" : "完成作答，进入复盘"}</button></footer>
+      <footer>{reviewing ? <small>当前为学习复盘，不是官方考场评分。</small> : <small>{userEmail ? `已填写 ${answeredCount} / 2 问，草稿保存在本机浏览器。` : "登录后可填写并保存答题卷。"}</small>}<button type="button" className={`button ${reviewing ? "button-quiet" : "button-primary"}`} onClick={() => setReviewing((value) => !value)}>{reviewing ? "返回作答" : "完成作答，进入复盘"}</button></footer>
     </aside>
     <div className="business-sheet-paper" role="document" aria-label={`${task.code} 答题卷`}>
       {exercise.sections.map((section) => <section id={`business-answer-${task.code}-${section.number}`} className="business-sheet-section" key={section.id}>
