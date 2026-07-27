@@ -36,13 +36,15 @@ export async function PUT(request: Request, { params }: { params: Promise<{ code
       return Response.json({ error: "Notebook 草稿格式无效" }, { status: 400 });
     }
   } else {
-    const sheet = payload.answerSheet as { answers?: unknown; scores?: unknown } | undefined;
+    const sheet = payload.answerSheet as { answers?: unknown; scores?: unknown; checks?: unknown } | undefined;
     const isRecordOf = (value: unknown, check: (item: unknown) => boolean) =>
       Boolean(value) && typeof value === "object" && !Array.isArray(value)
       && Object.values(value as Record<string, unknown>).every(check);
+    // 1.2/3.1 的答题卷记数值自评分，4.1/4.2 的模板题记每空是否达标，两种都放行。
     const valid = Boolean(sheet)
       && isRecordOf(sheet?.answers, (item) => typeof item === "string" && item.length <= 10_000)
-      && (sheet?.scores === undefined || isRecordOf(sheet.scores, (item) => typeof item === "number" && Number.isInteger(item) && item >= 0 && item <= 100));
+      && (sheet?.scores === undefined || isRecordOf(sheet.scores, (item) => typeof item === "number" && Number.isInteger(item) && item >= 0 && item <= 100))
+      && (sheet?.checks === undefined || isRecordOf(sheet.checks, (item) => typeof item === "boolean"));
     if (!valid) return Response.json({ error: "答题卷草稿格式无效" }, { status: 400 });
     draft = sheet;
   }

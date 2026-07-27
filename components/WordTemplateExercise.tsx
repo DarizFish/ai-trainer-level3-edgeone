@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { PracticalTask } from "@/lib/content";
 import { createPracticalWordExercise } from "@/lib/practical-word-exercise";
 import { PracticalTaskHeader } from "./PracticalTaskHeader";
@@ -39,6 +39,8 @@ export function WordTemplateExercise({ task, userEmail }: { task: PracticalTask;
   const [checks, setChecks] = useState<Record<string, boolean>>({});
   const [revealed, setRevealed] = useState(false);
   const [restored, setRestored] = useState(false);
+  const [syncNote, setSyncNote] = useState("");
+  const revisionRef = useRef(0);
   const storageKey = useMemo(() => exercise && userEmail
     ? `ai-trainer-word-draft-v1:${encodeURIComponent(userEmail)}:${task.code}:${exercise.materialSha256.slice(0, 16)}`
     : null, [exercise, task.code, userEmail]);
@@ -49,18 +51,57 @@ export function WordTemplateExercise({ task, userEmail }: { task: PracticalTask;
       if (cancelled) return;
       const fieldIds = new Set(exercise?.fields.map((field) => field.id) ?? []);
       const draft = storageKey ? restoreDraft(localStorage.getItem(storageKey) ?? "", fieldIds) : null;
+      if (userEmail) {
+        void fetch(`/api/drafts/${task.code}`)
+          .then((response) => (response.ok ? response.json() : null))
+          .then((payload: { draft?: { cellsJson?: string; revision?: number } | null } | null) => {
+            if (cancelled || !payload?.draft?.cellsJson) return;
+            revisionRef.current = payload.draft.revision ?? 0;
+            const cloud = restoreDraft(payload.draft.cellsJson, fieldIds);
+            if (!cloud) return;
+            const hasCloud = Object.values(cloud.answers).some((value) => value.trim());
+            const hasLocal = Object.values(draft?.answers ?? {}).some((value) => value.trim());
+            if (hasCloud || !hasLocal) { setAnswers(cloud.answers); setChecks(cloud.checks); }
+          })
+          .catch(() => undefined);
+      }
       setAnswers(draft?.answers ?? {});
       setChecks(draft?.checks ?? {});
       setRestored(true);
     });
     return () => { cancelled = true; };
-  }, [exercise, storageKey]);
+  }, [exercise, storageKey, task.code, userEmail]);
 
   useEffect(() => {
     if (!restored || !storageKey) return;
     const draft: WordDraft = { version: 1, answers, checks };
     localStorage.setItem(storageKey, JSON.stringify(draft));
-  }, [answers, checks, restored, storageKey]);
+    if (!userEmail) return;
+    // 与答题卷同一套：本机是离线缓存，账号里的那份才是跨设备的依据。
+    const timer = window.setTimeout(() => {
+      void fetch(`/api/drafts/${task.code}`, {
+        method: "PUT",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ answerSheet: draft, revision: revisionRef.current }),
+      }).then(async (response) => {
+        if (response.status === 409) {
+          const conflict = await response.json() as { cloud?: WordDraft; revision?: number };
+          revisionRef.current = conflict.revision ?? revisionRef.current;
+          if (conflict.cloud?.answers) {
+            setAnswers(conflict.cloud.answers);
+            setChecks(conflict.cloud.checks ?? {});
+            setSyncNote("已载入其它设备上更新的填写。");
+          }
+          return;
+        }
+        if (!response.ok) { setSyncNote("云端同步失败，内容仍保存在本机。"); return; }
+        const saved = await response.json() as { revision?: number };
+        revisionRef.current = saved.revision ?? revisionRef.current + 1;
+        setSyncNote("");
+      }).catch(() => setSyncNote("云端同步失败，内容仍保存在本机。"));
+    }, 900);
+    return () => window.clearTimeout(timer);
+  }, [answers, checks, restored, storageKey, task.code, userEmail]);
 
   if (!exercise) return null;
   const fieldCount = exercise.fields.length;
@@ -103,7 +144,7 @@ export function WordTemplateExercise({ task, userEmail }: { task: PracticalTask;
           const answered = Boolean(answers[field.id]?.trim());
           return <a className={answered ? "complete" : "pending"} href={`#word-field-${task.code}-${field.id}`} key={field.id}><span>{answered ? "✓" : index + 1}</span><b>{field.label}</b></a>;
         })}</nav>
-        <div className="word-side-review">{revealed ? <small>参考填写已显示在对应横线下方。</small> : <small>{userEmail ? "草稿自动保存" : "登录后可填写"}</small>}<button type="button" className={`button ${revealed ? "button-quiet" : "button-primary"}`} onClick={toggleReview}>{revealed ? "返回填写" : "完成并核对"}</button></div>
+        <div className="word-side-review">{revealed ? <small>参考填写已显示在对应横线下方。</small> : <small>{userEmail ? (syncNote || "草稿已同步到账号") : "登录后可填写"}</small>}<button type="button" className={`button ${revealed ? "button-quiet" : "button-primary"}`} onClick={toggleReview}>{revealed ? "返回填写" : "完成并核对"}</button></div>
       </section>
     </aside>
     <div className="business-sheet-paper word-document-canvas" role="document" aria-label={`${exercise.materialName} 答题卷`}>
@@ -137,7 +178,7 @@ export function WordTemplateExercise({ task, userEmail }: { task: PracticalTask;
       </div>
       </section>
       <footer id={`review-${task.code}`} className="word-exercise-actions">
-        <div className="word-review-status">{revealed ? <span>逐处对照参考填写后，确认每空得分。</span> : <span>{userEmail ? "草稿与核分自动保存在当前浏览器" : "登录后可填写并核分"}</span>}</div>
+        <div className="word-review-status">{revealed ? <span>逐处对照参考填写后，确认每空得分。</span> : <span>{userEmail ? (syncNote || "草稿与核分已同步到账号，换设备可继续") : "登录后可填写并核分"}</span>}</div>
         <button type="button" className={`button ${revealed ? "button-quiet" : "button-primary"}`} onClick={toggleReview}>{revealed ? "返回填写" : "完成填写，核对答案"}</button>
       </footer>
       {revealed && checkedCount === fieldCount && <p className="correct word-exercise-saved">✓ 本题已完成全部核分，当前 {exercise.fields.filter((field) => checks[field.id]).length} / {task.maxScore} 分；修改填写会撤销对应旧分数。</p>}

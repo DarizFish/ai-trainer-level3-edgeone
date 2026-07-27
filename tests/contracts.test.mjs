@@ -456,14 +456,17 @@ test("Word template practical tasks use five contextual answer fields instead of
   assert.equal(officialRetail.fields[0].referenceAnswer, "会员基本信息、消费记录和积分兑换");
   assert.equal(officialRetail.fields[4].referenceAnswer, "提升业务效率和顾客满意度");
   assert.match(component, /data-word-answer/);
-  assert.match(component, /草稿与核分自动保存在当前浏览器/);
+  assert.match(component, /草稿与核分已同步到账号，换设备可继续/);
   assert.match(component, /未达到 · 0 分/);
   assert.match(component, /达到 · 1 分/);
   assert.match(component, /word-inline-field/);
   assert.match(component, /完成填写，核对答案/);
   assert.match(component, /exercise\.materialName/);
   assert.match(component, /修改填写会撤销对应旧分数/);
-  assert.doesNotMatch(component, /fetch\(|scorePractical|rubric:|保存成绩|自评分/);
+  // 同 1.2/3.1：原先连 fetch( 一起禁掉等于把「只存本机」写成契约，而界面承诺草稿会
+  // 保存。现在允许同步草稿，仍禁止任何官方判分与成绩上报。
+  assert.doesNotMatch(component, /scorePractical|rubric:|保存成绩|自评分/);
+  assert.match(component, /fetch\(`\/api\/drafts\/\$\{task\.code\}`/);
   assert.match(workspace, /word-answer-first/);
   assert.match(component, /PracticalTaskHeader/);
   assert.match(component, /PracticalBrief/);
