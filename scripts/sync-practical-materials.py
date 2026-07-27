@@ -19,6 +19,11 @@ IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".webp", ".gif"}
 CANONICAL_TEXT_SUFFIXES = {".csv", ".txt", ".py"}
 
 
+def workspace_slug(code: str) -> str:
+    """JupyterLite workspace directory for a task; see generate-jupyterlite-notebooks.py."""
+    return code.replace(".", "-")
+
+
 def sha256(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as stream:
@@ -175,7 +180,7 @@ def main() -> None:
                 kind, label = material_kind(source)
                 url = None
                 if kind == "notebook":
-                    url = f"/lite/files/{code}/{encoded_path(relative)}"
+                    url = f"/lite/files/{workspace_slug(code)}/{encoded_path(relative)}"
                 elif kind == "model":
                     url = None
                 elif task["hasNotebook"] and kind not in {"document"}:

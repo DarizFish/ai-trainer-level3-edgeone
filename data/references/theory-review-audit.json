@@ -5,7 +5,9 @@
   "output": {
     "contentPath": "data/content.json",
     "auditPath": "data/references/theory-review-audit.json",
-    "publishedContentSha256": "6356b0fb32680b64de0390bfb8699eac460f65ce3cedc654ace49d7b36372393"
+    "publishedContentSha256": "b92f98998d8de206a1f76c2c0e9feaad2e5715ff48c25e2e94971fd1221dee5c",
+    "restampedAt": "2026-07-27T05:14:23Z",
+    "restampedFrom": "6356b0fb32680b64de0390bfb8699eac460f65ce3cedc654ace49d7b36372393"
   },
   "sourceHashes": {
     "content": "839c142493e0882c53e52fc5824f5ad101d8601de68ba2f728a70a1916a40871",

@@ -16,6 +16,19 @@ OUTPUT = ROOT / "jupyterlite" / "content"
 PUBLIC = ROOT / "public"
 
 
+def workspace_slug(code: str) -> str:
+    """Directory name for a task's JupyterLite workspace.
+
+    The题号 itself must not become a directory name. JupyterLite derives "is
+    this path a directory?" from PathExt.extname(), so a folder called 1.1.1
+    parses as a file with extension ".1"; newUntitled then silently writes to
+    the root instead, and a "New Text File" there creates a zero-byte file
+    named 1.1.1 that masks the whole directory. Dot-free names take the
+    correct branch. Mirrors task.code.replaceAll(".", "-") in the web app.
+    """
+    return code.replace(".", "-")
+
+
 def lines(source: str) -> list[str]:
     if not source:
         return []
@@ -64,14 +77,6 @@ def copy_workspace_assets(code: str, assets: list[dict], task_dir: Path) -> int:
     return copied
 
 
-def markdown_cell(source: str, **metadata: object) -> dict:
-    return {
-        "cell_type": "markdown",
-        "metadata": metadata,
-        "source": lines(source),
-    }
-
-
 def code_cell(source: str, **metadata: object) -> dict:
     return {
         "cell_type": "code",
@@ -102,62 +107,6 @@ def dependencies(source: str, assets: list[dict]) -> list[str]:
     if any(str(asset["name"]).lower().endswith(".xlsx") for asset in assets):
         packages.append("openpyxl")
     return packages
-
-
-def browser_safe_source(source: str) -> str:
-    replacements = {
-        "import xgboost as xgb": "# JupyterLite：本题评分目标不依赖可选的 xgboost 原生库，浏览器内核跳过此导入。",
-        "from xgboost import XGBRegressor": "# JupyterLite：本题评分目标不依赖可选的 XGBRegressor，浏览器内核跳过此导入。",
-    }
-    for original, replacement in replacements.items():
-        source = source.replace(original, replacement)
-    return source
-
-
-def setup_source(code: str, assets: list[dict], packages: list[str]) -> str:
-    return f'''# JupyterLite 环境准备：安装本题依赖，并按需下载本题素材
-from pathlib import Path
-import asyncio
-import hashlib
-import piplite
-from pyodide.http import pyfetch
-
-PACKAGES = {json.dumps(packages, ensure_ascii=False)}
-ASSETS = {json.dumps(assets, ensure_ascii=False)}
-
-async def _retry(label, operation, attempts=3):
-    last_error = None
-    for attempt in range(1, attempts + 1):
-        try:
-            return await operation()
-        except Exception as error:
-            last_error = error
-            if attempt < attempts:
-                await asyncio.sleep(0.8 * attempt)
-    raise RuntimeError(f"{{label}}失败（已重试 {{attempts}} 次）：{{last_error}}") from last_error
-
-if PACKAGES:
-    await _retry("依赖安装", lambda: piplite.install(PACKAGES))
-
-for asset in ASSETS:
-    target = Path(asset["name"])
-    target.parent.mkdir(parents=True, exist_ok=True)
-    if target.exists() and hashlib.sha256(target.read_bytes()).hexdigest() == asset["sha256"]:
-        continue
-    async def _download():
-        separator = "&" if "?" in asset["url"] else "?"
-        response = await pyfetch(f'{{asset["url"]}}{{separator}}sha256={{asset["sha256"][:16]}}')
-        if response.status < 200 or response.status >= 300:
-            raise RuntimeError(f'HTTP {{response.status}}：{{asset["url"]}}')
-        return await response.bytes()
-    payload = await _retry(f'素材下载 {{asset["name"]}}', _download)
-    digest = hashlib.sha256(payload).hexdigest()
-    if digest != asset["sha256"]:
-        raise RuntimeError(f"素材校验失败：{{asset['name']}}")
-    target.write_bytes(payload)
-
-print("✓ {code} 环境已就绪", f"依赖 {{len(PACKAGES)}} 项，素材 {{len(ASSETS)}} 个")
-'''
 
 
 def onnx_source(code: str) -> str:
@@ -417,14 +366,6 @@ onnx_result
     return source.replace("__TASK_CODE__", code)
 
 
-def rubric_markdown(task: dict) -> str:
-    rows = ["| 评分点 | 分值 | 方式 |", "|---|---:|---|"]
-    for item in task.get("rubric", []):
-        mode = "程序结果" if item.get("mode") == "auto" else "人工核对"
-        rows.append(f"| {item['id']} {item['description']} | {item['points']} | {mode} |")
-    return "\n".join(rows)
-
-
 def notebook_for(task: dict, manifest_task: dict, version: str) -> dict:
     code = task["code"]
     template = task["notebook"]
@@ -437,12 +378,14 @@ def notebook_for(task: dict, manifest_task: dict, version: str) -> dict:
             if package not in packages:
                 packages.append(package)
 
-    # Keep the visible notebook faithful to the supplied source notebook.
-    # Bootstrap and browser-runtime cells are tagged and hidden by the local
-    # JupyterLite extension; task text and rubrics stay in the website UI.
-    original_cells = [
-        code_cell(setup_source(code, assets, packages), tags=["ai-trainer-setup"], editable=False),
-    ]
+    # Keep the visible notebook faithful to the supplied source notebook: the
+    # official exercise file now contains the exam's own code and nothing else.
+    # Warning filters and piplite installs moved into a silent kernel request
+    # issued by the JupyterLite extension (see ai_trainer.pip_packages below),
+    # and素材下载 disappeared entirely once COOP/COEP made mountDrive true, which
+    # puts the shipped workspace files directly in the kernel's working
+    # directory. The browser-runtime cell stays: exercises import it by name.
+    original_cells: list[dict] = []
     if is_onnx:
         original_cells.append(code_cell(onnx_source(code), tags=["ai-trainer-onnx"], editable=False))
     for item in template.get("cells", []):
@@ -472,10 +415,13 @@ def notebook_for(task: dict, manifest_task: dict, version: str) -> dict:
             "ai_trainer": {
                 "task_code": code,
                 "content_version": version,
-                "format_version": 3,
+                "format_version": 4,
                 "visible_content": "original-code-only",
                 "runtime": "jupyterlite-pyodide",
                 "onnx_runtime": "onnxruntime-web@1.27.0" if is_onnx else None,
+                # Read by the extension, which installs these through piplite in
+                # a silent kernel request before the exercise runs.
+                "pip_packages": packages,
             },
         },
         "nbformat": 4,
@@ -484,95 +430,6 @@ def notebook_for(task: dict, manifest_task: dict, version: str) -> dict:
     canonical = json.dumps(original_notebook, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
     original_notebook["metadata"]["ai_trainer"]["template_sha256"] = hashlib.sha256(canonical.encode()).hexdigest()
     return original_notebook
-
-    intro = f'''# {code}　{task["title"]}
-
-> 人工智能训练师三级 · JupyterLite 浏览器实验
-
-{task.get("description", "")}
-
-## 使用方法
-
-1. 先运行“环境准备”单元，依赖和素材只保存在当前浏览器。
-2. 在练习单元中补全下划线，使用 `Shift + Enter` 逐格运行，或从菜单运行全部单元。
-3. JupyterLite 会自动保存到本机 IndexedDB；工具栏“保存到备考站云端”会同步完整 `.ipynb` 到账号。
-4. 评分表是核对清单，不再把“能运行且没有下划线”误称为隐藏测试。
-
-## 评分点
-
-{rubric_markdown(task)}
-'''
-    cells = [
-        markdown_cell(intro, tags=["ai-trainer-intro"]),
-        code_cell(setup_source(code, assets, packages), tags=["ai-trainer-setup"], editable=False),
-    ]
-
-    if is_onnx:
-        cells.append(markdown_cell(
-            "## 浏览器 ONNX 推理\n\n下一个单元使用 `onnxruntime-web` + WebAssembly 执行真实模型，"
-            "包含分片下载、SHA-256 校验和 Cache Storage 缓存。原考试代码使用 Python `onnxruntime`，"
-            "在纯浏览器内核中请用这里的异步适配入口。",
-            tags=["ai-trainer-onnx-note"],
-        ))
-        cells.append(code_cell(onnx_source(code), tags=["ai-trainer-onnx"], editable=False))
-        original = "\n\n".join(cell.get("source", "") for cell in template.get("cells", []))
-        cells.append(markdown_cell(
-            "## 原考试 Python 模板（对照）\n\n以下代码面向带原生 `onnxruntime` 的 Python 环境；保留用于对照迁移。\n\n"
-            f"```python\n{original}\n```",
-            tags=["ai-trainer-reference-template"],
-        ))
-        cells.append(code_cell(
-            f'''# 在这里编写本题的 JupyterLite 浏览器实现
-# 可先复用上方已加载的结果；需要再次执行时：
-result = await browser_onnx_check("{code}")
-print("模型：", result["model"])
-print("输入：", result["inputs"])
-print("输出：", result["outputs"])
-''',
-            tags=["ai-trainer-exercise"],
-            ai_trainer_cell_id="browser-onnx-exercise",
-        ))
-    else:
-        cells.append(markdown_cell("## 练习区", tags=["ai-trainer-exercise-heading"]))
-        for item in template.get("cells", []):
-            cells.append(code_cell(
-                browser_safe_source(item.get("source", "")),
-                tags=["ai-trainer-exercise"],
-                ai_trainer_cell_id=item.get("id"),
-            ))
-
-    notebook = {
-        "cells": cells,
-        "metadata": {
-            "kernelspec": {
-                "display_name": "Python (Pyodide)",
-                "language": "python",
-                "name": "python",
-            },
-            "language_info": {
-                "codemirror_mode": {"name": "python", "version": 3},
-                "file_extension": ".py",
-                "mimetype": "text/x-python",
-                "name": "python",
-                "nbconvert_exporter": "python",
-                "pygments_lexer": "ipython3",
-                "version": "3.13",
-            },
-            "ai_trainer": {
-                "task_code": code,
-                "content_version": version,
-                "format_version": 2,
-                "runtime": "jupyterlite-pyodide",
-                "onnx_runtime": "onnxruntime-web@1.27.0" if is_onnx else None,
-            },
-        },
-        "nbformat": 4,
-        "nbformat_minor": 5,
-    }
-    canonical = json.dumps(notebook, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-    notebook["metadata"]["ai_trainer"]["template_sha256"] = hashlib.sha256(canonical.encode()).hexdigest()
-    return notebook
-
 
 def main() -> None:
     content = json.loads(CONTENT_PATH.read_text(encoding="utf-8"))
@@ -590,7 +447,7 @@ def main() -> None:
         code = task["code"]
         manifest_task = manifest["tasks"].get(code, {"assets": []})
         notebook = notebook_for(task, manifest_task, content["version"])
-        task_dir = OUTPUT / code
+        task_dir = OUTPUT / workspace_slug(code)
         task_dir.mkdir()
         (task_dir / f"{code}.ipynb").write_text(
             json.dumps(notebook, ensure_ascii=False, indent=1) + "\n",

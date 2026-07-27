@@ -32,24 +32,16 @@ test("JupyterLite starts the Pyodide kernel through JavaScript MIME resources", 
 
   const workspace = `playwright-${Date.now()}`;
   await page.goto(
-    `/lite/lab/index.html?path=1.1.2%2F1.1.2.ipynb&workspace=${workspace}&ui=${runtimeRevision}`,
+    `/lite/lab/index.html?path=1-1-2%2F1.1.2.ipynb&workspace=${workspace}&ui=${runtimeRevision}`,
     { waitUntil: "domcontentloaded" },
   );
 
   await expect(page.getByRole("button", { name: /Python \(Pyodide\) \| Idle/ })).toBeVisible({
     timeout: 90_000,
   });
-  await expect.poll(async () => page.evaluate(() => {
-    const setupCell = [...document.querySelectorAll(".jp-Cell")]
-      .find(cell => cell.textContent?.includes("JupyterLite 环境准备"));
-    if (!setupCell) return "setup cell missing";
-    const output = setupCell.querySelector(".jp-OutputArea")?.textContent ?? "";
-    if (/Traceback|Error:/.test(output)) return output.slice(-500);
-    return output.includes("环境已就绪") ? "ready" : "pending";
-  }), {
-    message: "the hidden environment preparation cell should install dependencies and verify its material",
-    timeout: 120_000,
-  }).toBe("ready");
+  // mountDrive 只在跨域隔离成立时为真。题目文件已经不再自带素材下载兜底，所以
+  // COOP/COEP 一旦回退，20 道题会集体读不到数据文件——把它当硬约束守住。
+  expect(await page.evaluate(() => globalThis.crossOriginIsolated)).toBe(true);
 
   const configuredPyodideUrl = await page.locator("#jupyter-config-data").evaluate(element => {
     const config = JSON.parse(element.textContent || "{}");
@@ -96,4 +88,23 @@ test("ONNX Runtime can be dynamically imported from its EdgeOne-safe JavaScript 
   expect(moduleResponse.status).toBe(200);
   expect(moduleResponse.contentType).toMatch(/^(?:application|text)\/javascript/i);
   expect(requestedMjs).toEqual([]);
+});
+
+test("task dependencies install without an environment cell in the official notebook", async ({ page }) => {
+  // 2.1.2 读 .xlsx，需要 openpyxl —— 它是 jupyterlite/pypi 里的纯 Python wheel，
+  // 不在 pyodide-lock 内，import 时不会自动加载。题目文件已经没有环境准备单元，
+  // 所以这个 import 能成功，只可能是扩展的静默内核请求装上了它。
+  await page.goto("/practical/2.1.2/lab", { waitUntil: "domcontentloaded" });
+  await expect(page.getByText("代码区已就绪", { exact: false })).toBeVisible({ timeout: 240_000 });
+
+  const frame = page.frameLocator("iframe.jupyter-frame");
+  await frame.locator(".jp-Notebook .jp-CodeCell .cm-content").last().click();
+  await page.keyboard.press("Escape");
+  await page.keyboard.press("b");
+  await page.keyboard.press("Enter");
+  await page.keyboard.type("import openpyxl; print('env-ok', openpyxl.__version__)");
+  await page.keyboard.press("Shift+Enter");
+
+  await expect(frame.locator(".jp-OutputArea-output").filter({ hasText: "env-ok" }))
+    .toBeVisible({ timeout: 180_000 });
 });

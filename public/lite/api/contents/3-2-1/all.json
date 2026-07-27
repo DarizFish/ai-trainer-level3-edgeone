@@ -1,0 +1,57 @@
+{
+  "content": [
+    {
+      "content": null,
+      "created": "2026-07-26T15:18:06.971258Z",
+      "format": null,
+      "hash": null,
+      "hash_algorithm": null,
+      "last_modified": "2026-07-27T03:15:56.309779Z",
+      "mimetype": null,
+      "name": "3.2.1.ipynb",
+      "path": "3-2-1/3.2.1.ipynb",
+      "size": 15507,
+      "type": "notebook",
+      "writable": true
+    },
+    {
+      "content": null,
+      "created": "2026-07-26T15:18:06.978257Z",
+      "format": null,
+      "hash": null,
+      "hash_algorithm": null,
+      "last_modified": "2026-07-27T03:15:56.312779Z",
+      "mimetype": "image/jpeg",
+      "name": "img_test.jpg",
+      "path": "3-2-1/img_test.jpg",
+      "size": 150351,
+      "type": "file",
+      "writable": true
+    },
+    {
+      "content": null,
+      "created": "2026-07-26T15:18:06.988257Z",
+      "format": null,
+      "hash": null,
+      "hash_algorithm": null,
+      "last_modified": "2026-07-27T03:15:56.314780Z",
+      "mimetype": "text/plain",
+      "name": "labels.txt",
+      "path": "3-2-1/labels.txt",
+      "size": 10472,
+      "type": "file",
+      "writable": true
+    }
+  ],
+  "created": "2026-07-26T15:18:06.964258Z",
+  "format": "json",
+  "hash": null,
+  "hash_algorithm": null,
+  "last_modified": "2026-07-27T03:15:57.885312Z",
+  "mimetype": null,
+  "name": "3-2-1",
+  "path": "3-2-1",
+  "size": null,
+  "type": "directory",
+  "writable": true
+}

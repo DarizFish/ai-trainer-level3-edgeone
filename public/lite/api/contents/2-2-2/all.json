@@ -1,0 +1,43 @@
+{
+  "content": [
+    {
+      "content": null,
+      "created": "2026-07-26T15:18:06.901713Z",
+      "format": null,
+      "hash": null,
+      "hash_algorithm": null,
+      "last_modified": "2026-07-27T03:15:56.294780Z",
+      "mimetype": null,
+      "name": "2.2.2.ipynb",
+      "path": "2-2-2/2.2.2.ipynb",
+      "size": 4185,
+      "type": "notebook",
+      "writable": true
+    },
+    {
+      "content": null,
+      "created": "2026-07-26T15:18:06.912713Z",
+      "format": null,
+      "hash": null,
+      "hash_algorithm": null,
+      "last_modified": "2026-07-27T03:15:56.296779Z",
+      "mimetype": "application/vnd.ms-excel",
+      "name": "auto-mpg.csv",
+      "path": "2-2-2/auto-mpg.csv",
+      "size": 17732,
+      "type": "file",
+      "writable": true
+    }
+  ],
+  "created": "2026-07-26T15:18:06.899713Z",
+  "format": "json",
+  "hash": null,
+  "hash_algorithm": null,
+  "last_modified": "2026-07-27T03:15:57.788055Z",
+  "mimetype": null,
+  "name": "2-2-2",
+  "path": "2-2-2",
+  "size": null,
+  "type": "directory",
+  "writable": true
+}

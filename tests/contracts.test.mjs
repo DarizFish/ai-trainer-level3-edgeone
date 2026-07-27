@@ -1127,7 +1127,7 @@ test("starter preview is fully removed and social metadata asset exists", async 
 });
 
 test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes, and both site bridge extensions", async () => {
-  const [content, lite, host, labShell, configUtils, bridgeExtension, bridgePackage, pyodideKernelPackage, buildScript, patchScript, extensionBuildScript, runtimeCopyScript, packageJson, edgeOneConfig, labManifest] = await Promise.all([
+  const [content, lite, host, labShell, configUtils, bridgeExtension, bridgePackage, pyodideKernelPackage, buildScript, patchScript, extensionBuildScript, runtimeCopyScript, packageJson, edgeOneConfig, labManifest, nextConfig] = await Promise.all([
     readFile(new URL("../data/content.json", import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL("../public/lite/jupyter-lite.json", import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL("../components/JupyterLiteLab.tsx", import.meta.url), "utf8"),
@@ -1143,6 +1143,7 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
     readFile(new URL("../package.json", import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL("../edgeone.json", import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL("../public/labs/manifest.json", import.meta.url), "utf8").then(JSON.parse),
+    readFile(new URL("../next.config.ts", import.meta.url), "utf8"),
   ]);
   const extensions = lite["jupyter-config-data"].federated_extensions;
   const notebookOverrides = lite["jupyter-config-data"].settingsOverrides["@jupyterlab/notebook-extension:tracker"];
@@ -1235,14 +1236,16 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
   // content hash in their name must never be served as immutable. A stale
   // immutable copy pins deleted bundle hashes or a mismatched pyodide-lock.json
   // and silently breaks kernel startup until the browser cache expires.
-  const cacheRuleFor = path => edgeOneConfig.headers
-    .filter(rule => {
-      const bare = bareSource(rule);
-      return rule.source.endsWith("*") ? path.startsWith(bare) : path === bare;
-    })
+  // EdgeOne sources are globs and "*" may sit anywhere in the path.
+  const ruleMatches = (rule, path) => new RegExp(
+    `^${rule.source.split("*").map(part => part.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`)).join(".*")}$`,
+  ).test(path);
+  const headerValuesFor = (path, key) => edgeOneConfig.headers
+    .filter(rule => ruleMatches(rule, path))
     .flatMap(rule => rule.headers)
-    .filter(header => header.key === "Cache-Control")
+    .filter(header => header.key === key)
     .map(header => header.value);
+  const cacheRuleFor = path => headerValuesFor(path, "Cache-Control");
   for (const path of [
     "/lite/jupyter-lite.json",
     "/lite/jupyter-lite.ipynb",
@@ -1268,6 +1271,25 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
       `${path} must revalidate; its last matching rule still declares ${values.at(-1)}`,
     );
   }
+
+  // The Pyodide kernel only mounts Python's filesystem onto Jupyter Contents
+  // when mountDrive is true, which needs serviceWorkerManager.enabled or
+  // crossOriginIsolated. Without it, files written by to_csv never appear in
+  // the file browser. Both documents involved must therefore stay isolated.
+  const headerValueFor = (path, key) => headerValuesFor(path, key).at(-1);
+  for (const path of ["/practical/1.1.2/lab", "/lite/lab/index.html"]) {
+    assert.equal(headerValueFor(path, "Cross-Origin-Opener-Policy"), "same-origin", path);
+    assert.equal(headerValueFor(path, "Cross-Origin-Embedder-Policy"), "require-corp", path);
+  }
+  assert.match(nextConfig, /Cross-Origin-Opener-Policy/);
+  assert.match(nextConfig, /Cross-Origin-Embedder-Policy/);
+  assert.match(host, /allow="[^"]*cross-origin-isolated/);
+  // 告警屏蔽与 piplite 安装由扩展通过静默内核请求下发，官方题目文件里不含任何
+  // 环境准备代码；每题的依赖清单只以 ai_trainer.pip_packages 元数据形式随行。
+  assert.match(bridgeExtension, /filterwarnings\('ignore', category=FutureWarning\)/);
+  assert.match(bridgeExtension, /piplite\.install/);
+  assert.match(bridgeExtension, /silent: true/);
+
   const names = new Set(extensions.map(extension => extension.name));
   assert.ok(names.has("@jupyterlite/pyodide-kernel-extension"));
   assert.ok(names.has("jupyter-iframe-commands"));
@@ -1282,13 +1304,20 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
   let onnxNotebooks = 0;
   const nestedWorkspaceIndexes = new Set();
   for (const task of tasks) {
-    const notebookSource = await readFile(new URL(`../public/lite/files/${task.code}/${task.code}.ipynb`, import.meta.url), "utf8");
+    // JupyterLite 判定目录靠 PathExt.extname()，带点的目录名会让 newUntitled 写错
+    // 位置并造出遮蔽整个目录的同名空文件，所以工作区目录必须无点。
+    const workspaceDir = task.code.replaceAll(".", "-");
+    assert.doesNotMatch(workspaceDir, /\./, `${task.code} 的工作区目录名不能含点`);
+    const notebookSource = await readFile(new URL(`../public/lite/files/${workspaceDir}/${task.code}.ipynb`, import.meta.url), "utf8");
     const notebook = JSON.parse(notebookSource);
     assert.equal(notebook.metadata.ai_trainer.task_code, task.code);
     assert.equal(notebook.metadata.ai_trainer.runtime, "jupyterlite-pyodide");
     assert.equal(notebook.metadata.ai_trainer.visible_content, "original-code-only");
-    assert.ok(notebook.cells.some(cell => cell.metadata?.tags?.includes("ai-trainer-setup")));
-    const visibleCells = notebook.cells.filter(cell => !cell.metadata?.tags?.some(tag => tag === "ai-trainer-setup" || tag === "ai-trainer-onnx"));
+    // 官方题目文件里不得出现环境准备单元：告警屏蔽与 piplite 安装由扩展通过静默
+    // 内核请求下发，依赖清单只以元数据形式随题目走。
+    assert.doesNotMatch(notebookSource, /JupyterLite 环境准备|piplite|pyfetch|环境已就绪/, `${task.code} 仍含环境准备代码`);
+    assert.ok(Array.isArray(notebook.metadata.ai_trainer.pip_packages), `${task.code} 缺少 pip_packages 元数据`);
+    const visibleCells = notebook.cells.filter(cell => !cell.metadata?.tags?.includes("ai-trainer-onnx"));
     assert.ok(visibleCells.every(cell => cell.cell_type === "code"));
     assert.deepEqual(visibleCells.map(cell => cell.source.join("")), task.notebook.cells.map(cell => cell.source));
     assert.doesNotMatch(notebookSource, /## 使用方法|## 评分点|ai-trainer-intro|ai-trainer-exercise-heading/);
@@ -1303,12 +1332,12 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
     for (const asset of manifestTask.assets ?? []) {
       const assetParts = asset.name.split("/");
       for (let depth = 1; depth < assetParts.length; depth += 1) {
-        nestedWorkspaceIndexes.add(`${task.code}/${assetParts.slice(0, depth).join("/")}/all.json`);
+        nestedWorkspaceIndexes.add(`${workspaceDir}/${assetParts.slice(0, depth).join("/")}/all.json`);
       }
       const relativeAssetPath = asset.name.split("/").map(encodeURIComponent).join("/");
       const [sourcePayload, builtPayload] = await Promise.all([
-        readFile(new URL(`../jupyterlite/content/${task.code}/${relativeAssetPath}`, import.meta.url)),
-        readFile(new URL(`../public/lite/files/${task.code}/${relativeAssetPath}`, import.meta.url)),
+        readFile(new URL(`../jupyterlite/content/${workspaceDir}/${relativeAssetPath}`, import.meta.url)),
+        readFile(new URL(`../public/lite/files/${workspaceDir}/${relativeAssetPath}`, import.meta.url)),
       ]);
       for (const [location, payload] of [["source workspace", sourcePayload], ["built workspace", builtPayload]]) {
         assert.equal(payload.length, asset.size, `${asset.name} has a stale size in the ${location}`);

@@ -521,6 +521,57 @@ async function withTimeout<T>(promise: Promise<T>, label: string, timeoutMs = 40
   }
 }
 
+// 官方参考答案是从考试用完整 notebook 逐字转录的，其中的 pandas 写法（例如
+// df[col].fillna(method="ffill", inplace=True)）在新版 pandas 里会触发
+// FutureWarning。答案必须与官方原文保持一致，不能为了消除告警而改写，因此在内核
+// 里屏蔽这类版本迁移告警，避免考生把它误当成代码错误。
+const WARNING_FILTERS = [
+  "import warnings",
+  "warnings.filterwarnings('ignore', category=FutureWarning)",
+  "warnings.filterwarnings('ignore', category=DeprecationWarning)"
+];
+
+function kernelEnvironmentSource(packages: string[]): string {
+  const statements = [...WARNING_FILTERS];
+  if (packages.length > 0) {
+    // pyodide 自带的包（pandas、numpy、scikit-learn 等）在 import 时会自动加载，
+    // 但 jupyterlite/pypi 里的纯 Python wheel（openpyxl、seaborn、
+    // imbalanced-learn）不在 pyodide-lock 内，只能靠 piplite 装。
+    statements.push("import piplite", `await piplite.install(${JSON.stringify(packages)})`);
+  }
+  return statements.join("\n");
+}
+
+function taskPipPackages(panel: NotebookPanel): string[] {
+  const metadata = panel.content.model?.getMetadata("ai_trainer") as { pip_packages?: unknown } | undefined;
+  const packages = metadata?.pip_packages;
+  return Array.isArray(packages) ? packages.filter((name): name is string => typeof name === "string") : [];
+}
+
+// 告警屏蔽与依赖安装走静默内核请求，而不是题目文件里的准备单元，官方题目文件
+// 因此只剩考试本身的代码。素材无需下载：COOP/COEP 让 mountDrive 成立后，随站发布
+// 的工作区文件本来就在内核的工作目录里。
+async function applyKernelEnvironment(panel: NotebookPanel): Promise<void> {
+  const kernel = panel.sessionContext.session?.kernel;
+  if (!kernel) throw new Error("内核尚未就绪，无法准备题目环境");
+  const code = kernelEnvironmentSource(taskPipPackages(panel));
+  let lastFailure = "未知错误";
+  for (let attempt = 1; attempt <= 3; attempt += 1) {
+    const reply = await kernel.requestExecute({
+      code,
+      silent: true,
+      store_history: false,
+      stop_on_error: true
+    }).done;
+    if (reply.content.status === "ok") return;
+    lastFailure = reply.content.status === "error"
+      ? `${reply.content.ename}：${reply.content.evalue}`
+      : reply.content.status;
+    if (attempt < 3) await new Promise(resolve => window.setTimeout(resolve, 800 * attempt));
+  }
+  throw new Error(`题目环境准备失败（已重试 3 次）：${lastFailure}`);
+}
+
 const plugin: JupyterFrontEndPlugin<void> = {
   id: "ai-trainer-jupyterlite:bridge",
   autoStart: true,
@@ -586,7 +637,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
     const hideInfrastructureCells = (panel: NotebookPanel): void => {
       panel.content.widgets.forEach(cell => {
         const tags = cell.model.getMetadata("tags");
-        const infrastructure = Array.isArray(tags) && tags.some(tag => tag === "ai-trainer-setup" || tag === "ai-trainer-onnx");
+        const infrastructure = Array.isArray(tags) && tags.includes("ai-trainer-onnx");
         cell.node.style.display = infrastructure ? "none" : "";
         if (infrastructure) cell.node.setAttribute("aria-hidden", "true");
         else cell.node.removeAttribute("aria-hidden");
@@ -710,26 +761,32 @@ const plugin: JupyterFrontEndPlugin<void> = {
           const tags = cells[index]?.model.getMetadata("tags");
           return Array.isArray(tags) && tags.includes(tag);
         };
-        const preparationCells = cells.filter((_cell, index) => hasTag(index, "ai-trainer-setup") || hasTag(index, "ai-trainer-onnx"));
+        // 只有 5 道 ONNX 题带运行时单元，其余题目文件里全是习题代码。
+        const runtimeCells = cells.filter((_cell, index) => hasTag(index, "ai-trainer-onnx"));
         const exerciseIndex = cells.findIndex((_cell, index) => hasTag(index, "ai-trainer-exercise"));
 
-        if (!preparedPanels.has(panel) && preparationCells.length > 0) {
+        if (!preparedPanels.has(panel)) {
           let preparation = preparationRuns.get(panel);
           if (!preparation) {
             preparation = (async () => {
               notifyParent("AI_TRAINER_EXERCISE_PREPARING", { path: panel.context.path });
+              await withTimeout(applyKernelEnvironment(panel), "题目依赖准备", 180000);
+              if (runtimeCells.length === 0) {
+                preparedPanels.add(panel);
+                return;
+              }
               let lastFailure: string | null = null;
               for (let attempt = 1; attempt <= 2; attempt += 1) {
                 const succeeded = await withTimeout(
-                  NotebookActions.runCells(panel.content, preparationCells, panel.sessionContext),
-                  "题目依赖与素材准备",
+                  NotebookActions.runCells(panel.content, runtimeCells, panel.sessionContext),
+                  "浏览器运行时准备",
                   180000
                 );
                 if (succeeded) {
                   preparedPanels.add(panel);
                   return;
                 }
-                lastFailure = preparationFailure(preparationCells);
+                lastFailure = preparationFailure(runtimeCells);
                 if (attempt < 2) await new Promise(resolve => window.setTimeout(resolve, 1200));
               }
               throw new Error(lastFailure ?? "环境准备单元未能成功执行");

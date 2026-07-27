@@ -177,7 +177,12 @@ function buildFillReferences(templateCells: Array<{ id: string; source: string }
 export default function JupyterLiteLab({ task, signedIn, userEmail = null, examMode = false, activeSurface = "notebook" }: { task: PracticalTask; signedIn: boolean; userEmail?: string | null; examMode?: boolean; activeSurface?: "notebook" | "document" }) {
   const labRevision = "20260726-pyodide0277-runtime11";
   const iframeId = useMemo(() => `jupyterlite-${task.code.replaceAll(".", "-")}`, [task.code]);
-  const notebookPath = `${task.code}/${task.code}.ipynb`;
+  // JupyterLite 用 PathExt.extname() 判断一个路径是不是目录，所以题号不能直接当
+  // 目录名：1.1.1 会被解析成扩展名为 ".1" 的文件，newUntitled 于是写到根目录去，
+  // 在题号文件夹里“新建文本文件”还会造出一个同名空文件把整个目录遮掉。目录名去
+  // 点即可走对分支。与 scripts/generate-jupyterlite-notebooks.py 的 workspace_slug 一致。
+  const workspaceDir = task.code.replaceAll(".", "-");
+  const notebookPath = `${workspaceDir}/${task.code}.ipynb`;
   const workspaceSlug = `ai-trainer-${task.code.replaceAll(".", "-")}-${labRevision}`;
   const notebookUrl = `/lite/lab/index.html?path=${encodeURIComponent(notebookPath)}&workspace=${workspaceSlug}-embed&ui=${labRevision}${examMode ? "&exam=1" : ""}`;
   const fullNotebookUrl = `/lite/lab/index.html?path=${encodeURIComponent(notebookPath)}&workspace=${workspaceSlug}-full&ui=${labRevision}`;
@@ -586,7 +591,7 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
         <small>共 {fillReview.summary.total} 空 · 自动比对仅供参考，最终以运行结果为准</small>
       </div>}
       <div className="mobile-lab-hint">手机端适合查看和轻量编辑；长时间编码建议横屏或使用“全屏打开”。</div>
-      <iframe key={iframeGeneration} id={iframeId} className="jupyter-frame" src={`${notebookUrl}&attempt=${iframeGeneration}`} title={`${task.code} JupyterLite JupyterLab`} allow="clipboard-read; clipboard-write; fullscreen" />
+      <iframe key={iframeGeneration} id={iframeId} className="jupyter-frame" src={`${notebookUrl}&attempt=${iframeGeneration}`} title={`${task.code} JupyterLite JupyterLab`} allow="clipboard-read; clipboard-write; fullscreen; cross-origin-isolated" />
     </section>
     {!examMode && wordDeliverable && <section className={`lab-document-surface ${activeSurface === "document" ? "is-active" : "is-inactive"}`} role="tabpanel" aria-label={`${wordDeliverable.fileName} 作答区`}>
       <PracticalWordDeliverable task={task} userEmail={userEmail} />
