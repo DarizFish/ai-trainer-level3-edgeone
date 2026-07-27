@@ -430,6 +430,13 @@ def notebook_for(task: dict, manifest_task: dict, version: str) -> dict:
                 # a silent kernel request before the exercise runs. Only the
                 # packages pyodide cannot auto-load on import end up here.
                 "pip_packages": [p for p in packages if p in PIPLITE_ONLY_PACKAGES],
+                # 素材正常情况下由 mountDrive 挂进内核工作目录，无需下载。但 mountDrive
+                # 在内核创建那一刻就定死了，跨域隔离若未成立就没有 /drive，学员会在自己
+                # 的代码里撞上 FileNotFoundError。扩展据此清单校验并按需补齐。
+                "assets": [
+                    {"name": str(a["name"]), "url": str(a["url"]), "sha256": str(a["sha256"])}
+                    for a in assets
+                ],
             },
         },
         "nbformat": 4,

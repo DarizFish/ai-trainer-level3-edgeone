@@ -20,7 +20,7 @@
       },
       {
         "extension": "./extension",
-        "load": "static/remoteEntry.3af87f3f35fb90248bd9.js",
+        "load": "static/remoteEntry.8503cae6144253f0127f.js",
         "name": "ai-trainer-jupyterlite"
       },
       {

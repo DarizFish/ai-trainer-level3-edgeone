@@ -488,7 +488,7 @@ const WARNING_FILTERS = [
     "warnings.filterwarnings('ignore', category=FutureWarning)",
     "warnings.filterwarnings('ignore', category=DeprecationWarning)"
 ];
-function kernelEnvironmentSource(packages) {
+function kernelEnvironmentSource(packages, assets) {
     const statements = [...WARNING_FILTERS];
     if (packages.length > 0) {
         // pyodide 自带的包（pandas、numpy、scikit-learn 等）在 import 时会自动加载，
@@ -496,12 +496,30 @@ function kernelEnvironmentSource(packages) {
         // imbalanced-learn）不在 pyodide-lock 内，只能靠 piplite 装。
         statements.push("import piplite", `await piplite.install(${JSON.stringify(packages)})`);
     }
+    if (assets.length > 0) {
+        // 正常情况下素材由 mountDrive 挂进工作目录，下面的哈希校验直接命中、不发请求。
+        // 但 mountDrive 在内核创建那一刻就定死了：跨域隔离若未成立（例如页面被从 http
+        // 打开，或用的是修复前的缓存版本），就没有 /drive，学员会在自己的代码里撞上
+        // FileNotFoundError。这里按清单补齐，让题目文件本身仍然不含任何环境代码。
+        statements.push("import hashlib", "from pathlib import Path as _P", "from pyodide.http import pyfetch as _pyfetch", `_assets = ${JSON.stringify(assets)}`, "for _a in _assets:", "    _p = _P(_a['name'])", "    if _p.exists() and hashlib.sha256(_p.read_bytes()).hexdigest() == _a['sha256']:", "        continue", "    _r = await _pyfetch(_a['url'])", "    if _r.status >= 400:", "        raise RuntimeError(f\"素材下载失败 HTTP {_r.status}：{_a['url']}\")", "    _b = await _r.bytes()", "    if hashlib.sha256(_b).hexdigest() != _a['sha256']:", "        raise RuntimeError(f\"素材校验失败：{_a['name']}\")", "    _p.parent.mkdir(parents=True, exist_ok=True)", "    _p.write_bytes(_b)", "del _assets");
+    }
     return statements.join("\n");
 }
+function taskMetadata(panel) {
+    return panel.content.model?.getMetadata("ai_trainer") ?? {};
+}
 function taskPipPackages(panel) {
-    const metadata = panel.content.model?.getMetadata("ai_trainer");
-    const packages = metadata?.pip_packages;
+    const packages = taskMetadata(panel).pip_packages;
     return Array.isArray(packages) ? packages.filter((name) => typeof name === "string") : [];
+}
+function taskAssets(panel) {
+    const assets = taskMetadata(panel).assets;
+    if (!Array.isArray(assets))
+        return [];
+    return assets.filter((asset) => Boolean(asset) && typeof asset === "object"
+        && typeof asset.name === "string"
+        && typeof asset.url === "string"
+        && typeof asset.sha256 === "string");
 }
 // 告警屏蔽与依赖安装走静默内核请求，而不是题目文件里的准备单元，官方题目文件
 // 因此只剩考试本身的代码。素材无需下载：COOP/COEP 让 mountDrive 成立后，随站发布
@@ -510,7 +528,7 @@ async function applyKernelEnvironment(panel) {
     const kernel = panel.sessionContext.session?.kernel;
     if (!kernel)
         throw new Error("内核尚未就绪，无法准备题目环境");
-    const code = kernelEnvironmentSource(taskPipPackages(panel));
+    const code = kernelEnvironmentSource(taskPipPackages(panel), taskAssets(panel));
     let lastFailure = "未知错误";
     for (let attempt = 1; attempt <= 3; attempt += 1) {
         const reply = await kernel.requestExecute({

@@ -836,6 +836,37 @@ test("all Python practical tasks expose audited completed-notebook reference cod
   assert.doesNotMatch(lab, /下载完整参考代码|SourceBadge/);
 });
 
+test("每题素材有清单兜底，跨域隔离失效时也能读到数据文件", async () => {
+  const [content, labManifest, bridgeExtension] = await Promise.all([
+    readFile(new URL("../data/content.json", import.meta.url), "utf8").then(JSON.parse),
+    readFile(new URL("../public/labs/manifest.json", import.meta.url), "utf8").then(JSON.parse),
+    readFile(new URL("../jupyterlite-extension/src/index.ts", import.meta.url), "utf8"),
+  ]);
+  // mountDrive 在内核创建那一刻定死：跨域隔离未成立时没有 /drive，学员会在自己的
+  // 代码里撞上 FileNotFoundError。扩展据 ai_trainer.assets 校验并按需补齐，所以清单
+  // 必须与官方素材清单逐项对齐，且带 sha256 供校验。
+  assert.match(bridgeExtension, /pyfetch/);
+  assert.match(bridgeExtension, /hashlib\.sha256/);
+  for (const task of content.practical.filter(item => item.hasNotebook)) {
+    const workspaceDir = task.code.replaceAll(".", "-");
+    const notebook = JSON.parse(
+      await readFile(new URL(`../public/lite/files/${workspaceDir}/${task.code}.ipynb`, import.meta.url), "utf8"),
+    );
+    const assets = notebook.metadata.ai_trainer.assets;
+    assert.ok(Array.isArray(assets), `${task.code} 缺少 assets 元数据`);
+    const expected = labManifest.tasks[task.code]?.assets ?? [];
+    assert.deepEqual(
+      assets.map(asset => asset.name).sort(),
+      expected.map(asset => asset.name).sort(),
+      `${task.code} 的素材清单与 labs/manifest.json 不一致`,
+    );
+    for (const asset of assets) {
+      assert.match(asset.sha256, /^[0-9a-f]{64}$/, `${task.code} 素材缺少 sha256`);
+      assert.match(asset.url, /^\/labs\//, `${task.code} 素材 URL 必须是站内 /labs/ 路径`);
+    }
+  }
+});
+
 test("Word deliverable answers never expose Python code to learners", async () => {
   const [content, narrative] = await Promise.all([
     readFile(new URL("../data/content.json", import.meta.url), "utf8").then(JSON.parse),
