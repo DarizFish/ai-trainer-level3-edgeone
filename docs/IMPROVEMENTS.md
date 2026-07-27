@@ -2,6 +2,46 @@
 
 本文件记录可验证的产品改进，不以“代码有变化”作为完成标准。视口指标均来自本地 `1280 × 720` 浏览器。条目按日期倒序排列，最新在最前。
 
+## 2026-07-27：修复内核被 COEP 拦截与题号目录导致的新建文件失效，并移除题目文件里的环境准备单元
+
+对应提交 `b175204`、`166fa3c`。
+
+### 用户输入
+
+本地部署运行后逐项排查；在题号文件夹（`1.1.1`）下新建文件报 `Item does not exist`；要求彻底从官方题目脚本中删除环境准备单元。
+
+### 本轮实现
+
+**跨域隔离**
+
+- `mountDrive` 的判定是 `serviceWorkerManager.enabled || crossOriginIsolated`，而 `@jupyterlite/application-extension:service-worker-manager` 已在 `jupyterlite/jupyter-lite.json` 中禁用，因此 COOP/COEP 是唯一途径。
+- 但 `require-corp` 对会开新执行上下文的资源查的是策略继承而非 CORP，同源不豁免。Pyodide 内核由 `new Worker(<lite/extensions 下的分片>)` 启动，该响应缺 COEP 头会被 Chrome 以 `coep-frame-resource-needs-coep-header` 拦掉，内核停在启动中。`next.config.ts` 与 `edgeone.json` 为 `/lite/extensions/*` 补发 `Cross-Origin-Embedder-Policy: require-corp`；实测补 `Cross-Origin-Resource-Policy: same-origin` 无效。
+
+**题号工作区目录去点**
+
+- JupyterLite 用 `PathExt.extname()` 判断路径是不是目录，而 `extname("1.1.1") === ".1"`，于是 `newUntitled({path:"1.1.1"})` 落进根目录分支：New Folder 在根目录建出 `Untitled Folder` 并抛 `Item does not exist.`；New Text File 在根目录建出名为 `1.1.1` 的 0 字节文件，本地优先的 `get()` 让它遮蔽整个题号目录，文件浏览器显示为空（已保存的作答本身不丢，仍可按显式路径打开）。
+- 工作区目录改为 `1-1-1` 形式，notebook 文件名保留 `1.1.1.ipynb`。生成器新增 `workspace_slug()`，`components/JupyterLiteLab.tsx` 与素材 URL 同步。
+
+**发布封条可重新盖章**
+
+- `validate-content.py` 断言 `theory-review-audit.json` 的 `publishedContentSha256` 等于 `data/content.json` 的哈希。这是整文件封条，任何后续改动都会让它失效——包括本轮的素材 URL 同步，以及项目自己的 `npm run content:practical-materials`。而重新发布被设计拒绝，且没有别的出路，封条实际上只能靠手改，等于橡皮图章。
+- `publish_theory_review.py` 新增 `--restamp`（`npm run content:theory-review:restamp`）：按首次发布的时间戳确定性重建一次发布结果，逐字段比对 `publish_content_payload` 写入的 `theory`、`theoryReference`、`theoryReview`、`stats`、`version`，全部一致才把封条挪到当前文件，并写入 `restampedAt` 与 `restampedFrom` 保留原值。任一字段偏离即拒绝并指名具体字段。
+- `theoryReview.answerChanges` 例外处理：它记的是发布相对输入的增量，首次发布时 content 还是审校前的答案（79 处），重建时已是发布后的答案（必然 0），无法由重建复现，改由审计自身记录的数值钉住。
+- `tests/publish-theory-review.test.mjs` 与 `tests/theory-review-state.test.mjs` 此前不被任何 npm 脚本执行，现已并入 `test:contracts`（合计 3.4 秒）；前者新增重新盖章的正反两条用例。
+
+**移除环境准备单元**
+
+- 素材下载在 `mountDrive` 成立后已是空转（实测加载题目时 `/labs/` 请求为 0），整段删除。
+- 告警屏蔽与 `piplite.install` 改由扩展在 `ensure-kernel` 之后以 `requestExecute({ silent: true, store_history: false })` 静默下发并重试 3 次；每题依赖清单以 `ai_trainer.pip_packages` 元数据随行，`format_version` 升到 4。
+- 20 题总单元数 68 → 48，官方题目文件里只剩考试本身的代码；5 道 ONNX 题保留 `ai-trainer-onnx` 运行时单元。生成器同时删除失效的 `setup_source` 与一段不可达的遗留 notebook 构造代码。
+
+### 验证
+
+- 39/39 合同测试（含新并入的两个审校测试文件）；生产构建下浏览器回归 16/16。
+- 新增浏览器用例 `task dependencies install without an environment cell in the official notebook`：在 2.1.2 内 `import openpyxl` 成功。openpyxl 是纯 Python wheel，不在 `pyodide-lock` 内、import 不会自动加载，而题目文件已无准备单元，导入成功即证明扩展的静默注入生效。
+- `runtime.spec.mjs` 新增 `crossOriginIsolated === true` 断言：素材下载兜底移除后，COEP 一旦回退会让 20 题集体静默读不到数据文件。
+- 合同测试改为反向断言：题目文件出现 `piplite`/`pyfetch`/`环境准备` 字样即失败，工作区目录名含点即失败。
+
 ## 2026-07-26：Word 答题区统一为 1.2 答题纸，并切换到 Pyodide 0.27.7
 
 对应提交 `822b40b`。
