@@ -1,10 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { createBridge } from "jupyter-iframe-commands-host";
 import type { PracticalTask } from "@/lib/content";
 import { getPracticalWordDeliverable } from "@/lib/practical-word-deliverable";
+import { isLabCold, labHasModel, markLabWarm, subscribeWarmth } from "@/lib/lab-warmup";
 import { PracticalWordDeliverable } from "./PracticalWordDeliverable";
+import LabWarmupNotice, { type WarmupStage } from "./LabWarmupNotice";
 
 type NotebookCell = {
   cell_type: string;
@@ -225,11 +227,28 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
   const [confirmRestore, setConfirmRestore] = useState(false);
   const [iframeGeneration, setIframeGeneration] = useState(0);
   const [startupSlow, setStartupSlow] = useState(false);
+  const [warmupStage, setWarmupStage] = useState<WarmupStage>("shell");
   const [fillReview, setFillReview] = useState<{ visible: boolean; summary: FillReviewSummary } | null>(null);
   const wordDeliverable = useMemo(() => getPracticalWordDeliverable(task), [task]);
   const solutionCells = task.notebook?.solutionCells;
   const templateCells = task.notebook?.cells;
   const fillReferences = useMemo(() => templateCells && solutionCells ? buildFillReferences(templateCells, solutionCells) : [], [solutionCells, templateCells]);
+
+  // 冷热要读 localStorage，服务端拿不到。用 useSyncExternalStore 而不是「effect 里
+  // setState」：服务端快照恒为 false，客户端首帧就取到真值，既不会 hydration 不一致，
+  // 也不会多一轮级联渲染。markLabWarm 会通知订阅者，提示随即收起。
+  const cold = useSyncExternalStore(
+    subscribeWarmth,
+    () => isLabCold(task, labRevision),
+    () => false,
+  );
+  const hasModel = useMemo(() => labHasModel(task), [task]);
+
+  const finishWarmup = useCallback(() => {
+    // 只有真正走完准备阶段才记热身，中途关页面下次仍会提示。
+    markLabWarm(task, labRevision);
+    setWarmupStage("ready");
+  }, [labRevision, task]);
 
   const configureFillReferences = useCallback(async (bridge: Bridge) => {
     if (examMode || fillReferences.length === 0) return;
@@ -409,6 +428,7 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
     }, 30000);
     void bridge.ready.then(async () => {
       bridgeConnected = true;
+      setWarmupStage("kernel");
       window.clearTimeout(connectionTimer);
       for (let attempt = 0; attempt < 60 && !cancelled; attempt += 1) {
         try {
@@ -441,6 +461,7 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
             }
             setStartupSlow(false);
             setError(null);
+            finishWarmup();
             setSaveState(signedIn ? "代码区已就绪；修改会自动同步" : "代码区已就绪；登录后可云端同步");
           } catch (cause) {
             const message = cause instanceof Error ? cause.message : String(cause);
@@ -467,7 +488,7 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
     const onMessage = (event: MessageEvent) => {
       const iframe = document.getElementById(iframeId) as HTMLIFrameElement | null;
       if (event.origin !== window.location.origin || event.source !== iframe?.contentWindow) return;
-      const data = event.data as { type?: string; path?: string; status?: string; message?: string };
+      const data = event.data as { type?: string; path?: string; status?: string; message?: string; stage?: string };
       if (data.path && data.path !== notebookPath) return;
       if (data.type === "AI_TRAINER_SAVE_REQUEST") saveActionRef.current();
       if (data.type === "AI_TRAINER_NOTEBOOK_CHANGED") snapshotAndSchedule();
@@ -480,9 +501,13 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
         }
       }
       if (data.type === "AI_TRAINER_EXERCISE_PREPARING") setSaveState("正在准备运行环境、素材与模型…");
+      if (data.type === "AI_TRAINER_EXERCISE_STAGE" && (data.stage === "packages" || data.stage === "runtime")) {
+        setWarmupStage(data.stage);
+      }
       if (data.type === "AI_TRAINER_EXERCISE_READY") {
         setStartupSlow(false);
         setError(null);
+        finishWarmup();
         setSaveState(signedIn ? "代码区已就绪；修改会自动同步" : "代码区已就绪；登录后可云端同步");
       }
       if (data.type === "AI_TRAINER_EXERCISE_ERROR" && data.message) {
@@ -503,7 +528,7 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
       if (autosaveRef.current) clearTimeout(autosaveRef.current);
       if (snapshotRef.current) clearTimeout(snapshotRef.current);
     };
-  }, [configureFillReferences, iframeGeneration, iframeId, loadDrafts, notebookPath, signedIn, snapshotAndSchedule]);
+  }, [configureFillReferences, finishWarmup, iframeGeneration, iframeId, loadDrafts, notebookPath, signedIn, snapshotAndSchedule]);
 
   async function resolveConflict(choice: "local" | "cloud") {
     if (!conflict) return;
@@ -536,6 +561,7 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
     setStartupSlow(false);
     kernelRef.current = "unknown";
     setKernel("unknown");
+    setWarmupStage("shell");
     setSaveState("正在重新加载 JupyterLite 环境…");
     setIframeGeneration((value) => value + 1);
   }
@@ -607,7 +633,7 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
         </div>
       </div>
       {error && <div className="jupyter-error" role="alert"><span>{error}</span>{error.startsWith("题目环境准备失败") && <button type="button" className="button button-small" onClick={() => void retryPreparation()}>重试准备</button>}</div>}
-      {startupSlow && !error && <div className="jupyter-warning" role="status">Python 内核仍在准备。页面会保留当前环境，不再自动重载；若长时间没有响应，可手动点击“重新加载环境”。</div>}
+      {startupSlow && !error && !cold && <div className="jupyter-warning" role="status">Python 内核仍在准备。页面会保留当前环境，不再自动重载；若长时间没有响应，可手动点击“重新加载环境”。</div>}
       {fillReview?.visible && fillReview.summary.total > 0 && <div className="jupyter-fill-summary" role="status">
         <b>核对填空自查</b>
         <span className="fill-summary-chip is-exact">✓ 完全一致 {fillReview.summary.exact}</span>
@@ -616,7 +642,10 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
         <small>共 {fillReview.summary.total} 空 · 自动比对仅供参考，最终以运行结果为准</small>
       </div>}
       <div className="mobile-lab-hint">手机端适合查看和轻量编辑；长时间编码建议横屏或使用“全屏打开”。</div>
-      <iframe key={iframeGeneration} id={iframeId} className="jupyter-frame" src={`${notebookUrl}&attempt=${iframeGeneration}`} title={`${task.code} JupyterLite JupyterLab`} allow="clipboard-read; clipboard-write; fullscreen; cross-origin-isolated" />
+      <div className="jupyter-frame-wrap">
+        {cold && !error && <LabWarmupNotice stage={warmupStage} hasModel={hasModel} />}
+        <iframe key={iframeGeneration} id={iframeId} className="jupyter-frame" src={`${notebookUrl}&attempt=${iframeGeneration}`} title={`${task.code} JupyterLite JupyterLab`} allow="clipboard-read; clipboard-write; fullscreen; cross-origin-isolated" />
+      </div>
     </section>
     {!examMode && wordDeliverable && <section className={`lab-document-surface ${activeSurface === "document" ? "is-active" : "is-inactive"}`} role="tabpanel" aria-label={`${wordDeliverable.fileName} 作答区`}>
       <PracticalWordDeliverable task={task} userEmail={userEmail} />

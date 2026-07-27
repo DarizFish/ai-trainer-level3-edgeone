@@ -584,6 +584,22 @@ button { color: inherit; }
 .fill-summary-chip.is-different { color: #8c1d18; background: #fdeceb; border-color: #f0aca8; }
 .fill-summary-chip.is-empty { color: #5a6169; background: #eef0f2; border-color: #cfd5da; }
 .jupyter-frame { display: block; width: 100%; height: max(660px, calc(100dvh - 180px)); border: 0; background: #fff; }
+
+/* 首次冷启动提示。紧贴主机工具栏「等待内核」下方的小浮层，不铺满、不拦截点击：
+   等待期间学员照样能读题、切到 Word 页签、翻看 notebook。 */
+.jupyter-frame-wrap { position: relative; min-width: 0; }
+/* top 要让开 iframe 里 JupyterLab 自己的菜单栏（File/Edit/View…），否则浮层会把它压住。 */
+.lab-warmup { position: absolute; top: 38px; left: 10px; z-index: 5; padding: 10px 14px; border: 1px solid var(--line); background: #fff; box-shadow: var(--shadow); pointer-events: none; }
+.lab-warmup b { display: block; margin-bottom: 8px; font-size: 12px; color: #17212b; }
+.lab-warmup ol { display: flex; flex-direction: column; gap: 5px; margin: 0; padding: 0; list-style: none; }
+.lab-warmup li { display: flex; align-items: center; gap: 7px; font-size: 12px; color: #9aa0a7; }
+.lab-warmup li.is-done { color: #4a5158; }
+.lab-warmup li.is-active { color: #17212b; font-weight: 600; }
+.lab-warmup-dot { flex: none; width: 7px; height: 7px; border: 1px solid #c8cdd3; border-radius: 50%; background: #fff; }
+.lab-warmup li.is-done .lab-warmup-dot { border-color: #2e7d32; background: #2e7d32; }
+.lab-warmup li.is-active .lab-warmup-dot { border-color: var(--accent); background: var(--accent); animation: lab-warmup-pulse 1.4s ease-in-out infinite; }
+@keyframes lab-warmup-pulse { 50% { opacity: .3; } }
+@media (prefers-reduced-motion: reduce) { .lab-warmup-dot { animation: none; } }
 .lab-flow-nav { width: min(1540px, calc(100% - 32px)); margin: 10px auto 0; }
 .lab-inline-section { min-width: 0; scroll-margin-top: 90px; border: 1px solid var(--line); background: var(--card); box-shadow: 0 4px 18px rgba(40,35,25,.04); }
 .lab-inline-section > summary { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 15px 17px; cursor: pointer; list-style: none; }

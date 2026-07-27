@@ -28,6 +28,10 @@ const PYODIDE_KERNEL_PLUGIN_ID = "@jupyterlite/pyodide-kernel-extension:kernel";
 // wheel。同一条网络上实测就绪耗时在 30 秒到 56.5 秒之间浮动，原先的 60 秒上限
 // 只剩几秒余量，网络稍差就会误报“握手超时”，而内核其实仍在正常加载。
 const KERNEL_BOOT_TIMEOUT_MS = 180000;
+// 依赖准备阶段现在要把本题的科学计算 wheel 一并下完（2.1.3 是 42.6MB），慢网下轻易
+// 超过原来的 180 秒。超时判早的代价是给一个仍在正常下载的环境报错，比等久了更糟，
+// 何况前端有分阶段进度卡片和「重试准备」按钮兜着。
+const ENVIRONMENT_TIMEOUT_MS = 600000;
 const BLANK_PATTERN = /_{3,}/g;
 // Collapse insignificant whitespace and unify quote style so trivially
 // different spellings of the same code compare equal.
@@ -488,13 +492,22 @@ const WARNING_FILTERS = [
     "warnings.filterwarnings('ignore', category=FutureWarning)",
     "warnings.filterwarnings('ignore', category=DeprecationWarning)"
 ];
-function kernelEnvironmentSource(packages, assets) {
+function kernelEnvironmentSource(packages, assets, preloadImports) {
     const statements = [...WARNING_FILTERS];
     if (packages.length > 0) {
         // pyodide 自带的包（pandas、numpy、scikit-learn 等）在 import 时会自动加载，
         // 但 jupyterlite/pypi 里的纯 Python wheel（openpyxl、seaborn、
         // imbalanced-learn）不在 pyodide-lock 内，只能靠 piplite 装。
         statements.push("import piplite", `await piplite.install(${JSON.stringify(packages)})`);
+    }
+    if (preloadImports.length > 0) {
+        // pyodide_kernel 在每个执行请求前都会跑 loadPackagesFromImports 扫描源码，所以
+        // 这一行会把本题要用的 pandas / scikit-learn 等科学计算 wheel 就地下完。不写这
+        // 一行也能跑——学员第一次 import 时同样会自动加载——但那时准备阶段早已结束、
+        // 进度提示已经收起，2.1.3 的 42.6MB 会变成点「运行全部」后毫无反馈的一分钟。
+        // 必须排在 piplite.install 之后：seaborn 之类不在 pyodide-lock 里，先 import 会
+        // 直接 ModuleNotFoundError。
+        statements.push(`import ${preloadImports.join(", ")}`);
     }
     if (assets.length > 0) {
         // 正常情况下素材由 mountDrive 挂进工作目录，下面的哈希校验直接命中、不发请求。
@@ -521,14 +534,35 @@ function taskAssets(panel) {
         && typeof asset.url === "string"
         && typeof asset.sha256 === "string");
 }
-// 告警屏蔽与依赖安装走静默内核请求，而不是题目文件里的准备单元，官方题目文件
-// 因此只剩考试本身的代码。素材无需下载：COOP/COEP 让 mountDrive 成立后，随站发布
-// 的工作区文件本来就在内核的工作目录里。
+// 只预热确实能由 pyodide 提供的模块。题目源码里出现的其它 import（json、os 之类
+// 标准库，或学员自己加的东西）混进预热行只会把准备阶段搞崩，所以走白名单而不是
+// 直接把扫到的名字全塞进去。
+const PRELOADABLE_IMPORTS = new Set([
+    "pandas", "numpy", "matplotlib", "sklearn", "scipy", "PIL",
+    "seaborn", "imblearn", "xgboost", "cv2", "openpyxl", "statsmodels"
+]);
+const IMPORT_PATTERN = /^[ \t]*(?:import|from)[ \t]+([A-Za-z_][A-Za-z0-9_]*)/gm;
+// 预热清单直接从题目自己的单元推导，不依赖 notebook metadata：这样全屏模式、旧
+// 草稿和任何未来新增的题目都自动生效，也不必为了改一份清单去重建 JupyterLite。
+function taskPreloadImports(panel) {
+    const found = new Set();
+    for (const cell of panel.content.widgets) {
+        const source = cell.model.sharedModel.getSource();
+        for (const match of source.matchAll(IMPORT_PATTERN)) {
+            if (PRELOADABLE_IMPORTS.has(match[1]))
+                found.add(match[1]);
+        }
+    }
+    return [...found].sort();
+}
+// 告警屏蔽、依赖安装与科学计算包预热走静默内核请求，而不是题目文件里的准备单元，
+// 官方题目文件因此只剩考试本身的代码。素材无需下载：COOP/COEP 让 mountDrive 成立
+// 后，随站发布的工作区文件本来就在内核的工作目录里。
 async function applyKernelEnvironment(panel) {
     const kernel = panel.sessionContext.session?.kernel;
     if (!kernel)
         throw new Error("内核尚未就绪，无法准备题目环境");
-    const code = kernelEnvironmentSource(taskPipPackages(panel), taskAssets(panel));
+    const code = kernelEnvironmentSource(taskPipPackages(panel), taskAssets(panel), taskPreloadImports(panel));
     let lastFailure = "未知错误";
     for (let attempt = 1; attempt <= 3; attempt += 1) {
         const reply = await kernel.requestExecute({
@@ -751,11 +785,13 @@ const plugin = {
                     if (!preparation) {
                         preparation = (async () => {
                             notifyParent("AI_TRAINER_EXERCISE_PREPARING", { path: panel.context.path });
-                            await withTimeout(applyKernelEnvironment(panel), "题目依赖准备", 180000);
+                            notifyParent("AI_TRAINER_EXERCISE_STAGE", { path: panel.context.path, stage: "packages" });
+                            await withTimeout(applyKernelEnvironment(panel), "题目依赖准备", ENVIRONMENT_TIMEOUT_MS);
                             if (runtimeCells.length === 0) {
                                 preparedPanels.add(panel);
                                 return;
                             }
+                            notifyParent("AI_TRAINER_EXERCISE_STAGE", { path: panel.context.path, stage: "runtime" });
                             let lastFailure = null;
                             for (let attempt = 1; attempt <= 2; attempt += 1) {
                                 const succeeded = await withTimeout(_jupyterlab_notebook__WEBPACK_IMPORTED_MODULE_2__.NotebookActions.runCells(panel.content, runtimeCells, panel.sessionContext), "浏览器运行时准备", 180000);
