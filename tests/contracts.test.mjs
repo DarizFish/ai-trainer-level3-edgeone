@@ -315,6 +315,10 @@ test("theory sidebar tracks each question type and omits redundant navigation gr
   // 之前钉死 450，正是它把「解析一闪而过」固化成了契约。
   const autoAdvance = Number(theory.match(/CORRECT_AUTO_ADVANCE_MS = (\d+)/)[1]);
   assert.ok(autoAdvance >= 1500, `答对后 ${autoAdvance}ms 就跳题，来不及看判分与解析`);
+  // 自动跳题必须让用户看得见：既要说明会跳，也要说明怎么停下。
+  assert.match(theory, /正在自动进入下一题/);
+  assert.match(theory, /点击或滚动可停留/);
+  assert.match(theory, /已停留在本题/);
   assert.match(theory, /if \(correct\) \{/);
   assert.match(theory, /goToQuestion\(currentIndex \+ 1\)/);
   assert.match(theory, /if \(currentIndex === sessionQuestions\.length - 1\) completePractice\(\)/);

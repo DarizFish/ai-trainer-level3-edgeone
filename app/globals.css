@@ -1025,6 +1025,11 @@ button { color: inherit; }
 .practice-feedback { margin-top: 22px; padding: 19px 21px; border-left: 4px solid var(--red); background: #f2ead7; }
 .practice-feedback.correct { color: inherit; border-color: #347553; background: #e9f4ec; }
 .practice-feedback > div { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.practice-auto-advance { display: flex; align-items: center; gap: 10px; margin-top: 12px; font-size: 12px; color: var(--ink-soft); }
+.practice-auto-advance-bar { flex: 0 0 56px; height: 3px; border-radius: 2px; background: #347553; transform-origin: left center; animation: practice-auto-advance-countdown 2600ms linear forwards; }
+.practice-auto-advance.is-paused { color: #347553; }
+@media (prefers-reduced-motion: reduce) { .practice-auto-advance-bar { animation: none; } }
+@keyframes practice-auto-advance-countdown { from { transform: scaleX(1); } to { transform: scaleX(0); } }
 .practice-feedback strong { color: var(--red); font-size: 17px; }
 .practice-feedback.correct strong { color: #24704a; }
 .practice-feedback p { margin: 10px 0 0; color: var(--ink-soft); }

@@ -50,6 +50,7 @@ export default function TheoryPractice({ questions, contentVersion }: { question
   const [favorites, setFavorites] = useState<Record<string, boolean>>({});
   const [answeredIds, setAnsweredIds] = useState<Record<string, boolean>>({});
   const [wrongIds, setWrongIds] = useState<string[]>([]);
+  const [autoAdvancing, setAutoAdvancing] = useState(false);
   const [actionError, setActionError] = useState("");
   const [resettingType, setResettingType] = useState<TheoryType | null>(null);
   const [navOpen, setNavOpen] = useState(false);
@@ -428,13 +429,16 @@ export default function TheoryPractice({ questions, contentVersion }: { question
         if (autoAdvanceTimerRef.current === null) return;
         window.clearTimeout(autoAdvanceTimerRef.current);
         autoAdvanceTimerRef.current = null;
+        setAutoAdvancing(false);
         document.removeEventListener("pointerdown", cancelAutoAdvance);
         document.removeEventListener("wheel", cancelAutoAdvance);
       };
+      setAutoAdvancing(true);
       document.addEventListener("pointerdown", cancelAutoAdvance);
       document.addEventListener("wheel", cancelAutoAdvance, { passive: true });
       autoAdvanceTimerRef.current = window.setTimeout(() => {
         autoAdvanceTimerRef.current = null;
+        setAutoAdvancing(false);
         document.removeEventListener("pointerdown", cancelAutoAdvance);
         document.removeEventListener("wheel", cancelAutoAdvance);
         if (currentIndex === sessionQuestions.length - 1) completePractice();
@@ -576,6 +580,13 @@ export default function TheoryPractice({ questions, contentVersion }: { question
           {revealed[currentQuestion.id] && <div className={`practice-feedback ${feedback[currentQuestion.id] ? "correct" : "wrong"}`} aria-live="polite">
             <div><strong>{feedback[currentQuestion.id] ? "回答正确" : "回答错误"}</strong><b>参考答案：{currentQuestion.answer.join("、")}</b></div>
             <p>{currentQuestion.explanation}</p>
+            {/* 答对会自动跳到下一题。不明说的话，用户会以为页面自己跳了；也要让他知道
+                想留下看解析只需点一下或滚动一下。取消后提示改为「已停留」，不再倒计时。 */}
+            {feedback[currentQuestion.id] && <p className={`practice-auto-advance ${autoAdvancing ? "is-running" : "is-paused"}`} aria-live="polite">
+              {autoAdvancing
+                ? <><span className="practice-auto-advance-bar" aria-hidden="true" /><span>正在自动进入下一题　·　点击或滚动可停留</span></>
+                : <span>已停留在本题，随时可点「下一题」继续</span>}
+            </p>}
           </div>}
 
           <div className="practice-bottom-bar">
