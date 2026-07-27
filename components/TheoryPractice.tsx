@@ -8,7 +8,10 @@ import { useAccountSession } from "./AccountSession";
 const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 const RESUME_KEY = "ai-trainer-theory-session-v6";
 const QUESTION_MAP_PAGE_SIZE = 50;
-const CORRECT_AUTO_ADVANCE_MS = 450;
+// 答对后自动跳下一题。原先 450ms，「回答正确」和解析一闪而过，等于答对的题没有反馈，
+// 与首页「即时判分…把注意力留给知识点本身」的说法相悖。放宽到能读完一句解析，并且
+// 用户一有动作就取消跳转，想停下看就停得下来。
+const CORRECT_AUTO_ADVANCE_MS = 2600;
 
 type Screen = "practice" | "result";
 type ResumeState = {
@@ -222,14 +225,17 @@ export default function TheoryPractice({ questions, contentVersion }: { question
       attempts: value.attempts,
     }));
     if (!attempts.length) return;
-    pendingAnswersRef.current.clear();
     const body = JSON.stringify({ attempts });
 
     if (preferBeacon && navigator.sendBeacon) {
+      // beacon 由浏览器保证投递，可以立刻出队。
       const queued = navigator.sendBeacon("/api/theory/answer", new Blob([body], { type: "application/json" }));
-      if (queued) return;
+      if (queued) { for (const item of attempts) pendingAnswersRef.current.delete(item.questionId); return; }
     }
 
+    // 关键：请求成功之前不出队。原先在发出前就 clear()，一旦用户在请求在途时切页，
+    // fetch 会被 ERR_ABORTED，而卸载时的兜底 flush 看到的是空队列，什么也发不出去；
+    // 随后 .catch 把条目写回一个已卸载组件的 ref，等于静默丢答。
     void fetch("/api/theory/answer", {
       method: "POST",
       headers: { "content-type": "application/json" },
@@ -237,14 +243,12 @@ export default function TheoryPractice({ questions, contentVersion }: { question
       keepalive: true,
     }).then((response) => {
       if (!response.ok) throw new Error("progress sync failed");
-    }).catch(() => {
       for (const item of attempts) {
         const current = pendingAnswersRef.current.get(item.questionId);
-        pendingAnswersRef.current.set(item.questionId, {
-          answer: current?.answer ?? item.answer,
-          attempts: (current?.attempts ?? 0) + item.attempts,
-        });
+        // 期间又答了同一题就保留新值，不要把新答案一起删掉。
+        if (current && current.attempts <= item.attempts) pendingAnswersRef.current.delete(item.questionId);
       }
+    }).catch(() => {
       setActionError("答案已在本机判分，学习记录暂未同步；继续练习时会再次保存。");
     });
   }, []);
@@ -420,8 +424,19 @@ export default function TheoryPractice({ questions, contentVersion }: { question
     queueProgress(question.id, answer);
     if (correct) {
       if (autoAdvanceTimerRef.current !== null) window.clearTimeout(autoAdvanceTimerRef.current);
+      const cancelAutoAdvance = () => {
+        if (autoAdvanceTimerRef.current === null) return;
+        window.clearTimeout(autoAdvanceTimerRef.current);
+        autoAdvanceTimerRef.current = null;
+        document.removeEventListener("pointerdown", cancelAutoAdvance);
+        document.removeEventListener("wheel", cancelAutoAdvance);
+      };
+      document.addEventListener("pointerdown", cancelAutoAdvance);
+      document.addEventListener("wheel", cancelAutoAdvance, { passive: true });
       autoAdvanceTimerRef.current = window.setTimeout(() => {
         autoAdvanceTimerRef.current = null;
+        document.removeEventListener("pointerdown", cancelAutoAdvance);
+        document.removeEventListener("wheel", cancelAutoAdvance);
         if (currentIndex === sessionQuestions.length - 1) completePractice();
         else goToQuestion(currentIndex + 1);
       }, CORRECT_AUTO_ADVANCE_MS);

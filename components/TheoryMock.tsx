@@ -153,6 +153,18 @@ export default function TheoryMock({ allQuestions, officialQuestions, contentVer
     return () => window.clearInterval(timer);
   }, [deadlineAt, finished, started, submitExam]);
 
+  // 交卷不可撤销，一点就出成绩。此前没有任何确认，而低风险的「重新开始」反而有——
+  // 护栏加在了错的地方。未答题数在这里明确告知，倒计时到点的自动交卷不走这条路。
+  const confirmSubmit = useCallback(() => {
+    const answeredNow = Object.values(answers).filter((answer) => answer.length).length;
+    const unanswered = questions.length - answeredNow;
+    const notice = unanswered > 0
+      ? `还有 ${unanswered} 题未作答，交卷后将按未答计分且不能再修改。确定交卷吗？`
+      : "交卷后将立即判分且不能再修改。确定交卷吗？";
+    if (!window.confirm(notice)) return;
+    void submitExam();
+  }, [answers, questions.length, submitExam]);
+
   useEffect(() => {
     if (!started || finished || !deadlineAt) return;
     const saved = createActiveTheoryExamSnapshot({ contentVersion, mode, questions, answers, current, deadlineAt });
@@ -250,7 +262,7 @@ export default function TheoryMock({ allQuestions, officialQuestions, contentVer
   const navGroups = (["judge", "single", "multi"] as const).map((type) => ({ key: type, label: examBlueprint.theory.types[type].label, indexes: visibleNavigatorIndexes.filter((index) => questions[index].type === type) }));
 
   return <div>
-    <div className="mock-dock"><div className="container mock-dock-row"><div><b>{mode === "official" ? "标准模拟卷" : "随机模拟卷"}</b>　<span>第 {current + 1} / {questions.length} 题　·　已答 {answered}</span></div><div className="mock-dock-actions"><button className="button button-small mock-answer-sheet-trigger" aria-controls="theory-mock-answer-sheet" aria-expanded={showNavigator} onClick={() => setShowNavigator((value) => !value)}>答题卡</button><span className={`timer ${seconds <= 300 ? "timer-warning" : ""}`}>{formatTime(seconds)}</span><button className="button button-small" onClick={() => begin(true)}>重新开始</button><button className="button button-small button-danger" disabled={submitting} onClick={() => void submitExam()}>{submitting ? "正在交卷…" : "交卷"}</button></div></div><div className="mock-progress-track"><span style={{ width: `${(answered / questions.length) * 100}%` }} /></div></div>
+    <div className="mock-dock"><div className="container mock-dock-row"><div><b>{mode === "official" ? "标准模拟卷" : "随机模拟卷"}</b>　<span>第 {current + 1} / {questions.length} 题　·　已答 {answered}</span></div><div className="mock-dock-actions"><button className="button button-small mock-answer-sheet-trigger" aria-controls="theory-mock-answer-sheet" aria-expanded={showNavigator} onClick={() => setShowNavigator((value) => !value)}>答题卡</button><span className={`timer ${seconds <= 300 ? "timer-warning" : ""}`}>{formatTime(seconds)}</span><button className="button button-small" onClick={() => begin(true)}>重新开始</button><button className="button button-small button-danger" disabled={submitting} onClick={() => void confirmSubmit()}>{submitting ? "正在交卷…" : "交卷"}</button></div></div><div className="mock-progress-track"><span style={{ width: `${(answered / questions.length) * 100}%` }} /></div></div>
     <div className="container workspace theory-mock-layout">
       <main className="theory-mock-question-column">
         {submitError && <div className="account-error" role="alert">{submitError} <button type="button" onClick={() => void submitExam()}>重试交卷</button></div>}

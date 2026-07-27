@@ -296,7 +296,7 @@ test("theory sidebar tracks each question type and omits redundant navigation gr
   assert.match(theory, /storedAnswers/);
   assert.match(theory, /resetResponses = true/);
   assert.match(theory, /typedQuestions\.length\} 题`,\s+false/);
-  assert.match(theory, /CORRECT_AUTO_ADVANCE_MS = 450/);
+  assert.match(theory, /CORRECT_AUTO_ADVANCE_MS = 2600/);
   assert.match(theory, /if \(correct\) \{/);
   assert.match(theory, /goToQuestion\(currentIndex \+ 1\)/);
   assert.match(theory, /if \(currentIndex === sessionQuestions\.length - 1\) completePractice\(\)/);
