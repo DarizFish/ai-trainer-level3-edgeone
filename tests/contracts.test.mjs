@@ -512,7 +512,11 @@ test("two-deliverable Word tasks share the 1.2 paper answer sheet and completion
   assert.match(component, /legacyStorageKey/);
   assert.match(component, /business-sheet-sidebar/);
   assert.match(component, /PracticalBrief task=\{task\} open=\{false\}/);
-  assert.doesNotMatch(component, /fetch\(|scorePractical|RubricAssessment/);
+  // 原先这里连 fetch( 一起禁掉，等于把「答题纸只存本机」固化成契约；但界面承诺草稿会
+  // 保存，只写 localStorage 换设备就丢。现在允许同步草稿，仍禁止任何官方判分。
+  assert.doesNotMatch(component, /scorePractical|RubricAssessment/);
+  assert.match(component, /fetch\(`\/api\/drafts\/\$\{task\.code\}`/);
+  assert.match(component, /answerSheet: \{ version: 1, answers, scores \}/);
   assert.match(workspace, /const reportAnswerSheet = task\.group === "1\.2" \|\| task\.group === "3\.1"/);
   assert.match(workspace, /if \(reportAnswerSheet\) return <BusinessAnalysisAnswerSheet/);
   assert.doesNotMatch(workspace, /PracticalResponseExercise/);

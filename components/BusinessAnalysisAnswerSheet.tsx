@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { PracticalTask } from "@/lib/content";
 import { createPracticalResponseExercise } from "@/lib/practical-response-exercise";
 import type { PracticalRubricScores } from "@/lib/scoring";
@@ -46,6 +46,8 @@ export function BusinessAnalysisAnswerSheet({ task, userEmail }: { task: Practic
   const [scores, setScores] = useState<PracticalRubricScores>({});
   const [reviewing, setReviewing] = useState(false);
   const [restored, setRestored] = useState(false);
+  const [syncNote, setSyncNote] = useState("");
+  const revisionRef = useRef(0);
   // 键里不再嵌评分表指纹。原先带 `${answerBasis}-${referenceAnswer.length}-M1:6-…`，
   // 只要参考答案或评分点分值一改，键就变了，用户此前写的内容会静默变成孤儿——补一句
   // 官方口径都会触发。restoreDraft 本来就按 sectionIds 与 scoreLimits 逐项校验，
@@ -72,18 +74,61 @@ export function BusinessAnalysisAnswerSheet({ task, userEmail }: { task: Practic
           ?? legacyStorageKeys.map((key) => localStorage.getItem(key)).find(Boolean)
           ?? ""
         : "";
-      const draft = storageKey ? restoreDraft(serialized, sectionIds, scoreLimits) : null;
-      setAnswers(draft?.answers ?? {});
-      setScores(draft?.scores ?? {});
+      const local = storageKey ? restoreDraft(serialized, sectionIds, scoreLimits) : null;
+      setAnswers(local?.answers ?? {});
+      setScores(local?.scores ?? {});
       setRestored(true);
+      if (!userEmail) return;
+      // 云端草稿优先：本机内容只是离线缓存，换设备时应当拿到服务端那份。
+      void fetch(`/api/drafts/${task.code}`)
+        .then((response) => (response.ok ? response.json() : null))
+        .then((payload: { draft?: { cellsJson?: string; revision?: number } | null } | null) => {
+          if (cancelled || !payload?.draft?.cellsJson) return;
+          const cloud = restoreDraft(payload.draft.cellsJson, sectionIds, scoreLimits);
+          revisionRef.current = payload.draft.revision ?? 0;
+          if (!cloud) return;
+          const hasCloudContent = Object.values(cloud.answers).some((value) => value.trim());
+          const hasLocalContent = Object.values(local?.answers ?? {}).some((value) => value.trim());
+          if (hasCloudContent || !hasLocalContent) {
+            setAnswers(cloud.answers);
+            setScores(cloud.scores);
+          }
+        })
+        .catch(() => undefined);
     });
     return () => { cancelled = true; };
-  }, [exercise, legacyStorageKeys, storageKey]);
+  }, [exercise, legacyStorageKeys, storageKey, task.code, userEmail]);
 
   useEffect(() => {
     if (!restored || !storageKey) return;
     localStorage.setItem(storageKey, JSON.stringify({ version: 1, answers, scores } satisfies AnswerSheetDraft));
-  }, [answers, restored, scores, storageKey]);
+    if (!userEmail) return;
+    // 防抖后同步到服务端。冲突时以云端为准并刷新 revision——答题卷是纯文本，
+    // 直接采纳云端比弹一个合并界面更不容易让人丢内容。
+    const timer = window.setTimeout(() => {
+      void fetch(`/api/drafts/${task.code}`, {
+        method: "PUT",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ answerSheet: { version: 1, answers, scores }, revision: revisionRef.current }),
+      }).then(async (response) => {
+        if (response.status === 409) {
+          const conflict = await response.json() as { cloud?: { answers?: Record<string, string>; scores?: PracticalRubricScores }; revision?: number };
+          revisionRef.current = conflict.revision ?? revisionRef.current;
+          if (conflict.cloud?.answers) {
+            setAnswers(conflict.cloud.answers);
+            setScores(conflict.cloud.scores ?? {});
+            setSyncNote("已载入其它设备上更新的作答。");
+          }
+          return;
+        }
+        if (!response.ok) { setSyncNote("云端同步失败，内容仍保存在本机。"); return; }
+        const saved = await response.json() as { revision?: number };
+        revisionRef.current = saved.revision ?? revisionRef.current + 1;
+        setSyncNote("");
+      }).catch(() => setSyncNote("云端同步失败，内容仍保存在本机。"));
+    }, 900);
+    return () => window.clearTimeout(timer);
+  }, [answers, restored, scores, storageKey, task.code, userEmail]);
 
   if (!exercise) return null;
   const answeredCount = exercise.sections.filter((section) => answers[section.id]?.trim()).length;
@@ -119,7 +164,7 @@ export function BusinessAnalysisAnswerSheet({ task, userEmail }: { task: Practic
         const answered = Boolean(answers[section.id]?.trim());
         return <a href={`#business-answer-${task.code}-${section.number}`} className={answered ? "complete" : "pending"} key={section.id}><span>{section.number}</span><b>{section.number === 1 ? "第一问" : "第二问"}</b><small>{answered ? "已填写" : "待作答"}</small></a>;
       })}</nav>
-      <footer>{reviewing ? <small>当前为学习复盘，不是官方考场评分。</small> : <small>{userEmail ? `已填写 ${answeredCount} / 2 问，草稿保存在本机浏览器。` : "登录后可填写并保存答题卷。"}</small>}<button type="button" className={`button ${reviewing ? "button-quiet" : "button-primary"}`} onClick={() => setReviewing((value) => !value)}>{reviewing ? "返回作答" : "完成作答，进入复盘"}</button></footer>
+      <footer>{reviewing ? <small>当前为学习复盘，不是官方考场评分。</small> : <small>{userEmail ? `已填写 ${answeredCount} / 2 问，${syncNote || "草稿已同步到账号，换设备可继续。"}` : "登录后可填写并保存答题卷。"}</small>}<button type="button" className={`button ${reviewing ? "button-quiet" : "button-primary"}`} onClick={() => setReviewing((value) => !value)}>{reviewing ? "返回作答" : "完成作答，进入复盘"}</button></footer>
     </aside>
     <div className="business-sheet-paper" role="document" aria-label={`${task.code} 答题卷`}>
       {exercise.sections.map((section) => <section id={`business-answer-${task.code}-${section.number}`} className="business-sheet-section" key={section.id}>

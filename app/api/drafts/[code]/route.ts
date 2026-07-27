@@ -17,14 +17,34 @@ export async function PUT(request: Request, { params }: { params: Promise<{ code
   if (!user) return unauthorized();
   const { code } = await params;
   const task = practicalByCode.get(code);
-  if (!task?.hasNotebook) return Response.json({ error: "实验不存在" }, { status: 404 });
+  if (!task) return Response.json({ error: "实验不存在" }, { status: 404 });
 
-  const payload = await request.json() as { notebook?: unknown; cells?: unknown; revision?: number };
-  const draft = payload.notebook ?? payload.cells;
-  const isNotebook = Boolean(draft && typeof draft === "object" && !Array.isArray(draft) && Array.isArray((draft as { cells?: unknown }).cells));
-  const isLegacyDraft = Array.isArray(draft);
-  if ((!isNotebook && !isLegacyDraft) || typeof payload.revision !== "number") {
-    return Response.json({ error: "Notebook 草稿格式无效" }, { status: 400 });
+  const payload = await request.json() as {
+    notebook?: unknown; cells?: unknown; answerSheet?: unknown; revision?: number;
+  };
+  if (typeof payload.revision !== "number") {
+    return Response.json({ error: "草稿格式无效" }, { status: 400 });
+  }
+
+  // 文档题（1.2/3.1/4.1/4.2）此前只写 localStorage，换设备即丢，而界面宣称草稿会保存。
+  // 它们没有 Notebook，与 Notebook 草稿在 (email, taskCode) 上互斥，可以共用这张表。
+  let draft: unknown;
+  if (task.hasNotebook) {
+    draft = payload.notebook ?? payload.cells;
+    const isNotebook = Boolean(draft && typeof draft === "object" && !Array.isArray(draft) && Array.isArray((draft as { cells?: unknown }).cells));
+    if (!isNotebook && !Array.isArray(draft)) {
+      return Response.json({ error: "Notebook 草稿格式无效" }, { status: 400 });
+    }
+  } else {
+    const sheet = payload.answerSheet as { answers?: unknown; scores?: unknown } | undefined;
+    const isRecordOf = (value: unknown, check: (item: unknown) => boolean) =>
+      Boolean(value) && typeof value === "object" && !Array.isArray(value)
+      && Object.values(value as Record<string, unknown>).every(check);
+    const valid = Boolean(sheet)
+      && isRecordOf(sheet?.answers, (item) => typeof item === "string" && item.length <= 10_000)
+      && (sheet?.scores === undefined || isRecordOf(sheet.scores, (item) => typeof item === "number" && Number.isInteger(item) && item >= 0 && item <= 100));
+    if (!valid) return Response.json({ error: "答题卷草稿格式无效" }, { status: 400 });
+    draft = sheet;
   }
 
   const serialized = JSON.stringify(draft);
