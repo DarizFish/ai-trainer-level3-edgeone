@@ -877,13 +877,20 @@ test("Word deliverable answers never expose Python code to learners", async () =
     readFile(new URL("../data/content.json", import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL("../lib/practical-reference.ts", import.meta.url), "utf8"),
   ]);
-  // 官方答案常把完成版 Notebook 放在 Word 正文之前，学员在 Word 题「查看答案」时
-  // 不该看到代码。这里复刻 getPracticalReferenceNarrative 的切分规则，直接校验真实
-  // 数据的输出，而不是只断言源码里存在这段逻辑。
+  // 学员在 Word 题点「查看答案」时，只该看到 Word 作答内容：不含 Python 代码，也不
+  // 该先糊一段评分点列表（那里绝大多数是代码得分点，由 Notebook 判分）。这里复刻
+  // getPracticalReferenceNarrative 的切分规则，直接校验真实数据的输出。
+  assert.match(narrative, /WORD_ANSWER_HEADING/);
   assert.match(narrative, /\.docx/);
   const toNarrative = (task) => {
     const answer = task.referenceAnswer.trim();
     if (!task.notebook?.solutionCells?.length) return answer;
+    const wordAnswer = answer.indexOf("Word 交付物作答示例");
+    if (wordAnswer >= 0) {
+      const tail = answer.slice(wordAnswer);
+      const codeTail = tail.indexOf("\nPython 参考代码：");
+      return (codeTail >= 0 ? tail.slice(0, codeTail) : tail).trim();
+    }
     const deliverable = answer.match(/(?:^|\n)\s*\d+(?:\.\d+)*\.docx\s*(?:\n|$)/);
     if (deliverable?.index !== undefined) return answer.slice(deliverable.index + deliverable[0].length).trim();
     const report = answer.match(/(?:^|\n)（2）\s*/);
@@ -901,6 +908,8 @@ test("Word deliverable answers never expose Python code to learners", async () =
     const text = toNarrative(task);
     assert.ok(text.trim(), `${task.code} 的 Word 参考答案为空`);
     assert.doesNotMatch(text, codeMarkers, `${task.code} 的 Word 参考答案仍含 Python 代码`);
+    assert.doesNotMatch(text, /建议答案应完整覆盖以下评分点/, `${task.code} 的 Word 参考答案混入了评分点列表`);
+    assert.doesNotMatch(text, /Python 参考代码：/, `${task.code} 的 Word 参考答案带上了代码说明尾巴`);
   }
 });
 
