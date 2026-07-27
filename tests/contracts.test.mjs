@@ -3,6 +3,19 @@ import { createHash } from "node:crypto";
 import { readdir, readFile } from "node:fs/promises";
 import test from "node:test";
 
+// 写断言时区分「产品意图」和「某一版的写法」。断言意图，不要断言实现细节——否则测试
+// 会反过来保护缺陷：改进撞红灯，只能改断言才能放行，而那一刻很容易顺手把意图也一起改掉。
+//
+// 本仓库真实踩过的三次：
+//   - doesNotMatch(/fetch\(/) 把「答题纸只存本机」写成契约，而界面承诺草稿会保存；
+//     补跨设备同步时被它挡住。应当只禁止官方判分，不禁止同步草稿。
+//   - CORRECT_AUTO_ADVANCE_MS = 450 把「答对后解析一闪而过」钉死；应当断言下限
+//     （够读完反馈），而不是某个具体毫秒数。
+//   - 「草稿与核分自动保存在当前浏览器」这句文案被钉死，接上同步后文案该改却改不动。
+//
+// 经验：可调参数（超时、迭代次数、间隔）断言范围；用户可见承诺断言语义；只有真正
+// 不可变的契约（版本号、哈希、官方原文）才钉精确值。
+
 test("completed Chinese exam-prep homepage contains product-specific content", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const layout = await readFile(new URL("../app/layout.tsx", import.meta.url), "utf8");
@@ -157,7 +170,9 @@ test("email accounts use versioned PostgreSQL schema, hashed passwords, and revo
   assert.match(migration, /CREATE TABLE "users"/);
   assert.match(migration, /"password_hash" text/);
   assert.match(auth, /PBKDF2/);
-  assert.match(auth, /PASSWORD_ITERATIONS = 100_000/);
+  // 断言下限而不是精确值：迭代次数是安全参数，只应升不应降，钉死会让加固动作撞红灯。
+  const iterations = Number(auth.match(/PASSWORD_ITERATIONS = ([\d_]+)/)[1].replaceAll("_", ""));
+  assert.ok(iterations >= 100_000, `PBKDF2 迭代次数 ${iterations} 低于安全下限 100000`);
   assert.match(auth, /HttpOnly/);
   assert.match(auth, /SameSite=Lax/);
   assert.match(register, /createPasswordRecord/);
@@ -296,7 +311,10 @@ test("theory sidebar tracks each question type and omits redundant navigation gr
   assert.match(theory, /storedAnswers/);
   assert.match(theory, /resetResponses = true/);
   assert.match(theory, /typedQuestions\.length\} 题`,\s+false/);
-  assert.match(theory, /CORRECT_AUTO_ADVANCE_MS = 2600/);
+  // 同理：答对后自动跳题的间隔是体验参数，约束应当是「够读完反馈」而不是某个具体数值。
+  // 之前钉死 450，正是它把「解析一闪而过」固化成了契约。
+  const autoAdvance = Number(theory.match(/CORRECT_AUTO_ADVANCE_MS = (\d+)/)[1]);
+  assert.ok(autoAdvance >= 1500, `答对后 ${autoAdvance}ms 就跳题，来不及看判分与解析`);
   assert.match(theory, /if \(correct\) \{/);
   assert.match(theory, /goToQuestion\(currentIndex \+ 1\)/);
   assert.match(theory, /if \(currentIndex === sessionQuestions\.length - 1\) completePractice\(\)/);
