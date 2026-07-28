@@ -1678,10 +1678,12 @@ test("legal pages exist, are linked from every page, and describe what is actual
   assert.match(disclaimer, /不是官方标准答案/);
 
   // 隐私政策必须覆盖真实存在的数据项。限流表存 IP，漏写就是隐私政策与实现不符。
+  // 断言约束的是「有没有把这件事告诉用户」，不是用了哪个算法或哪个存储 API——
+  // 后者属于实现细节，正文里刻意不写。
   assert.match(schema, /auth_throttle/);
   assert.match(privacy, /IP 地址/);
-  assert.match(privacy, /PBKDF2/);
-  assert.match(privacy, /ai_trainer_session/);
+  assert.match(privacy, /不保存明文/);
+  assert.match(privacy, /Cookie/);
   // 数据存在东京、站点在境外，这两点决定了用户数据受哪边管辖，必须写明。
   assert.match(privacy, /东京/);
   assert.match(privacy, /中国大陆境外/);

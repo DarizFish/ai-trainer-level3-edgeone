@@ -6,14 +6,16 @@ export const metadata = {
   description: "本站收集哪些数据、为什么收集、存放在哪里，以及如何删除。",
 };
 
+// 面向学员而不是工程师：只说收了什么、为什么、放在哪、怎么删。算法名称、Cookie 属性、
+// 存储 API 这些实现细节不写——它们不改变用户的判断，只会让人读不下去。
 // 中文段落一律写成单行：JSX 里换行缩进会被渲染成一个空格，中文句子中间会平白多出空隙。
 const collected: Array<[string, string, string]> = [
   ["邮箱地址", "账号标识与登录", "注册时由你填写"],
   ["昵称", "页面上显示的称呼", "注册时由你填写，留空则取邮箱前缀"],
-  ["密码", "登录校验", "只保存加盐 PBKDF2-SHA256 派生值（10 万轮），不保存明文，我们无法还原你的密码"],
+  ["密码", "登录校验", "只保存加密后的校验值，不保存明文；我们无法查看或还原你的密码"],
   ["学习记录", "展示学习档案与错题", "你答题、交卷、自评分、收藏、保存草稿时产生"],
-  ["会话标识", "保持登录状态", "登录时生成随机令牌，服务器只保存它的 SHA-256"],
-  ["IP 地址与时间", "限制注册与登录频率，防止灌注册和撞库", "你调用注册或登录接口时记录"],
+  ["登录状态", "让你 30 天内免于重复登录", "登录时生成，退出登录即失效"],
+  ["IP 地址与访问时间", "限制注册与登录频率，防止恶意批量注册和撞库", "你注册或登录时记录"],
 ];
 
 export default function PrivacyPage() {
@@ -27,7 +29,7 @@ export default function PrivacyPage() {
         <h2>一、收集哪些信息</h2>
         <div className="legal-table-wrap">
           <table className="legal-table">
-            <thead><tr><th>信息</th><th>用途</th><th>来源与说明</th></tr></thead>
+            <thead><tr><th>信息</th><th>用途</th><th>说明</th></tr></thead>
             <tbody>
               {collected.map(([item, purpose, note]) => (
                 <tr key={item}><th scope="row">{item}</th><td>{purpose}</td><td>{note}</td></tr>
@@ -39,20 +41,20 @@ export default function PrivacyPage() {
       </section>
       <section>
         <h2>二、Cookie</h2>
-        <p>本站只使用一个 Cookie：<code>ai_trainer_session</code>，属性为 HttpOnly、SameSite=Lax，有效期 30 天，用途仅是在你登录后保持登录状态。本站<b>没有</b>广告 Cookie、统计 Cookie 或任何跨站追踪标识，因此也不需要 Cookie 同意弹窗。</p>
+        <p>本站只使用一个 Cookie，用途仅是在你登录后保持登录状态，有效期 30 天，退出登录即清除。本站<b>没有</b>广告 Cookie、统计 Cookie 或任何跨站追踪标识，因此也不需要 Cookie 同意弹窗。</p>
       </section>
       <section>
         <h2>三、浏览器本地存储</h2>
-        <p>为了让你切换页面不丢答案、断网也能继续做题，本站会在你的浏览器 localStorage 与 IndexedDB 中保存答题状态、草稿，以及在线实验环境所需的 Python 运行时缓存（首次进入实操题会下载数十 MB）。这些数据保存在你自己的设备上，不会自动上传；清除浏览器的站点数据即可删除。</p>
+        <p>为了让你切换页面不丢答案、断网也能继续做题，本站会把答题状态和草稿保存在你自己的浏览器里；实操实验还会缓存运行所需的 Python 环境（首次进入约数十 MB）。这些数据存在你的设备上，不会自动上传；清除浏览器的站点数据即可删除。</p>
       </section>
       <section>
         <h2>四、数据存放在哪里</h2>
-        <p>账号与学习记录存放在 Supabase 托管的 PostgreSQL 数据库，机房位于 <b>AWS 亚太东北一区（东京）</b>。网站本身部署在腾讯云 EdgeOne 的<b>中国大陆境外</b>节点。也就是说，你的数据存储与处理均发生在中国大陆境外。</p>
+        <p>账号与学习记录存放在 Supabase 托管的数据库，机房位于<b>日本东京</b>。网站本身部署在腾讯云 EdgeOne 的<b>中国大陆境外</b>节点。也就是说，你的数据存储与处理均发生在中国大陆境外。</p>
       </section>
       <section>
         <h2>五、保留多久</h2>
         <ul>
-          <li>登录会话：30 天后自动过期；主动退出登录会立即删除。</li>
+          <li>登录状态：30 天后自动失效；主动退出登录会立即清除。</li>
           <li>频率限制记录（含 IP）：最长 24 小时后清除。</li>
           <li>账号与学习记录：保留至你要求删除为止。</li>
         </ul>
