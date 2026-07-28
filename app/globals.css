@@ -713,6 +713,35 @@ button { color: inherit; }
 .practical-result-grid small { color: var(--ink-soft); }
 .separate-pass-note { padding: 16px 18px; border: 1px solid #d8c184; background: #fff4d4; color: #614e21; }
 
+/* 隐私政策 / 服务条款 / 免责声明。正文宽度收到 68ch 上下，长条款读起来才不费劲。 */
+.legal-page { max-width: 780px; }
+.legal-page-head { padding-bottom: 24px; border-bottom: 2px solid var(--ink); }
+.legal-page-head .breadcrumbs { margin-bottom: 20px; }
+.legal-page-head h1 { margin: 5px 0 14px; font: 700 clamp(32px, 4vw, 44px)/1.2 "Noto Serif SC", STSong, SimSun, serif; }
+.legal-summary { margin: 0; color: var(--ink-soft); font-size: 17px; line-height: 1.8; }
+.legal-updated { margin: 16px 0 0; color: var(--ink-soft); font-size: 12px; letter-spacing: .06em; }
+.legal-body section { padding-top: 30px; }
+.legal-body h2 { margin: 0 0 12px; font: 700 19px/1.5 "Noto Serif SC", STSong, SimSun, serif; }
+.legal-body p { margin: 0 0 12px; line-height: 1.9; }
+.legal-body p:last-child { margin-bottom: 0; }
+.legal-body ul { margin: 0; padding-left: 22px; }
+.legal-body li { margin-bottom: 9px; line-height: 1.85; }
+.legal-body li:last-child { margin-bottom: 0; }
+.legal-body code { padding: 1px 5px; background: var(--paper-deep); font-size: 13px; }
+/* 表格在窄屏上自己横向滚动，页面本身不许出现横向滚动条。 */
+.legal-table-wrap { overflow-x: auto; margin: 0 0 14px; border: 1px solid var(--line); }
+.legal-table { width: 100%; min-width: 520px; border-collapse: collapse; background: var(--card); font-size: 14px; }
+.legal-table th, .legal-table td { padding: 11px 14px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+.legal-table thead th { background: var(--paper-deep); font-size: 12px; letter-spacing: .08em; }
+.legal-table tbody th { width: 22%; font-weight: 700; }
+.legal-table tr:last-child th, .legal-table tr:last-child td { border-bottom: 0; }
+.legal-contact { margin-top: 38px; padding: 20px 22px; border: 1px solid var(--line); background: var(--card); }
+.legal-contact b { display: block; margin-bottom: 6px; font-family: "Noto Serif SC", STSong, SimSun, serif; }
+.legal-contact p { margin: 0; color: var(--ink-soft); line-height: 1.8; }
+.footer-legal { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 14px; font-size: 12px; }
+.footer-legal a { color: #9eb0be; }
+.footer-legal a:hover { color: #fff; }
+
 /* Official Shanghai reference entry */
 .resources-page { max-width: 900px; gap: 22px; }
 .resources-page-head { padding-bottom: 22px; border-bottom: 1px solid var(--line); }

@@ -10,6 +10,15 @@ import {
   serializeSessionCookie,
   verifyPassword,
 } from "@/lib/account-auth";
+import {
+  LOGIN_FAILURES_PER_EMAIL,
+  LOGIN_PER_ADDRESS,
+  clientAddress,
+  consumeThrottle,
+  peekThrottle,
+  sweepThrottle,
+  tooManyRequests,
+} from "@/lib/auth-throttle";
 
 export async function POST(request: Request) {
   const payload = await request.json().catch(() => null) as { email?: unknown; password?: unknown } | null;
@@ -17,9 +26,22 @@ export async function POST(request: Request) {
   const password = typeof payload?.password === "string" ? payload.password : "";
   if (!isValidEmail(email) || !password) return invalidCredentials();
 
-  let stage: "schema" | "lookup" | "password" | "session-write" = "schema";
+  const failureBucket = `login:email:${email}`;
+  let stage: "schema" | "throttle" | "lookup" | "password" | "session-write" = "schema";
   try {
     await ensureAccountSchema();
+
+    // 两道额度都必须在 verifyPassword 之前判：那一步无论账号存不存在都会跑满
+    // 10 万轮 PBKDF2（不存在时用 DUMMY_SALT 走等时路径），是本接口唯一的重活。
+    stage = "throttle";
+    const addressQuota = await consumeThrottle(`login:ip:${clientAddress(request)}`, LOGIN_PER_ADDRESS);
+    if (!addressQuota.allowed) return tooManyRequests(addressQuota.retryAfterSeconds, "登录尝试");
+    // 邮箱额度只在失败时累加，所以这里是只读查看。挡住的这次不计数，否则攻击者
+    // 可以靠持续敲门把受害者的锁定无限续期。
+    const emailQuota = await peekThrottle(failureBucket, LOGIN_FAILURES_PER_EMAIL);
+    if (!emailQuota.allowed) return tooManyRequests(emailQuota.retryAfterSeconds, "该账号的登录尝试");
+    sweepThrottle();
+
     stage = "lookup";
     const [user] = await getDb().select().from(users).where(eq(users.email, email)).limit(1);
     stage = "password";
@@ -28,7 +50,10 @@ export async function POST(request: Request) {
       salt: user?.passwordSalt || undefined,
       iterations: user?.passwordIterations || undefined,
     });
-    if (!user || !valid) return invalidCredentials();
+    if (!user || !valid) {
+      await consumeThrottle(failureBucket, LOGIN_FAILURES_PER_EMAIL);
+      return invalidCredentials();
+    }
 
     stage = "session-write";
     const session = await createSession(user.email);

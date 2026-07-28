@@ -1226,10 +1226,12 @@ test("progress keeps only theory type progress, wrong answers, and favorites", a
 });
 
 test("starter preview is fully removed and social metadata asset exists", async () => {
-  const [layout, packageJson, og] = await Promise.all([readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"), readFile(new URL("../package.json", import.meta.url), "utf8"), readFile(new URL("../public/og.png", import.meta.url))]);
+  const [layout, packageJson, og] = await Promise.all([readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"), readFile(new URL("../package.json", import.meta.url), "utf8"), readFile(new URL("../public/og.jpg", import.meta.url))]);
   assert.doesNotMatch(layout, /codex-preview|_sites-preview|Starter Project/);
   assert.doesNotMatch(packageJson, /react-loading-skeleton/);
-  assert.ok(og.length > 100_000);
+  // 下限挡住占位图，上限挡住「换张原图直接扔进 public」——分享卡片由微信、Twitter 这类
+  // 抓取器现拉现渲染，超过 1MB 的图它们经常直接放弃，卡片就变成没有配图的纯文字。
+  assert.ok(og.length > 100_000 && og.length < 1_000_000, `og.jpg 应在 100KB–1MB 之间，当前 ${og.length} 字节`);
 });
 
 test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes, and both site bridge extensions", async () => {
@@ -1604,5 +1606,98 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
     const wheel = await readFile(new URL(`../public/lite/pypi/${release.filename}`, import.meta.url));
     assert.equal(wheel.length, release.size, `${name} has an unexpected wheel size`);
     assert.equal(createHash("sha256").update(wheel).digest("hex"), release.digests.sha256, `${name} has an invalid wheel`);
+  }
+});
+
+test("credential endpoints spend rate-limit quota before doing password work", async () => {
+  const [throttle, login, register, schema] = await Promise.all([
+    readFile(new URL("../lib/auth-throttle.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/auth/login/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/auth/register/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../db/schema.ts", import.meta.url), "utf8"),
+  ]);
+
+  // 计数必须落库。放进程内存的话，EdgeOne 多实例各数各的，并发就能把每个实例的额度
+  // 分别用满，等于没限。
+  assert.match(schema, /auth_throttle/);
+  assert.match(throttle, /getDb\(\)/);
+
+  // 这是整条防线的关键顺序：verifyPassword / createPasswordRecord 每次要跑 10 万轮
+  // PBKDF2，额度必须先扣。顺序反了就还是能被 CPU 放大打满。
+  // 比的是调用点而不是 import 里的同名标识符，所以都带上左括号。
+  for (const [name, route, expensive] of [["login", login, "verifyPassword("], ["register", register, "createPasswordRecord("]]) {
+    assert.ok(route.indexOf("consumeThrottle(") < route.indexOf(expensive), `${name} 必须先扣额度再做密码运算`);
+    assert.match(route, /tooManyRequests|429/);
+  }
+
+  // X-Forwarded-For 的最左位由客户端控制，拿它当身份等于让攻击者自己发号；
+  // EO-Connecting-IP 由 EdgeOne 边缘节点写入，必须排在前面。
+  assert.ok(throttle.indexOf("eo-connecting-ip") < throttle.indexOf("x-forwarded-for"), "必须优先采信 EO-Connecting-IP");
+
+  // 邮箱额度只记失败，正常登录的人不该被自己的成功登录挤下线：进门时只读查看，
+  // 密码校验失败之后才累加。
+  assert.ok(login.indexOf("peekThrottle(") < login.indexOf("verifyPassword("), "邮箱额度应在密码校验前只读检查");
+  assert.ok(login.indexOf("consumeThrottle(failureBucket") > login.indexOf("verifyPassword("), "邮箱额度应当只在校验失败后累加");
+});
+
+test("robots and sitemap keep crawlers on content and off the runtime", async () => {
+  const [robots, sitemap] = await Promise.all([
+    readFile(new URL("../app/robots.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/sitemap.ts", import.meta.url), "utf8"),
+  ]);
+
+  // JupyterLite 运行时是几万个文件，/labs/ 下还有 46MB 的 ONNX 分片，放开只会烧抓取预算。
+  for (const blocked of ["/lite/", "/labs/", "/api/", "/practical/*/lab", "/account", "/progress"]) {
+    assert.ok(robots.includes(`"${blocked}"`), `robots.txt 应当 Disallow ${blocked}`);
+  }
+  // 题库内容是客户端取 /content/*.json 渲染的，挡掉就等于让爬虫看到空页。
+  assert.doesNotMatch(robots, /"\/content\/"|"\/_next\/"/);
+  assert.match(robots, /sitemap/);
+
+  // sitemap 里不该出现登录后才有内容的页面，也不该出现会 302 的地址。
+  assert.doesNotMatch(sitemap, /"\/account"|"\/progress"/);
+  assert.match(sitemap, /practicalMockEnabled/);
+  assert.match(sitemap, /content\.practical\.map/);
+});
+
+test("legal pages exist, are linked from every page, and describe what is actually collected", async () => {
+  const [layout, privacy, terms, disclaimer, site, schema] = await Promise.all([
+    readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/privacy/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/terms/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/disclaimer/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../lib/site.ts", import.meta.url), "utf8"),
+    readFile(new URL("../db/schema.ts", import.meta.url), "utf8"),
+  ]);
+
+  // 页尾三条链接出现在 layout 里，等于每一页都能到达。
+  for (const href of ["/disclaimer", "/terms", "/privacy"]) assert.ok(layout.includes(`href="${href}"`), `页尾缺少 ${href}`);
+
+  // 站点声明与官方无关，这一条必须在页尾常驻，而不只藏在免责声明页里。
+  assert.match(layout, /无隶属或授权关系/);
+  assert.match(disclaimer, /不是官方标准答案/);
+
+  // 隐私政策必须覆盖真实存在的数据项。限流表存 IP，漏写就是隐私政策与实现不符。
+  assert.match(schema, /auth_throttle/);
+  assert.match(privacy, /IP 地址/);
+  assert.match(privacy, /PBKDF2/);
+  assert.match(privacy, /ai_trainer_session/);
+  // 数据存在东京、站点在境外，这两点决定了用户数据受哪边管辖，必须写明。
+  assert.match(privacy, /东京/);
+  assert.match(privacy, /中国大陆境外/);
+
+  // 两处条款都承诺「发邮件可以处理」，联系方式就必须真的存在。
+  assert.match(site, /SITE_CONTACT_EMAIL/);
+  assert.match(terms, /请通过页尾邮箱联系/);
+});
+
+test("Chinese paragraphs are not wrapped in JSX source", async () => {
+  // JSX 里换行 + 缩进会被渲染成一个空格。英文里那正是想要的，中文里就是句子中间
+  // 平白多出一个空隙（「不登录也可以␣浏览题库」）。所以中文段落必须写成单行。
+  const files = ["app/privacy/page.tsx", "app/terms/page.tsx", "app/disclaimer/page.tsx", "components/LegalPage.tsx"];
+  const wrapped = /[\u4e00-\u9fa5、，。；：（）]\r?\n\s+[\u4e00-\u9fa5]/;
+  for (const file of files) {
+    const source = await readFile(new URL(`../${file}`, import.meta.url), "utf8");
+    assert.doesNotMatch(source, wrapped, `${file} 有被换行截断的中文段落，渲染后会多出空格`);
   }
 });

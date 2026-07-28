@@ -34,6 +34,19 @@ export const sessions = pgTable("sessions", {
   index("sessions_expires_at_idx").on(table.expiresAt),
 ]);
 
+/**
+ * 注册与登录的固定窗口计数器。放数据库而不是进程内存，是因为 EdgeOne 函数是多实例
+ * 的，进程内计数各数各的，攻击者只要并发就能把每个实例的额度分别用满。
+ *
+ * `bucket` 形如 `register:ip:1.2.3.4`、`login:email:a@b.c`，窗口过期由写入方按
+ * `window_start` 判断并原地重置，不需要定时任务。
+ */
+export const authThrottle = pgTable("auth_throttle", {
+  bucket: text("bucket").primaryKey(),
+  count: integer("count").notNull().default(0),
+  windowStart: timestamp("window_start", { mode: "string", withTimezone: true }).notNull().defaultNow(),
+}, (table) => [index("auth_throttle_window_start_idx").on(table.windowStart)]);
+
 export const theoryAttempts = pgTable("theory_attempts", {
   id: serial("id").primaryKey(),
   email: text("email").notNull().references(() => users.email, { onDelete: "cascade" }),

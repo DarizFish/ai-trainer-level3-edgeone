@@ -1,6 +1,6 @@
 # 项目当前状态
 
-更新时间：2026-07-26。本文取代原 `SESSION-HANDOFF.md`，用于把项目移交给其他会话或协作者。只记录**当前**事实与待办；历史改进见 `IMPROVEMENTS.md`。
+更新时间：2026-07-28。本文取代原 `SESSION-HANDOFF.md`，用于把项目移交给其他会话或协作者。只记录**当前**事实与待办；历史改进见 `IMPROVEMENTS.md`。
 
 ## 1. 坐标
 
@@ -9,7 +9,7 @@
 | 正式站 | https://www.aitrainer3.xyz/ |
 | 本地目录 | `C:\Users\zd\Documents\aitrainer3\edgeone-site` |
 | 当前分支 | `codex/edgeone-migration`（与 `origin` 同步，无未推送提交） |
-| 当前 HEAD | `8cab82d` 修正 EdgeOne 规则优先级 |
+| 当前 HEAD | `8ddc777` 首次进入实操 lab 给出环境准备浮层 |
 | GitHub | `ssh://git@ssh.github.com:443/DarizFish/ai-trainer-level3-edgeone.git` |
 | EdgeOne 项目 | `makers-xyzgssb9k7as` |
 | Supabase | 项目 `sqenbhewvjnmatgkkbqy`，东京区 `aws-0-ap-northeast-1.pooler.supabase.com` |
@@ -152,18 +152,32 @@ Pyodide 0.27.7 读到旧 lock 文件后 `initializePackageIndex` 抛出 `Lock fi
 
 `npm run test:browser` 的 15/15 需要先设置 `NO_PROXY`，原因见 4.6。
 
+## 5.1 部署前置条件：先跑 migration，再发代码
+
+`auth_throttle` 表是注册与登录限流的存储。应用运行时**不执行 DDL**，表不存在时两个接口都会直接返回 503——也就是说，代码先于 migration 上线会让账号体系整体不可用。顺序必须是：先建表，再部署。
+
+生产库里**没有** `__drizzle_migrations` 记录表，说明 `0000` 当初是在 Supabase SQL Editor 里手工执行的，因此 `npm run db:migrate` 会试图重跑 `0000` 而失败。后续 migration 同样手工执行。
+
+`drizzle/0001_gigantic_cardiac.sql` 已于 2026-07-28 手工应用到生产库，验证通过后测试行已清空（`auth_throttle` 现为 0 行）。**下一次新增表时记得沿用同样的手工流程。**
+
 ## 6. 下一步
 
-1. **确认 4.3 的规则顺序修正是否生效**——这是唯一未闭环的验证项：
-
-   ```powershell
-   curl.exe -sI https://www.aitrainer3.xyz/lite/static/pyodide/pyodide-lock.json | findstr /i cache-control
-   ```
-
-   期望 `max-age=0, must-revalidate`。若仍返回 `immutable`，说明 EdgeOne 的优先级还有别的规则（例如按 source 特异性而非顺序），退路是把 `/lite/static/*` 收窄成只覆盖 `*.whl` 等带版本号的子集。**在确认之前不要认为缓存问题已彻底解决**：升级 Pyodide 会再次毒化所有老用户。
-2. 视情况调整 4.7 的冒烟并发与超时。
-3. 按 `TESTING.md` 执行正式站验收；重点人工确认任意 CSV Lab 显示「环境已就绪」、`1.1.2` 的 `sensor_data.csv` 不再校验失败、3.2.x 的 ONNX 题可下载模型并推理。3.2.x 这条路径本轮完全未验证。
+1. ~~确认 4.3 的规则顺序修正是否生效~~ **已闭环**（2026-07-28 线上实测）。`pyodide-lock.json`、`jupyter-lite.json`、`config-utils.js`、`service-worker.js` 四个文件均返回 `public, max-age=0, must-revalidate`。EdgeOne 的「靠后规则生效」结论成立，缓存毒化的根因已消除。
+2. 视情况调整 4.7 的冒烟并发与超时。修好之前 `npm run test:smoke` 会一直停在 2/4，没法当上线后的健康检查用。
+3. 按 `TESTING.md` 执行正式站验收；重点人工确认任意 CSV Lab 显示「环境已就绪」、`1.1.2` 的 `sensor_data.csv` 不再校验失败、3.2.x 的 ONNX 题可下载模型并推理。**3.2.x 这条路径至今完全未在生产环境验证过**，是 20 个 lab 里最重的一条链路。
 4. 老用户仍需按 4.3 清一次全局 HTTP 缓存；这是一次性的，之后新响应头会自动接管。
+
+## 6.1 正式发布前仍未处理
+
+| 事项 | 状态 |
+| --- | --- |
+| 轮换数据库密码（曾出现在历史会话记录中） | 未做，建议发布前完成 |
+| 清理生产库测试数据（`users` 13 行、`sessions` 20 行） | 未做，删除不可逆，需人工确认范围 |
+| `SITE_CONTACT_EMAIL`（`lib/site.ts`）目前是 `contact@aitrainer3.xyz` | 信箱必须真的收得到信——隐私政策承诺「发邮件可导出/删除账号」，服务条款承诺「侵权可联系处理」 |
+| `reference/`（官方答案扫描件）是否入库 | 未决定，当前未提交 |
+| 题库来源与二次发布授权 | 法律面问题，需自行确认 |
+| 错误监控 / 分析 | 无。线上出问题时没有任何服务端信号 |
+| `app/blueprint/` 空目录 | 删除还是补全，未决定 |
 
 ## 7. ONNX 模型
 

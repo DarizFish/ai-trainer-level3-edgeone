@@ -22,6 +22,18 @@ npm.cmd run test:install-browser
 
 若本机设置了 `HTTP_PROXY`，必须同时设置 `NO_PROXY=localhost,127.0.0.1,::1`。Playwright 的 webServer 探活请求会经代理返回 `400`，它把“收到任何 HTTP 响应”判定为服务已就绪从而跳过启动 `next start`，导致全部浏览器测试报 `ERR_CONNECTION_REFUSED`。
 
+### 手工验证时踩过的三个坑
+
+1. **换构建前先按端口杀掉旧服务**。`pkill -f next-server` 在本机杀不掉 Node，旧进程会继续占着端口，新起的 `next start` 因 `EADDRINUSE` 静默退出，你以为在验证新代码，其实浏览器拿到的还是上一版构建。可靠做法：
+
+   ```powershell
+   Get-NetTCPConnection -LocalPort <端口> -State Listen | Select-Object -ExpandProperty OwningProcess -Unique | ForEach-Object { Stop-Process -Id $_ -Force }
+   ```
+
+2. **开发服务器只能用 `localhost` 访问**。`next.config.ts` 的 `allowedDevOrigins` 写的是 `127.0.0.1`，但 Next 的 dev origin 检查不认这种写法，用 `http://127.0.0.1:<端口>` 打开时页面不会 hydrate，且控制台与终端都没有任何报错，极易误判成代码问题。
+
+3. **强杀服务会在 Supabase 事务连接池留下孤儿连接**。`Stop-Process -Force` 不给进程关闭 PostgreSQL 连接的机会，池子这一侧要过一段时间才回收。反复重启几次后连接槽被占满，此后所有查询（包括从别的进程发出的）都会一直排队，直到 2 分钟 `statement_timeout` 报 `57014 query_canceled`。症状是"数据库好像坏了"，实际只需停掉所有本地服务等一会儿。判断方法：停掉服务后跑一句 `SELECT 1`，正常就是这个原因。
+
 开发过程中运行快速门禁：
 
 ```powershell
