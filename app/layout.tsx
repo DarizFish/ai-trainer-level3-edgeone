@@ -16,7 +16,7 @@ const navigation = ([
   ["学习档案", "/progress"],
 ] as const).filter(([, href]) => practicalMockEnabled || href !== "/practical/mock");
 
-const title = "人工智能训练师三级全题库备考站（上海）";
+const title = "人工智能训练师三级题库备考站（上海）";
 const description = "900 道理论题、190 道标准模拟题、40 道实操题与 20 个在线 Python 实验。";
 
 export const metadata: Metadata = {
@@ -36,7 +36,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <div className="container nav-row">
               <IntentLink className="brand" href="/" aria-label="人工智能训练师三级备考站（上海）首页">
                 <span className="brand-mark">AI</span>
-                <span><b>人工智能训练师（上海）</b><small>三级全题库备考站</small></span>
+                <span><b>人工智能训练师（上海）</b><small>三级题库备考站</small></span>
               </IntentLink>
               <nav className="main-nav" aria-label="主导航">
                 <SiteNavigationLinks items={navigation} />

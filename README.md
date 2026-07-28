@@ -1,6 +1,6 @@
-# 人工智能训练师三级全题库备考站（EdgeOne 版）
+# 人工智能训练师三级题库备考站（EdgeOne 版）
 
-这是“人工智能训练师三级全题库备考站”的 EdgeOne Makers 部署版本。它保留现有题库、模拟考试、实操材料、JupyterLite、浏览器内模型和自建邮箱密码账号，并把运行平台从 OpenAI Sites / Cloudflare Worker + D1 迁移为标准 Next.js + EdgeOne Cloud Functions + Supabase PostgreSQL。
+这是“人工智能训练师三级题库备考站”的 EdgeOne Makers 部署版本。它保留现有题库、模拟考试、实操材料、JupyterLite、浏览器内模型和自建邮箱密码账号，并把运行平台从 OpenAI Sites / Cloudflare Worker + D1 迁移为标准 Next.js + EdgeOne Cloud Functions + Supabase PostgreSQL。
 
 原 Sites 项目是回退版本；本目录是独立部署副本。未正式发布前不迁移旧用户、会话或学习记录，Supabase 使用全新表结构。
 

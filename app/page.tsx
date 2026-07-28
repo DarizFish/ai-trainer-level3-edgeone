@@ -12,7 +12,7 @@ export default function HomePage() {
           <div className="hero-copy">
             <p className="eyebrow">国家职业技能等级 · 三级</p>
             <h1>把厚厚的指导手册，<br /><em>练成你的分数。</em></h1>
-            <p className="lede">一站覆盖理论全题库、模拟考试、实操评分细则与 20 个浏览器 Python 实验。从练习到复盘，按真实考试节奏稳步提分。</p>
+            <p className="lede">一站覆盖理论题库、模拟考试、实操评分细则与 20 个浏览器 Python 实验。从练习到复盘，按真实考试节奏稳步提分。</p>
             <HomeAccountCta />
           </div>
           <aside className="exam-docket" aria-label="题库概览">
@@ -35,7 +35,7 @@ export default function HomePage() {
           <p>练习、订正、模拟、实操，所有进度都围绕同一份内容版本保存。</p>
         </div>
         <div className="path-grid">
-          <IntentLink className="path-card" href="/theory"><span className="path-number">壹</span><h3>理论题库</h3><p>判断、单选、多选独立进度；即时评分、错题与收藏。</p><b>900 道全题库 →</b></IntentLink>
+          <IntentLink className="path-card" href="/theory"><span className="path-number">壹</span><h3>理论题库</h3><p>判断、单选、多选独立进度；即时评分、错题与收藏。</p><b>900 道理论题 →</b></IntentLink>
           <IntentLink className="path-card featured" href="/theory/mock"><span className="path-number">贰</span><h3>90 分钟模拟</h3><p>标准卷或随机卷，190 题、100 分，完全按规则计分。</p><b>进入模拟考场 →</b></IntentLink>
           <IntentLink className="path-card" href="/practical"><span className="path-number">叁</span><h3>实操与实验</h3><p>逐项对照官方评分表，Python 代码直接在浏览器运行。</p><b>40 道实操题 →</b></IntentLink>
         </div>
