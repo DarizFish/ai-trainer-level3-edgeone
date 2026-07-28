@@ -1,4 +1,6 @@
-import rawContent from "@/data/content.json";
+// 题库来自 data/entities/ 的实体层，不再是一个 944KB 的单行大文件。
+// index.ts 由 scripts/build-entity-index.mjs 生成（需提交），contracts 校验其与目录一致。
+import { contentBank } from "@/data/entities";
 import { examBlueprint } from "./exam-blueprint";
 
 export type AnswerSource = "official" | "derived";
@@ -163,7 +165,7 @@ export type ContentBank = {
   };
 };
 
-export const content = rawContent as ContentBank;
+export const content = contentBank as unknown as ContentBank;
 
 export const theoryById = new Map(content.theory.map((question) => [question.id, question]));
 export const practicalByCode = new Map(content.practical.map((task) => [task.code, task]));

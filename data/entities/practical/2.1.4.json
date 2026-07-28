@@ -1,0 +1,133 @@
+{
+  "code": "2.1.4",
+  "title": "医疗研究数据清洗和标注设计",
+  "category": "智能训练",
+  "unit": "数据处理规范制定",
+  "group": "2.1",
+  "durationMinutes": 20,
+  "maxScore": 15,
+  "description": "随着医学技术的进步和医疗资源的丰富，医疗研究在改善患者治疗效果、提升医疗服务质量方面起到了重要作用。研究人员通过分析大量患者的治疗数据，能够评估不同治疗方案的效果，发现潜在的健康问题，并提出针对性的治疗建议。这不仅可以帮助患者获得更好的治疗效果，还能为医疗机构优化资源配置、提升服务水平提供重要依据。\n现提供一份医疗研究数据集，训练集样本数据一共5441条记录。请补全2.1.4.ipynb代码，完成下面的数据预处理任务：\n1、加载数据集，查看表的数据类型，表结构和显示每一列的空缺值数量；\n2、将“就诊日期”和“诊断日期”规范为“yyyy-mm-dd”格式，并将“病人ID”列名改为“患者ID”，显示修改后的表结构；\n3、增加“诊断延迟”（诊断日期-就诊日期）和“病程”（当前日期-诊断日期）两列，删除不合理的数据（如负数，年龄为几百岁等）；\n4、检查数据集中的重复值并删除所有重复值，并记录删除的行数；\n5、对数据段[年龄，体重，身高]进行归一化处理；\n6、统计不同疾病类型的治疗结果分布，并画出柱状图；\n7、分析年龄和疾病严重程度的关系，绘制出散点图；\n8、保存处理后的数据，并命名为：2.1.4_cleaned_data.csv，保存到考生文件夹；\n9、制定数据清洗和数据标注规范，将答案写到答题卷文件中，答题卷文件命名为“2.1.4.docx”，保存到考生文件夹；\n10、将以上代码以及运行结果，以html格式保存并命名为2.1.4.html，保存到考生文件夹，考生文件夹命名为“准考证号+身份证后6位”。",
+  "officialTaskSheet": {
+    "equipmentRequirements": "（1）人工智能训练师主机 1 台；\n（2）Python 编译环境；\n（3）职业人群体检数据集。",
+    "skillRequirements": "（1）能结合人工智能技术要求和业务特征，设计数据清洗和标注流程；\n（2）能结合人工智能技术要求和业务特征，制定数据清洗和标注规范。",
+    "qualityIndicators": "（1）深入理解业务，训练符合业务需求的模型。"
+  },
+  "rubric": [
+    {
+      "id": "M1",
+      "points": 2.0,
+      "description": "加载数据集并指定编码为gbk正确得1分，查看表结构基本信息正确得1分，总计得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M2",
+      "points": 1.0,
+      "description": "修改列名正确得1分；",
+      "mode": "self"
+    },
+    {
+      "id": "M3",
+      "points": 2.0,
+      "description": "增加列操作正确得1分，删除不合理数据得1分，总计得2分；",
+      "mode": "self"
+    },
+    {
+      "id": "M4",
+      "points": 1.0,
+      "description": "删除重复值正确得1分；",
+      "mode": "self"
+    },
+    {
+      "id": "M5",
+      "points": 1.0,
+      "description": "数据归一化处理得1分；",
+      "mode": "self"
+    },
+    {
+      "id": "M6",
+      "points": 1.0,
+      "description": "绘制柱状图正确得1分；",
+      "mode": "self"
+    },
+    {
+      "id": "M7",
+      "points": 1.0,
+      "description": "正确绘制散点图得1分；",
+      "mode": "self"
+    },
+    {
+      "id": "M8",
+      "points": 1.0,
+      "description": "保存处理后的数据正确得1分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M9",
+      "points": 2.0,
+      "description": "回答数据清洗规范：每回答正确1个规范点，得1分，最高得2分；",
+      "mode": "self"
+    },
+    {
+      "id": "M10",
+      "points": 3.0,
+      "description": "回答数据标注规范：每回答正确1个规范点，得1分，最高得3分；",
+      "mode": "self"
+    }
+  ],
+  "answerSource": "derived",
+  "answerBasis": "completed_reference_notebook",
+  "referenceAnswer": "建议答案应完整覆盖以下评分点：\nM1（2分）：加载数据集并指定编码为gbk正确得1分，查看表结构基本信息正确得1分，总计得2分；\nM2（1分）：修改列名正确得1分；\nM3（2分）：增加列操作正确得1分，删除不合理数据得1分，总计得2分；\nM4（1分）：删除重复值正确得1分；\nM5（1分）：数据归一化处理得1分；\nM6（1分）：绘制柱状图正确得1分；\nM7（1分）：正确绘制散点图得1分；\nM8（1分）：保存处理后的数据正确得1分；\nM9（2分）：回答数据清洗规范：每回答正确1个规范点，得1分，最高得2分；\nM10（3分）：回答数据标注规范：每回答正确1个规范点，得1分，最高得3分；\n\nWord 交付物作答示例（本站依据官方题干与评分表整理，非指导手册标准答案）\n一、数据清洗规范（M9，每点 1 分，最高 2 分）\n1. 字段与结构规范：统一列名为可读的英文或中文标准名，删除与研究目标无关的列，并对不合理取值（如年龄为负、指标越界）直接剔除。\n2. 重复与量纲规范：按患者标识与就诊时间去重；对检验指标做归一化，使不同量纲的指标可以同图比较。\n\n二、数据标注规范（M10，每点 1 分，最高 3 分）\n1. 标注口径规范：由具备医学背景的人员制定分组与阳性/阴性判定标准，边界值须有明确归属规则。\n2. 隐私合规规范：标注前完成脱敏，去除姓名、身份证号、联系方式等直接标识符，标注环境与数据存储需受控可审计。\n3. 复核与追溯规范：双人独立标注并留存分歧记录，抽样复核合格后方可入库；标注结果需带版本号与操作人，可追溯到原始记录。\n\nPython 参考代码：已从配套完成版 Notebook 提取 1 个代码单元。请在实验室的“答案与来源”中查看或下载；该代码不是指导手册官方标准答案。",
+  "materials": [
+    {
+      "name": "2.1.4.docx",
+      "kind": "document",
+      "label": "配套文档",
+      "size": 15056,
+      "sha256": "f800411dc61203eea6afaff22153d26c1b917a04a44932aa93ffa0b643bcc3c2",
+      "note": "官方配套文档；7 个正文段落，0 个表格",
+      "url": "/materials/2.1.4/2.1.4.docx"
+    },
+    {
+      "name": "2.1.4.ipynb",
+      "kind": "notebook",
+      "label": "Notebook 模板",
+      "size": 3920,
+      "sha256": "a1f5ca33339444d962ffd00324e5789167204a0036e18db625f460dc24fbc56b",
+      "note": "官方 Notebook 模板；1 个代码单元",
+      "url": "/lite/files/2-1-4/2.1.4.ipynb"
+    },
+    {
+      "name": "medical_data.csv",
+      "kind": "dataset",
+      "label": "CSV 数据集",
+      "size": 678817,
+      "sha256": "4bc238b8525e4c04d040d96609e554424c86eda9f2f2224c8fdd4ae060f1a1b4",
+      "note": "5440 行数据 × 22 列；字段：病人ID、年龄、性别、地区、就诊日期…",
+      "url": "/labs/2.1.4/medical_data.csv",
+      "sourceSize": 684258,
+      "sourceSha256": "b2c3e63c379a0b5c7c6f8e01411616752f228c07141f525edaedea4f2e5f799d"
+    }
+  ],
+  "hasNotebook": true,
+  "notebook": {
+    "cells": [
+      {
+        "id": "cell-1",
+        "source": "import pandas as pd\n\n# 加载数据集并指定编码为gbk\ndata = _________\n\n# 查看数据类型\nprint(data.dtypes)\n# 查看表结构基本信息\nprint(_________)\n\n# 显示每一列的空缺值数量\nprint(data.isnull().sum())\n\n# 规范日期格式\ndata['就诊日期'] = pd.to_datetime(data['就诊日期'])\ndata['诊断日期'] = pd.to_datetime(data['诊断日期'])\n\n# 修改列名\n_________(_________, inplace=True)\n\n# 查看修改后的表结构\nprint(data.head())\n\nfrom datetime import datetime\n\n# 增加诊断延迟和病程列\ndata['诊断延迟'] = _________.dt.days\ndata['病程'] = (datetime(2024, 9, 1) - data['诊断日期']).dt.days\n\n# 删除不合理的数据\ndata = _________[(_________ >= 0) & (_________ > 0) & (_________ < 120)]\n\n# 查看修改后的数据\nprint(data.describe())\n\n# 删除重复值并记录删除的行数\ninitial_rows = data.shape[0]\n_________(inplace=True)\ndeleted_rows = initial_rows - data.shape[0]\n\nprint(f'删除的重复行数: {deleted_rows}')\n\nfrom sklearn.preprocessing import MinMaxScaler\n\n# 对需要归一化的列进行处理\nscaler = MinMaxScaler()\ncolumns_to_normalize = [_________]\ndata[columns_to_normalize] = _________\n\n# 查看归一化后的数据\nprint(data.head())\n\nimport matplotlib.pyplot as plt\nimport matplotlib.font_manager as fm\n\n\n# 统计治疗结果分布\ntreatment_outcome_distribution = data.groupby('疾病类型')['治疗结果'].value_counts().unstack()\n\n# 设置中文字体\nfont_path = 'C:/Windows/Fonts/simhei.ttf'  # 根据你的系统调整字体路径\nmy_font = fm.FontProperties(fname=font_path)\n\n# 绘制柱状图\n_________(_________, stacked=True)\nplt.title('不同疾病类型的治疗结果分布', fontproperties=my_font)\nplt.xlabel('疾病类型', fontproperties=my_font)\nplt.ylabel('治疗结果数量', fontproperties=my_font)\nplt.xticks(fontproperties=my_font)  # 设置x轴刻度标签的字体\nplt.yticks(fontproperties=my_font)  # 设置y轴刻度标签的字体\nplt.legend(prop=my_font)  # 设置图例字体\nplt.show()\n\n# 绘制散点图\n_________(_________, _________)\nplt.title('年龄和疾病严重程度的关系', fontproperties=my_font)\nplt.xlabel('年龄', fontproperties=my_font)\nplt.ylabel('疾病严重程度', fontproperties=my_font)\nplt.xticks(fontproperties=my_font)  # 设置x轴刻度标签的字体\nplt.yticks(fontproperties=my_font)  # 设置y轴刻度标签的字体\nplt.legend(prop=my_font)  # 设置图例字体\nplt.show()\n\n# 保存处理后得数据\noutput_path = '2.1.4_cleaned_data.csv'\n_________(_________, index=False)"
+      }
+    ],
+    "assets": [
+      "2.1.4.docx",
+      "medical_data.csv"
+    ],
+    "browserAdapted": false,
+    "solutionCells": [
+      {
+        "id": "solution-1",
+        "source": "import pandas as pd\n\n# 加载数据集并指定编码为gbk\ndata = pd.read_csv('medical_data.csv',encoding='gbk')\n\n# 查看数据类型\nprint(data.dtypes)\n# 查看表结构基本信息\nprint(data.info())\n\n# 显示每一列的空缺值数量\nprint(data.isnull().sum())\n\n# 规范日期格式\ndata['就诊日期'] = pd.to_datetime(data['就诊日期'])\ndata['诊断日期'] = pd.to_datetime(data['诊断日期'])\n\n# 修改列名\ndata.rename(columns={'病人ID':'患者ID'}, inplace=True)\n\n# 查看修改后的表结构\nprint(data.head())\n\nfrom datetime import datetime\n\n# 增加诊断延迟和病程列\ndata['诊断延迟'] = (data['诊断日期']-data['就诊日期']).dt.days\ndata['病程'] = (datetime(2024, 9, 1) - data['诊断日期']).dt.days\n\n# 删除不合理的数据\ndata = data[(data['诊断延迟'] >= 0) & (data['年龄'] > 0) & (data['年龄'] < 120)]\n\n# 查看修改后的数据\nprint(data.describe())\n\n# 删除重复值并记录删除的行数\ninitial_rows = data.shape[0]\ndata.drop_duplicates(inplace=True)\ndeleted_rows = initial_rows - data.shape[0]\n\nprint(f'删除的重复行数: {deleted_rows}')\n\nfrom sklearn.preprocessing import MinMaxScaler\n\n# 对需要归一化的列进行处理\nscaler = MinMaxScaler()\ncolumns_to_normalize = ['年龄','体重','身高']\ndata[columns_to_normalize] = scaler.fit_transform(data[columns_to_normalize])\n\n# 查看归一化后的数据\nprint(data.head())\n\nimport matplotlib.pyplot as plt\nimport matplotlib.font_manager as fm\n\n\n# 统计治疗结果分布\ntreatment_outcome_distribution = data.groupby('疾病类型')['治疗结果'].value_counts().unstack()\n\n# 设置中文字体\nfont_path = 'C:/Windows/Fonts/simhei.ttf'  # 根据你的系统调整字体路径\nmy_font = fm.FontProperties(fname=font_path)\n\n# 绘制柱状图\ntreatment_outcome_distribution.plot(kind='bar', stacked=True)\nplt.title('不同疾病类型的治疗结果分布', fontproperties=my_font)\nplt.xlabel('疾病类型', fontproperties=my_font)\nplt.ylabel('治疗结果数量', fontproperties=my_font)\nplt.xticks(fontproperties=my_font)  # 设置x轴刻度标签的字体\nplt.yticks(fontproperties=my_font)  # 设置y轴刻度标签的字体\nplt.legend(prop=my_font)  # 设置图例字体\nplt.show()\n\n# 绘制散点图\nplt.scatter(data['年龄'], data['疾病严重程度'])\nplt.title('年龄和疾病严重程度的关系', fontproperties=my_font)\nplt.xlabel('年龄', fontproperties=my_font)\nplt.ylabel('疾病严重程度', fontproperties=my_font)\nplt.xticks(fontproperties=my_font)  # 设置x轴刻度标签的字体\nplt.yticks(fontproperties=my_font)  # 设置y轴刻度标签的字体\nplt.legend(prop=my_font)  # 设置图例字体\nplt.show()\n\n# 保存处理后得数据\noutput_path = '2.1.4_cleaned_data.csv'\ndata.to_csv(output_path, index=False)\n"
+      }
+    ],
+    "solutionSource": "completed_reference_notebook",
+    "solutionSha256": "2ba9510e1681a6d1c6fedffdc82826b32b896b64e1f601db3fcc1837b87c673e"
+  }
+}

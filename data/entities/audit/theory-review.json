@@ -1,0 +1,20 @@
+{
+  "batchId": "theory-900-review-2026-07-26-v1",
+  "version": "2026-07-26-v8",
+  "publishedAt": "2026-07-25T17:23:16Z",
+  "reviewedQuestions": 900,
+  "independentExplanations": 900,
+  "crossReviewedQuestions": 900,
+  "crossReviewShards": 9,
+  "answerChanges": 79,
+  "officialAnswerChanges": 0,
+  "resolvedConflicts": 5,
+  "basisCounts": {
+    "independent_review": 139,
+    "official_word": 190,
+    "secondary_site": 571
+  },
+  "manifestPath": "data/references/theory-review-state/manifest.json",
+  "manifestSha256": "1cfba38e55b18b51f6f3bfd14d7c1644b2859bf94e7b2cf56196461d915c8e2c",
+  "auditPath": "data/references/theory-review-audit.json"
+}

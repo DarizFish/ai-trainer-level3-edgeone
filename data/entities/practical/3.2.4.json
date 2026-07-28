@@ -1,0 +1,147 @@
+{
+  "code": "3.2.4",
+  "title": "花朵智能识别系统交互流程设计",
+  "category": "智能系统设计",
+  "unit": "人机交互流程设计",
+  "group": "3.2",
+  "durationMinutes": 20,
+  "maxScore": 20,
+  "description": "花朵智能识别系统在现代城市绿化管理中起着越来越重要的作用，其利用先进的计算机视觉技术，如花朵检测与识别，实现了对花朵种类的实时监控与管理。本系统要求开发一个基于已训练模型的花朵检测与分类系统，能够准确识别出不同类别的花朵。\nAI模型说明：提供的模型“flower-detection.onnx”是使用 Pytorch 框架和基于深度卷积神经网络训练得到的，专门用于进行花朵识别。对应的标签文件为“labels.txt”。 该模型的使用交互流程为：\n1)加载模型“flower-detection.onnx”和加载类别标签“labels.txt”；\n2)加载一张本地花朵图片“flower_test.png”，并预处理图像；\n3)使用flower-detection模型对花朵图片进行识别；\n4)输出花朵的预测类型和识别的准确率。\n你作为一名人工智能训练师，请完成以下工作任务：\n（1）补全该模型的使用交互流程对应的Python代码（3.2.4.ipynb），实现本地测试图片“flower _test.png”的识别，将其识别结果截图保存为jpg格式文件，命名为3.2.4-1.jpg。\n（2）在上面的使用交互流程基础上，给出在花朵智能识别系统中使用“flower-detection.onnx”模型的一种人机交互的最优流程，将其保存为docx文件，命名为3.2.4.docx。\n所有结果文件储存在桌面新建的考生文件夹中，文件夹命名为“准考证号+身份证号后六位”。",
+  "officialTaskSheet": {
+    "equipmentRequirements": "（1）人工智能训练师主机 1 台；\n（2）Python 编译环境；\n（3）Pytorch框架。",
+    "skillRequirements": "（1）能确保模型在单一场景下稳定运行；\n（2）能通过分析，设计单一场景下人工和智能交互的最优流程。",
+    "qualityIndicators": "（1）模型运行稳定，使用正常；\n（2）单一场景下人工和智能交互的最优流程切实可行。"
+  },
+  "rubric": [
+    {
+      "id": "M1",
+      "points": 2.0,
+      "description": "模型加载代码正确得2分",
+      "mode": "auto"
+    },
+    {
+      "id": "M2",
+      "points": 2.0,
+      "description": "类别标签加载代码正确得2分",
+      "mode": "auto"
+    },
+    {
+      "id": "M3",
+      "points": 2.0,
+      "description": "从指定路径加载图片代码正确得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M4",
+      "points": 2.0,
+      "description": "预处理图片代码正确得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M5",
+      "points": 2.0,
+      "description": "使用模型对图片进行识别代码正确得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M6",
+      "points": 2.0,
+      "description": "获取识别分类后的准确率代码正确得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M7",
+      "points": 2.0,
+      "description": "获取预测的类别索引代码正确得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M8",
+      "points": 2.0,
+      "description": "获取预测的准确值（转换为百分比）代码正确得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M9",
+      "points": 2.0,
+      "description": "获取预测的类别标签代码正确得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M10",
+      "points": 1.0,
+      "description": "截图3.2.4-1.jpg中类别和准确率正确得1分；",
+      "mode": "self"
+    },
+    {
+      "id": "M11",
+      "points": 1.0,
+      "description": "人机交互最优流程（不少于3条）正确得1分；",
+      "mode": "self"
+    }
+  ],
+  "answerSource": "derived",
+  "answerBasis": "completed_reference_notebook",
+  "referenceAnswer": "建议答案应完整覆盖以下评分点：\nM1（2分）：模型加载代码正确得2分\nM2（2分）：类别标签加载代码正确得2分\nM3（2分）：从指定路径加载图片代码正确得2分；\nM4（2分）：预处理图片代码正确得2分；\nM5（2分）：使用模型对图片进行识别代码正确得2分；\nM6（2分）：获取识别分类后的准确率代码正确得2分；\nM7（2分）：获取预测的类别索引代码正确得2分；\nM8（2分）：获取预测的准确值（转换为百分比）代码正确得2分；\nM9（2分）：获取预测的类别标签代码正确得2分；\nM10（1分）：截图3.2.4-1.jpg中类别和准确率正确得1分；\nM11（1分）：人机交互最优流程（不少于3条）正确得1分；\n\nWord 交付物作答示例（本站依据官方题干与评分表整理，非指导手册标准答案）\n一、截图结果（M10，1 分）\n在 3.2.4-1.jpg 中完整显示花朵的预测类别与准确率（置信度），截图需包含输入图像与两项输出。\n\n二、人机交互最优流程（M11，不少于 3 条，1 分）\n1. 输入引导：提示单株、主体居中、背景简洁，支持拍照与相册两种入口。\n2. 实时反馈：返回 Top-1 类别与置信度，置信度较低时同时给出 Top-3 候选供用户选择。\n3. 结果扩展：在识别结果下方提供该花种的简介与养护要点，提升使用价值。\n4. 异常兜底：非花卉图像或识别失败时明确提示，并引导用户重新拍摄。\n\nPython 参考代码：已从配套完成版 Notebook 提取 1 个代码单元。请在实验室的“答案与来源”中查看或下载；该代码不是指导手册官方标准答案。",
+  "materials": [
+    {
+      "name": "3.2.4.ipynb",
+      "kind": "notebook",
+      "label": "Notebook 模板",
+      "size": 2957,
+      "sha256": "9ebcc32ad169ad1d6526c139b8932273b70684087d6b24b6ec98f613acaeffa6",
+      "note": "官方 Notebook 模板；1 个代码单元",
+      "url": "/lite/files/3-2-4/3.2.4.ipynb"
+    },
+    {
+      "name": "flower-detection.onnx",
+      "kind": "model",
+      "label": "ONNX 模型",
+      "size": 102583340,
+      "sha256": "af16a04a6ec48ac494065d4439fe9dea590d337b9ca6dc328160ccf04a217b9c",
+      "note": "官方 ONNX 模型；进入实验室后按需加载浏览器兼容版本",
+      "url": null
+    },
+    {
+      "name": "flower_test.png",
+      "kind": "image",
+      "label": "测试图片",
+      "size": 100699,
+      "sha256": "0fa1f4d5aad2121e4f4bc74a7f38d290f3094eeb1082d4daae1daa65b4b0cdf5",
+      "note": "测试图片",
+      "url": "/labs/3.2.4/flower_test.png"
+    },
+    {
+      "name": "labels.txt",
+      "kind": "text",
+      "label": "标签文件",
+      "size": 10472,
+      "sha256": "1f386e0d1cb6e28b9c2dac651c3dea6801e98ad1b41a14ce6bb1a093d72069f5",
+      "note": "标签文件",
+      "url": "/labs/3.2.4/labels.txt"
+    }
+  ],
+  "hasNotebook": true,
+  "notebook": {
+    "cells": [
+      {
+        "id": "cell-1",
+        "source": "import onnxruntime as ort\nimport numpy as np\nimport scipy.special\nfrom PIL import Image\n\n\n# 预处理图像\ndef preprocess_image(image, resize_size=256, crop_size=224, mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]):\n    image = image.resize((resize_size, resize_size), Image.BILINEAR)\n    w, h = image.size\n    left = (w - crop_size) / 2\n    top = (h - crop_size) / 2\n    image = image.crop((left, top, left + crop_size, top + crop_size))\n    image = np.array(image).astype(np.float32)\n    image = image / 255.0\n    image = (image - mean) / std\n    image = np.transpose(image, (2, 0, 1))\n    image = image.reshape((1,) + image.shape)\n    return image\n\n\n# 加载模型  2分\nsession = _________________\n\n\n# 加载类别标签 2分\nwith _________________ as f:\n    labels = [line.strip() for line in f.readlines()]\n\n\n# 获取模型输入和输出的名称\ninput_name = session.get_inputs()[0].name\noutput_name = session.get_outputs()[0].name\n\n\n# 加载图片  2分\nimage = _________________('RGB')\n\n\n# 预处理图片  2分\nprocessed_image = _________________\n\n\n# 确保输入数据是 float32 类型\nprocessed_image = processed_image.astype(np.float32)\n\n\n# 进行图片识别  2分\noutput = _________________([output_name], {input_name: processed_image})[0]\n\n\n# 应用 softmax 函数获取识别分类后的准确率  2分\naccuracy = _________________(output, axis=-1)\n\n\n# 获取预测的类别索引\npredicted_idx =  __________\n\n\n# 获取预测的准确值（转换为百分比）\nprob_percentage =  __________\n\n\n# 获取预测的类别标签\npredicted_label = __________\n\n\n# 输出预测结果，包含百分比形式的概率\nprint(f\"Predicted class: {predicted_label}, Accuracy: {prob_percentage:.2f}%\")\n"
+      }
+    ],
+    "assets": [
+      "flower-detection.onnx",
+      "flower_test.png",
+      "labels.txt"
+    ],
+    "browserAdapted": true,
+    "solutionCells": [
+      {
+        "id": "solution-1",
+        "source": "import onnxruntime as ort\nimport numpy as np\nimport scipy.special\nfrom PIL import Image\n\n\n# 预处理图像\ndef preprocess_image(image, resize_size=256, crop_size=224, mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]):\n    image = image.resize((resize_size, resize_size), Image.BILINEAR)\n    w, h = image.size\n    left = (w - crop_size) / 2\n    top = (h - crop_size) / 2\n    image = image.crop((left, top, left + crop_size, top + crop_size))\n    image = np.array(image).astype(np.float32)\n    image = image / 255.0\n    image = (image - mean) / std\n    image = np.transpose(image, (2, 0, 1))\n    image = image.reshape((1,) + image.shape)\n    return image\n\n\n# 加载模型  2分\nsession = ort.InferenceSession('flower-detection.onnx')\n\n\n# 加载类别标签 2分\nwith open('labels.txt') as f:\n    labels = [line.strip() for line in f.readlines()]\n\n\n# 获取模型输入和输出的名称\ninput_name = session.get_inputs()[0].name\noutput_name = session.get_outputs()[0].name\n\n\n# 加载图片  2分\nimage = Image.open('flower_test.png').convert('RGB')\n\n\n# 预处理图片  2分\nprocessed_image = preprocess_image(image)\n\n\n# 确保输入数据是 float32 类型\nprocessed_image = processed_image.astype(np.float32)\n\n\n# 进行图片识别  2分\noutput = session.run([output_name], {input_name: processed_image})[0]\n\n\n# 应用 softmax 函数获取识别分类后的准确率  2分\naccuracy = scipy.special.softmax(output, axis=-1)\n\n\n# 获取预测的类别索引\npredicted_idx =  np.argmax(accuracy[0])\n\n\n# 获取预测的准确值（转换为百分比）\nprob_percentage =  accuracy[0,predicted_idx] * 100\n\n\n# 获取预测的类别标签\npredicted_label = labels[predicted_idx]\n\n\n# 输出预测结果，包含百分比形式的概率\nprint(f\"Predicted class: {predicted_label}, Accuracy: {prob_percentage:.2f}%\")\n"
+      }
+    ],
+    "solutionSource": "completed_reference_notebook",
+    "solutionSha256": "96a8bf241f999383616aa3d5be17635ea68987efedf962e6551da51a0a3b7c5d"
+  }
+}

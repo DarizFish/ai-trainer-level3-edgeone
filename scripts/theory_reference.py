@@ -19,6 +19,10 @@ from datetime import date
 from pathlib import Path
 from typing import Any
 
+import sys as _sys
+_sys.path.insert(0, str(Path(__file__).resolve().parent))
+from content_entities import load_bank, write_bank  # noqa: E402
+
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SOURCE_URL = "http://119.28.189.105/questions.js"
@@ -325,7 +329,7 @@ def snapshot_command(args: argparse.Namespace) -> None:
 
 
 def apply_command(args: argparse.Namespace) -> None:
-    content = json.loads(args.content.read_text(encoding="utf-8"))
+    content = load_bank()
     if content.get("theoryReview") and not args.allow_review_reset:
         raise ValueError(
             "当前题库已发布 900 题审校结果；直接重放次级参考会覆盖答案与原创解析。"
@@ -340,7 +344,7 @@ def apply_command(args: argparse.Namespace) -> None:
     audit["summary"]["remainingHeuristicAnswers"] = sum(question["answerBasis"] == "heuristic" for question in content["theory"])
     content["version"] = args.content_version
     content["theoryReference"] = content_reference_metadata(snapshot, audit)
-    write_json(args.content, content, compact_json=True)
+    write_bank(content)
     write_json(args.audit, audit)
     print(json.dumps(audit["summary"], ensure_ascii=False, indent=2))
 

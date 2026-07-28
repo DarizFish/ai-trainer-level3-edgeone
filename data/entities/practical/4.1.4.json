@@ -1,0 +1,229 @@
+{
+  "code": "4.1.4",
+  "title": "Pandas数据清洗培训大纲编写",
+  "category": "培训与指导",
+  "unit": "培训",
+  "group": "4.1",
+  "durationMinutes": 10,
+  "maxScore": 5,
+  "description": "A企业是一家康复训练机构，需要利用人工智能技术为康复患者提供个性化的康复训练计划。为了提高人工智能技术的应用效果，其采集了大量的康复数据，现计划对新进技术人员进行数据清洗工具的使用培训。因为Pandas是Python中最为广泛使用的数据分析和操作库之一，因此这次培训将使新进技术人员掌握Pandas的主要数据清洗功能使用，能对大量的康复数据进行清洗，达到人工智能训练师四级/中级工的技能水平。\n请你根据要求补全素材4.1.4.docx中的培训大纲。",
+  "officialTaskSheet": {
+    "equipmentRequirements": "（1）人工智能训练师主机；\n（2）Office软件。",
+    "skillRequirements": "（1）能编写初级培训讲义；\n（2）能对初级工、中级工开展知识和技术培训。",
+    "qualityIndicators": "（1）培训讲义编写逻辑合理；\n（2）培训资料正确有效；\n（3）语句组织通顺。"
+  },
+  "rubric": [
+    {
+      "id": "M1",
+      "points": 5.0,
+      "description": "回答内容与答案类似得1分；最多5分；",
+      "mode": "self"
+    }
+  ],
+  "answerSource": "derived",
+  "answerBasis": "official_template_completion",
+  "referenceAnswer": "官方 Word 模板填写示例（5 处空白）\n\n以下内容按模板中的空白顺序填写，取自官方参考答案中标黄的填空原文。评分口径为“回答内容与答案类似得 1 分，每题最多 5 分”，作答时无需标黄。\n\n1. Pandas 简介与安装｜学习目标\n填写：掌握使用 Pandas 进行数据导入与导出的方法。\n\n2. 数据筛选与过滤｜学习目标\n填写：掌握使用 Pandas 进行数据筛选与过滤的方法。\n\n3. 数据转换｜学习目标\n填写：掌握使用 Pandas 进行数据转换的方法。\n\n4. 数据合并与重塑｜学习目标\n填写：掌握使用 Pandas 进行数据合并与重塑的方法。\n\n5. 数据分组与聚合｜学习目标\n填写：掌握使用 Pandas 进行数据分组与聚合的方法。\n\n提交检查：\n按模板中的 5 个空白顺序填写，确保每个学习目标覆盖该节列出的 Pandas 操作，并保留原有综合项目实践内容。",
+  "materials": [
+    {
+      "name": "4.1.4.docx",
+      "kind": "document",
+      "label": "配套文档",
+      "size": 16213,
+      "sha256": "d2f0c5b5f5254ee566d15a4af3b23311fdb6185341fefc1395b1f14e3707f68d",
+      "note": "官方配套文档；47 个正文段落，0 个表格",
+      "url": "/materials/4.1.4/4.1.4.docx",
+      "preview": [
+        {
+          "kind": "heading",
+          "text": "在下划线上填写答案。"
+        },
+        {
+          "kind": "heading",
+          "text": "根据学习大纲补充学习目标"
+        },
+        {
+          "kind": "heading",
+          "text": "数据清洗基础理论"
+        },
+        {
+          "kind": "paragraph",
+          "text": "学习目标：掌握数据清洗的基本概念和流程。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "内容："
+        },
+        {
+          "kind": "paragraph",
+          "text": "什么是数据清洗？"
+        },
+        {
+          "kind": "paragraph",
+          "text": "数据清洗的常见任务：数据去重、缺失值处理、数据格式转换等。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "数据清洗在数据分析和模型训练中的重要性。"
+        },
+        {
+          "kind": "heading",
+          "text": "Pandas简介与安装"
+        },
+        {
+          "kind": "heading",
+          "text": "学习目标："
+        },
+        {
+          "kind": "paragraph",
+          "text": "内容："
+        },
+        {
+          "kind": "paragraph",
+          "text": "读取CSV、Excel、SQL等格式的数据。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "保存数据到CSV、Excel等格式。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "实践操作：导入和导出康复数据集。"
+        },
+        {
+          "kind": "heading",
+          "text": "数据筛选与过滤"
+        },
+        {
+          "kind": "heading",
+          "text": "学习目标："
+        },
+        {
+          "kind": "paragraph",
+          "text": "内容："
+        },
+        {
+          "kind": "paragraph",
+          "text": "条件筛选：基于单列或多列的条件筛选数据。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "数据去重：去除重复记录。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "缺失值处理：识别、删除和填充缺失值。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "实践操作：筛选和过滤康复数据。"
+        },
+        {
+          "kind": "heading",
+          "text": "数据转换"
+        },
+        {
+          "kind": "heading",
+          "text": "学习目标："
+        },
+        {
+          "kind": "paragraph",
+          "text": "内容："
+        },
+        {
+          "kind": "paragraph",
+          "text": "数据类型转换：转换数据类型（如字符串到日期）。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "时间序列处理：处理和分析时间序列数据。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "数据分列和合并：分割和合并数据列。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "实践操作：转换和处理康复数据。"
+        },
+        {
+          "kind": "heading",
+          "text": "数据合并与重塑"
+        },
+        {
+          "kind": "heading",
+          "text": "学习目标："
+        },
+        {
+          "kind": "paragraph",
+          "text": "内容："
+        },
+        {
+          "kind": "paragraph",
+          "text": "数据合并：concat和merge方法。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "数据重塑：pivot和melt方法。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "实践操作：合并和重塑康复数据。"
+        },
+        {
+          "kind": "heading",
+          "text": "数据分组与聚合"
+        },
+        {
+          "kind": "heading",
+          "text": "学习目标："
+        },
+        {
+          "kind": "paragraph",
+          "text": "内容："
+        },
+        {
+          "kind": "paragraph",
+          "text": "数据分组：groupby方法。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "聚合函数：sum、mean、count等。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "实践操作：分组和聚合康复数据。"
+        },
+        {
+          "kind": "heading",
+          "text": "数据可视化"
+        },
+        {
+          "kind": "paragraph",
+          "text": "学习目标：综合运用所学知识进行数据清洗项目。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "内容："
+        },
+        {
+          "kind": "paragraph",
+          "text": "项目介绍：清洗一个多来源的康复数据集。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "数据采集：导入多种格式的数据。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "数据清洗：使用Pandas进行数据清洗和转换。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "项目评审：展示清洗成果，讲解实现思路和遇到的问题。"
+        }
+      ]
+    }
+  ],
+  "hasNotebook": false,
+  "notebook": null
+}

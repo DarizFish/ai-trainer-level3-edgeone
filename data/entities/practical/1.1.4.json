@@ -1,0 +1,157 @@
+{
+  "code": "1.1.4",
+  "title": "电商平台用户行为分析系统的数据采集与处理流程设计",
+  "category": "业务分析",
+  "unit": "业务流程设计",
+  "group": "1.1",
+  "durationMinutes": 30,
+  "maxScore": 25,
+  "description": "某电商平台希望通过用户行为数据分析，了解用户购物习惯、购买倾向等，从而优化产品推荐系统，提高用户满意度和销售额。作为数据分析师，您需要设计一套全面的业务数据采集与处理流程，确保数据在进入用户行为分析系统之前经过严格的采集、清洗和预处理。\n我们提供一个用户行为数据集（user_behavior_data.csv），包含以下字段：\nUserID: 用户ID\nUserName: 用户名\nAge: 年龄\nGender: 性别（Male/Female）\nLocation: 位置\nLastLogin: 上次登录时间\nPurchaseAmount: 购买金额\nPurchaseCategory: 购买类别（例如，电子产品、服装、食品等）\nReviewScore: 用户评价评分（1-5）\nLoginFrequency: 登录频率（每日、每周、每月）\n你作为人工智能训练师，根据提供的user_behavior_data.csv数据集和Python代码框架（1.1.4.ipynb），完成以下数据的采集与处理任务，确保数据的准确性和可靠性。请按照以下要求完成任务，确保结果准确并保存相应的截图。\n（1）数据采集：\n通过运行Python代码（1.1.4.ipynb），从本地文件user_behavior_data.csv中读取数据，并将数据加载到DataFrame中。打印前5条数据。\n（2）数据清洗与预处理：\n通过运行Python代码（1.1.4.ipynb）对数据进行清洗和预处理，具体要求如下：\n处理缺失值：对缺失值进行填充或删除。\n数据类型转换：确保每个字段的数据类型正确。\n处理异常值：删除不合理的年龄、购买金额和评价评分。\n数据标准化：对购买金额和评价评分进行标准化处理。\n清洗后的数据保存为新文件cleaned_user_behavior_data.csv。\n（3）数据统计：\n通过运行Python代码（1.1.4.ipynb），完成以下数据统计任务：\n统计每个购买类别的用户数。\n统计不同性别的平均购买金额。\n统计不同年龄段的用户数（18-25岁、26-35岁、36-45岁、46-55岁、56-65岁、65岁以上）。\n将统计结果分别截图以JPG的格式保存，分别命名为“1.1.4-1”、“1.1.4-2”、“1.1.4-3”。\n所有结果文件储存在桌面新建的考生文件夹中，文件夹命名为“准考证号+身份证号后六位”。",
+  "officialTaskSheet": {
+    "equipmentRequirements": "人工智能训练师主机：CPU（intel i5 及以上）、内存（不少于 16GB）、操作系统（windows10）、支持深度学习训练；",
+    "skillRequirements": "（1）能结合人工智能技术要求和业务特征，设计整套业务数据采集流程\n（2）能结合人工智能技术要求和业务特征，设计整套业务数据处理流程",
+    "qualityIndicators": "（1）完整性指标：数据集中无缺失值和重复记录。\n（2）合理性指标：所有数据点符合业务规则，无异常值存在。\n（3）清洗效果指标：清洗后的数据集完整、合理，且适于建模分析。\n人工智能训练师（三级）操作技能考核\n试题评分表\n准考证号：\n试题代码："
+  },
+  "rubric": [
+    {
+      "id": "M1",
+      "points": 2.0,
+      "description": "从本地文件中读取数据的代码正确得2分",
+      "mode": "auto"
+    },
+    {
+      "id": "M2",
+      "points": 2.0,
+      "description": "打印数据的前5条记录的代码正确得2分",
+      "mode": "auto"
+    },
+    {
+      "id": "M3",
+      "points": 2.0,
+      "description": "处理缺失值的代码正确得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M4",
+      "points": 2.0,
+      "description": "Age数据类型转换的代码正确得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M5",
+      "points": 2.0,
+      "description": "PurchaseAmount数据类型转换的代码正确得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M6",
+      "points": 2.0,
+      "description": "ReviewScore数据类型转换的代码正确得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M7",
+      "points": 2.0,
+      "description": "处理异常值的代码正确得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M8",
+      "points": 2.0,
+      "description": "PurchaseAmount数据标准化的代码正确2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M9",
+      "points": 2.0,
+      "description": "ReviewScore数据标准化的代码正确得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M10",
+      "points": 1.0,
+      "description": "保存清洗后的数据的代码正确得1分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M11",
+      "points": 2.0,
+      "description": "统计每个购买类别的用户数的代码正确得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M12",
+      "points": 2.0,
+      "description": "统计不同性别的平均购买金额的代码正确得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M13",
+      "points": 2.0,
+      "description": "统计不同年龄段的用户数的代码正确得2分；",
+      "mode": "auto"
+    }
+  ],
+  "answerSource": "derived",
+  "answerBasis": "completed_reference_notebook",
+  "referenceAnswer": "建议答案应完整覆盖以下评分点：\nM1（2分）：从本地文件中读取数据的代码正确得2分\nM2（2分）：打印数据的前5条记录的代码正确得2分\nM3（2分）：处理缺失值的代码正确得2分；\nM4（2分）：Age数据类型转换的代码正确得2分；\nM5（2分）：PurchaseAmount数据类型转换的代码正确得2分；\nM6（2分）：ReviewScore数据类型转换的代码正确得2分；\nM7（2分）：处理异常值的代码正确得2分；\nM8（2分）：PurchaseAmount数据标准化的代码正确2分；\nM9（2分）：ReviewScore数据标准化的代码正确得2分；\nM10（1分）：保存清洗后的数据的代码正确得1分；\nM11（2分）：统计每个购买类别的用户数的代码正确得2分；\nM12（2分）：统计不同性别的平均购买金额的代码正确得2分；\nM13（2分）：统计不同年龄段的用户数的代码正确得2分；\n\nPython 参考代码：已从配套完成版 Notebook 提取 3 个代码单元。请在实验室的“答案与来源”中查看或下载；该代码不是指导手册官方标准答案。",
+  "materials": [
+    {
+      "name": "1.1.4.ipynb",
+      "kind": "notebook",
+      "label": "Notebook 模板",
+      "size": 3445,
+      "sha256": "df397270f56c343f410a460bd5d305b3267dda57ff55c9f5545b9d8f74bdf639",
+      "note": "官方 Notebook 模板；3 个代码单元",
+      "url": "/lite/files/1-1-4/1.1.4.ipynb"
+    },
+    {
+      "name": "user_behavior_data.csv",
+      "kind": "dataset",
+      "label": "CSV 数据集",
+      "size": 67059,
+      "sha256": "bc1af7ce1573c673da6107a7426db89edb02b5fec67e3fee24cf674faa96f124",
+      "note": "1000 行数据 × 10 列；字段：UserID、UserName、Age、Gender、Location…",
+      "url": "/labs/1.1.4/user_behavior_data.csv",
+      "sourceSize": 68060,
+      "sourceSha256": "0147d06abc773fe47e16ea4c71003b553c99f159c8f3feeb71f76973a867aa91"
+    }
+  ],
+  "hasNotebook": true,
+  "notebook": {
+    "cells": [
+      {
+        "id": "cell-1",
+        "source": "import pandas\nimport numpy as np\nimport matplotlib.pyplot as plt\n\n# 1. 数据采集\n# 从本地文件中读取数据  2分\ndata =  _______________________________\nprint(\"数据采集完成，已加载到DataFrame中\")\n\n# 打印数据的前5条记录  2分\nprint(________________________________)"
+      },
+      {
+        "id": "cell-2",
+        "source": "# 2. 数据清洗与预处理\n# 处理缺失值（删除）  2分\ndata = ________________________________\n\n# 数据类型转换\ndata________________ = ________________(int)   # Age数据类型转换为int 2分\ndata________________ = ________________(float) # PurchaseAmount数据类型转换为float  2分\ndata________________ = ________________(int)   # ReviewScore数据类型转换为int 2分\n\n# 处理异常值  2分\ndata = data[(________________.________________(18, 70)) & \n            (data['PurchaseAmount'] > 0) & \n            (________________.________________(1, 5))]\n\n# 数据标准化\ndata['PurchaseAmount'] = (data['PurchaseAmount'] - ________________) / ________________  # PurchaseAmount数据标准化 2分\ndata['ReviewScore'] = (data['ReviewScore'] - ________________) / ________________        # ReviewScore数据标准化 2分\n\n# 保存清洗后的数据  1分\n________________('cleaned_user_behavior_data.csv', index=False)\nprint(\"数据清洗完成，已保存为 'cleaned_user_behavior_data.csv'\")"
+      },
+      {
+        "id": "cell-3",
+        "source": "# 3. 数据统计\n# 统计每个购买类别的用户数 2分\npurchase_category_counts = ________________.________________\nprint(\"每个购买类别的用户数:\\n\", purchase_category_counts)\n\n# 统计不同性别的平均购买金额 2分\ngender_purchase_amount_mean = ________________(________________)['PurchaseAmount'].mean()\nprint(\"不同性别的平均购买金额:\\n\", gender_purchase_amount_mean)\n\n# 统计不同年龄段的用户数 2分\nbins = [18, 26, 36, 46, 56, 66, np.inf]\nlabels = ['18-25', '26-35', '36-45', '46-55', '56-65', '65+']\ndata['AgeGroup'] = pandas.________________(________________, right=False)\nage_group_counts = data['AgeGroup'].value_counts().sort_index()\nprint(\"不同年龄段的用户数:\\n\", age_group_counts)\n"
+      }
+    ],
+    "assets": [
+      "user_behavior_data.csv"
+    ],
+    "browserAdapted": false,
+    "solutionCells": [
+      {
+        "id": "solution-1",
+        "source": "import pandas\nimport numpy as np\nimport matplotlib.pyplot as plt\n\n# 1. 数据采集\n# 从本地文件中读取数据  2分\ndata =  pandas.read_csv('user_behavior_data.csv')\nprint(\"数据采集完成，已加载到DataFrame中\")\n\n# 打印数据的前5条记录  2分\nprint(data.head())\n"
+      },
+      {
+        "id": "solution-2",
+        "source": "# 2. 数据清洗与预处理\n# 处理缺失值（删除）  2分\ndata = data.dropna()\n\n# 数据类型转换\ndata['Age'] = data['Age'].astype(int)   # Age数据类型转换为int 2分\ndata['PurchaseAmount'] = data['PurchaseAmount'].astype(float) # PurchaseAmount数据类型转换为float  2分\ndata['ReviewScore'] = data['ReviewScore'].astype(int)   # ReviewScore数据类型转换为int 2分\n\n# 处理异常值  2分\ndata = data[(data['Age'].between(18, 70)) & \n            (data['PurchaseAmount'] > 0) & \n            (data['ReviewScore'].between(1, 5))]\n\n# 数据标准化\ndata['PurchaseAmount'] = (data['PurchaseAmount'] - data['PurchaseAmount'].mean()) / data['PurchaseAmount'].std()  # PurchaseAmount数据标准化 2分\ndata['ReviewScore'] = (data['ReviewScore'] - data['ReviewScore'].mean()) / data['ReviewScore'].std()        # ReviewScore数据标准化 2分\n\n# 保存清洗后的数据  1分\ndata.to_csv('cleaned_user_behavior_data.csv', index=False)\nprint(\"数据清洗完成，已保存为 'cleaned_user_behavior_data.csv'\")\n"
+      },
+      {
+        "id": "solution-3",
+        "source": "# 3. 数据统计\n# 统计每个购买类别的用户数 2分\npurchase_category_counts = data['PurchaseCategory'].value_counts()\nprint(\"每个购买类别的用户数:\\n\", purchase_category_counts)\n\n# 统计不同性别的平均购买金额 2分\ngender_purchase_amount_mean = data.groupby('Gender')['PurchaseAmount'].mean()\nprint(\"不同性别的平均购买金额:\\n\", gender_purchase_amount_mean)\n\n# 统计不同年龄段的用户数 2分\nbins = [18, 26, 36, 46, 56, 66, np.inf]\nlabels = ['18-25', '26-35', '36-45', '46-55', '56-65', '65+']\ndata['AgeGroup'] = pandas.cut(data['Age'],bins=bins,labels=labels, right=False)\nage_group_counts = data['AgeGroup'].value_counts().sort_index()\nprint(\"不同年龄段的用户数:\\n\", age_group_counts)\n"
+      }
+    ],
+    "solutionSource": "completed_reference_notebook",
+    "solutionSha256": "fd35c3f26e44dee8f8768c7faede62e12647a32f8a71f0fc664fc208057bff1f"
+  }
+}

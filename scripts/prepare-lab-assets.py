@@ -9,6 +9,10 @@ import shutil
 from pathlib import Path
 from urllib.parse import quote
 
+import sys as _sys
+_sys.path.insert(0, str(Path(__file__).resolve().parent))
+from content_entities import load_bank, write_bank  # noqa: E402
+
 CHUNK_SIZE = 16 * 1024 * 1024
 SKIP_SUFFIXES = {".doc", ".docx", ".ipynb", ".zip", ".rar", ".pyc"}
 CANONICAL_TEXT_SUFFIXES = {".csv", ".txt", ".py"}
@@ -34,7 +38,7 @@ def main() -> None:
     parser.add_argument("--output", type=Path, default=Path("public/labs"))
     parser.add_argument("--browser-models", type=Path, default=Path("work/browser-models/quantized"))
     args = parser.parse_args()
-    content = json.loads(args.content.read_text(encoding="utf-8"))
+    content = load_bank()
     lab_codes = {task["code"] for task in content["practical"] if task["hasNotebook"]}
     material_root = next((path for path in args.source.rglob("*") if path.is_dir() and path.name.endswith("_sucai")), None)
     if material_root is None:

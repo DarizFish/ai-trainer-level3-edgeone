@@ -1,0 +1,147 @@
+{
+  "code": "2.2.1",
+  "title": "智能信用评分Logistic回归模型开发与测试",
+  "category": "智能训练",
+  "unit": "算法测试",
+  "group": "2.2",
+  "durationMinutes": 20,
+  "maxScore": 20,
+  "description": "互联网金融飞速发展，使得个人金融理财变得越来越容易。而其中信用评分技术是一种对贷款申请人（信用卡申请人）做风险评估分值的统计模型，可以根据客户提供的资料、客户的历史数据、第三方平台数据（芝麻分、京东、微信等），对客户的信用进行评估。现要求根据提供的finance数据集，补全2.2.1.ipynb代码。选择合适的特征，开发一个申请的评分模型，利用测试工具对模型进行测试，并对测试结果进行分析，完成测试报告，并运用工具对错误原因进行纠正。\n（1）正确加载数据集，显示前五行的数据。\n（2）使用Logistic模型进行模型训练，要求设定自变量和因变量，并根据自变量特征进行模型训练，最终将训练好的模型以文件名2.2.1_model.pkl保存到考生文件夹，结果文件以2.2.1_results.txt保存到考生文件夹。\n（3）使用测试工具对模型进行测试，并记录测试结果，命名2.2.1_report.txt，保存到考生文件夹\n（4）对测试结果进行详细分析，并编写测试报告，包括模型性能评估、错误分析及改进建议，将答案写到答题卷文件中，答题卷文件命名为“2.2.1.docx”，保存到考生文件夹。\n（5）运用工具分析算法中错误案例产生的原因并进行纠正，重新得到模型训练结果，以文件名2.2.1_results_xg.txt保存到考生文件夹。\n（6）将以上代码以及运行结果，以html格式保存并命名为2.2.1.html，保存到考生文件夹，考生文件夹命名为“准考证号+身份证后6位”。\n数据集说明：\nUnnamed: 0 - 索引号。\nSeriousDlqin2yrs - 个人在过去两年内是否出现过严重的拖欠（1 表示有严重拖欠，0 表示没有）。\nRevolvingUtilizationOfUnsecuredLines - 这是指个人未偿还的信用额度与总信用额度的比例。\nage - 客户的年龄。\nNumberOfTime30-59DaysPastDueNotWorse - 在过去一段时间内，贷款逾期30至59天的次数。\nDebtRatio - 债务比率。\nMonthlyIncome - 客户的月收入。\nNumberOfOpenCreditLinesAndLoans - 正在使用的信贷账户或贷款的数量。\nNumberOfTimes90DaysLate - 贷款逾期超过90天的次数。\nNumberRealEstateLoansOrLines - 持有的房地产相关贷款或信贷的数量。\nNumberOfTime60-89DaysPastDueNotWorse - 贷款逾期60至89天的次数。\nNumberOfDependents - 家庭中依赖该个人的人数。",
+  "officialTaskSheet": {
+    "equipmentRequirements": "（1）人工智能训练师主机 1 台；\n（2）Python 编译环境；\n（3）Finance数据集。",
+    "skillRequirements": "(1) 能维护日常训练集与测试集。\n(2) 能使用工具对算法进行训练。\n(3) 能使用测试工具对人工智能产品的使用进行测试。\n(4) 能对测试结果进行分析，编写测试报告。\n(5) 能运用工具，分析算法中错误案例产生的原因并进行纠正。",
+    "qualityIndicators": "(1) 深入理解业务，训练符合业务需求的模型。\n(2) 数据预处理步骤完整，方法选择合理。\n(3) 代码实现正确，结果符合预期。\n(4) 测试结果分析全面，报告详细。"
+  },
+  "rubric": [
+    {
+      "id": "M1",
+      "points": 2.0,
+      "description": "正确加载数据集，得1分，显示前五行的数据，得1分，总计得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M2",
+      "points": 1.0,
+      "description": "训练集与测试集的准确划分得1分；",
+      "mode": "self"
+    },
+    {
+      "id": "M3",
+      "points": 2.0,
+      "description": "初始化 Logistic 回归模型得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M4",
+      "points": 2.0,
+      "description": "训练 Logistic 回归模型得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M5",
+      "points": 1.0,
+      "description": "正确保存Logistic 回归模型文件得1分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M6",
+      "points": 1.0,
+      "description": "使用 Logistic 回归模型在测试集上进行预测得1分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M7",
+      "points": 2.0,
+      "description": "正确计算Logistic 回归模型的准确率得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M8",
+      "points": 2.0,
+      "description": "正确处理数据不平衡问题得2分；",
+      "mode": "self"
+    },
+    {
+      "id": "M9",
+      "points": 2.0,
+      "description": "模型重新训练得2分",
+      "mode": "auto"
+    },
+    {
+      "id": "M10",
+      "points": 1.0,
+      "description": "正确生成新预测结果得1分；",
+      "mode": "self"
+    },
+    {
+      "id": "M11",
+      "points": 1.0,
+      "description": "正确分析新的测试结果得1分；",
+      "mode": "self"
+    },
+    {
+      "id": "M12",
+      "points": 3.0,
+      "description": "正确填写2.2.1.docx测试报告：其中模型性能评估得1分、错误分析得1分，改进建议得1分，总计得3分；",
+      "mode": "auto"
+    }
+  ],
+  "answerSource": "official",
+  "answerBasis": "manual_official",
+  "referenceAnswer": "（1）2.2.1.ipynb代码\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LogisticRegression\nimport pickle\nfrom sklearn.metrics import classification_report\nfrom imblearn.over_sampling import SMOTE\n\n# 加载数据\ndata = pd.read_csv('finance数据集.csv')\n\n# 显示前五行的数据\nprint(data.head())\n\n# 选择自变量和因变量\nX = data.drop(['SeriousDlqin2yrs', 'Unnamed: 0'], axis=1)\ny = data['SeriousDlqin2yrs']\n\n# 分割训练集和测试集\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)\n\n# 训练Logistic回归模型\nmodel = LogisticRegression(max_iter=1000)\nmodel.fit(X_train, y_train)\n\n# 保存模型\nwith open('2.2.1_model.pkl', 'wb') as file:\n    pickle.dump(model, file)\n\n# 预测并保存结果\ny_pred = model.predict(X_test)\npd.DataFrame(y_pred, columns=['预测结果']).to_csv('2.2.1_results.txt', index=False)\n\n# 生成测试报告\nreport = classification_report(y_test, y_pred, zero_division=1)\nwith open('2.2.1_report.txt', 'w') as file:\n    file.write(report)\n\n# 分析测试结果\naccuracy = (y_test == y_pred).mean()\nprint(f\"模型准确率: {accuracy:.2f}\")\n\n# 处理数据不平衡\nsmote = SMOTE(random_state=42)\nX_resampled, y_resampled = smote.fit_resample(X_train, y_train)\n\n# 重新训练模型\nmodel.fit(X_resampled, y_resampled)\n# 重新预测\ny_pred_resampled = model.predict(X_test)\n\n# 保存新结果\npd.DataFrame(y_pred_resampled, columns=['预测结果']).to_csv('2.2.1_results_xg.txt', index=False)\n\n# 生成新的测试报告\nreport_resampled = classification_report(y_test, y_pred_resampled, zero_division=1)\nwith open('2.2.1_report_xg.txt', 'w') as file:\n    file.write(report_resampled)\n\n# 分析新的测试结果\naccuracy_resampled = (y_test == y_pred_resampled).mean()\nprint(f\"重新采样后的模型准确率: {accuracy_resampled:.2f}\")\n\n（2）\nLogistic模型（说明：只要小数点后第一位正确即可得满分）\n模型性能\n precision recall f1-score support\n0（没有严重逾期） 0.95 0.99 0.97 26779\n1（有严重逾期） 0.57 0.14 0.22 1737\n\n错误分析\n0（没有严重逾期）：\n准确率很高，召回率也很高，表明模型在这一类别上的性能非常好。\n可能的错误主要来自于少数漏报情况，即极少数实际没有严重逾期的样本被错误预测为有严重逾期。\n1（有严重逾期）：\n准确率较低，召回率也很低，F1-Score仅为0.22，表明模型在这一类别上的性能较差。\n主要问题在于大量的漏报（真正有严重逾期的样本被预测为没有）和一定的误报（将没有严重逾期的样本预测为有）。\n改进建议\n1. 数据处理策略调整\n重采样技术：由于数据集存在明显的不平衡，可以考虑使用过采样（如SMOTE）或欠采样技术来平衡两个类别的数量。\n2. 特征工程优化\n特征选择：仔细审查现有特征，去除冗余或不相关的特征，可能有助于提升模型性能。\n特征构造：尝试创建新的、更具区分力的特征，如基于现有特征的交互项或衍生指标。",
+  "materials": [
+    {
+      "name": "2.2.1.docx",
+      "kind": "document",
+      "label": "配套文档",
+      "size": 14934,
+      "sha256": "a05e1f928a4c50f3099c23b9c88e575c7d1727a0a9fd3b1a90ad37c3c649c4d5",
+      "note": "官方配套文档；6 个正文段落，1 个表格",
+      "url": "/materials/2.2.1/2.2.1.docx"
+    },
+    {
+      "name": "2.2.1.ipynb",
+      "kind": "notebook",
+      "label": "Notebook 模板",
+      "size": 3032,
+      "sha256": "49895f3c20e222a0857f56587cd273aa12ec09810f6417a91ba684f7ce561811",
+      "note": "官方 Notebook 模板；2 个代码单元",
+      "url": "/lite/files/2-2-1/2.2.1.ipynb"
+    },
+    {
+      "name": "finance数据集.csv",
+      "kind": "dataset",
+      "label": "CSV 数据集",
+      "size": 7777795,
+      "sha256": "12aad75e1e14015d97b7b182f29ad7dde37190b56ff87a5f23b21b2912831cd3",
+      "note": "142577 行数据 × 12 列；字段：Unnamed: 0、SeriousDlqin2yrs、RevolvingUtilizationOfUnsecuredLines、age、NumberOfTime30-59DaysPastDueNotWorse…",
+      "url": "/labs/2.2.1/finance%E6%95%B0%E6%8D%AE%E9%9B%86.csv"
+    }
+  ],
+  "hasNotebook": true,
+  "notebook": {
+    "cells": [
+      {
+        "id": "cell-1",
+        "source": "import pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LogisticRegression\nimport pickle\nfrom sklearn.metrics import classification_report\nfrom imblearn.over_sampling import SMOTE\n\n# 加载数据\ndata = __________\n\n# 显示前五行的数据\nprint(__________)\n\n# 选择自变量和因变量\nX = data.drop(['SeriousDlqin2yrs', 'Unnamed: 0'], axis=1)\ny = data['SeriousDlqin2yrs']\n\n# 分割训练集和测试集（测试集20%）\nX_train, X_test, y_train, y_test = __________(__________, random_state=42)\n\n# 训练Logistic回归模型（最大迭代次数为1000次）\nmodel = __________\n#训练 Logistic 回归模型\n__________\n\n# 保存模型\nwith open('2.2.1_model.pkl', 'wb') as file:\n    pickle.__________\n\n# 预测并保存结果\ny_pred = __________\npd.DataFrame(y_pred, columns=['预测结果']).to_csv('2.2.1_results.txt', index=False)\n\n# 生成测试报告\nreport = classification_report(y_test, y_pred, zero_division=1)\nwith open('2.2.1_report.txt', 'w') as file:\n    file.write(report)\n\n# 分析测试结果\naccuracy = __________\nprint(f\"模型准确率: {accuracy:.2f}\")\n\n# 处理数据不平衡\nsmote = SMOTE(random_state=42)\nX_resampled, y_resampled = __________\n\n# 重新训练模型\n__________\n# 重新预测\ny_pred_resampled = __________\n\n# 保存新结果\npd.DataFrame(y_pred_resampled, columns=['预测结果']).to_csv('2.2.1_results_xg.txt', index=False)\n\n# 生成新的测试报告\nreport_resampled = classification_report(y_test, y_pred_resampled, zero_division=1)\nwith open('2.2.1_report_xg.txt', 'w') as file:\n    file.write(report_resampled)\n\n# 分析新的测试结果\naccuracy_resampled = __________\nprint(f\"重新采样后的模型准确率: {accuracy_resampled:.2f}\")\n"
+      },
+      {
+        "id": "cell-2",
+        "source": ""
+      }
+    ],
+    "assets": [
+      "2.2.1.docx",
+      "finance数据集.csv"
+    ],
+    "browserAdapted": false,
+    "solutionCells": [
+      {
+        "id": "solution-1",
+        "source": "import pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LogisticRegression\nimport pickle\nfrom sklearn.metrics import classification_report\nfrom imblearn.over_sampling import SMOTE\n\n# 加载数据\ndata = pd.read_csv('finance数据集.csv')\n\n# 显示前五行的数据\nprint(data.head())\n\n# 选择自变量和因变量\nX = data.drop(['SeriousDlqin2yrs', 'Unnamed: 0'], axis=1)\ny = data['SeriousDlqin2yrs']\n\n# 分割训练集和测试集（测试集20%）\nX_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2, random_state=42)\n\n# 训练Logistic回归模型（最大迭代次数为1000次）\nmodel = LogisticRegression(max_iter=1000)\n#训练 Logistic 回归模型\nmodel.fit(X_train, y_train)\n\n# 保存模型\nwith open('2.2.1_model.pkl', 'wb') as file:\n    pickle.dump(model, file)\n\n# 预测并保存结果\ny_pred = model.predict(X_test)\npd.DataFrame(y_pred, columns=['预测结果']).to_csv('2.2.1_results.txt', index=False)\n\n# 生成测试报告\nreport = classification_report(y_test, y_pred, zero_division=1)\nwith open('2.2.1_report.txt', 'w') as file:\n    file.write(report)\n\n# 分析测试结果\naccuracy = (y_test==y_pred).mean()\nprint(f\"模型准确率: {accuracy:.2f}\")\n\n# 处理数据不平衡\nsmote = SMOTE(random_state=42)\nX_resampled, y_resampled = smote.fit_resample(X_train,y_train)\n\n# 重新训练模型\nmodel.fit(X_resampled, y_resampled)\n# 重新预测\ny_pred_resampled = model.predict(X_test)\n\n# 保存新结果\npd.DataFrame(y_pred_resampled, columns=['预测结果']).to_csv('2.2.1_results_xg.txt', index=False)\n\n# 生成新的测试报告\nreport_resampled = classification_report(y_test, y_pred_resampled, zero_division=1)\nwith open('2.2.1_report_xg.txt', 'w') as file:\n    file.write(report_resampled)\n\n# 分析新的测试结果\naccuracy_resampled = (y_test==y_pred_resampled).mean()\nprint(f\"重新采样后的模型准确率: {accuracy_resampled:.2f}\")\n"
+      }
+    ],
+    "solutionSource": "completed_reference_notebook",
+    "solutionSha256": "3e16debb2496f51a006fbca2ee13b53c09ea66a0e8ac9c85b8368b0ff627916a"
+  }
+}

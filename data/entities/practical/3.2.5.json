@@ -1,0 +1,165 @@
+{
+  "code": "3.2.5",
+  "title": "人脸AI智能检测系统交互流程设计",
+  "category": "智能系统设计",
+  "unit": "人机交互流程设计",
+  "group": "3.2",
+  "durationMinutes": 20,
+  "maxScore": 20,
+  "description": "在安防监控、智能交通等领域，实时准确的人脸检测需求日益增长。传统的人脸检测方法在面对复杂光照、多角度、遮挡等情况时，检测效果往往不尽人意。随着深度学习技术的发展，基于深度神经网络的人脸检测模型展现出强大的性能优势。ONNX（Open Neural Network Exchange）作为一种开放式的神经网络交换格式，能够实现不同深度学习框架间的模型转换与共享，使得基于 ONNX 的人脸检测模型可以在多种环境下高效运行。本系统所使用的 “version-RFB-320.onnx” 模型，通过大量数据训练，能够快速准确地检测出图像中的人脸，在实际应用场景中具有重要价值。\nAI 模型说明：“version-RFB-320.onnx” 模型是用于人脸检测的 ONNX 格式模型，对应的类别标签文件为 “voc-model-labels.txt” 。该模型的使用交互流程为：\n（1）加载 “version-RFB-320.onnx” 模型和 “voc-model-labels.txt” 类别标签；\n（2）加载本地测试图片文件夹 “imgs” 中的所有图片，并对每张图片进行预处理以符合模型输入要求；\n（3）使用 “version-RFB-320.onnx” 模型对加载的图片进行人脸检测；\n（4）在图片上绘制检测到的人脸框，并将处理后的图片保存到 “./detect_imgs_results_onnx” 文件夹中；\n（5）统计所有图片中检测到的人脸总数并输出。\n你作为一名人工智能训练师，请完成以下工作任务：\n（1）补全该模型的使用交互流程对应的 Python 代码（3.2.5.ipynb），实现本地测试图片文件夹 “imgs” 中所有图片的人脸检测，将运行结果截图保存到3.2.5-1.jpg中，并将检测结果的图片上传。\n（2）在上面的使用交互流程基础上，结合实际应用场景，设计在人脸检测系统中使用 “version-RFB-320.onnx” 模型的一种人机交互优化方案，包括交互界面布局、操作流程等内容，将其保存为docx文件，命名为 3.2.5.docx。\n所有结果文件储存在桌面新建的考生文件夹中，文件夹命名为 “准考证号 + 身份证号后六位”。",
+  "officialTaskSheet": {
+    "equipmentRequirements": "（1）人工智能训练师主机 1 台；",
+    "skillRequirements": "（1）能确保模型在单一场景下稳定运行；\n（2）能通过分析，找到单一场景下人工和智能交互的最优方式。\n（3）能对单一场景下人工和智能交互界面设计提出优化需求。",
+    "qualityIndicators": "（1）模型运行稳定，使用正常；\n（2）单一场景下人工和智能交互的最优方式切实可行。"
+  },
+  "rubric": [
+    {
+      "id": "M1",
+      "points": 2.0,
+      "description": "从标签文件中读取每一行，并去除行首尾的空白字符，得到类别名称列表代码正确得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M2",
+      "points": 2.0,
+      "description": "创建 ONNX Runtime 的推理会话，用于运行模型进行推理代码正确得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M3",
+      "points": 2.0,
+      "description": "获取模型输入的名称代码正确得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M4",
+      "points": 2.0,
+      "description": "果保存结果的目录不存在，则创建该目录代码得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M5",
+      "points": 2.0,
+      "description": "使用 OpenCV 读取图像文件 2分代码正确得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M6",
+      "points": 2.0,
+      "description": "将图像调整为 320x240 的尺寸（符合模型输入的尺寸要求）代码正确得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M7",
+      "points": 2.0,
+      "description": "定义图像归一化的均值数组代码正确得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M8",
+      "points": 1.0,
+      "description": "在第一个维度上扩展一个维度，将图像变为 (1, 通道数, 高度, 宽度)，以符合模型输入的维度要求代码正确得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M9",
+      "points": 2.0,
+      "description": "使用 ONNX Runtime 运行模型，输入图像数据，得到模型输出的置信度和边界框代码正确得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M10",
+      "points": 1.0,
+      "description": "本地保存运行结果的截图3.2.5-1.jpg中人脸数量正确：得1分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M11",
+      "points": 1.0,
+      "description": "检测结果的图片中人脸标注框和数量都正确得1分；",
+      "mode": "self"
+    },
+    {
+      "id": "M12",
+      "points": 1.0,
+      "description": "人机交互最优流程（不少于3条）正确得1分；",
+      "mode": "self"
+    }
+  ],
+  "answerSource": "derived",
+  "answerBasis": "completed_reference_notebook",
+  "referenceAnswer": "建议答案应完整覆盖以下评分点：\nM1（2分）：从标签文件中读取每一行，并去除行首尾的空白字符，得到类别名称列表代码正确得2分；\nM2（2分）：创建 ONNX Runtime 的推理会话，用于运行模型进行推理代码正确得2分；\nM3（2分）：获取模型输入的名称代码正确得2分；\nM4（2分）：果保存结果的目录不存在，则创建该目录代码得2分；\nM5（2分）：使用 OpenCV 读取图像文件 2分代码正确得2分；\nM6（2分）：将图像调整为 320x240 的尺寸（符合模型输入的尺寸要求）代码正确得2分；\nM7（2分）：定义图像归一化的均值数组代码正确得2分；\nM8（1分）：在第一个维度上扩展一个维度，将图像变为 (1, 通道数, 高度, 宽度)，以符合模型输入的维度要求代码正确得2分；\nM9（2分）：使用 ONNX Runtime 运行模型，输入图像数据，得到模型输出的置信度和边界框代码正确得2分；\nM10（1分）：本地保存运行结果的截图3.2.5-1.jpg中人脸数量正确：得1分；\nM11（1分）：检测结果的图片中人脸标注框和数量都正确得1分；\nM12（1分）：人机交互最优流程（不少于3条）正确得1分；\n\nWord 交付物作答示例（本站依据官方题干与评分表整理，非指导手册标准答案）\n一、检测结果截图（M11，1 分）\n提交的结果图片需同时满足：每张人脸都有标注框且框位准确，画面中显示检测到的人脸数量，数量与实际一致。\n\n二、人机交互最优流程（M12，不少于 3 条，1 分）\n1. 采集引导：提示画面中人脸不宜过小、避免强逆光，多人场景需保证人脸不相互遮挡。\n2. 实时反馈：在预览画面上实时绘制标注框并显示当前检测到的人脸数量。\n3. 结果确认：允许用户对漏检或误检的框进行增删，修正后再导出结果。\n4. 隐私与合规：明确告知人脸数据用途，提供本地处理或即时删除选项，不默认上传原图。\n\nPython 参考代码：已从配套完成版 Notebook 提取 1 个代码单元。请在实验室的“答案与来源”中查看或下载；该代码不是指导手册官方标准答案。",
+  "materials": [
+    {
+      "name": "3.2.5.ipynb",
+      "kind": "notebook",
+      "label": "Notebook 模板",
+      "size": 6643,
+      "sha256": "df8974b126c2e9238a506c4eb14db7486750f07949f0dfb923d701fafc7695a2",
+      "note": "官方 Notebook 模板；2 个代码单元",
+      "url": "/lite/files/3-2-5/3.2.5.ipynb"
+    },
+    {
+      "name": "imgs/1.jpg",
+      "kind": "image",
+      "label": "测试图片",
+      "size": 49124,
+      "sha256": "929d79fd5ac4dea69fd5bc4bd5dab0199f19d06fa84e5649b69c3d5c481c52c9",
+      "note": "测试图片",
+      "url": "/labs/3.2.5/imgs/1.jpg"
+    },
+    {
+      "name": "version-RFB-320.onnx",
+      "kind": "model",
+      "label": "ONNX 模型",
+      "size": 1270727,
+      "sha256": "34cd7e60aeff28744c657de7a3dc64e872d506741de66987f3426f2b79f88017",
+      "note": "官方 ONNX 模型；进入实验室后按需加载浏览器兼容版本",
+      "url": null
+    },
+    {
+      "name": "vision/utils/box_utils_numpy.py",
+      "kind": "code",
+      "label": "Python 代码",
+      "size": 4509,
+      "sha256": "2b23965cd99e9e462e5ce3d52a86e816c17006514edba7ade11fb29688247aab",
+      "note": "Python 代码",
+      "url": "/labs/3.2.5/vision/utils/box_utils_numpy.py"
+    },
+    {
+      "name": "voc-model-labels.txt",
+      "kind": "text",
+      "label": "标签文件",
+      "size": 15,
+      "sha256": "42f22f006e845cedefcbbbc76399d00a83a27831cb17a7b3fafcb9c60c814cd6",
+      "note": "标签文件",
+      "url": "/labs/3.2.5/voc-model-labels.txt"
+    }
+  ],
+  "hasNotebook": true,
+  "notebook": {
+    "cells": [
+      {
+        "id": "cell-1",
+        "source": "import os\nimport time\nimport cv2\nimport numpy as np\nimport vision.utils.box_utils_numpy as box_utils\nimport onnxruntime as ort\n\n# 定义预测函数，对模型输出的边界框和置信度进行后处理\ndef predict(width, height, confidences, boxes, prob_threshold, iou_threshold=0.3, top_k=-1):\n    boxes = boxes[0]\n    confidences = confidences[0]\n    picked_box_probs = []\n    picked_labels = []\n    for class_index in range(1, confidences.shape[1]):\n        probs = confidences[:, class_index]\n        mask = probs > prob_threshold\n        probs = probs[mask]\n        if probs.shape[0] == 0:\n            continue\n        subset_boxes = boxes[mask, :]\n        box_probs = np.concatenate([subset_boxes, probs.reshape(-1, 1)], axis=1)\n        box_probs = box_utils.hard_nms(box_probs,\n                                       iou_threshold=iou_threshold,\n                                       top_k=top_k,\n                                       )\n        picked_box_probs.append(box_probs)\n        picked_labels.extend([class_index] * box_probs.shape[0])\n    if not picked_box_probs:\n        return np.array([]), np.array([]), np.array([])\n    picked_box_probs = np.concatenate(picked_box_probs)\n    picked_box_probs[:, 0] *= width\n    picked_box_probs[:, 1] *= height\n    picked_box_probs[:, 2] *= width\n    picked_box_probs[:, 3] *= height\n    return picked_box_probs[:, :4].astype(np.int32), np.array(picked_labels), picked_box_probs[:, 4]\n\n# 从标签文件中读取每一行，并去除行首尾的空白字符，得到类别名称列表 2分\nclass_names = [_______________ for name in open('voc-model-labels.txt').readlines()]\n\n# 创建 ONNX Runtime 的推理会话，用于运行模型进行推理 2分\nort_session = _______________('version-RFB-320.onnx')\n\n# 获取模型输入的名称 2分\ninput_name = _______________()[0].name\n\n# 定义保存检测结果图像的目录路径\nresult_path = \"./detect_imgs_results_onnx\"\n\n# 定义置信度阈值，用于筛选出置信度较高的检测结果\nthreshold = 0.7\n# 定义存储待检测图像的目录路径\npath = \"imgs\"\n# 用于统计所有图像中检测到的目标框总数，初始化为 0\nsum = 0\n\n# 如果保存结果的目录不存在，则创建该目录 2分\nif not os.path.exists(result_path):\n    os._______________\n    \n# 获取指定目录下的所有文件和文件夹名称列表\nlistdir = os.listdir(path)\n\n# 遍历目录下的每个文件\nfor file_path in listdir:\n    # 拼接图像文件的完整路径\n    img_path = os.path.join(path, file_path)\n    # 使用 OpenCV 读取图像文件 2分\n    orig_image = _______________\n    # 将图像从 BGR 颜色空间转换为 RGB 颜色空间（许多模型要求输入为 RGB 格式）\n    image = cv2.cvtColor(orig_image, cv2.COLOR_BGR2RGB)\n    # 将图像调整为 320x240 的尺寸（符合模型输入的尺寸要求） 2分\n    image = _______________(_______________, (320, 240))\n    # 定义图像归一化的均值数组 2分\n    image_mean = _______________([127, 127, 127])\n    # 对图像进行归一化处理，减去均值并除以 128\n    image = (image - image_mean) / 128\n    # 将图像的维度从 (高度, 宽度, 通道数) 转换为 (通道数, 高度, 宽度)\n    image = np.transpose(image, [2, 0, 1])\n    # 在第一个维度上扩展一个维度，将图像变为 (1, 通道数, 高度, 宽度)，以符合模型输入的维度要求  1分\n    image = _______________(image, axis=0)\n    # 将图像数据类型转换为 float32 类型\n    image = image.astype(np.float32)\n    # 记录开始时间，用于计算模型推理的耗时\n    time_time = time.time()\n    # 使用 ONNX Runtime 运行模型，输入图像数据，得到模型输出的置信度和边界框  2分\n    confidences, boxes = _______________(None, {input_name: image})\n    # 计算并打印模型推理的耗时\n    print(\"cost time:{}\".format(time.time() - time_time))\n    # 调用 predict 函数对模型输出的边界框和置信度进行后处理，得到最终的边界框、类别标签和置信度\n    boxes, labels, probs = predict(orig_image.shape[1], orig_image.shape[0], confidences, boxes, threshold)\n    # 遍历每个检测到的目标框\n    for i in range(boxes.shape[0]):\n        # 获取当前目标框的坐标\n        box = boxes[i, :]\n        # 生成当前目标框的标签字符串，包含类别名称和置信度\n        label = f\"{class_names[labels[i]]}: {probs[i]:.2f}\"\n\n        # 在原始图像上绘制目标框，颜色为 (255, 255, 0)，线条粗细为 4\n        cv2.rectangle(orig_image, (box[0], box[1]), (box[2], box[3]), (255, 255, 0), 4)\n        # 将绘制了目标框的图像保存到结果目录中\n        cv2.imwrite(os.path.join(result_path, file_path), orig_image)\n    # 累加当前图像中检测到的目标框数量到总数中\n    sum += boxes.shape[0]\n# 打印所有图像中检测到的目标框总数\nprint(\"sum:{}\".format(sum))"
+      },
+      {
+        "id": "cell-2",
+        "source": ""
+      }
+    ],
+    "assets": [
+      "version-RFB-320.onnx",
+      "voc-model-labels.txt"
+    ],
+    "browserAdapted": true,
+    "solutionCells": [
+      {
+        "id": "solution-1",
+        "source": "import os\nimport time\nimport cv2\nimport numpy as np\nimport vision.utils.box_utils_numpy as box_utils\nimport onnxruntime as ort\n\n# 定义预测函数，对模型输出的边界框和置信度进行后处理\ndef predict(width, height, confidences, boxes, prob_threshold, iou_threshold=0.3, top_k=-1):\n    boxes = boxes[0]\n    confidences = confidences[0]\n    picked_box_probs = []\n    picked_labels = []\n    for class_index in range(1, confidences.shape[1]):\n        probs = confidences[:, class_index]\n        mask = probs > prob_threshold\n        probs = probs[mask]\n        if probs.shape[0] == 0:\n            continue\n        subset_boxes = boxes[mask, :]\n        box_probs = np.concatenate([subset_boxes, probs.reshape(-1, 1)], axis=1)\n        box_probs = box_utils.hard_nms(box_probs,\n                                       iou_threshold=iou_threshold,\n                                       top_k=top_k,\n                                       )\n        picked_box_probs.append(box_probs)\n        picked_labels.extend([class_index] * box_probs.shape[0])\n    if not picked_box_probs:\n        return np.array([]), np.array([]), np.array([])\n    picked_box_probs = np.concatenate(picked_box_probs)\n    picked_box_probs[:, 0] *= width\n    picked_box_probs[:, 1] *= height\n    picked_box_probs[:, 2] *= width\n    picked_box_probs[:, 3] *= height\n    return picked_box_probs[:, :4].astype(np.int32), np.array(picked_labels), picked_box_probs[:, 4]\n\n# 从标签文件中读取每一行，并去除行首尾的空白字符，得到类别名称列表 2分\nclass_names = [name.strip() for name in open('voc-model-labels.txt').readlines()]\n\n# 创建 ONNX Runtime 的推理会话，用于运行模型进行推理 2分\nort_session = ort.InferenceSession('version-RFB-320.onnx')\n\n# 获取模型输入的名称 2分\ninput_name = ort_session.get_inputs()[0].name\n\n# 定义保存检测结果图像的目录路径\nresult_path = \"./detect_imgs_results_onnx\"\n\n# 定义置信度阈值，用于筛选出置信度较高的检测结果\nthreshold = 0.7\n# 定义存储待检测图像的目录路径\npath = \"imgs\"\n# 用于统计所有图像中检测到的目标框总数，初始化为 0\nsum = 0\n\n# 如果保存结果的目录不存在，则创建该目录 2分\nif not os.path.exists(result_path):\n    os.mkdir(result_path)\n    \n# 获取指定目录下的所有文件和文件夹名称列表\nlistdir = os.listdir(path)\n\n# 遍历目录下的每个文件\nfor file_path in listdir:\n    # 拼接图像文件的完整路径\n    img_path = os.path.join(path, file_path)\n    # 使用 OpenCV 读取图像文件 2分\n    orig_image = cv2.imread(img_path)\n    # 将图像从 BGR 颜色空间转换为 RGB 颜色空间（许多模型要求输入为 RGB 格式）\n    image = cv2.cvtColor(orig_image, cv2.COLOR_BGR2RGB)\n    # 将图像调整为 320x240 的尺寸（符合模型输入的尺寸要求） 2分\n    image = cv2.resize(image, (320, 240))\n    # 定义图像归一化的均值数组 2分\n    image_mean = np.array([127, 127, 127])\n    # 对图像进行归一化处理，减去均值并除以 128\n    image = (image - image_mean) / 128\n    # 将图像的维度从 (高度, 宽度, 通道数) 转换为 (通道数, 高度, 宽度)\n    image = np.transpose(image, [2, 0, 1])\n    # 在第一个维度上扩展一个维度，将图像变为 (1, 通道数, 高度, 宽度)，以符合模型输入的维度要求  1分\n    image = np.expand_dims(image, axis=0)\n    # 将图像数据类型转换为 float32 类型\n    image = image.astype(np.float32)\n    # 记录开始时间，用于计算模型推理的耗时\n    time_time = time.time()\n    # 使用 ONNX Runtime 运行模型，输入图像数据，得到模型输出的置信度和边界框  2分\n    confidences, boxes = ort_session.run(None, {input_name: image})\n    # 计算并打印模型推理的耗时\n    print(\"cost time:{}\".format(time.time() - time_time))\n    # 调用 predict 函数对模型输出的边界框和置信度进行后处理，得到最终的边界框、类别标签和置信度\n    boxes, labels, probs = predict(orig_image.shape[1], orig_image.shape[0], confidences, boxes, threshold)\n    # 遍历每个检测到的目标框\n    for i in range(boxes.shape[0]):\n        # 获取当前目标框的坐标\n        box = boxes[i, :]\n        # 生成当前目标框的标签字符串，包含类别名称和置信度\n        label = f\"{class_names[labels[i]]}: {probs[i]:.2f}\"\n\n        # 在原始图像上绘制目标框，颜色为 (255, 255, 0)，线条粗细为 4\n        cv2.rectangle(orig_image, (box[0], box[1]), (box[2], box[3]), (255, 255, 0), 4)\n        # 将绘制了目标框的图像保存到结果目录中\n        cv2.imwrite(os.path.join(result_path, file_path), orig_image)\n    # 累加当前图像中检测到的目标框数量到总数中\n    sum += boxes.shape[0]\n# 打印所有图像中检测到的目标框总数\nprint(\"sum:{}\".format(sum))\n"
+      }
+    ],
+    "solutionSource": "completed_reference_notebook",
+    "solutionSha256": "b8548146ce3671452152d487076f46ef9f07d6bf6ef5236c9a2882e7a5682369"
+  }
+}

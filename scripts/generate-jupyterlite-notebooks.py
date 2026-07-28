@@ -9,8 +9,11 @@ import shutil
 from pathlib import Path, PurePosixPath
 from urllib.parse import unquote, urlsplit
 
+import sys as _sys
+_sys.path.insert(0, str(Path(__file__).resolve().parent))
+from content_entities import load_bank  # noqa: E402
+
 ROOT = Path(__file__).resolve().parents[1]
-CONTENT_PATH = ROOT / "data" / "content.json"
 MANIFEST_PATH = ROOT / "public" / "labs" / "manifest.json"
 OUTPUT = ROOT / "jupyterlite" / "content"
 PUBLIC = ROOT / "public"
@@ -215,7 +218,7 @@ def notebook_for(task: dict, manifest_task: dict, version: str) -> dict:
     return original_notebook
 
 def main() -> None:
-    content = json.loads(CONTENT_PATH.read_text(encoding="utf-8"))
+    content = load_bank()
     manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
     if OUTPUT.exists():
         shutil.rmtree(OUTPUT)

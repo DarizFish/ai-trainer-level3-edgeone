@@ -11,7 +11,19 @@ const projectRoot = fileURLToPath(new URL("../", import.meta.url));
 const publishScript = fileURLToPath(new URL("../scripts/publish_theory_review.py", import.meta.url));
 const stateScript = fileURLToPath(new URL("../scripts/theory_review_state.py", import.meta.url));
 const qualityScript = fileURLToPath(new URL("../scripts/theory_review_quality.py", import.meta.url));
-const sourceContent = fileURLToPath(new URL("../data/content.json", import.meta.url));
+// 题库已拆成 data/entities/ 的实体层，没有 data/content.json 可拷。这些 CLI 仍以
+// 「一份 bank 文件」为接口（它们要往临时夹具里发布），所以夹具由实体层现场装配，
+// 用与发布封条相同的紧凑序列化，保证与线上内容逐字节一致。
+function writeBankFixture(target) {
+  // 必须由 Python 生成：JS 的 JSON.stringify 会把 1.0 归一成 1，与发布封条盖的
+  // 紧凑字节不符，夹具一开就通不过哈希校验。
+  const result = spawnSync("python", ["-c",
+    "import sys,pathlib;sys.path.insert(0,'scripts');" +
+    "from content_entities import load_bank,canonical_bytes;" +
+    `pathlib.Path(r"${target}").write_bytes(canonical_bytes(load_bank()))`,
+  ], { cwd: projectRoot, encoding: "utf8" });
+  if (result.status !== 0) throw new Error(`夹具生成失败: ${result.stderr}`);
+}
 const sourceReference = fileURLToPath(
   new URL("../data/references/theory-question-bank-2026-07-16.json", import.meta.url),
 );
@@ -102,7 +114,7 @@ async function makeCompleteFixture(root) {
   const reference = join(root, "reference.json");
   const referenceAudit = join(root, "reference-audit.json");
   const stateDir = join(root, "state");
-  await copyFile(sourceContent, content);
+  writeBankFixture(content);
   const unpublishedContent = await readJson(content);
   delete unpublishedContent.theoryReview;
   await writeJson(content, unpublishedContent);

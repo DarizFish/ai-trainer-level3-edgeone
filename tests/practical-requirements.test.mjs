@@ -1,9 +1,11 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+
+// 题库来自 data/entities/ 的实体层，不再有 data/content.json 这个单行大文件。
+const loadContentBank = async () => (await import("../scripts/assemble-entities.mjs")).assembleBank();
 import test from "node:test";
 import { parsePracticalRequirements } from "../lib/practical-requirements.mjs";
 
-const content = JSON.parse(await readFile(new URL("../data/content.json", import.meta.url), "utf8"));
+const content = await loadContentBank();
 
 function descriptionFor(code) {
   const task = content.practical.find(item => item.code === code);

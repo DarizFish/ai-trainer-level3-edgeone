@@ -1,0 +1,137 @@
+{
+  "code": "3.2.2",
+  "title": "手写数字识别系统交互流程设计",
+  "category": "智能系统设计",
+  "unit": "人机交互流程设计",
+  "group": "3.2",
+  "durationMinutes": 20,
+  "maxScore": 20,
+  "description": "手写数字识别系统是在数字化转型和自动化需求日益增长的社会背景下应运而生的。随着信息时代的到来，大量手写文档需要进行电子化处理，以提高数据存储、检索和分析的效率。传统的光学字符识别(OCR)技术在处理手写体时面临诸多挑战，如书写风格的多样性、笔迹的连笔和重叠等，导致识别率不高。然而，深度学习的兴起，尤其是卷积神经网络(CNN)的发展，为手写数字的精准识别提供了强大的工具。\nAI模型说明：提供的模型“mnist.onnx”是基于卷积神经网络训练得到的，专门用于进行手写数字的识别应用。该模型的使用交互流程为：\n1)加载模型“mnist.onnx”;\n2)加载一张本地手写数字图片“img_test.png”，并进行预处理图像以符合模型输入要求；\n3)使用mnist模型对手写数字图片进行识别；\n4)输出识别后的数字。\n你作为一名人工智能训练师，请完成以下工作任务：\n（1）补全该模型的使用交互流程对应的Python代码（3.2.2.ipynb），实现本地测试图片“img_test.png”的识别，将其识别结果截图保存为jpg格式文件，命名为3.2.2-1.jpg。\n（2）在上面的使用交互流程基础上，给出在手写数字识别系统中使用“mnist.onnx”模型的一种人机交互的最优流程，将其保存为docx文件，命名为3.2.2.docx。\n所有结果文件储存在桌面新建的考生文件夹中，文件夹命名为“准考证号+身份证号后六位”。",
+  "officialTaskSheet": {
+    "equipmentRequirements": "（1）人工智能训练师主机 1 台；\n（2）Python 编译环境；\n（3）Pytorch框架。",
+    "skillRequirements": "（1）能确保模型在单一场景下稳定运行；\n（2）能通过分析，设计单一场景下人工和智能交互的最优流程。",
+    "qualityIndicators": "（1）模型运行稳定，使用正常；\n（2）单一场景下人工和智能交互的最优流程切实可行。"
+  },
+  "rubric": [
+    {
+      "id": "M1",
+      "points": 2.0,
+      "description": "模型加载代码正确得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M2",
+      "points": 2.0,
+      "description": "加载图像正确得2分；",
+      "mode": "self"
+    },
+    {
+      "id": "M3",
+      "points": 2.0,
+      "description": "调整大小为MNIST模型的输入尺寸代码正确得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M4",
+      "points": 2.0,
+      "description": "转为numpy数组代码正确得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M5",
+      "points": 2.0,
+      "description": "添加batch维度代码正确得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M6",
+      "points": 2.0,
+      "description": "添加通道维度代码正确得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M7",
+      "points": 2.0,
+      "description": "返回模型输入列表代码正确得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M8",
+      "points": 2.0,
+      "description": "执行预测代码正确得2分",
+      "mode": "auto"
+    },
+    {
+      "id": "M9",
+      "points": 2.0,
+      "description": "获取预测结果代码正确得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M10",
+      "points": 1.0,
+      "description": "截图3.2.2-1.jpg中预测类别结果正确：得1分；",
+      "mode": "self"
+    },
+    {
+      "id": "M11",
+      "points": 1.0,
+      "description": "人机交互最优流程（不少于3条）正确得1分；",
+      "mode": "self"
+    }
+  ],
+  "answerSource": "derived",
+  "answerBasis": "completed_reference_notebook",
+  "referenceAnswer": "建议答案应完整覆盖以下评分点：\nM1（2分）：模型加载代码正确得2分；\nM2（2分）：加载图像正确得2分；\nM3（2分）：调整大小为MNIST模型的输入尺寸代码正确得2分；\nM4（2分）：转为numpy数组代码正确得2分；\nM5（2分）：添加batch维度代码正确得2分；\nM6（2分）：添加通道维度代码正确得2分；\nM7（2分）：返回模型输入列表代码正确得2分；\nM8（2分）：执行预测代码正确得2分\nM9（2分）：获取预测结果代码正确得2分；\nM10（1分）：截图3.2.2-1.jpg中预测类别结果正确：得1分；\nM11（1分）：人机交互最优流程（不少于3条）正确得1分；\n\nWord 交付物作答示例（本站依据官方题干与评分表整理，非指导手册标准答案）\n一、截图结果（M10，1 分）\n在 3.2.2-1.jpg 中完整显示模型对手写数字的预测类别，截图需包含输入图像与预测输出，数值清晰可辨。\n\n二、人机交互最优流程（M11，不少于 3 条，1 分）\n1. 输入引导：提供手写区或图片上传入口，明确提示单张、单个数字、深色笔迹等输入要求。\n2. 实时反馈：提交后显示「识别中」状态；返回预测类别的同时给出置信度，置信度低于阈值时提示重写或换图。\n3. 结果确认与纠错：允许用户确认或更正识别结果，更正样本可回流用于模型迭代。\n4. 异常与兜底：输入为空、图像模糊或识别失败时给出明确原因与下一步操作建议，不返回空白结果。\n\nPython 参考代码：已从配套完成版 Notebook 提取 1 个代码单元。请在实验室的“答案与来源”中查看或下载；该代码不是指导手册官方标准答案。",
+  "materials": [
+    {
+      "name": "3.2.2.ipynb",
+      "kind": "notebook",
+      "label": "Notebook 模板",
+      "size": 1768,
+      "sha256": "0fbe1e7ca06dc3604268887020fec32e5e879e0fdc24210b2a83cd48a06497ee",
+      "note": "官方 Notebook 模板；1 个代码单元",
+      "url": "/lite/files/3-2-2/3.2.2.ipynb"
+    },
+    {
+      "name": "img_test.png",
+      "kind": "image",
+      "label": "测试图片",
+      "size": 16753,
+      "sha256": "85dbd75a5b0c81491ddeae785cd208f4084b608bcd8b27deca87e3e6be473606",
+      "note": "测试图片",
+      "url": "/labs/3.2.2/img_test.png"
+    },
+    {
+      "name": "mnist.onnx",
+      "kind": "model",
+      "label": "ONNX 模型",
+      "size": 26143,
+      "sha256": "5c688690f8bacf667d4c2074af5ad0646ca328d7ab03eccf944a65b320171bdd",
+      "note": "官方 ONNX 模型；进入实验室后按需加载浏览器兼容版本",
+      "url": null
+    }
+  ],
+  "hasNotebook": true,
+  "notebook": {
+    "cells": [
+      {
+        "id": "cell-1",
+        "source": "import onnxruntime\nimport numpy as np\nfrom PIL import Image\n\n\n# 加载ONNX模型  2分\nort_session = __________________\n\n\n# 加载图像 2分\nimage = __________________('L')  # 转为灰度图\n\n\n#图像预处理 \nimage = __________________((28, 28))  # 调整大小为MNIST模型的输入尺寸2分\nimage_array = __________________(__________________, dtype=np.float32)  # 转为numpy数组2分\nimage_array = __________________(__________________, axis=0)  # 添加batch维度2分\nimage_array = __________________(__________________, axis=0)  # 添加通道维度2分\n\n\n#返回模型输入列表 2分\nort_inputs = {__________________()[0].name: image_array}\n# 执行预测 2分\nort_outs = __________________(None, ort_inputs)\n\n\n# 获取预测结果 2分\npredicted_class = __________________\n\n\n# 输出预测结果\nprint(f\"Predicted class: {predicted_class}\")\n"
+      }
+    ],
+    "assets": [
+      "img_test.png",
+      "mnist.onnx"
+    ],
+    "browserAdapted": true,
+    "solutionCells": [
+      {
+        "id": "solution-1",
+        "source": "import onnxruntime\nimport numpy as np\nfrom PIL import Image\n\n\n# 加载ONNX模型  2分\nort_session = onnxruntime.InferenceSession('mnist.onnx')   \n\n\n# 加载图像 2分\nimage = Image.open('img_test.png').convert('L')  # 转为灰度图\n\n\n#图像预处理 \nimage = image.resize((28, 28))  # 调整大小为MNIST模型的输入尺寸2分\nimage_array = np.array(image, dtype=np.float32)  # 转为numpy数组2分\nimage_array = np.expand_dims(image_array, axis=0)  # 添加batch维度2分\nimage_array = np.expand_dims(image_array, axis=0)  # 添加通道维度2分\n\n\n#返回模型输入列表 2分\nort_inputs = {ort_session.get_inputs()[0].name: image_array}\n# 执行预测 2分\nort_outs = ort_session.run(None, ort_inputs)\n\n\n# 获取预测结果 2分\npredicted_class = np.argmax(ort_outs[0])\n\n\n# 输出预测结果\nprint(f\"Predicted class: {predicted_class}\")\n"
+      }
+    ],
+    "solutionSource": "completed_reference_notebook",
+    "solutionSha256": "168e29a2253fb467adb940ba86286ccd494476e7bf1782322aaf894a91df16a4"
+  }
+}

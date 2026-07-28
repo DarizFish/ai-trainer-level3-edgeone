@@ -1,0 +1,229 @@
+{
+  "code": "4.1.5",
+  "title": "Python数据可视化培训大纲编写",
+  "category": "培训与指导",
+  "unit": "培训",
+  "group": "4.1",
+  "durationMinutes": 10,
+  "maxScore": 5,
+  "description": "A企业是一家康复训练机构，需要利用人工智能技术为康复患者提供个性化的康复训练计划，并实时监控训练效果。为了提高人工智能技术的应用效果，其采集了大量的康复数据，现计划对新进技术人员进行数据可视化工具的使用培训。通过这次培训，将会使新进技术人员掌握Python的数据可视化工具的使用，能对重要数据进行可视化操作，达到人工智能训练师四级/中级工的技能水平。\n请你根据要求补全素材4.1.5.docx中的培训大纲。",
+  "officialTaskSheet": {
+    "equipmentRequirements": "（1）人工智能训练师主机；\n（2）Office软件。",
+    "skillRequirements": "（1）能编写初级培训讲义；\n（2）能对初级工、中级工开展知识和技术培训。",
+    "qualityIndicators": "（1）培训讲义编写逻辑合理；\n（2）培训资料正确有效；\n（3）语句组织通顺。"
+  },
+  "rubric": [
+    {
+      "id": "M1",
+      "points": 5.0,
+      "description": "回答内容与答案类似得1分；最多5分；",
+      "mode": "self"
+    }
+  ],
+  "answerSource": "derived",
+  "answerBasis": "official_template_completion",
+  "referenceAnswer": "官方 Word 模板填写示例（5 处空白）\n\n以下内容按模板中的空白顺序填写，取自官方参考答案中标黄的填空原文。评分口径为“回答内容与答案类似得 1 分，每题最多 5 分”，作答时无需标黄。\n\n1. 数据可视化基础理论｜学习目标\n填写：掌握数据可视化的基本概念和原则。\n\n2. Matplotlib 简介与安装｜学习目标\n填写：了解 Matplotlib 库的基本功能和安装方法。\n\n3. Matplotlib 基本绘图｜学习目标\n填写：掌握 Matplotlib 基本绘图方法。\n\n4. Plotly 简介与安装｜学习目标\n填写：了解 Plotly 库的基本功能和安装方法。\n\n5. Plotly 交互式绘图｜学习目标\n填写：掌握 Plotly 交互式绘图方法。\n\n提交检查：\n填满 5 个空白学习目标，分别对应基础理论、Matplotlib 和 Plotly 内容；保留项目实战、答疑和评估测试结构。",
+  "materials": [
+    {
+      "name": "4.1.5.docx",
+      "kind": "document",
+      "label": "配套文档",
+      "size": 16246,
+      "sha256": "eeb013ac9f1fc8556a5b4f637e9a65078326597383b82d74f76c209b4c3cdd3e",
+      "note": "官方配套文档；47 个正文段落，0 个表格",
+      "url": "/materials/4.1.5/4.1.5.docx",
+      "preview": [
+        {
+          "kind": "heading",
+          "text": "在下划线上填写答案。"
+        },
+        {
+          "kind": "heading",
+          "text": "根据学习大纲补充学习目标"
+        },
+        {
+          "kind": "heading",
+          "text": "数据可视化基础理论"
+        },
+        {
+          "kind": "heading",
+          "text": "学习目标："
+        },
+        {
+          "kind": "paragraph",
+          "text": "内容："
+        },
+        {
+          "kind": "paragraph",
+          "text": "什么是数据可视化？"
+        },
+        {
+          "kind": "paragraph",
+          "text": "数据可视化的目的和优势。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "常见的数据可视化类型：条形图、折线图、散点图、饼图等。"
+        },
+        {
+          "kind": "heading",
+          "text": "Matplotlib简介与安装"
+        },
+        {
+          "kind": "heading",
+          "text": "学习目标："
+        },
+        {
+          "kind": "paragraph",
+          "text": "内容："
+        },
+        {
+          "kind": "paragraph",
+          "text": "Matplotlib简介及其应用场景。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "安装与配置Matplotlib库。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Matplotlib基本构架与常用组件。"
+        },
+        {
+          "kind": "heading",
+          "text": "Matplotlib基本绘图"
+        },
+        {
+          "kind": "heading",
+          "text": "学习目标："
+        },
+        {
+          "kind": "paragraph",
+          "text": "内容："
+        },
+        {
+          "kind": "paragraph",
+          "text": "创建简单图表：折线图、条形图、饼图。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "图表定制：标题、轴标签、图例、颜色等。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "实践操作：使用Matplotlib绘制康复数据的基本图表。"
+        },
+        {
+          "kind": "heading",
+          "text": "Plotly简介与安装"
+        },
+        {
+          "kind": "heading",
+          "text": "学习目标："
+        },
+        {
+          "kind": "paragraph",
+          "text": "内容："
+        },
+        {
+          "kind": "paragraph",
+          "text": "Plotly简介及其应用场景。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "安装与配置Plotly库。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Plotly与Jupyter Notebook的结合使用。"
+        },
+        {
+          "kind": "heading",
+          "text": "Plotly交互式绘图"
+        },
+        {
+          "kind": "heading",
+          "text": "学习目标："
+        },
+        {
+          "kind": "paragraph",
+          "text": "内容："
+        },
+        {
+          "kind": "paragraph",
+          "text": "创建交互式图表：折线图、散点图、饼图、地理图表。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "图表交互功能：缩放、平移、悬停显示。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "实践操作：使用Plotly绘制交互式康复数据图表。"
+        },
+        {
+          "kind": "heading",
+          "text": "数据可视化项目实战"
+        },
+        {
+          "kind": "paragraph",
+          "text": "学习目标：综合运用所学知识进行数据可视化项目。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "内容："
+        },
+        {
+          "kind": "paragraph",
+          "text": "项目介绍：对康复数据进行可视化分析。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "数据采集与预处理：导入并清洗康复数据。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "数据可视化：使用Matplotlib、Seaborn、Plotly进行可视化分析。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "项目评审：展示可视化成果，讲解实现思路和遇到的问题。"
+        },
+        {
+          "kind": "heading",
+          "text": "总结与答疑"
+        },
+        {
+          "kind": "paragraph",
+          "text": "学习目标：巩固所学内容，解决学员疑问。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "内容：培训内容总结，关键点回顾，学员提问与解答。"
+        },
+        {
+          "kind": "heading",
+          "text": "评估测试"
+        },
+        {
+          "kind": "paragraph",
+          "text": "学习目标：评估学员掌握的数据可视化技能。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "内容："
+        },
+        {
+          "kind": "paragraph",
+          "text": "理论测试：关于数据可视化基本概念和工具使用的笔试。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "实操测试：要求学员完成指定的数据可视化任务。"
+        }
+      ]
+    }
+  ],
+  "hasNotebook": false,
+  "notebook": null
+}

@@ -1,0 +1,123 @@
+{
+  "code": "3.2.3",
+  "title": "面部表情识别系统交互流程设计",
+  "category": "智能系统设计",
+  "unit": "人机交互流程设计",
+  "group": "3.2",
+  "durationMinutes": 20,
+  "maxScore": 20,
+  "description": "面部表情识别系统是一种先进的计算机视觉技术，它能够分析人脸的微表情，识别出诸如快乐、悲伤、惊讶等基本情绪。通过捕捉和解读面部特征，如眼睛、眉毛和嘴部的动作，这类系统能在实时或预录的视频中判断人的情感状态，广泛应用于人机交互、市场调研、医疗健康监测、安全监控及教育科技等多个领域，为提升用户体验、增进情感智能和优化社会服务提供了有力工具。\nAI模型说明：提供的已训练的模型“emotion-ferplus.onnx”，其专门用于进行面部表情识别。定义情感类别与数字标签的映射表为{'neutral':0, 'happiness':1, 'surprise':2, 'sadness':3, 'anger':4, 'disgust':5, 'fear':6, 'contempt':7}。\n该模型的使用交互流程为：\n1)加载模型“emotion-ferplus.onnx”和加载情感类别与数字标签的映射表；\n2)加载一张本地图片“img_test.png”，并预处理图像；\n3)使用已训练的模型对图片面部表情识别；\n4)输出识别后的表情标签。\n你作为一名人工智能训练师，请完成以下工作任务：\n（1）补全该模型的使用交互流程对应的Python代码（3.2.3.ipynb），实现本地测试图片“img_test.png”的识别，将其识别结果截图保存为jpg格式文件，命名为3.2.3-1.jpg。\n（2）在上面的使用交互流程基础上，给出在面部表情识别系统中使用“emotion-ferplus.onnx”模型的一种人机交互的最优方式，将其保存为docx文件，命名为3.2.3.docx。\n所有结果文件储存在桌面新建的考生文件夹中，文件夹命名为“准考证号+身份证号后六位”。",
+  "officialTaskSheet": {
+    "equipmentRequirements": "（1）人工智能训练师主机 1 台；\n（2）Python 编译环境；\n（3）Pytorch框架。",
+    "skillRequirements": "（1）能确保模型在单一场景下稳定运行；\n（2）能通过分析，找到单一场景下人工和智能交互的最优方式。",
+    "qualityIndicators": "（1）模型运行稳定，使用正常；\n（2）单一场景下人工和智能交互的最优方式切实可行。"
+  },
+  "rubric": [
+    {
+      "id": "M1",
+      "points": 3.0,
+      "description": "定义情感类别与数字标签的映射表代码正确得3分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M2",
+      "points": 3.0,
+      "description": "模型加载代码正确得3分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M3",
+      "points": 3.0,
+      "description": "加载本地图片并进行预处理代码正确得3分 ；",
+      "mode": "auto"
+    },
+    {
+      "id": "M4",
+      "points": 3.0,
+      "description": "运行模型，进行预测代码正确得3分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M5",
+      "points": 3.0,
+      "description": "解码模型输出，找到预测概率最高的情感类别代码正确得3分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M6",
+      "points": 3.0,
+      "description": "根据预测的标签找到对应的情感名称代码正确得3分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M7",
+      "points": 1.0,
+      "description": "截图3.2.3-1.jpg中识别的面部情绪正确：得1分；",
+      "mode": "self"
+    },
+    {
+      "id": "M8",
+      "points": 1.0,
+      "description": "人机交互最优流程（不少于3条）正确得1分；",
+      "mode": "self"
+    }
+  ],
+  "answerSource": "derived",
+  "answerBasis": "completed_reference_notebook",
+  "referenceAnswer": "建议答案应完整覆盖以下评分点：\nM1（3分）：定义情感类别与数字标签的映射表代码正确得3分；\nM2（3分）：模型加载代码正确得3分；\nM3（3分）：加载本地图片并进行预处理代码正确得3分 ；\nM4（3分）：运行模型，进行预测代码正确得3分；\nM5（3分）：解码模型输出，找到预测概率最高的情感类别代码正确得3分；\nM6（3分）：根据预测的标签找到对应的情感名称代码正确得3分；\nM7（1分）：截图3.2.3-1.jpg中识别的面部情绪正确：得1分；\nM8（1分）：人机交互最优流程（不少于3条）正确得1分；\n\nWord 交付物作答示例（本站依据官方题干与评分表整理，非指导手册标准答案）\n一、截图结果（M7，1 分）\n在 3.2.3-1.jpg 中完整显示识别出的面部情绪类别，截图需包含输入人脸图像与情绪输出，标签清晰可辨。\n\n二、人机交互最优流程（M8，不少于 3 条，1 分）\n1. 采集引导：提示正脸、光照充足、五官无遮挡，并在取景框内给出人脸位置参考。\n2. 实时反馈：显示检测进度，返回情绪类别与置信度；未检出人脸时提示重新采集。\n3. 结果解释与纠错：以文字加图标呈现情绪结果，允许用户反馈识别错误，用于后续模型优化。\n4. 隐私告知：采集前明确告知用途与存储期限，提供不保存原图的选项。\n\nPython 参考代码：已从配套完成版 Notebook 提取 1 个代码单元。请在实验室的“答案与来源”中查看或下载；该代码不是指导手册官方标准答案。",
+  "materials": [
+    {
+      "name": "3.2.3.ipynb",
+      "kind": "notebook",
+      "label": "Notebook 模板",
+      "size": 3173,
+      "sha256": "a04e0a3c31dbc8ef98285e60000f2b0332663a1f7c215f9c148fa51edfd0093f",
+      "note": "官方 Notebook 模板；2 个代码单元",
+      "url": "/lite/files/3-2-3/3.2.3.ipynb"
+    },
+    {
+      "name": "emotion-ferplus.onnx",
+      "kind": "model",
+      "label": "ONNX 模型",
+      "size": 35040571,
+      "sha256": "a2a2ba6a335a3b29c21acb6272f962bd3d47f84952aaffa03b60986e04efa61c",
+      "note": "官方 ONNX 模型；进入实验室后按需加载浏览器兼容版本",
+      "url": null
+    },
+    {
+      "name": "img_test.png",
+      "kind": "image",
+      "label": "测试图片",
+      "size": 17697,
+      "sha256": "7e688ab62e96522f26d84cc0178621794c5f2f705e6a323ded11f3f668a6e124",
+      "note": "测试图片",
+      "url": "/labs/3.2.3/img_test.png"
+    }
+  ],
+  "hasNotebook": true,
+  "notebook": {
+    "cells": [
+      {
+        "id": "cell-1",
+        "source": "# 导入必要的库\nimport numpy as np\nfrom PIL import Image\nimport onnxruntime as ort\n\n\n# 定义预处理函数，用于将图片转换为模型所需的输入格式\ndef preprocess(image_path):\n    input_shape = (1, 1, 64, 64)    # 模型输入期望的形状，这里是 (N, C, H, W)，N=batch size, C=channels, H=height, W=width\n    img = Image.open(image_path).convert('L')    # 打开图像文件并将其转换为灰度图  1分\n    img = img.resize((64, 64), Image.ANTIALIAS)    # 调整图像大小到模型输入所需的尺寸\n    img_data = np.array(img, dtype=np.float32)    # 将PIL图像对象转换为numpy数组，并确保数据类型是float32\n    # 调整数组的形状以匹配模型输入的形状\n    img_data = np.expand_dims(img_data, axis=0)  # 添加 batch 维度\n    img_data = np.expand_dims(img_data, axis=1)  # 添加 channel 维度\n    assert img_data.shape == input_shape, f\"Expected shape {input_shape}, but got {img_data.shape}\"    # 确保最终的形状与模型输入要求的形状一致\n    return img_data    # 返回预处理后的图像数据\n\n\n# 定义情感类别与数字标签的映射表 3分\nemotion_table = {____________}\n\n\n# 加载模型 3分\nort_session = ____________    # 使用onnxruntime创建一个会话，用于加载并运行模型\n\n\n# 加载本地图片并进行预处理 3分\ninput_data = ____________\n\n\n# 准备输入数据，确保其符合模型输入的要求\nort_inputs = {ort_session.get_inputs()[0].name: input_data}    # ort_session.get_inputs()[0].name 是获取模型的第一个输入的名字\n\n\n# 运行模型，进行预测 3分\nort_outs = ____________(None, ____________)\n\n\n# 解码模型输出，找到预测概率最高的情感类别 3分\npredicted_label = ____________(ort_outs[0])\n\n\n# 根据预测的标签找到对应的情感名称 3分\npredicted_emotion = ____________[predicted_label]\n\n\n# 输出预测的情感\nprint(f\"Predicted emotion: {predicted_emotion}\")\n"
+      },
+      {
+        "id": "cell-2",
+        "source": ""
+      }
+    ],
+    "assets": [
+      "emotion-ferplus.onnx",
+      "img_test.png"
+    ],
+    "browserAdapted": true,
+    "solutionCells": [
+      {
+        "id": "solution-1",
+        "source": "# 导入必要的库\nimport numpy as np\nfrom PIL import Image\nimport onnxruntime as ort\n\n\n# 定义预处理函数，用于将图片转换为模型所需的输入格式\ndef preprocess(image_path):\n    input_shape = (1, 1, 64, 64)    # 模型输入期望的形状，这里是 (N, C, H, W)，N=batch size, C=channels, H=height, W=width\n    img = Image.open(image_path).convert('L')    # 打开图像文件并将其转换为灰度图  1分\n    img = img.resize((64, 64))    # 调整图像大小到模型输入所需的尺寸\n    img_data = np.array(img, dtype=np.float32)    # 将PIL图像对象转换为numpy数组，并确保数据类型是float32\n    # 调整数组的形状以匹配模型输入的形状\n    img_data = np.expand_dims(img_data, axis=0)  # 添加 batch 维度\n    img_data = np.expand_dims(img_data, axis=1)  # 添加 channel 维度\n    assert img_data.shape == input_shape, f\"Expected shape {input_shape}, but got {img_data.shape}\"    # 确保最终的形状与模型输入要求的形状一致\n    return img_data    # 返回预处理后的图像数据\n\n\n# 定义情感类别与数字标签的映射表 3分\nemotion_table = {'neutral':0, 'happiness':1, 'surprise':2, 'sadness':3, 'anger':4, 'disgust':5, 'fear':6, 'contempt':7}\n\n\n# 加载模型 3分\nort_session = ort.InferenceSession('emotion-ferplus.onnx')    # 使用onnxruntime创建一个会话，用于加载并运行模型\n\n\n# 加载本地图片并进行预处理 3分\ninput_data = preprocess('img_test.png')\n\n\n# 准备输入数据，确保其符合模型输入的要求\nort_inputs = {ort_session.get_inputs()[0].name: input_data}    # ort_session.get_inputs()[0].name 是获取模型的第一个输入的名字\n\n\n# 运行模型，进行预测 3分\nort_outs = ort_session.run(None, ort_inputs)\n\n\n# 解码模型输出，找到预测概率最高的情感类别 3分\npredicted_label = np.argmax(ort_outs[0])\n\n\n# 根据预测的标签找到对应的情感名称 3分\npredicted_emotion = list(emotion_table.keys())[predicted_label]\n\n\n# 输出预测的情感\nprint(f\"Predicted emotion: {predicted_emotion}\")\n"
+      }
+    ],
+    "solutionSource": "completed_reference_notebook",
+    "solutionSha256": "de5453ca97a5bfcf98ca94b02c7df6821949217e6d8a0c99251b4b785f4cae6b"
+  }
+}

@@ -10,6 +10,10 @@ from pathlib import Path
 
 from docx import Document
 
+import sys as _sys
+_sys.path.insert(0, str(Path(__file__).resolve().parent))
+from content_entities import load_bank, write_bank  # noqa: E402
+
 
 def compact(value: str) -> str:
     return re.sub(r"[\s\x00-\x1f；。]", "", value).replace("/", "")
@@ -36,7 +40,7 @@ def main() -> None:
     parser.add_argument("--output", type=Path, default=Path("data/references/practical-source-audit.json"))
     args = parser.parse_args()
 
-    content = json.loads(args.content.read_text(encoding="utf-8"))
+    content = load_bank()
     tasks = content["practical"]
     document = Document(args.manual_docx)
     if len(tasks) != 40 or len(document.tables) != 40:

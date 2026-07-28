@@ -13,6 +13,10 @@ from urllib.parse import quote, unquote
 from docx import Document
 from openpyxl import load_workbook
 
+import sys as _sys
+_sys.path.insert(0, str(Path(__file__).resolve().parent))
+from content_entities import load_bank, write_bank  # noqa: E402
+
 
 SKIP_SUFFIXES = {".pyc"}
 IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".webp", ".gif"}
@@ -146,7 +150,7 @@ def main() -> None:
     parser.add_argument("--audit", type=Path, default=Path("data/references/practical-material-audit.json"))
     args = parser.parse_args()
 
-    content = json.loads(args.content.read_text(encoding="utf-8"))
+    content = load_bank()
     lab_manifest_path = Path("public/labs/manifest.json")
     lab_manifest_data = json.loads(lab_manifest_path.read_text(encoding="utf-8")) if lab_manifest_path.exists() else {"models": {}}
     browser_models = {model["originalSha256"]: model for model in lab_manifest_data.get("models", {}).values()}
@@ -258,7 +262,7 @@ def main() -> None:
             "materials": audited_entries,
         })
 
-    args.content.write_text(json.dumps(content, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    write_bank(content)
     if lab_manifest_path.exists():
         manifest = json.loads(lab_manifest_path.read_text(encoding="utf-8"))
         manifest["version"] = content["version"]

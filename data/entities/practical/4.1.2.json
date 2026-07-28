@@ -1,0 +1,293 @@
+{
+  "code": "4.1.2",
+  "title": "爬虫培训大纲编写",
+  "category": "培训与指导",
+  "unit": "培训",
+  "group": "4.1",
+  "durationMinutes": 10,
+  "maxScore": 5,
+  "description": "A企业是一家互联网金融机构，需要利用人工智能技术获取大量上市公司的财务报告。为了提高获取效率，现计划对新进技术人员进行网页爬虫工具的使用培训。通过这次培训，将会使新进技术人员掌握常用网页爬虫工具的使用，能对网络公开的上市公司财务报告进行获取，达到人工智能训练师四级/中级工的技能水平。\n请你根据要求补全素材4.1.2.docx中的培训大纲。",
+  "officialTaskSheet": {
+    "equipmentRequirements": "（1）人工智能训练师主机；\n（2）Office软件。",
+    "skillRequirements": "（1）能编写初级培训讲义；\n（2）能对初级工、中级工开展知识和技术培训；",
+    "qualityIndicators": "（1）培训讲义编写逻辑合理；\n（2）培训资料正确有效；\n（3）语句组织通顺。"
+  },
+  "rubric": [
+    {
+      "id": "M1",
+      "points": 5.0,
+      "description": "回答内容与答案类似得1分；最多5分；",
+      "mode": "self"
+    }
+  ],
+  "answerSource": "derived",
+  "answerBasis": "official_template_completion",
+  "referenceAnswer": "官方 Word 模板填写示例（5 处空白）\n\n以下内容按模板中的空白顺序填写，取自官方参考答案中标黄的填空原文。评分口径为“回答内容与答案类似得 1 分，每题最多 5 分”，作答时无需标黄。\n\n1. 网页爬虫基础理论｜学习目标\n填写：掌握网页爬虫的基本概念和工作原理。\n\n2. 常用网页爬虫工具简介｜学习目标\n填写：了解常用网页爬虫工具的功能和特点。\n\n3. 网页数据解析｜学习目标\n填写：掌握网页数据解析的方法和技巧。\n\n4. Scrapy 框架实战｜学习目标\n填写：掌握使用 Scrapy 框架进行大规模数据采集。\n\n5. 数据清洗与处理｜学习目标\n填写：掌握爬取数据的清洗和处理方法。\n\n提交检查：\n按官方模板顺序填入 5 个学习目标，保留工具名称、实践内容和评估方式；采集任务须遵守 robots.txt、网站条款和数据合规要求。",
+  "materials": [
+    {
+      "name": "4.1.2.docx",
+      "kind": "document",
+      "label": "配套文档",
+      "size": 16858,
+      "sha256": "72c65d21ac3e1c5fdf3cb7e92beb1966eec6ad98662f371ad0ab7e10adf35a0f",
+      "note": "官方配套文档；63 个正文段落，0 个表格",
+      "url": "/materials/4.1.2/4.1.2.docx",
+      "preview": [
+        {
+          "kind": "heading",
+          "text": "在下划线上填写答案。"
+        },
+        {
+          "kind": "heading",
+          "text": "根据学习大纲补充学习目标"
+        },
+        {
+          "kind": "heading",
+          "text": "引言"
+        },
+        {
+          "kind": "paragraph",
+          "text": "学习目标：了解网页爬虫的重要性和应用场景。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "内容："
+        },
+        {
+          "kind": "paragraph",
+          "text": "介绍人工智能在金融数据采集中的应用，网页爬虫在获取上市公司财务报告中的作用。"
+        },
+        {
+          "kind": "heading",
+          "text": "网页爬虫基础理论"
+        },
+        {
+          "kind": "paragraph",
+          "text": "学习目标："
+        },
+        {
+          "kind": "paragraph",
+          "text": "内容："
+        },
+        {
+          "kind": "paragraph",
+          "text": "什么是网页爬虫？"
+        },
+        {
+          "kind": "paragraph",
+          "text": "网页爬虫的工作流程和基本结构。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "机器人协议（robots.txt）的作用和遵守方法。"
+        },
+        {
+          "kind": "heading",
+          "text": "常用网页爬虫工具简介"
+        },
+        {
+          "kind": "paragraph",
+          "text": "学习目标："
+        },
+        {
+          "kind": "paragraph",
+          "text": "内容："
+        },
+        {
+          "kind": "paragraph",
+          "text": "BeautifulSoup：用于解析HTML和XML文档。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Scrapy：一个快速、高效的网页爬虫框架。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Selenium：用于模拟浏览器操作，处理动态网页。"
+        },
+        {
+          "kind": "heading",
+          "text": "环境搭建与工具安装"
+        },
+        {
+          "kind": "paragraph",
+          "text": "学习目标：掌握网页爬虫工具的安装和环境配置。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "内容："
+        },
+        {
+          "kind": "paragraph",
+          "text": "安装Python和pip包管理工具。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "安装并配置BeautifulSoup、Scrapy、Selenium。"
+        },
+        {
+          "kind": "heading",
+          "text": "网页数据解析"
+        },
+        {
+          "kind": "paragraph",
+          "text": "学习目标："
+        },
+        {
+          "kind": "paragraph",
+          "text": "内容："
+        },
+        {
+          "kind": "paragraph",
+          "text": "使用BeautifulSoup进行HTML解析。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "使用XPath和CSS选择器提取数据。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "实践操作：解析一个简单的网页数据。"
+        },
+        {
+          "kind": "heading",
+          "text": "动态网页处理"
+        },
+        {
+          "kind": "paragraph",
+          "text": "学习目标：掌握处理动态网页的方法。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "内容："
+        },
+        {
+          "kind": "paragraph",
+          "text": "使用Selenium模拟浏览器操作。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "处理动态加载的数据，如Ajax请求。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "实践操作：爬取一个动态加载的网页数据。"
+        },
+        {
+          "kind": "heading",
+          "text": "Scrapy框架实战"
+        },
+        {
+          "kind": "paragraph",
+          "text": "学习目标："
+        },
+        {
+          "kind": "paragraph",
+          "text": "内容："
+        },
+        {
+          "kind": "paragraph",
+          "text": "Scrapy项目的创建和基本配置。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "编写爬虫脚本，设置抓取规则。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "数据存储与导出：将数据保存为CSV、JSON等格式。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "实践操作：构建一个Scrapy爬虫项目，获取上市公司财务报告。"
+        },
+        {
+          "kind": "heading",
+          "text": "数据清洗与处理"
+        },
+        {
+          "kind": "paragraph",
+          "text": "学习目标："
+        },
+        {
+          "kind": "paragraph",
+          "text": "内容："
+        },
+        {
+          "kind": "paragraph",
+          "text": "数据去重、缺失值处理。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "数据格式转换与规范化。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "实践操作：对获取的财务报告数据进行清洗和处理。"
+        },
+        {
+          "kind": "heading",
+          "text": "综合项目实践"
+        },
+        {
+          "kind": "paragraph",
+          "text": "学习目标：综合运用所学知识进行网页爬虫项目。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "内容："
+        },
+        {
+          "kind": "paragraph",
+          "text": "项目介绍：构建一个完整的财务报告爬虫项目。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "数据采集：获取多个网站的财务报告数据。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "数据处理与分析：清洗并分析获取的数据。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "项目评审：展示爬虫成果，讲解实现思路和遇到的问题。"
+        },
+        {
+          "kind": "heading",
+          "text": "总结与答疑"
+        },
+        {
+          "kind": "paragraph",
+          "text": "学习目标：巩固所学内容，解决学员疑问。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "内容：培训内容总结，关键点回顾，学员提问与解答。"
+        },
+        {
+          "kind": "heading",
+          "text": "评估测试"
+        },
+        {
+          "kind": "paragraph",
+          "text": "学习目标：评估学员掌握的网页爬虫技能。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "内容："
+        },
+        {
+          "kind": "paragraph",
+          "text": "理论测试：关于网页爬虫基本概念和工具使用的笔试。"
+        },
+        {
+          "kind": "paragraph",
+          "text": "实操测试：要求学员完成指定的网页爬虫任务。"
+        }
+      ]
+    }
+  ],
+  "hasNotebook": false,
+  "notebook": null
+}

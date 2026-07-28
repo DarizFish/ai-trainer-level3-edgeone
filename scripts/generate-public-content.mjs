@@ -1,9 +1,11 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { assembleBank } from "./assemble-entities.mjs";
 
 const projectRoot = dirname(dirname(fileURLToPath(import.meta.url)));
-const content = JSON.parse(await readFile(join(projectRoot, "data", "content.json"), "utf8"));
+// 直接从实体层装配，不再经过 data/content.json 这个中间大文件。
+const content = await assembleBank();
 const outputDirectory = join(projectRoot, "public", "content");
 
 if (!/^[a-zA-Z0-9._-]+$/.test(content.version)) {

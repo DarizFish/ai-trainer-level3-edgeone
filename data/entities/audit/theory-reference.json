@@ -1,0 +1,16 @@
+{
+  "snapshotVersion": "2026-07-16-v1",
+  "sourceUrl": "http://119.28.189.105/questions.js",
+  "capturedAt": "2026-07-16",
+  "strictMatchedQuestions": 830,
+  "appliedDerivedAnswers": 649,
+  "unmatchedDerivedAnswers": 61,
+  "editorialReviewVersion": "2026-07-17-v3",
+  "editorialReviewedAnswers": 23,
+  "remainingHeuristicAnswers": 0,
+  "reviewBatchId": "theory-900-review-2026-07-26-v1",
+  "reviewVersion": "2026-07-26-v8",
+  "reviewedQuestions": 900,
+  "independentExplanations": 900,
+  "resolvedConflicts": 5
+}

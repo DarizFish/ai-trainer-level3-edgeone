@@ -44,6 +44,10 @@ from theory_reference import (
 from theory_review_quality import build_report as build_theory_review_quality_report
 from theory_review_state import validate_state as validate_theory_review_state
 
+import sys as _sys
+_sys.path.insert(0, str(Path(__file__).resolve().parent))
+from content_entities import canonical_bytes, load_bank  # noqa: E402
+
 
 EXPECTED_OFFICIAL_ANSWER_HASH = "2e4bef5183e8fbf66f152006d70bb5843a60f5b519d321f3a54d06eab61e829f"
 EXPECTED_OFFICIAL_PRACTICAL_ANSWER_HASH = "51bae122558c5eab29dade3140d7423de02ced62faa603fcfd81a10ce2533a20"
@@ -57,7 +61,7 @@ def file_sha256(path: Path) -> str:
             digest.update(block)
     return digest.hexdigest()
 
-data = json.loads(Path("data/content.json").read_text(encoding="utf-8"))
+data = load_bank()
 theory = data["theory"]
 practical = data["practical"]
 assert data["version"] == "2026-07-26-v8"
@@ -181,12 +185,14 @@ assert review_audit["explanations"]["crossReviewed"] == 900
 assert review_audit["explanations"]["duplicateGroups"] == []
 assert review_audit["explanations"]["warnings"] == []
 assert review_audit["manifest"]["sha256"] == theory_review["manifestSha256"]
-assert review_audit["output"]["publishedContentSha256"] == file_sha256(Path("data/content.json"))
+# 发布封条盖的是紧凑序列化的字节，不是某个文件的字节。实体层能逐字节复现它，
+# 所以拆分 content.json 之后封条依然有效，无需重新盖章。
+assert review_audit["output"]["publishedContentSha256"] == hashlib.sha256(canonical_bytes(data)).hexdigest()
 assert len(review_audit["shards"]) == 9
 assert sum(shard["count"] for shard in review_audit["shards"]) == 900
 
 state_summary = validate_theory_review_state(
-    content_path=Path("data/content.json"),
+    content_path=None,  # None = 用实体层装配的当前题库
     reference_path=DEFAULT_REFERENCE_PATH,
     audit_path=DEFAULT_THEORY_AUDIT_PATH,
     state_dir=Path("data/references/theory-review-state"),
@@ -194,7 +200,7 @@ state_summary = validate_theory_review_state(
 assert state_summary["reviewed"] == 900
 assert state_summary["byExplanationGenerationStatus"] == {"reviewed": 900}
 quality_report, quality_errors = build_theory_review_quality_report(
-    content_path=Path("data/content.json"),
+    content_path=None,  # None = 用实体层装配的当前题库
     reference_path=DEFAULT_REFERENCE_PATH,
     audit_path=DEFAULT_THEORY_AUDIT_PATH,
     state_dir=Path("data/references/theory-review-state"),

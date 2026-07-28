@@ -1,0 +1,195 @@
+{
+  "code": "1.1.3",
+  "title": "金融机构信用评估系统中的业务数据审核流程设计",
+  "category": "业务分析",
+  "unit": "业务流程设计",
+  "group": "1.1",
+  "durationMinutes": 30,
+  "maxScore": 25,
+  "description": "某金融机构计划引入智能信用评估系统，通过分析客户的历史交易数据和信用记录，使用机器学习算法预测客户的信用风险等级，从而辅助贷款审批和风险控制。为了确保数据的准确性和可靠性，该机构需要设计并实现一套全面的业务数据审核流程，确保数据在进入信用评估系统之前经过严格的审核和清洗。\n我们提供一个客户信用数据集（credit_data.csv），包含以下字段：\nCustomerID: 客户ID\nName: 客户姓名\nAge: 年龄\nIncome: 收入\nLoanAmount: 贷款金额\nLoanTerm: 贷款期限（月）\nCreditScore: 信用评分\nDefault: 是否违约（0: 否，1: 是）\nTransactionHistory: 历史交易记录（JSON格式）\n你作为人工智能训练师，根据提供的credit_data.csv数据集和Python代码框架（1.1.3.ipynb），完成以下数据的审核和处理任务，确保数据的准确性和可靠性。请按照以下要求完成任务，确保结果准确并保存相应的截图。\n（1）数据完整性审核：\n通过运行Python代码（1.1.3.ipynb）检查数据集中的每个字段是否存在缺失值和重复值。将上述审核结果截图以JPG的格式保存，命名为“1.1.3-1”。\n（2）数据合理性审核：\n通过运行Python代码（1.1.3.ipynb）审核以下字段的合理性：\n年龄：应在18到70岁之间。\n收入：应大于2000。\n贷款金额：应小于收入的5倍。\n信用评分：应在300到850之间。\n对不合理的数据进行标记，并将审核结果截图以JPG的格式保存，命名为“1.1.3-2”。\n（3）通过运行Python代码（1.1.3.ipynb）对数据进行清洗，处理异常值。具体要求如下：\n将不合理的数据进行标记，并对异常值所在行进行删除；\n清洗后的数据保存为新文件cleaned_credit_data.csv。\n所有结果文件储存在桌面新建的考生文件夹中，文件夹命名为“准考证号+身份证号后六位”。",
+  "officialTaskSheet": {
+    "equipmentRequirements": "人工智能训练师主机：CPU（intel i5 及以上）、内存（不少于 16GB）、操作系统（windows10）、支持深度学习训练；",
+    "skillRequirements": "（1）能结合人工智能技术要求和业务特征，设计整套业务数据处理流程；\n（2）能结合人工智能技术要求和业务特征，设计整套业务数据审核流程",
+    "qualityIndicators": "（1）完整性指标：数据集中无缺失值和重复记录。\n（2）合理性指标：所有数据点符合业务规则，无异常值存在。\n（3）清洗效果指标：清洗后的数据集完整、合理，且适于建模分析。"
+  },
+  "rubric": [
+    {
+      "id": "M1",
+      "points": 2.0,
+      "description": "数据缺失值统计代码正确得2分",
+      "mode": "auto"
+    },
+    {
+      "id": "M2",
+      "points": 2.0,
+      "description": "数据重复值统计代码正确得2分",
+      "mode": "auto"
+    },
+    {
+      "id": "M3",
+      "points": 1.0,
+      "description": "1.1.3-1.jpg中CustomerID缺失值统计正确：得1分；",
+      "mode": "self"
+    },
+    {
+      "id": "M4",
+      "points": 1.0,
+      "description": "1.1.3-1.jpg中Name缺失值统计正确：得1分；",
+      "mode": "self"
+    },
+    {
+      "id": "M5",
+      "points": 1.0,
+      "description": "1.1.3-1.jpg中Age缺失值统计正确：得1分；",
+      "mode": "self"
+    },
+    {
+      "id": "M6",
+      "points": 1.0,
+      "description": "1.1.3-1.jpg中Income缺失值统计正确：得1分；",
+      "mode": "self"
+    },
+    {
+      "id": "M7",
+      "points": 1.0,
+      "description": "1.1.3-1.jpg中LoanAmount缺失值统计正确：得1分；",
+      "mode": "self"
+    },
+    {
+      "id": "M8",
+      "points": 1.0,
+      "description": "1.1.3-1.jpg中LoanTerm缺失值统计正确：得1分；",
+      "mode": "self"
+    },
+    {
+      "id": "M9",
+      "points": 1.0,
+      "description": "1.1.3-1.jpg中CreditScore缺失值统计正确：得1分；",
+      "mode": "self"
+    },
+    {
+      "id": "M10",
+      "points": 1.0,
+      "description": "1.1.3-1.jpg中Default缺失值统计正确：得1分；",
+      "mode": "self"
+    },
+    {
+      "id": "M11",
+      "points": 1.0,
+      "description": "1.1.3-1.jpg中TransactionHistory缺失值统计正确：得1分；",
+      "mode": "self"
+    },
+    {
+      "id": "M12",
+      "points": 2.0,
+      "description": "Age数据的合理性审核代码正确得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M13",
+      "points": 2.0,
+      "description": "Income数据的合理性审核代码正确得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M14",
+      "points": 2.0,
+      "description": "LoanAmount数据的合理性审核代码正确得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M15",
+      "points": 2.0,
+      "description": "CreditScore数据的合理性审核代码正确得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M16",
+      "points": 1.0,
+      "description": "数据合理性检查结果(1.1.3-2.jpg)正确：得1分；",
+      "mode": "self"
+    },
+    {
+      "id": "M17",
+      "points": 2.0,
+      "description": "保存清洗后的代码正确得2分",
+      "mode": "auto"
+    },
+    {
+      "id": "M18",
+      "points": 1.0,
+      "description": "保存cleaned_credit_data.csv文件成功：得1分；",
+      "mode": "auto"
+    }
+  ],
+  "answerSource": "derived",
+  "answerBasis": "completed_reference_notebook",
+  "referenceAnswer": "建议答案应完整覆盖以下评分点：\nM1（2分）：数据缺失值统计代码正确得2分\nM2（2分）：数据重复值统计代码正确得2分\nM3（1分）：1.1.3-1.jpg中CustomerID缺失值统计正确：得1分；\nM4（1分）：1.1.3-1.jpg中Name缺失值统计正确：得1分；\nM5（1分）：1.1.3-1.jpg中Age缺失值统计正确：得1分；\nM6（1分）：1.1.3-1.jpg中Income缺失值统计正确：得1分；\nM7（1分）：1.1.3-1.jpg中LoanAmount缺失值统计正确：得1分；\nM8（1分）：1.1.3-1.jpg中LoanTerm缺失值统计正确：得1分；\nM9（1分）：1.1.3-1.jpg中CreditScore缺失值统计正确：得1分；\nM10（1分）：1.1.3-1.jpg中Default缺失值统计正确：得1分；\nM11（1分）：1.1.3-1.jpg中TransactionHistory缺失值统计正确：得1分；\nM12（2分）：Age数据的合理性审核代码正确得2分；\nM13（2分）：Income数据的合理性审核代码正确得2分；\nM14（2分）：LoanAmount数据的合理性审核代码正确得2分；\nM15（2分）：CreditScore数据的合理性审核代码正确得2分；\nM16（1分）：数据合理性检查结果(1.1.3-2.jpg)正确：得1分；\nM17（2分）：保存清洗后的代码正确得2分\nM18（1分）：保存cleaned_credit_data.csv文件成功：得1分；\n\nPython 参考代码：已从配套完成版 Notebook 提取 4 个代码单元。请在实验室的“答案与来源”中查看或下载；该代码不是指导手册官方标准答案。",
+  "materials": [
+    {
+      "name": "1.1.3.ipynb",
+      "kind": "notebook",
+      "label": "Notebook 模板",
+      "size": 3068,
+      "sha256": "82e22d5e692895134033657c2756b3d64f938562ba0240f63876dd1cc64186ce",
+      "note": "官方 Notebook 模板；4 个代码单元",
+      "url": "/lite/files/1-1-3/1.1.3.ipynb"
+    },
+    {
+      "name": "credit_data.csv",
+      "kind": "dataset",
+      "label": "CSV 数据集",
+      "size": 582250,
+      "sha256": "5cd12574c8bc729014e3212feee325fd65ddd22c875a2561f013e7f78eeba8d7",
+      "note": "1000 行数据 × 9 列；字段：CustomerID、Name、Age、Income、LoanAmount…",
+      "url": "/labs/1.1.3/credit_data.csv",
+      "sourceSize": 583251,
+      "sourceSha256": "2d040de2559c987043fec64aa5fc4ef1805f3bb1bc518bbb54989f3e15af9fe5"
+    }
+  ],
+  "hasNotebook": true,
+  "notebook": {
+    "cells": [
+      {
+        "id": "cell-1",
+        "source": "import pandas as pd\nimport numpy as np\nimport matplotlib.pyplot as plt\n# 读取数据集\ndata = pd.read_csv('credit_data.csv')"
+      },
+      {
+        "id": "cell-2",
+        "source": "# 1. 数据完整性审核\nmissing_values = data._________       #数据缺失值统计 2分\nduplicate_values = data._________     #数据重复值统计 2分\n# 输出结果\nprint(\"缺失值统计:\")\nprint(missing_values)\nprint(\"重复值统计:\")\nprint(duplicate_values)"
+      },
+      {
+        "id": "cell-3",
+        "source": "# 2. 数据合理性审核\ndata['is_age_valid'] = _________._________(18, 70)              #Age数据的合理性审核 2分\ndata['is_income_valid'] = _________ > _________                 #Income数据的合理性审核 2分\ndata['is_loan_amount_valid'] = _________ < (_________ * 5)      #LoanAmount数据的合理性审核 2分\ndata['is_credit_score_valid'] = _________._________(300, 850)   #CreditScore数据的合理性审核 2分\n# 合理性检查结果\nvalidity_checks = data[['is_age_valid', 'is_income_valid', 'is_loan_amount_valid', 'is_credit_score_valid']].all(axis=1)\ndata['is_valid'] = validity_checks\n# 输出结果\nprint(\"数据合理性检查:\")\nprint(data[['is_age_valid', 'is_income_valid', 'is_loan_amount_valid', 'is_credit_score_valid', 'is_valid']].describe())"
+      },
+      {
+        "id": "cell-4",
+        "source": "# 3. 数据清洗和异常值处理\n# 标记不合理数据\ninvalid_rows = data[~data['is_valid']]\n# 删除不合理数据行\ncleaned_data = data[data['is_valid']]\n# 删除标记列\ncleaned_data = cleaned_data.drop(columns=['is_age_valid', 'is_income_valid', 'is_loan_amount_valid', 'is_credit_score_valid', 'is_valid'])\n# 保存清洗后的数据\n_________._________(_________, index=False)\nprint(\"数据清洗完成，已保存为 'cleaned_credit_data.csv'\")"
+      }
+    ],
+    "assets": [
+      "credit_data.csv"
+    ],
+    "browserAdapted": false,
+    "solutionCells": [
+      {
+        "id": "solution-1",
+        "source": "import pandas as pd\nimport numpy as np\nimport matplotlib.pyplot as plt\n# 读取数据集\ndata = pd.read_csv('credit_data.csv')\n"
+      },
+      {
+        "id": "solution-2",
+        "source": "# 1. 数据完整性审核\nmissing_values = data.isnull().sum()       #数据缺失值统计 2分\nduplicate_values = data.duplicated().sum()     #数据重复值统计 2分\n# 输出结果\nprint(\"缺失值统计:\")\nprint(missing_values)\nprint(\"重复值统计:\")\nprint(duplicate_values)\n"
+      },
+      {
+        "id": "solution-3",
+        "source": "# 2. 数据合理性审核\ndata['is_age_valid'] = data['Age'].between(18, 70)              #Age数据的合理性审核 2分\ndata['is_income_valid'] = data['Income'] > 0                 #Income数据的合理性审核 2分\ndata['is_loan_amount_valid'] = data['LoanAmount'] < (data['Income'] * 5)      #LoanAmount数据的合理性审核 2分\ndata['is_credit_score_valid'] = data['CreditScore'].between(300, 850)   #CreditScore数据的合理性审核 2分\n# 合理性检查结果\nvalidity_checks = data[['is_age_valid', 'is_income_valid', 'is_loan_amount_valid', 'is_credit_score_valid']].all(axis=1)\ndata['is_valid'] = validity_checks\n# 输出结果\nprint(\"数据合理性检查:\")\nprint(data[['is_age_valid', 'is_income_valid', 'is_loan_amount_valid', 'is_credit_score_valid', 'is_valid']].describe())\n"
+      },
+      {
+        "id": "solution-4",
+        "source": "# 3. 数据清洗和异常值处理\n# 标记不合理数据\ninvalid_rows = data[~data['is_valid']]\n# 删除不合理数据行\ncleaned_data = data[data['is_valid']]\n# 删除标记列\ncleaned_data = cleaned_data.drop(columns=['is_age_valid', 'is_income_valid', 'is_loan_amount_valid', 'is_credit_score_valid', 'is_valid'])\n# 保存清洗后的数据\ncleaned_data.to_csv('credit_data.csv', index=False)\nprint(\"数据清洗完成，已保存为 'cleaned_credit_data.csv'\")\n"
+      }
+    ],
+    "solutionSource": "completed_reference_notebook",
+    "solutionSha256": "e3b1e6196763fa32df9e3f70557e4fb47305b5cea36e43d2dff29ed23a4bead5"
+  }
+}

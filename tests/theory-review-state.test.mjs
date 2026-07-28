@@ -125,7 +125,7 @@ test("review state CLI validates, updates one shard atomically, and preserves wo
   const temporaryState = await mkdtemp(join(tmpdir(), "theory-review-state-"));
   try {
     const temporaryContent = join(temporaryState, "content.json");
-    const unpublishedContent = await readJson(new URL("../data/content.json", import.meta.url));
+    const unpublishedContent = await (await import("../scripts/assemble-entities.mjs")).assembleBank();
     delete unpublishedContent.theoryReview;
     await writeFile(temporaryContent, `${JSON.stringify(unpublishedContent, null, 2)}\n`, "utf8");
     const synced = runReviewState([

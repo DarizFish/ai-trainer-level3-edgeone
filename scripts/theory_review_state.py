@@ -35,6 +35,10 @@ from theory_reference import (
     reference_local_id,
 )
 
+import sys as _sys
+_sys.path.insert(0, str(Path(__file__).resolve().parent))
+from content_entities import canonical_bytes, load_bank  # noqa: E402
+
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CONTENT_PATH = PROJECT_ROOT / "data" / "content.json"
@@ -311,11 +315,13 @@ def load_existing_entries(state_dir: Path) -> tuple[dict[str, Any], dict[str, di
 
 
 def prepare_sources(
-    content_path: Path,
+    content_path: Path | None,
     reference_path: Path,
     audit_path: Path,
 ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
-    content = read_json(content_path)
+    # 给了具体路径就读那个文件（发布流程与测试夹具都按「一份 bank 文件」操作），
+    # 传 None 才表示「当前线上题库」，从实体层装配。
+    content = load_bank() if content_path is None else read_json(content_path)
     reference = read_json(reference_path)
     audit = read_json(audit_path)
     theory = content.get("theory")
@@ -387,7 +393,7 @@ def state_lock(state_dir: Path) -> Iterator[None]:
 
 def sync_state(
     *,
-    content_path: Path,
+    content_path: Path | None,
     reference_path: Path,
     audit_path: Path,
     state_dir: Path,
@@ -455,7 +461,8 @@ def sync_state(
         "content": {
             "path": "data/content.json",
             "version": content.get("version"),
-            "sha256": file_sha256(content_path),
+            # 封条盖的是紧凑序列化的字节，与文件布局无关——实体层能逐字节复现。
+            "sha256": hashlib.sha256(canonical_bytes(content)).hexdigest(),
         },
         "sources": {
             "officialWord": {
@@ -597,7 +604,7 @@ def validate_entry(
 
 def validate_state(
     *,
-    content_path: Path,
+    content_path: Path | None,
     reference_path: Path,
     audit_path: Path,
     state_dir: Path,
@@ -608,7 +615,7 @@ def validate_state(
     errors: list[str] = []
     if manifest.get("schemaVersion") != SCHEMA_VERSION or manifest.get("batchId") != BATCH_ID:
         errors.append("manifest schemaVersion 或 batchId 不一致")
-    current_content_sha256 = file_sha256(content_path)
+    current_content_sha256 = hashlib.sha256(canonical_bytes(content)).hexdigest()
     baseline_content_matches = manifest.get("content", {}).get("sha256") == current_content_sha256
     published_review = content.get("theoryReview")
     published_content_matches = (

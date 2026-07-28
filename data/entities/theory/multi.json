@@ -1,0 +1,8074 @@
+[
+  {
+    "id": "multi-001",
+    "index": 1,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "职业道德,就是同人们的职业活动紧密联系的符合职业特点所要求(    )的的总和。",
+    "options": [
+      "道德准则",
+      "道德情操",
+      "道德品质",
+      "道德底线",
+      "道德约束"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "职业道德由与职业活动相适应的道德准则、道德情操和道德品质共同构成，所以 A、B、C 正确。道德底线只表示最低限度，道德约束只强调规范作用，D、E 都不能完整表示职业道德的构成。",
+    "points": 1
+  },
+  {
+    "id": "multi-002",
+    "index": 2,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "职业道德基本知识中,关于奉献社会的要求,正确的是(    )。",
+    "options": [
+      "树立正确的义利观",
+      "认真履行岗位职责",
+      "正确处理个人利益和集体利益的关系",
+      "增强社会责任感",
+      "以我为主"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "奉献社会要求正确处理义与利、个人与集体的关系，并通过履行岗位职责和增强社会责任感落实，因此 A、B、C、D 均正确。E 的“以我为主”把个人利益置于公共责任之前，与奉献社会相悖。",
+    "points": 1
+  },
+  {
+    "id": "multi-003",
+    "index": 3,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "在社会主义社会时期,职业道德的发展有特点包括 (    )。",
+    "options": [
+      "个人主义盛行",
+      "注重社会责任",
+      "提倡无私奉献",
+      "追求公平正义",
+      "鼓励创新和发展"
+    ],
+    "answer": [
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "社会主义职业道德强调社会责任、奉献精神、公平正义，并鼓励通过创新推动社会发展，故 B、C、D、E 成立。A 所述个人主义盛行与集体主义和社会责任导向不符。",
+    "points": 1
+  },
+  {
+    "id": "multi-004",
+    "index": 4,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "职业道德建设的基本原则关注职业活动中的人际关系和社会责任。这些原则鼓励人们在职业活动中保持(    ),并不断提升自己的专业知识和技能。",
+    "options": [
+      "公正公平",
+      "爱岗敬业",
+      "团队合作",
+      "持续学习",
+      "个人至上"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "公正公平规范职业关系，爱岗敬业体现责任，团队合作协调共同任务，持续学习提升专业能力，因此 A、B、C、D 都符合职业道德建设原则。E 的个人至上会损害协作和社会责任，不应选择。",
+    "points": 1
+  },
+  {
+    "id": "multi-005",
+    "index": 5,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "人工智能训练师在进行模型训练时,应遵循的职业道德基本要求包括(    )。",
+    "options": [
+      "保护用户隐私和数据安全",
+      "确保模型输出的准确性和可靠性",
+      "尊重知识产权和公平竞争",
+      "不断提升自身专业技能",
+      "遵守法律法规和公司规章制度"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "模型训练既要保护隐私和数据安全，也要保障输出可靠，尊重知识产权与公平竞争；训练师还需持续提升技能并遵守法律和单位制度。因此 A、B、C、D、E 都是职业道德的具体要求，本题没有不符合项。",
+    "points": 1
+  },
+  {
+    "id": "multi-006",
+    "index": 6,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "在人工智能训练过程中,训练师需要遵循的职业道德规范包括(    )。",
+    "options": [
+      "尊重知识产权",
+      "保持公正客观",
+      "注重数据安全",
+      "勇于创新",
+      "个人利益优先"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "尊重知识产权、公正客观处理数据、保障数据安全和在合规前提下创新，分别对应 A、B、C、D，均是训练过程应遵循的规范。E 将个人利益置于职责和公共利益之前，违反职业道德。",
+    "points": 1
+  },
+  {
+    "id": "multi-007",
+    "index": 7,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "在人工智能训练过程中,(    )是不被鼓励的。",
+    "options": [
+      "过度追求模型的准确率",
+      "忽视模型的可解释性",
+      "在未经充分验证的情况下将模型应用于实际场景",
+      "不断尝试新的技术和方法以提高模型性能",
+      "不尊重和保护用户隐私和数据安全"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "只追求准确率会忽略公平、鲁棒性等目标，忽视可解释性会削弱可审计性，未经验证即上线会放大风险，不保护隐私则直接违反合规要求，所以 A、B、C、E 都不应鼓励。D 是合理的技术改进活动，不属于禁止行为。",
+    "points": 1
+  },
+  {
+    "id": "multi-008",
+    "index": 8,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "职业守则是指从事某种职业的人们在职业活动中应该遵循的行为规范的总和,它包括(    )。",
+    "options": [
+      "道德准则",
+      "法律法规",
+      "技术规程",
+      "个人习惯",
+      "文化传统"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "职业守则可同时吸收职业道德准则、具有强制性的法律法规以及保障作业质量安全的技术规程，故 A、B、C 正确。个人习惯没有统一规范效力，文化传统也不是职业守则当然包含的具体规则，D、E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-009",
+    "index": 9,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "关于职业守则,符合其通常具有的特点的描述为(    )。",
+    "options": [
+      "职业守则具有高度的个性化,每位从业者都可以根据自己的喜好来制定",
+      "职业守则强调从业者在工作中的专业态度和责任心",
+      "职业守则仅关注本职业内部的操作规范和流程",
+      "职业守则涉及本职业与其他职业之间的合作关系与沟通",
+      "职业守则随着社会发展和行业变革而不断更新和完善"
+    ],
+    "answer": [
+      "B",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "职业守则强调专业态度和责任，也会规范跨职业协作，并随行业与社会变化修订，所以 B、D、E 正确。守则是共同规范而非个人按喜好制定，且内容不只限于本职业内部流程，因此 A、C 错误。",
+    "points": 1
+  },
+  {
+    "id": "multi-010",
+    "index": 10,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "职业守则要求我们在工作中,不应该出现(    )的情况。",
+    "options": [
+      "承担责任",
+      "逃避责任",
+      "推卸责任",
+      "履行责任",
+      "忽略责任"
+    ],
+    "answer": [
+      "B",
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "逃避、推卸或忽略责任都会造成职责落空，正是职业守则要求避免的情形，故 B、C、E 正确。承担和履行责任属于合规表现，A、D 不属于题目所问的负面情况。",
+    "points": 1
+  },
+  {
+    "id": "multi-011",
+    "index": 11,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "在制定职业守则时,应遵循(    )原则。",
+    "options": [
+      "公平性",
+      "公正性",
+      "公开性",
+      "透明性",
+      "保密性"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "official",
+    "answerBasis": "manual_official",
+    "confidence": "high",
+    "explanation": "制定守则应让规则对相关人员公平、形成过程公正，并通过公开和透明保证可理解、可监督，因此 A、B、C、D 正确。保密性可用于保护特定信息，但不是制定职业守则的普遍程序原则，E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-012",
+    "index": 12,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "为了确保职业守则的有效实施,企业应该采取(    )等措施。",
+    "options": [
+      "制定明确、具体的职业守则",
+      "建立有效的监督和激励机制",
+      "提供必要的培训和资源支持",
+      "定期评估职业守则的执行情况并进行改进",
+      "不透明的处理过程"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "明确具体的规则提供执行标准，监督激励机制推动落实，培训资源保证人员有能力遵守，定期评估则形成改进闭环，所以 A、B、C、D 都有效。E 的不透明处理会削弱信任和问责，反而妨碍实施。",
+    "points": 1
+  },
+  {
+    "id": "multi-013",
+    "index": 13,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "职业守则要求从业人员在工作中做到(    )。",
+    "options": [
+      "团结协作",
+      "顾全大局",
+      "相互学习",
+      "进取创新",
+      "个人利益优先"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "团结协作和顾全大局保障共同目标，相互学习与进取创新促进团队和业务发展，故 A、B、C、D 都是从业要求。E 将个人利益优先于职责与集体利益，不符合职业守则。",
+    "points": 1
+  },
+  {
+    "id": "multi-014",
+    "index": 14,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "从业人员要做到爱岗敬业就应(    )。",
+    "options": [
+      "树立正确的职业理想",
+      "强化职业责任",
+      "缺乏团队精神",
+      "提高职业技能",
+      "消极怠工"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "爱岗敬业需要正确的职业理想作为方向，以职业责任约束行为，并通过提高技能胜任岗位，所以 A、B、D 正确。缺乏团队精神和消极怠工都会损害履职质量，C、E 不符合要求。",
+    "points": 1
+  },
+  {
+    "id": "multi-015",
+    "index": 15,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "在人工智能训练过程中,(    )行为是不被允许的。",
+    "options": [
+      "篡改原始数据",
+      "泄露用户隐私",
+      "优化模型性能",
+      "忽视模型可解释性",
+      "不使用未经授权的算法库"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "篡改原始数据破坏真实性，泄露隐私违反保密义务，忽视可解释性会使模型风险难以审查，因此 A、B、D 不被允许。优化性能是正当工作，拒绝使用未经授权的算法库也是合规行为，C、E 不属于禁止项。",
+    "points": 1
+  },
+  {
+    "id": "multi-016",
+    "index": 16,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "Windows输入法的(    )智能应用可以帮助用户提高输入效率。",
+    "options": [
+      "减少拼写错误",
+      "提高打字速度",
+      "实现语音输入",
+      "提供个性化体验",
+      "支持多种语言输入"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "输入法的联想和纠错可减少拼写错误并提高速度，语音识别支持语音输入，用户词典带来个性化，多语言模型支持不同语言，因此 A、B、C、D、E 都能提升输入效率。",
+    "points": 1
+  },
+  {
+    "id": "multi-017",
+    "index": 17,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "Windows系统更新工具可以更新(    )。",
+    "options": [
+      "操作系统补丁",
+      "驱动程序",
+      "第三方应用程序",
+      "安全补丁",
+      "语言包"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "Windows 更新服务会分发操作系统补丁和安全补丁，也可提供兼容的驱动更新；语言功能包通常同样经系统更新基础设施下载，所以 A、B、D、E 正确。普通第三方应用一般由其自身更新器或应用商店维护，不属于 Windows 系统更新的通用范围，C 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-018",
+    "index": 18,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "在Windows操作系统中,可能会遇到(    )常见故障。",
+    "options": [
+      "系统缓慢或冻结",
+      "软件安装错误",
+      "网络连接中断",
+      "硬件不兼容",
+      "打印机驱动问题"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "资源不足或故障可造成系统卡顿，权限与依赖问题会引发软件安装错误，配置或链路异常会中断网络，硬件兼容性以及打印机驱动也都是常见故障来源，因此 A、B、C、D、E 均成立。",
+    "points": 1
+  },
+  {
+    "id": "multi-019",
+    "index": 19,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "在使用Windows小工具的过程中,(    )操作可能会导致问题。",
+    "options": [
+      "将小工具拖放到不适当的位置",
+      "修改小工具的设置",
+      "删除小工具",
+      "更新小工具",
+      "不更新小工具的软件版本"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "把小工具放到不合适的位置可能遮挡界面，错误修改设置会使功能异常，删除会造成不可用，长期不更新会留下兼容或安全问题，故 A、B、C、E 都可能导致问题。正常更新通常用于修复问题，D 本身不是负面操作。",
+    "points": 1
+  },
+  {
+    "id": "multi-020",
+    "index": 20,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "当你想要查找某个特定的网页时,可以使用(    )。",
+    "options": [
+      "在搜索引擎中输入关键词进行搜索",
+      "访问收藏夹中的网页链接",
+      "通过浏览器的历史记录找到之前访问过的网页",
+      "使用浏览器的地址栏直接输入网址",
+      "询问朋友或同事推荐的网页链接"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "关键词搜索可发现页面，收藏夹和历史记录可找回已知页面，明确网址时可直接在地址栏访问，向他人询问也可能取得准确链接，因此 A、B、C、D、E 都是查找特定网页的可行途径。",
+    "points": 1
+  },
+  {
+    "id": "multi-021",
+    "index": 21,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "在使用浏览器的高级探索功能时,(    )可以帮助你更好地理解网页的工作原理。",
+    "options": [
+      "查看网页的源代码",
+      "使用浏览器的开发者工具进行网络请求分析",
+      "禁用JavaScript来查看网页的基本结构",
+      "启用浏览器的广告拦截器",
+      "清除浏览器的缓存和Cookie"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "源代码揭示页面结构，开发者工具可观察请求和资源加载，禁用 JavaScript 能区分静态结构与脚本行为，故 A、B、C 有助于理解工作原理。广告拦截和清理缓存主要用于过滤内容或排障，D、E 不直接解释页面机制。",
+    "points": 1
+  },
+  {
+    "id": "multi-022",
+    "index": 22,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "正确描述Office快捷键作用的是(    )。",
+    "options": [
+      "Ctrl+C: 复制选中的内容",
+      "Ctrl+V: 粘贴剪切板中的内容",
+      "Ctrl+A: 查找",
+      "Ctrl+F: 全选",
+      "Ctrl+H: 替换"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "Ctrl+C 用于复制，Ctrl+V 用于粘贴，Ctrl+H 通常打开替换功能，所以 A、B、E 正确。Ctrl+A 实际是全选而非查找，Ctrl+F 实际是查找而非全选，C、D 把作用写反了。",
+    "points": 1
+  },
+  {
+    "id": "multi-023",
+    "index": 23,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "在Word中,(    )可以提高工作效率。",
+    "options": [
+      "使用快捷键",
+      "利用模板快速创建文档",
+      "批量修改文档格式",
+      "定期备份文件",
+      "使用宏自动化任务"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "快捷键减少操作步骤，模板复用结构，批量格式修改避免逐项处理，备份缩短故障恢复时间，宏可自动执行重复任务，因此 A、B、C、D、E 都能从不同方面提高 Word 工作效率。",
+    "points": 1
+  },
+  {
+    "id": "multi-024",
+    "index": 24,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "关于Word样式库的快速应用,(    )操作可以加速文档格式设置。",
+    "options": [
+      "创建个性化样式模板",
+      "使用“样式”功能批量修改文字格式",
+      "手动逐一调整每个段落的字体和大小",
+      "利用“格式刷”复制并应用格式",
+      "导入外部样式库进行快速设置"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "个性化样式模板可复用规范，样式功能能统一批量修改，格式刷可复制现有格式，导入样式库可快速套用外部规范，所以 A、B、D、E 能加速排版。C 逐段手工调整耗时且易产生不一致。",
+    "points": 1
+  },
+  {
+    "id": "multi-025",
+    "index": 25,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "在Word中进行图文混排时,可以提高文档的视觉效果和专业程度的方法有(    )。",
+    "options": [
+      "使用“样式”功能批量修改文字格式",
+      "利用“格式刷”复制并应用格式",
+      "手动逐一调整每个段落的字体和大小",
+      "导入外部样式库进行快速设置",
+      "使用“布局”或“排列”功能合理放置图片和文本"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "样式、格式刷和外部样式库可保持文字视觉规范，布局或排列功能能控制图片环绕、对齐和层次，故 A、B、D、E 有助于专业图文混排。C 逐段手调效率低且容易破坏一致性，不是推荐方法。",
+    "points": 1
+  },
+  {
+    "id": "multi-026",
+    "index": 26,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "在Excel中,公式可以用来进行(    )操作。",
+    "options": [
+      "对工作表数据进行计算",
+      "查找特定数据",
+      "匹配不同数据项",
+      "进行数据统计",
+      "实现动画效果"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "Excel 公式既能进行算术计算，也能借助 LOOKUP、XLOOKUP 等函数查找数据，使用 MATCH 等函数匹配位置，并用 SUM、COUNT、AVERAGE 等完成统计，因此 A、B、C、D 正确。公式不负责生成动画效果，E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-027",
+    "index": 27,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "在Excel中,进行数据排序时,可以使用(    )方法。",
+    "options": [
+      "按单元格值",
+      "按条件格式图标",
+      "按字体类型排序",
+      "按字体颜色排序",
+      "按单元格颜色排序"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "Excel 自定义排序可按单元格值，也可按条件格式图标、字体颜色和单元格颜色排序，所以 A、B、D、E 正确。排序菜单不提供按字体名称或字体类型排序的通用规则，C 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-028",
+    "index": 28,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "作为人工智能训练师,在使用Excel进行数据可视化时,(    )方法可以帮助提高图表的清晰度和专业度。",
+    "options": [
+      "选择合适的图表类型",
+      "使用统一的色调和风格",
+      "添加图表标题和数据标签",
+      "调整图表的大小以适应更多数据",
+      "避免过多的图表特效和颜色"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "合适的图表类型能准确表达关系，统一色调保持视觉一致，标题和数据标签补充必要语义，克制特效和颜色可减少干扰，因此 A、B、C、E 正确。单纯放大图表并不能解决数据过多造成的拥挤，D 不是可靠方法。",
+    "points": 1
+  },
+  {
+    "id": "multi-029",
+    "index": 29,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "关于Excel工作簿的管理,(    )操作是正确的。",
+    "options": [
+      "可以将多个工作簿合并为一个工作簿",
+      "可以对工作簿进行加密保护",
+      "可以对工作簿中的数据进行排序",
+      "可以对工作簿中的数据进行筛选",
+      "可以对工作簿中的数据进行分类汇总"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "Excel 可通过移动或复制工作表、查询等方式合并工作簿，也能加密保护文件；工作簿内的数据可以排序、筛选并执行分类汇总。因此 A、B、C、D、E 描述的操作都可实现。",
+    "points": 1
+  },
+  {
+    "id": "multi-030",
+    "index": 30,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "作为人工智能训练师,在利用Excel宏实现数据处理自动化时,(    )操作是可能的。",
+    "options": [
+      "自动清洗数据",
+      "自动生成图表",
+      "自动进行数据分类",
+      "自动填充公式",
+      "自动发送邮件"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "宏可调用工作表和应用对象来清洗数据、生成图表、按规则分类以及填充公式；在配置邮件客户端或接口后也能自动发送邮件。因此 A、B、C、D、E 都是可编程实现的自动化操作。",
+    "points": 1
+  },
+  {
+    "id": "multi-031",
+    "index": 31,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "(    )情况可能导致劳动合同被认定为无效。",
+    "options": [
+      "用人单位与劳动者未在一个月内订立书面劳动合同",
+      "劳动合同中约定的劳动报酬低于当地最低工资标准",
+      "劳动合同中约定的试用期为两个月",
+      "劳动合同中约定了违反法律、行政法规的条款",
+      "用人单位未按照合同约定支付劳动报酬"
+    ],
+    "answer": [
+      "B",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "约定工资低于法定最低标准以及设置违反法律、行政法规的条款，都会使相应约定无效，故 B、D 正确。A 会触发未及时签书面合同的责任但不当然使劳动关系无效；两个月试用期可能合法，欠付工资是履约违约，C、E 也不当然导致合同无效。",
+    "points": 1
+  },
+  {
+    "id": "multi-032",
+    "index": 32,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "在劳动合同中,通常需要明确规定(    )事项以保障雇员权益。",
+    "options": [
+      "试用期长度及条件",
+      "培训和技能提升",
+      "工作职责的具体描述",
+      "合同期限和终止条件",
+      "竞业禁止和保密协议"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "如设置试用期，应明确期限和条件；培训安排关系到发展机会与费用责任；工作职责、合同期限和终止条件决定基本权利义务；竞业和保密条款还需明确范围、期限及补偿。因此 A、B、C、D、E 都宜在适用时写清，以避免权责不明。",
+    "points": 1
+  },
+  {
+    "id": "multi-033",
+    "index": 33,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "订立劳动合同应遵循的基本原则是(    )。",
+    "options": [
+      "劳动行政部门鉴证原则",
+      "平等自愿原则",
+      "协商一致原则",
+      "遵守法律法规原则",
+      "双方公证原则"
+    ],
+    "answer": [
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "劳动合同应由双方在平等自愿基础上协商一致，内容还必须遵守法律法规，所以 B、C、D 是基本原则。行政鉴证和双方公证都不是劳动合同成立或生效的一般必经条件，A、E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-034",
+    "index": 34,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "根据《中华人民共和国网络安全法》,网络运营者应当履行的安全保障义务包括(    )。",
+    "options": [
+      "制定内部安全管理制度和操作规程,确定网络安全负责人,落实网络安全保护责任",
+      "采取防范计算机病毒和网络攻击、网络侵入等危害网络安全行为的技术措施",
+      "采取监测、记录网络运行状态、网络安全事件的技术措施,并按照规定留存相关的网络日志不少于六个月",
+      "采取数据分类、重要数据备份和加密等措施",
+      "法律、行政法规规定的其他义务"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "网络运营者需要建立内部制度并落实责任，部署病毒和攻击防护，监测记录运行状态且依法留存日志，对数据分类并采取备份、加密措施，同时履行其他法定义务。因此 A、B、C、D、E 均属于网络安全保障义务。",
+    "points": 1
+  },
+  {
+    "id": "multi-035",
+    "index": 35,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "在网络接入使用中,人工智能训练师应当(    )确保合规性。",
+    "options": [
+      "使用加密技术进行数据传输",
+      "定期参与网络安全培训",
+      "遵守数据保护法规",
+      "使用个人设备进行工作",
+      "保持软件和系统的更新"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "加密传输降低窃听风险，安全培训提升人员防护能力，遵守数据法规保证处理合法，及时更新系统可修补漏洞，因此 A、B、C、E 有助于合规。未经单位管理的个人设备会增加数据泄露和配置失控风险，D 不能作为一般合规措施。",
+    "points": 1
+  },
+  {
+    "id": "multi-036",
+    "index": 36,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "关键信息基础设施的运营者还应当履行(    )。",
+    "options": [
+      "设置专门安全管理机构和安全管理负责人,并对该负责人和关键岗位的人员进行安全背景审查。",
+      "定期对从业人员进行网络安全教育、技术培训和技能考核。",
+      "对重要系统和数据库进行容灾备份。",
+      "制定网络安全事件应急预案,并定期进行演练。",
+      "法律、行政法规规定的其他义务。"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "关键信息基础设施运营者要设置专门机构并审查关键人员，持续开展教育培训，对重要系统和数据库做容灾备份，制定并演练应急预案，还要履行其他法律规定的义务，故 A、B、C、D、E 全部正确。",
+    "points": 1
+  },
+  {
+    "id": "multi-037",
+    "index": 37,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "(    )正确描述了专利申请权主体。",
+    "options": [
+      "发明人必须是企事业单位的员工",
+      "企事业单位可以是专利申请权主体",
+      "个人可以是专利申请权主体",
+      "发明人、企事业单位和个人都不能作为专利申请权主体",
+      "发明人、企事业单位和个人都可以作为专利申请权主体"
+    ],
+    "answer": [
+      "B",
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "企事业单位可对职务发明等享有申请权，个人可对非职务发明或受让的成果申请，发明人在符合法律归属条件时也可以成为申请权人，所以 B、C、E 成立。发明人不必是单位员工，A 错误；D 否认所有合法主体，显然不成立。",
+    "points": 1
+  },
+  {
+    "id": "multi-038",
+    "index": 38,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "专利授权的实质性条件通常包括(    )要素。",
+    "options": [
+      "新颖性",
+      "实用性",
+      "创造性",
+      "可复制性",
+      "道德合规性"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "发明或实用新型获得授权通常要求新颖性、创造性和实用性，因此 A、B、C 正确。可复制性不是专利法规定的独立授权要件，道德合规可能影响可专利主题，但不是这组三性中的实质条件，D、E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-039",
+    "index": 39,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "在专利申请流程的标准化步骤中,(    )属于必须进行的步骤。",
+    "options": [
+      "提交专利申请书和相关文件",
+      "对申请进行初步审查",
+      "公布专利申请以征求公众意见",
+      "实质审查以确定发明的可专利性",
+      "办理专利权登记并支付年费以维持专利有效性"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "按完整的发明专利申请至维持流程，申请人先提交文件，主管机关进行初步审查，申请随后公开接受社会查阅和监督，再经实质审查判断可专利性，授权后办理登记并按期缴纳年费。因此在该流程语境下 A、B、C、D、E 均有对应环节。",
+    "points": 1
+  },
+  {
+    "id": "multi-040",
+    "index": 40,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "遵纪守法的社会价值体现在(    )方面。",
+    "options": [
+      "维护社会秩序",
+      "保障公民权益",
+      "促进经济发展",
+      "提高道德水平",
+      "减少犯罪率"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "守法能稳定社会秩序并保障公民权益，清晰可预期的规则有利于经济活动，长期依法行事会强化公共道德，同时通过预防和惩戒降低违法犯罪。因此 A、B、C、D、E 都体现了社会价值。",
+    "points": 1
+  },
+  {
+    "id": "multi-041",
+    "index": 41,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "签订劳动合同的情形中,可以认定无效或部分无效的有(    )。",
+    "options": [
+      "用人单位甲与劳动者乙签订劳动合同,为期一年,工作内容是运送假钞",
+      "用人单位甲与劳动者乙约定,社会保险由劳动者自行缴纳",
+      "用人单位甲与劳动者乙签订的劳动合同中缺少劳动保护条款",
+      "用人单位甲与劳动者乙签订的劳动合同没有约定违约金",
+      "用人单位合并以后的合同"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "answerSource": "official",
+    "answerBasis": "manual_official",
+    "confidence": "high",
+    "explanation": "运送假钞的工作内容违反法律，约定劳动者自行承担依法应由单位履行的社会保险义务排除了法定权利，故A、B可导致合同或相关条款无效。官方Word还将缺少劳动保护条款的C列为部分无效情形；严格法律实务中，欠缺必备条款通常应先补充完善，不当然使整份合同无效。未约定违约金不影响效力，单位合并后原合同通常继续履行，D、E不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-042",
+    "index": 42,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "根据知识产权法的基本原则,(    )行为属于侵权行为。",
+    "options": [
+      "未经许可擅自使用他人的专利产品",
+      "在新闻报道中合理引用他人作品",
+      "未经允许将他人的商标用于自己的产品包装上",
+      "在学术研究中引用他人的研究成果",
+      "在公共场所播放他人的音乐作品"
+    ],
+    "answer": [
+      "A",
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "未经许可实施他人专利产品会侵犯专利权，将他人商标用于自有包装易造成来源混淆，公共场所向公众播放音乐通常涉及表演或播放权，故 A、C、E 属于侵权。新闻报道中的必要合理引用和注明来源的学术引用可落入合理使用，B、D 不当然侵权。",
+    "points": 1
+  },
+  {
+    "id": "multi-043",
+    "index": 43,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "属于侵犯著作权人权利的情形是(    )。",
+    "options": [
+      "未经允许,将他人作品改编成电影",
+      "未经许可,在公共场合演唱他人的歌曲",
+      "未经许可,将他人的软件进行商业性使用",
+      "未经许可,在社交媒体上分享他人的摄影作品",
+      "未经许可,将他人的文章进行翻译并发布"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "改编作品为电影涉及改编权，公开演唱涉及表演权，商业使用软件涉及复制和许可，社交媒体分享摄影作品涉及信息网络传播，翻译并发布涉及翻译和传播权。A、B、C、D、E 在无授权且无合理使用例外时都会侵犯著作权。",
+    "points": 1
+  },
+  {
+    "id": "multi-044",
+    "index": 44,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "在讨论人工智能训练师与专利权的主体和客体时,(    )是正确的。",
+    "options": [
+      "人工智能训练师可以成为专利的发明主体",
+      "由人工智能训练师辅助开发的AI技术不能成为专利的发明客体",
+      "人工智能本身可以作为专利的发明主体",
+      "人工智能生成的技术方案可以成为专利的发明客体",
+      "人工智能训练师可以成为专利的发明客体"
+    ],
+    "answer": [
+      "A",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "人工智能训练师作为自然人可对其创造性贡献主张发明人身份，具备技术性且满足授权条件的人工智能生成或辅助生成方案可成为专利客体，所以 A、D 正确。AI 本身通常不具备发明人法律主体资格，技术方案并非因 AI 辅助就被排除，训练师本人也不是发明客体，B、C、E 错误。",
+    "points": 1
+  },
+  {
+    "id": "multi-045",
+    "index": 45,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "基本要求",
+    "section": "职业道德与基础知识",
+    "stem": "在知识产权保护中,专利保护的对象是(    )。",
+    "options": [
+      "发明创造",
+      "实用新型",
+      "外观设计",
+      "商标",
+      "商业秘密"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "专利制度保护发明、实用新型和外观设计三类创新成果，故 A、B、C 正确。商标由商标法保护，商业秘密依反不正当竞争和保密制度保护，D、E 不属于专利客体。",
+    "points": 1
+  },
+  {
+    "id": "multi-046",
+    "index": 46,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "属于Python爬虫库的是(    )。",
+    "options": [
+      "BeautifulSoup",
+      "Scrapy",
+      "NumPy",
+      "Requests",
+      "Pandas"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "BeautifulSoup 用于解析网页，Scrapy 是爬虫框架，Requests 用于发起 HTTP 请求，三者分别对应 A、B、D，常用于爬取流程。NumPy 和 Pandas 主要面向数值计算与表格数据处理，C、E 不是专门的爬虫库。",
+    "points": 1
+  },
+  {
+    "id": "multi-047",
+    "index": 47,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "数据抓取与提取的常用技术包括(    )。",
+    "options": [
+      "正则表达式",
+      "网络爬虫",
+      "API接口",
+      "数据可视化",
+      "数据库查询"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "正则表达式可从文本提取模式，网络爬虫采集网页，API 直接获取结构化数据，数据库查询从存储系统筛选记录，因此 A、B、C、E 都是抓取或提取技术。数据可视化用于呈现结果，不负责原始数据提取，D 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-048",
+    "index": 48,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "在数据采集流程中,使用工具可以(    )。",
+    "options": [
+      "提高数据收集的效率",
+      "确保数据的质量和一致性",
+      "简化数据清洗和预处理的步骤",
+      "加强数据分析和可视化的能力",
+      "限制了数据来源的多样性"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "采集工具能自动执行重复任务提高效率，通过校验规则和统一接口改善质量一致性，并可衔接清洗预处理以减少手工步骤，所以 A、B、C 正确。分析可视化属于后续环节而非采集工具的必然能力，工具也不必然限制数据来源，D、E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-049",
+    "index": 49,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "数据治理工具在人工智能领域具有(    )关键作用。",
+    "options": [
+      "确保数据的一致性和准确性",
+      "提高数据的安全性和隐私保护",
+      "简化数据收集和存储过程",
+      "增强数据分析的可重复性和可靠性",
+      "限制数据科学家的创新自由"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "数据治理通过标准、质量规则保证一致准确，通过权限和分类分级提高安全隐私，并以元数据、血缘和版本记录增强分析的可重复性与可靠性，故 A、B、D 正确。它不以简化采集存储为核心目标，也不应限制科学家的合理创新，C、E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-050",
+    "index": 50,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "ETL工具的基本原理包括(    )步骤。",
+    "options": [
+      "数据抽取",
+      "数据清洗",
+      "数据转换",
+      "数据加载",
+      "数据验证"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "ETL 先从来源抽取数据，再在转换阶段执行清洗和格式、结构变换，最后加载到目标系统，因此 A、B、C、D 构成常见流程。数据验证是重要质量控制，但不是 ETL 缩写对应的独立核心阶段，E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-051",
+    "index": 51,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "在使用数据存储和管理工具时,(    )可以提高工作效率。",
+    "options": [
+      "使用自动化脚本简化数据操作",
+      "定期对数据进行清理和维护",
+      "利用内置模板快速创建报表",
+      "对数据进行分类和标签化以便于检索",
+      "避免使用复杂的查询语句以提高性能"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "自动化脚本减少重复操作，定期清理维护防止数据和索引劣化，内置模板加快报表创建，分类标签提升检索效率，所以 A、B、C、D 正确。复杂查询应根据需求优化而非一概避免，E 的绝对做法可能牺牲功能且未必提升性能。",
+    "points": 1
+  },
+  {
+    "id": "multi-052",
+    "index": 52,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "(    )是云服务和工具的优势。",
+    "options": [
+      "弹性伸缩",
+      "按需付费",
+      "自动备份",
+      "数据隔离",
+      "随时随地访问"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "云服务可按负载弹性伸缩并按使用量计费，托管服务常提供自动备份，租户和权限机制支持数据隔离，网络接入又使授权用户可跨地点访问。因此 A、B、C、D、E 都是云服务在正确配置下能够提供的优势。",
+    "points": 1
+  },
+  {
+    "id": "multi-053",
+    "index": 53,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "在进行数据预处理时,(    )工具可以帮助实现常见数据格式间的转换。",
+    "options": [
+      "Python的pandas库",
+      "Java的Jackson库",
+      "xmlstarlet",
+      "csvkit",
+      "Excel"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "Pandas 可在 CSV、JSON、Excel 等表格格式间转换，Jackson 处理 Java 中的 JSON 等格式，xmlstarlet 处理 XML，csvkit 处理 CSV，Excel 也能导入和导出多种常见表格或文本格式。因此 A、B、C、D、E 均可用于相应格式转换。",
+    "points": 1
+  },
+  {
+    "id": "multi-054",
+    "index": 54,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "大数据处理平台通常可以分为(    )类型。",
+    "options": [
+      "批处理平台",
+      "流处理平台",
+      "图计算平台",
+      "内存计算平台",
+      "实时处理平台"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "批处理面向有界数据集，流处理和实时处理面向持续到达及低延迟数据，图计算针对图结构关系，内存计算以减少磁盘访问提高速度。A、B、C、D、E 分别描述了大数据平台常见的处理模式或专门计算类型。",
+    "points": 1
+  },
+  {
+    "id": "multi-055",
+    "index": 55,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "广泛用于数据清洗和预处理阶段的工具是(    )。",
+    "options": [
+      "Python的Pandas库",
+      "SQLServer",
+      "ApacheHadoop",
+      "MicrosoftExcel",
+      "TableauPrep"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "Pandas 适合脚本化清洗，SQL Server 可用 SQL 或集成服务筛选、去重和转换，Hadoop 生态可分布式预处理大数据，Excel 适合中小规模整理，Tableau Prep 专门提供可视化清洗流程。因此 A、B、C、D、E 都广泛用于不同规模或场景的预处理。",
+    "points": 1
+  },
+  {
+    "id": "multi-056",
+    "index": 56,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "特征工程工具在人工智能应用中通常具有(    )特点。",
+    "options": [
+      "自动化特征提取",
+      "增强数据可视化",
+      "简化特征选择过程",
+      "提高模型性能",
+      "降低模型性能"
+    ],
+    "answer": [
+      "A",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "特征工程工具可自动提取候选特征，利用统计或模型方法简化特征选择，并通过更有信息量的表示提升模型效果，所以 A、C、D 正确。增强数据可视化不是其必备特征，降低模型性能更不是设计目标，B、E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-057",
+    "index": 57,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "使用数据质量监控工具可以(    )。",
+    "options": [
+      "自动检测数据质量问题",
+      "提供数据清洗建议",
+      "实时监控数据变化",
+      "生成数据质量报告",
+      "优化数据处理流程"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "质量监控工具能按规则自动发现缺失、异常等问题，给出清洗建议，持续监测数据变化并生成报告；这些结果还能定位反复出错的环节，支撑处理流程优化。因此 A、B、C、D、E 都是其直接能力或合理作用。",
+    "points": 1
+  },
+  {
+    "id": "multi-058",
+    "index": 58,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "数据审核平台的主要类型包括(    )。",
+    "options": [
+      "在线审核平台",
+      "离线审核平台",
+      "实时审核平台",
+      "批量审核平台",
+      "智能审核平台"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "按连接方式可分在线和离线审核，按时效或任务组织可分实时和批量审核，按自动化能力还可形成智能审核平台。A、B、C、D、E 是从不同分类维度描述的数据审核平台类型，彼此可以组合。",
+    "points": 1
+  },
+  {
+    "id": "multi-059",
+    "index": 59,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "在选择合适的数据可视化工具时,人工智能训练师应考虑(    )因素。",
+    "options": [
+      "易用性和学习曲线",
+      "数据兼容性和处理能力",
+      "可视化类型和定制选项",
+      "成本和许可证要求",
+      "社区支持和更新频率"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "选择可视化工具要评估上手难度，确认数据格式和规模是否兼容，检查图形种类与定制能力，同时衡量成本许可和长期社区维护情况。因此 A、B、C、D、E 都会影响工具能否适配当前及后续需求。",
+    "points": 1
+  },
+  {
+    "id": "multi-060",
+    "index": 60,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "业务流程管理与优化工具可以帮助企业实现(    )目标。",
+    "options": [
+      "提高工作效率",
+      "降低运营成本",
+      "提升客户满意度",
+      "优化资源配置",
+      "实现流程自动化"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "流程管理工具通过建模、协同和自动流转提高效率并减少人工成本，借助可视化和规则优化资源配置，稳定及时的流程又能改善客户体验。因此 A、B、C、D、E 都是 BPM 与优化工具可支持的目标。",
+    "points": 1
+  },
+  {
+    "id": "multi-061",
+    "index": 61,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "数据采集的策略包括(    )。",
+    "options": [
+      "数据源的选择",
+      "数据采集的方法",
+      "数据清洗和预处理",
+      "数据存储和管理",
+      "数据分析和挖掘"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "采集策略首先要确定从哪些数据源获取、采用何种采集方法，并规划采集结果如何可靠存储和管理，因此 A、B、D 正确。清洗预处理和分析挖掘属于数据取得后的处理与利用环节，C、E 不是采集策略本身。",
+    "points": 1
+  },
+  {
+    "id": "multi-062",
+    "index": 62,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "在进行数据源选择时,(    )可以帮助我们找到合适的数据源。",
+    "options": [
+      "使用搜索引擎查找相关数据",
+      "咨询专业人士或行业专家",
+      "参考权威机构发布的数据报告",
+      "通过社交媒体平台获取数据",
+      "尝试多种数据源并进行比较"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "搜索引擎能发现公开来源，专家可提供行业线索，权威报告提供高可信数据，社交媒体可补充实时或用户数据，多源试用比较则有助于验证覆盖度与质量。因此 A、B、C、D、E 都可帮助筛选合适数据源，但实际使用仍需校验合法性和可信度。",
+    "points": 1
+  },
+  {
+    "id": "multi-063",
+    "index": 63,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "在选择数据抓取技术时,需要考虑的因素包括(    )。",
+    "options": [
+      "抓取速度",
+      "数据准确性",
+      "技术支持",
+      "抓取范围",
+      "抓取成本"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "抓取速度决定时效和吞吐，准确性决定可用程度，技术支持影响维护风险，抓取范围关系到覆盖度，成本则约束基础设施、开发和长期运行。因此 A、B、C、D、E 都是选择抓取技术时应权衡的因素。",
+    "points": 1
+  },
+  {
+    "id": "multi-064",
+    "index": 64,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "在执行网络数据抓取任务时,人工智能训练师需要注意(    )法律和伦理问题。",
+    "options": [
+      "遵守robots.txt文件规定的抓取规则",
+      "尊重版权和知识产权",
+      "避免对目标网站造成过度负担",
+      "保证数据的匿名性和隐私保护",
+      "公开抓取的数据和抓取过程"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "执行网络抓取应尊重站点声明的抓取规则和知识产权，控制频率避免给服务器造成过载，并对个人信息实施匿名化或隐私保护，故 A、B、C、D 正确。E 要求一律公开数据和过程，既非普遍义务，还可能泄露隐私或商业信息。",
+    "points": 1
+  },
+  {
+    "id": "multi-065",
+    "index": 65,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "在设计数据存储解决方案时,考虑数据的持久化,(    )可以用来实现数据的持久化。",
+    "options": [
+      "使用事务来确保数据的一致性",
+      "实施RAID技术以提高数据冗余和可用性",
+      "采用实时内存数据库加速数据访问",
+      "使用数据备份和恢复策略",
+      "应用数据加密技术保护数据安全"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "持久化数据库中的事务通过提交原子性和持久性保证有效写入，RAID 用冗余降低磁盘故障风险，备份恢复则在数据损坏后提供副本，所以 A、B、D 有助于持久保存。纯内存数据库若无落盘机制不能保证持久化，加密只保护机密性，C、E 不直接解决持久性。",
+    "points": 1
+  },
+  {
+    "id": "multi-066",
+    "index": 66,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "数据清洗与预处理流程的主要步骤包括(    )。",
+    "options": [
+      "数据筛选",
+      "数据转换",
+      "数据分析",
+      "数据集成",
+      "数据可视化"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "数据筛选保留符合条件的记录，数据转换统一结构或尺度，数据集成合并不同来源，这三项对应 A、B、D，都是清洗预处理的主要步骤。数据分析和可视化通常发生在形成可用数据集之后，C、E 不属于主要预处理步骤。",
+    "points": 1
+  },
+  {
+    "id": "multi-067",
+    "index": 67,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "在数据集成过程中,(    )有助于处理数据冲突和不一致性。",
+    "options": [
+      "数据仲裁,选择最佳数据源",
+      "数据融合,结合多个数据源的信息",
+      "数据清洗,消除错误和重复项",
+      "数据加密,保护数据安全",
+      "数据压缩,减少存储空间需求"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "数据仲裁可在冲突值中选择可信来源，数据融合可综合多源信息，数据清洗可纠正错误并去重，所以 A、B、C 都直接处理冲突和不一致。加密解决保密性，压缩解决空间占用，D、E 不会消除语义或数值冲突。",
+    "points": 1
+  },
+  {
+    "id": "multi-068",
+    "index": 68,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "在业务数据相关流程中,为了确保数据安全和用户隐私,(    )被广泛应用。",
+    "options": [
+      "加密技术",
+      "访问控制",
+      "数据脱敏",
+      "数据备份",
+      "数据恢复"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "加密防止数据被窃读，访问控制限制未授权使用，脱敏降低身份暴露风险；备份和恢复则保障误删、损坏或灾害后的数据可用性。A、B、C 侧重机密性与隐私，D、E 侧重完整性和可用性，五项共同构成广泛使用的数据安全措施。",
+    "points": 1
+  },
+  {
+    "id": "multi-069",
+    "index": 69,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "实时数据处理技术中,(    )特性对于处理大规模流式数据至关重要。",
+    "options": [
+      "数据的持久化存储能力",
+      "支持窗口操作",
+      "异步数据处理能力",
+      "容错恢复机制",
+      "数据处理的确定性"
+    ],
+    "answer": [
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "窗口操作把无界数据流划分为可计算区间，异步处理提升并发吞吐，容错恢复保证节点故障后继续处理，因此 B、C、D 对大规模流处理至关重要。持久化可由外部日志或存储提供，并非处理引擎必备内置能力；严格确定性也不是所有实时场景的必要条件，A、E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-070",
+    "index": 70,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "在特征选择方法中,(    )方法可以用于减少特征的维度。",
+    "options": [
+      "过滤法",
+      "包装法",
+      "嵌入法",
+      "降维法",
+      "聚类法"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "过滤法依据统计指标筛选特征，包装法按模型效果搜索子集，嵌入法在训练中完成选择，降维法将原特征映射为更少变量，所以 A、B、C、D 都能减少最终特征维数。一般聚类法主要分组样本，未指定特征聚类时不属于标准特征选择方法，E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-071",
+    "index": 71,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "容器化技术在业务数据处理流程中的意义包括(    )。",
+    "options": [
+      "提高资源利用率",
+      "简化部署和运维",
+      "增强系统安全性",
+      "降低硬件成本",
+      "支持跨平台运行"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "容器共享内核并按需分配资源，可提高利用率并减少硬件需求；镜像和编排简化部署运维；命名空间、权限等隔离机制增强安全；标准镜像还便于在兼容平台间迁移。因此 A、B、C、D、E 都是其在数据流程中的实际意义。",
+    "points": 1
+  },
+  {
+    "id": "multi-072",
+    "index": 72,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "数据质量评估的主要目的是(    )。",
+    "options": [
+      "提高数据处理的效率",
+      "保证数据的准确性",
+      "保证数据的时效性",
+      "保证数据的完整性",
+      "保证数据的安全性"
+    ],
+    "answer": [
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "数据质量评估直接检查数据是否准确、是否及时更新以及是否完整覆盖，因此 B、C、D 是主要目的。处理效率属于流程性能，安全性属于访问保护和风险管理，A、E 虽重要但不是这里的质量评估核心目标。",
+    "points": 1
+  },
+  {
+    "id": "multi-073",
+    "index": 73,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "数据校验过程中,为了确保数据的质量,(    )步骤是必要的。",
+    "options": [
+      "检查数据的完整性,确保没有缺失值",
+      "应用机器学习模型预测数据趋势",
+      "检测并处理异常值,避免其对分析结果的影响",
+      "验证数据的一致性,确保数据格式正确",
+      "对数据进行清洗,去除重复记录"
+    ],
+    "answer": [
+      "A",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "完整性检查发现缺失，异常值检测防止极端错误干扰结果，一致性验证确认格式和规则统一，去重清洗消除重复记录，所以 A、C、D、E 都是质量校验所需步骤。预测趋势是后续建模任务，B 不能替代基础校验。",
+    "points": 1
+  },
+  {
+    "id": "multi-074",
+    "index": 74,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "在设计高效业务流程时,(    )是至关重要的。",
+    "options": [
+      "明确流程的目标和输出",
+      "减少不必要的审批环节",
+      "提升员工的技能和培训",
+      "增加更多的检查点以确保质量",
+      "采用最新的技术而不考虑成本"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "明确目标和输出可界定流程价值，删除无效审批能缩短周期，提升员工技能保证流程真正落地，故 A、B、C 正确。盲目增加检查点会制造等待和重复，脱离成本采用最新技术也可能得不偿失，D、E 不符合高效原则。",
+    "points": 1
+  },
+  {
+    "id": "multi-075",
+    "index": 75,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "合规性检查的主要目的是(    )。",
+    "options": [
+      "确保数据质量",
+      "发现潜在风险",
+      "提高数据处理效率",
+      "满足监管要求",
+      "优化数据存储结构"
+    ],
+    "answer": [
+      "B",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "合规检查通过对照法律、标准和内部制度确认是否满足监管要求，并提前暴露处罚、泄露等潜在风险，所以 B、D 正确。数据质量、处理效率和存储结构可由其他专项评估优化，A、C、E 不是合规检查的主要目的。",
+    "points": 1
+  },
+  {
+    "id": "multi-076",
+    "index": 76,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "业务数据的特点有(    )。",
+    "options": [
+      "实时性",
+      "多样性",
+      "准确性",
+      "可追溯性",
+      "安全性"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "业务数据常随业务发生而快速变化并具有多来源、多格式特征，只有保持准确才能支持决策；同时还需记录来源和处理链路以便追溯，并通过安全措施保护敏感信息。因此 A、B、C、D、E 都是业务数据的重要特点或要求。",
+    "points": 1
+  },
+  {
+    "id": "multi-077",
+    "index": 77,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "实施人工智能项目时(    )因素被认为是至关重要的成功要素。",
+    "options": [
+      "数据质量和数量",
+      "强大的计算能力",
+      "高级算法和模型",
+      "用户界面设计",
+      "法律法规遵守"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "足量且高质量的数据决定模型上限，计算能力支撑训练和推理，高级算法模型提供解决问题的方法，遵守法律法规保证项目可部署和持续运行，所以 A、B、C、E 是普遍成功要素。用户界面只对部分面向终端用户的项目关键，D 不是所有 AI 项目的通用核心条件。",
+    "points": 1
+  },
+  {
+    "id": "multi-078",
+    "index": 78,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "(    )功能属于人工智能的范畴。",
+    "options": [
+      "图像识别",
+      "自动翻译",
+      "智能推荐",
+      "在线客服",
+      "自动驾驶"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "图像识别使用视觉模型，自动翻译使用语言模型，智能推荐进行偏好预测，在线客服可由对话系统实现，自动驾驶综合感知与决策控制。因此 A、B、C、D、E 都存在典型的人工智能实现形态。",
+    "points": 1
+  },
+  {
+    "id": "multi-079",
+    "index": 79,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "推荐系统功能模块的原理包括(    )方面。",
+    "options": [
+      "协同过滤",
+      "内容推荐",
+      "混合推荐",
+      "深度学习推荐",
+      "基于知识的推荐"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "协同过滤利用群体行为相似性，内容推荐匹配物品和用户特征，混合推荐组合多种信号，深度学习学习复杂表示，基于知识的方法使用规则和领域知识。A、B、C、D、E 都是推荐系统常见原理或技术路线。",
+    "points": 1
+  },
+  {
+    "id": "multi-080",
+    "index": 80,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "实现智能搜索功能模块的关键步骤有(    )。",
+    "options": [
+      "数据收集与预处理",
+      "特征提取与选择",
+      "模型训练与评估",
+      "搜索结果排序与展示",
+      "网络安全与数据加密"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "智能搜索需要先收集并清洗语料，再提取可检索特征，训练和评估匹配或排序模型，最后对结果排序并展示，所以 A、B、C、D 构成关键实现链路。安全加密是系统通用保障，不是搜索功能算法模块特有的核心步骤，E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-081",
+    "index": 81,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "智能交互功能模块的优势是(    )。",
+    "options": [
+      "提高用户体验",
+      "降低人工成本",
+      "增强系统智能化程度",
+      "数据安全",
+      "无法提高工作效率"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "智能交互能提供更及时、自然的服务体验，自动处理重复咨询以降低人工成本，并让系统具备理解和反馈能力，因此 A、B、C 正确。数据安全是必须另行保障的要求而非交互模块天然优势，E 否认效率提升也与自动化效果相反，D、E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-082",
+    "index": 82,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "自动数据处理功能模块可以支持(    )数据处理方式。",
+    "options": [
+      "批量处理",
+      "实时处理",
+      "定时处理",
+      "手动处理",
+      "分布式处理"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "自动数据处理模块可针对积累的数据做批量处理，对数据流做实时处理，按计划任务定时运行，也可在集群中分布式执行，所以 A、B、C、E 正确。手动处理依赖人工逐次操作，不属于自动模块所支持的自动化方式，D 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-083",
+    "index": 83,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "在实现最优化决策功能模块时,(    )方法可以被采用。",
+    "options": [
+      "梯度下降法",
+      "遗传算法",
+      "线性规划",
+      "动态规划",
+      "拉格朗日乘数法"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "梯度下降适合可微目标，遗传算法进行启发式全局搜索，线性规划求解线性约束问题，动态规划利用子问题结构，拉格朗日乘数法处理等式约束优化。因此 A、B、C、D、E 都可用于不同形式的最优化决策。",
+    "points": 1
+  },
+  {
+    "id": "multi-084",
+    "index": 84,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "智能控制功能模块在(    )领域有广泛应用。",
+    "options": [
+      "智能家居",
+      "工业自动化",
+      "航空航天",
+      "医疗电子",
+      "交通运输"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "智能家居用其调节设备，工业自动化用其控制产线，航空航天用其完成导航与姿态控制，医疗电子用其辅助监测和设备调节，交通运输用其进行车辆与信号控制。因此 A、B、C、D、E 都有广泛应用。",
+    "points": 1
+  },
+  {
+    "id": "multi-085",
+    "index": 85,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "自然语言处理的任务有(    )。",
+    "options": [
+      "文本分类",
+      "命名实体识别",
+      "语音转换",
+      "问答系统",
+      "文本生成"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "文本分类判断类别，命名实体识别人名机构等实体，问答系统理解问题并组织回答，文本生成产生自然语言，因此 A、B、D、E 都是典型自然语言处理任务。C 的语音转换主要处理声学信号，通常归入语音处理而非文本 NLP 核心任务。",
+    "points": 1
+  },
+  {
+    "id": "multi-086",
+    "index": 86,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "生物特征识别功能模块的特点有(    )。",
+    "options": [
+      "唯一性",
+      "稳定性",
+      "可采集性",
+      "灵活性",
+      "不可复制性"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "适用的生物特征应能区分个体，随时间相对稳定，并可由传感器采集，所以唯一性、稳定性和可采集性对应 A、B、C。灵活性不是标准评价属性，生物特征也可能被仿造，不能宣称绝对不可复制，D、E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-087",
+    "index": 87,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "计算机视觉涉及(    )主要任务。",
+    "options": [
+      "图像分类",
+      "目标跟踪",
+      "视频压缩",
+      "图像修复",
+      "视频编辑"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "图像分类判断整幅图像类别，目标跟踪定位目标随时间的运动，图像修复根据视觉上下文恢复缺损区域，故 A、B、D 都属于计算机视觉任务。视频压缩和视频编辑主要是编码及媒体制作，C、E 不以视觉理解为核心。",
+    "points": 1
+  },
+  {
+    "id": "multi-088",
+    "index": 88,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "关于计算智能的描述,说法正确的是(    )。",
+    "options": [
+      "计算智能是一种模拟人类智能的技术和系统",
+      "计算智能主要依赖于传统编程方法",
+      "计算智能可以处理不确定性和复杂性",
+      "计算智能具有自适应和学习能力",
+      "计算智能仅限于解决特定问题"
+    ],
+    "answer": [
+      "A",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "计算智能用神经网络、进化计算、模糊系统等方式模拟智能行为，能够处理不确定和复杂问题，并具有学习、自适应能力，因此 A、C、D 正确。它不主要依赖固定规则的传统编程，也不只限于单一特定问题，B、E 错误。",
+    "points": 1
+  },
+  {
+    "id": "multi-089",
+    "index": 89,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "在数据挖掘和知识发现的过程中,(    )步骤是必不可少的。",
+    "options": [
+      "数据清洗",
+      "数据转换",
+      "数据加密",
+      "模型训练",
+      "特征提取"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "数据清洗保证输入质量，数据转换统一表示，特征提取形成可学习变量，模型训练或模式挖掘从数据中发现规律，因此 A、B、D、E 是知识发现流程的重要步骤。数据加密用于安全保护，并非发现知识必不可少的分析步骤，C 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-090",
+    "index": 90,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "数据挖掘和知识发现的方法包括(    )。",
+    "options": [
+      "统计分析",
+      "序列分析",
+      "关联规则学习",
+      "分类",
+      "聚类"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "统计分析用于描述和推断规律，序列分析研究时序或顺序模式，关联规则发现共现关系，分类预测离散类别，聚类识别自然群组。因此 A、B、C、D、E 都是数据挖掘和知识发现的常用方法。",
+    "points": 1
+  },
+  {
+    "id": "multi-091",
+    "index": 91,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "业务模块构建方法的原则包括(    )。",
+    "options": [
+      "模块化设计",
+      "高内聚低耦合",
+      "单一职责原则",
+      "开闭原则",
+      "依赖倒置原则"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "模块化设计划分系统边界，高内聚低耦合减少相互影响，单一职责控制变更原因，开闭原则支持扩展而少改旧代码，依赖倒置降低对具体实现的绑定。因此 A、B、C、D、E 都适用于业务模块构建。",
+    "points": 1
+  },
+  {
+    "id": "multi-092",
+    "index": 92,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "在进行业务流程优化时,应该采取(    )策略。",
+    "options": [
+      "持续改进",
+      "系统改造",
+      "全新设计",
+      "外包",
+      "合作"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "业务流程可通过小步持续改进消除问题，也可配合系统改造重构支撑能力，必要时对流程进行全新设计，所以 A、B、C 是常见优化策略。外包和合作是组织或资源安排，未必改善流程本身，D、E 不能作为通用优化策略。",
+    "points": 1
+  },
+  {
+    "id": "multi-093",
+    "index": 93,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "在业务数据采集中,需要重点关注(    )。",
+    "options": [
+      "数据采集人员",
+      "数据采集工具的流行度",
+      "数据采集质量",
+      "数据采集可靠性",
+      "数据采集效率"
+    ],
+    "answer": [
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "official",
+    "answerBasis": "manual_official",
+    "confidence": "high",
+    "explanation": "业务数据采集首先要保证结果符合质量要求，采集过程和来源稳定可靠，并在成本与时效约束下保持足够效率，因此 C、D、E 是重点。人员只是执行主体，工具是否流行也不等于适用或可靠，A、B 不是评价采集效果的核心指标。",
+    "points": 1
+  },
+  {
+    "id": "multi-094",
+    "index": 94,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "业务流程管理BPM的核心要素包括(    )。",
+    "options": [
+      "流程设计",
+      "流程执行",
+      "流程监控",
+      "流程分析",
+      "流程优化"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "BPM 通过流程设计定义结构，流程执行落实任务，流程监控采集运行状态，流程分析识别问题，流程优化形成持续改进闭环。因此 A、B、C、D、E 共同构成业务流程管理的核心生命周期。",
+    "points": 1
+  },
+  {
+    "id": "multi-095",
+    "index": 95,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "在进行简单业务流程分析时,常用的方法有(    )。",
+    "options": [
+      "流程图分析法",
+      "SWOT分析法",
+      "5W1H分析法",
+      "实验法",
+      "头脑风暴法"
+    ],
+    "answer": [
+      "A",
+      "C"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "流程图能直观看到步骤、分支和交接，5W1H 可从事项、原因、人员、时间、地点和方法逐项检查流程，所以 A、C 是简单流程分析的常用方法。SWOT 偏战略环境分析，实验法和头脑风暴更适合验证或产生方案，B、D、E 不是描述分析现有流程的主要方法。",
+    "points": 1
+  },
+  {
+    "id": "multi-096",
+    "index": 96,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "为了实现业务流程的持续改进,可以采用(    )方法。",
+    "options": [
+      "定期评估流程性能",
+      "鼓励员工提出改进建议",
+      "实施持续监控和改进机制",
+      "引入外部专家进行诊断",
+      "专注于单个流程的优化"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "定期评估提供基准，员工建议补充一线经验，持续监控机制及时发现偏差，外部专家可提供独立诊断，故 A、B、C、D 都能推动持续改进。只专注单个流程可能把问题转移到上下游，E 不符合系统性改进要求。",
+    "points": 1
+  },
+  {
+    "id": "multi-097",
+    "index": 97,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "业务流程优化效果的评价指标包括(    )。",
+    "options": [
+      "成本降低",
+      "效率提升",
+      "质量改进",
+      "客户满意度提高",
+      "创新能力增强"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "成本降低衡量资源节约，效率提升衡量周期和产出，质量改进反映差错减少，客户满意度体现外部价值，创新能力增强则反映流程对变化和新方案的支持。因此 A、B、C、D、E 都可作为优化效果指标。",
+    "points": 1
+  },
+  {
+    "id": "multi-098",
+    "index": 98,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "在综合业务流程分析流程中,(    )阶段涉及到对现有流程的详细描述和改进建议。",
+    "options": [
+      "需求分析",
+      "流程设计",
+      "流程实施",
+      "流程监控",
+      "流程优化"
+    ],
+    "answer": [
+      "B",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "流程设计阶段会把现有流程及目标流程的步骤、角色和规则详细建模，流程优化阶段则依据问题提出改进建议，所以 B、E 正确。需求分析主要明确目标和边界，实施阶段负责落地，监控阶段采集指标而非描述结构或形成改进方案，A、C、D 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-099",
+    "index": 99,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "在进行复杂业务系统改进时,可以考虑的措施有(    )。",
+    "options": [
+      "对现有系统进行全面评估",
+      "分析业务流程,找出瓶颈和问题",
+      "采用敏捷开发方法进行快速迭代",
+      "引入新技术和新工具提高系统性能",
+      "对用户进行培训,提高他们的使用技能"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "全面评估建立现状基线，流程分析定位瓶颈，敏捷迭代降低一次性改造风险，新技术工具可提升性能，用户培训则保证新系统被正确使用并发挥价值。因此 A、B、C、D、E 都是复杂业务系统改进可采用的措施。",
+    "points": 1
+  },
+  {
+    "id": "multi-100",
+    "index": 100,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "综合业务流程优化方法的原则包括:(    )。",
+    "options": [
+      "以客户为中心",
+      "以流程为导向",
+      "以结果为导向",
+      "以效率为导向",
+      "以成本为导向"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "综合流程优化应从客户价值出发，以端到端流程而非部门为分析对象，并用可验证的业务结果判断成效，因此 A、B、C 是方向性原则。效率和成本是重要评价目标，但若单独作为导向可能牺牲质量与客户价值，D、E 不宜上升为普遍原则。",
+    "points": 1
+  },
+  {
+    "id": "multi-101",
+    "index": 101,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "通过知识表示使得机器具备的能力包括(    )。",
+    "options": [
+      "演绎",
+      "推理",
+      "解决问题",
+      "数据采集",
+      "创新"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "知识表示把事实、概念和关系转成机器可操作的结构，使系统能够依据规则演绎、进行推理并据此求解问题，所以 A、B、C 正确。数据采集是获取原始资料的过程，创新也不能仅由表示结构直接保证，D、E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-102",
+    "index": 102,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "知识图谱是一种用于表示和组织知识的数据结构,其基本元素包括(    )。",
+    "options": [
+      "节点",
+      "数据库",
+      "算法",
+      "边",
+      "属性"
+    ],
+    "answer": [
+      "A",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "知识图谱以节点表示实体或概念，以边表示实体间关系，并可用属性描述节点或关系的特征，因此 A、D、E 是基本元素。数据库是存储实现，算法是处理方法，B、C 不是图谱数据结构本身的组成元素。",
+    "points": 1
+  },
+  {
+    "id": "multi-103",
+    "index": 103,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "业务数据分析工具通常可以分为(    )。",
+    "options": [
+      "报表生成工具",
+      "数据挖掘工具",
+      "可视化工具",
+      "统计分析工具",
+      "数据脱敏工具"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "报表工具汇总业务指标，数据挖掘工具发现模式，可视化工具呈现关系，统计分析工具完成描述和推断，故 A、B、C、D 都属于业务数据分析工具。数据脱敏工具主要保护敏感信息，不以分析为核心，E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-104",
+    "index": 104,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "在进行业务数据分析时,通常采用(    )方法来发现数据中的模式和趋势。",
+    "options": [
+      "描述性分析",
+      "随机性分析",
+      "规范性分析",
+      "因果性分析",
+      "探索性分析"
+    ],
+    "answer": [
+      "A",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "描述性分析概括已发生的分布和趋势，因果性分析识别变量间影响，探索性分析在缺少预设假设时发现结构和模式，因此 A、D、E 正确。随机性分析不是通行的业务分析类型，规范性分析侧重建议应采取的行动，不以发现现有模式为主要目标，B、C 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-105",
+    "index": 105,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "业务分析",
+    "section": "业务流程与模块优化",
+    "stem": "在进行业务数据分析时,(    )环节是必不可少的。",
+    "options": [
+      "数据收集",
+      "数据清洗",
+      "数据加密",
+      "数据挖掘",
+      "数据脱敏"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "业务分析必须先收集与问题相关的数据，通过清洗保证数据可用，再用挖掘或其他分析方法发现规律，所以 A、B、D 构成必要链路。加密和脱敏应在涉及敏感数据时采用，但并非每项分析都必不可少，C、E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-106",
+    "index": 106,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "关于机器学习的基本流程,必要的步骤包括(    )。",
+    "options": [
+      "问题定义",
+      "数据收集",
+      "特征工程",
+      "模型训练与评估",
+      "部署与监控"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "机器学习项目要先定义问题和评价目标，再收集数据并构造特征，随后训练评估模型，最后部署并持续监控线上表现。因此 A、B、C、D、E 共同组成从需求到运行的完整基本流程。",
+    "points": 1
+  },
+  {
+    "id": "multi-107",
+    "index": 107,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "生成对抗网络主要组成部分是(    )。",
+    "options": [
+      "生成器",
+      "分类器",
+      "编码器",
+      "解码器",
+      "判别器"
+    ],
+    "answer": [
+      "A",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "标准生成对抗网络由生成器产生候选样本，判别器区分真实样本与生成样本，二者对抗训练，所以 A、E 正确。分类器、编码器和解码器可出现在特定变体中，但不是基本 GAN 必有的两大组成，B、C、D 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-108",
+    "index": 108,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在智能训练中,特征提取的主要方法包括(    )。",
+    "options": [
+      "主成分分析",
+      "线性判别分析",
+      "梯度提升树",
+      "贝叶斯分类器",
+      "神经网络"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "主成分分析提取最大方差方向，线性判别分析提取有区分力的低维投影，神经网络可逐层学习表示，因此 A、B、E 属于主要特征提取方法。梯度提升树和贝叶斯分类器主要用于预测分类，不是通用的特征提取方法，C、D 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-109",
+    "index": 109,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在模型训练中,可以用来改善模型的性能的策略包括(    )。",
+    "options": [
+      "增加训练数据集的大小",
+      "减少学习率",
+      "使用早停技术",
+      "增加模型复杂度",
+      "应用正则化技术"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "更多且有代表性的训练数据可改善泛化，适当减小学习率有助于稳定收敛，早停和正则化可抑制过拟合；当模型欠拟合时增加复杂度也可能提高表达能力。因此 A、B、C、D、E 都是在合适诊断和调参条件下可改善性能的策略。",
+    "points": 1
+  },
+  {
+    "id": "multi-110",
+    "index": 110,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "数据预处理的策略有(    )。",
+    "options": [
+      "数据清洗",
+      "数据集成",
+      "数据变换",
+      "数据规约",
+      "参数调优"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "数据清洗纠正缺失和错误，数据集成合并多源数据，数据变换统一尺度或格式，数据规约减少体量和维数，故 A、B、C、D 都是预处理策略。参数调优针对模型训练而非原始数据，E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-111",
+    "index": 111,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在数据增强中,(    )方法可以增加数据的多样性。",
+    "options": [
+      "翻转图像",
+      "固定剪裁",
+      "旋转图像",
+      "添加噪声",
+      "低分辨率模拟"
+    ],
+    "answer": [
+      "A",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "随机翻转和旋转改变空间姿态，添加噪声模拟采集扰动，低分辨率模拟增加清晰度条件的变化，所以 A、C、D、E 能增加样本多样性。对所有样本使用同一固定剪裁不会产生变化组合，B 不能单独构成有效增强。",
+    "points": 1
+  },
+  {
+    "id": "multi-112",
+    "index": 112,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "(    )方法属于水平分片技术。",
+    "options": [
+      "基于范围的分片",
+      "基于哈希的分片",
+      "基于列表的分片",
+      "基于值的分片",
+      "基于连接的分片"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "水平分片按行划分数据，常见规则包括按键值范围、哈希结果和预定义值列表分配记录，因此 A、B、C 正确。笼统的“基于值”没有说明独立于范围或列表的标准策略，连接分片通常指派生分片机制，D、E 不属于这里列举的基本方法。",
+    "points": 1
+  },
+  {
+    "id": "multi-113",
+    "index": 113,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "(    )标注工具可以帮助提高数据标注的效率和质量。",
+    "options": [
+      "LabelImg",
+      "RectLabel",
+      "VGG Image Annotator",
+      "Photoshop",
+      "Coreldraw"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "LabelImg、RectLabel 和 VGG Image Annotator 都提供边界框、多边形等专门标注能力及结构化导出，故 A、B、C 能提升标注效率和质量。Photoshop 与 CorelDRAW 主要用于图像或矢量编辑，缺少标准数据集标注工作流，D、E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-114",
+    "index": 114,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在模型评估指标的计算方法中,(    )是正确的。",
+    "options": [
+      "准确率可以通过计算所有预测正确的样本数除以总样本数得到",
+      "精确率可以通过计算真正例数除以所有被预测为正例的样本数得到",
+      "召回率可以通过计算真正例数除以所有实际为正例的样本数得到",
+      "F1值可以通过计算精确率和召回率的调和平均值得到",
+      "AUC-ROC曲线下的面积可以用来衡量模型的整体性能"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "准确率等于预测正确数除以总数，精确率为真正例除以全部预测正例，召回率为真正例除以全部实际正例，F1 是精确率与召回率的调和平均，AUC 是 ROC 曲线下面积。因此 A、B、C、D、E 的计算或含义都正确。",
+    "points": 1
+  },
+  {
+    "id": "multi-115",
+    "index": 115,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在评估回归模型时,常用的评估指标有(    )。",
+    "options": [
+      "均方误差",
+      "均方根误差",
+      "平均绝对误差",
+      "R平方",
+      "平均相对误差"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "official",
+    "answerBasis": "manual_official",
+    "confidence": "high",
+    "explanation": "均方误差、均方根误差和平均绝对误差从不同方式衡量预测偏差，R 平方衡量解释的方差比例，平均相对误差以相对尺度评价误差。因此 A、B、C、D、E 都可用于回归模型评估。",
+    "points": 1
+  },
+  {
+    "id": "multi-116",
+    "index": 116,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在选择机器学习库时,需要考虑(    )因素。",
+    "options": [
+      "库的易用性",
+      "库的性能",
+      "库的社区支持",
+      "库的文档质量",
+      "库的可扩展性"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "易用性影响开发效率，性能决定能否满足规模和时延要求，社区支持与文档质量影响排障维护，可扩展性决定后续定制和增长能力。因此 A、B、C、D、E 都是选择机器学习库时应综合评估的因素。",
+    "points": 1
+  },
+  {
+    "id": "multi-117",
+    "index": 117,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "Pandas库在数据处理方面的主要优势是(    )。",
+    "options": [
+      "强大的数据结构",
+      "高效的内存管理",
+      "丰富的数据处理函数",
+      "深度学习支持",
+      "实时数据处理"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "Pandas 提供 Series 和 DataFrame 等强大结构，借助向量化和紧凑类型进行较高效的内存数据操作，并有丰富的清洗、变换、聚合函数，因此 A、B、C 正确。它不是深度学习框架，也不面向严格实时流处理，D、E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-118",
+    "index": 118,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在设计数据收集任务的策略时,需要考虑(    )些因素。",
+    "options": [
+      "目标受众的特点",
+      "数据的可用性和质量",
+      "数据收集的成本和时间",
+      "数据分析的方法和技术",
+      "数据存储和管理的方案"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "目标受众决定样本覆盖和采集渠道，数据可用性质量决定能否支持任务，成本时间约束执行方式，预期分析方法决定粒度和格式，存储管理方案保证数据可持续使用。因此 A、B、C、D、E 都应在设计收集任务时考虑。",
+    "points": 1
+  },
+  {
+    "id": "multi-119",
+    "index": 119,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "(    )原理是自动化标注工具常用的。",
+    "options": [
+      "基于规则的方法",
+      "基于机器学习的方法",
+      "基于深度学习的方法",
+      "基于人工的方法",
+      "基于随机选择的方法"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "自动化标注可通过规则直接赋予标签，也可用传统机器学习或深度学习模型预测标签，因此 A、B、C 是常用原理。纯人工方法不属于自动化，随机选择不能形成可靠标签，D、E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-120",
+    "index": 120,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "python工具库中,(    )常用于数据加载与预处理。",
+    "options": [
+      "DataLoader",
+      "Dataset",
+      "NumPy",
+      "Pandas",
+      "Matplotlib"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "Dataset 定义样本访问，DataLoader 负责批量加载和打乱，NumPy 处理数值数组，Pandas 读取并整理表格数据，所以 A、B、C、D 常用于加载与预处理。Matplotlib 主要用于绘图展示，E 不属于核心加载处理工具。",
+    "points": 1
+  },
+  {
+    "id": "multi-121",
+    "index": 121,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在模型优化过程中,(    )方法可以帮助提高模型的性能。",
+    "options": [
+      "调整模型的超参数",
+      "使用正则化技术",
+      "重复训练",
+      "尝试不同的模型结构",
+      "对模型进行集成学习"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "超参数调整可寻找更优配置，正则化改善泛化，尝试不同结构解决容量或归纳偏置问题，集成学习降低单模型方差，因此 A、B、D、E 能帮助优化性能。仅按相同条件重复训练没有针对性改进机制，C 不一定提高性能。",
+    "points": 1
+  },
+  {
+    "id": "multi-122",
+    "index": 122,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在模型训练过程中,(    )技术可以用于防止过拟合。",
+    "options": [
+      "数据增强",
+      "早停法",
+      "Dropout",
+      "增加模型复杂度",
+      "使用更大的数据集"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "数据增强扩展有效样本，早停在验证性能恶化前停止，Dropout 降低神经元共适应，更大的有效数据集减少对个别样本的记忆，所以 A、B、C、E 可防止过拟合。盲目增加模型复杂度通常会增大过拟合风险，D 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-123",
+    "index": 123,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "(    )原理是和人工智能训练师和模型训练自动化工具的工作中相关的。",
+    "options": [
+      "数据预处理和增强",
+      "超参数优化",
+      "损失函数和梯度下降法",
+      "分布式计算和并行处理",
+      "用户界面设计和交互性改进"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "训练自动化会编排数据预处理和增强，搜索超参数，依据损失函数用梯度方法更新模型，并用分布式或并行计算扩展训练，因此 A、B、C、D 与其工作原理直接相关。用户界面改进是产品交互问题，不是模型训练自动化的核心原理，E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-124",
+    "index": 124,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在系统监控中,常用于收集和分析服务器性能指标的工具是(    )。",
+    "options": [
+      "Nagios",
+      "Prometheus",
+      "Elasticsearch",
+      "Splunk",
+      "TensorFlow"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "official",
+    "answerBasis": "manual_official",
+    "confidence": "high",
+    "explanation": "Nagios 监控主机和服务，Prometheus 采集时序指标，Elasticsearch 可存储检索监控数据，Splunk 可聚合分析日志和性能事件，所以 A、B、C、D 都可用于服务器性能监控。TensorFlow 是机器学习框架，不是通用系统监控工具，E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-125",
+    "index": 125,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在生成对抗网络中,(    )方法可以用于提高生成数据的质量。",
+    "options": [
+      "增加生成器的复杂度",
+      "增加判别器的复杂度",
+      "使用更小的学习率",
+      "使用更大的学习率",
+      "增加训练轮次"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "在容量不足时增强生成器可改善表达，适当增强判别器可提供更有效梯度，较小学习率有助于稳定对抗训练，足够训练轮次可使双方继续收敛，所以 A、B、C、E 可能提高样本质量。过大的学习率容易振荡或发散，D 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-126",
+    "index": 126,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在R语言中,对数据集进行标准化的主要目的是(    )。",
+    "options": [
+      "减少数据存储空间",
+      "增加模型复杂性",
+      "改善模型收敛性",
+      "增加特征之间的可比性",
+      "降低模型预测精度"
+    ],
+    "answer": [
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "标准化把不同量纲的特征调整到可比较尺度，可改善梯度优化的数值条件和模型收敛，所以 C、D 正确。它不以节省存储或增加模型复杂度为目标，也不应降低预测精度，A、B、E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-127",
+    "index": 127,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "使用模型部署工具时,通常需要考虑(    )因素。",
+    "options": [
+      "模型的性能",
+      "模型的准确性",
+      "模型的实时性",
+      "模型的可用性",
+      "模型的兼容性"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "部署工具需让模型满足吞吐和资源性能、业务准确性、响应实时性及服务可用性，还要兼容目标硬件、运行时和接口。因此 A、B、C、D、E 都会直接影响部署方案是否可行。",
+    "points": 1
+  },
+  {
+    "id": "multi-128",
+    "index": 128,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "(    )是探索性数据分析常用的可视化图形方法。",
+    "options": [
+      "散点图",
+      "箱线图",
+      "直方图",
+      "热力图",
+      "雷达图"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "散点图观察变量关系，箱线图揭示分布和异常值，直方图显示频数分布，热力图展示矩阵或相关性，所以 A、B、C、D 是探索性数据分析的常用图形。雷达图更适合展示少量对象的多指标概况，不是通用 EDA 图形，E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-129",
+    "index": 129,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在进行数据探索分析时,通常会关注(    )方面的信息。",
+    "options": [
+      "数据的完整性",
+      "数据的准确性",
+      "数据的时效性",
+      "数据的可解释性",
+      "数据的多样性"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "探索分析会检查缺失情况以判断完整性，核查异常和逻辑以评估准确性，确认时间范围和更新频率以判断时效性，理解字段语义以保证可解释，并观察类别、来源和分布以评估多样性。因此 A、B、C、D、E 都应关注。",
+    "points": 1
+  },
+  {
+    "id": "multi-130",
+    "index": 130,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在python中,利用填充缺失数据处理缺失数据的方法主要有(    )。",
+    "options": [
+      "常数填充",
+      "统计值填充",
+      "前向/后向填充",
+      "插值方法",
+      "模型预测填充"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "Python 可用固定常数填补缺失，用均值、中位数等统计量填充，按序列做前向或后向填充，利用插值估计连续值，也可训练模型预测缺失项。因此 A、B、C、D、E 都是常见填充方法。",
+    "points": 1
+  },
+  {
+    "id": "multi-131",
+    "index": 131,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在大规模数据集中,(    )策略可以有效处理缺失值,同时尽量减少信息损失。",
+    "options": [
+      "使用数据集的全局均值填充缺失值",
+      "利用邻近观测值进行局部插补",
+      "基于模型的预测填充",
+      "采用多重插补技术",
+      "删除所有含有缺失值的记录"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "全局均值填充简单且保留记录，邻近观测插补利用局部结构，模型预测利用其他变量，多重插补还能表达不确定性，因此 A、B、C、D 都能在不同条件下处理缺失并减少直接丢弃。删除所有含缺失值的记录会造成显著样本和信息损失，E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-132",
+    "index": 132,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在异常值检测和处理的过程中,(    )步骤是必要的。",
+    "options": [
+      "识别异常值",
+      "分析异常值产生的原因",
+      "对异常值进行处理",
+      "忽略异常值",
+      "验证处理后的数据质量"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "异常处理应先识别异常，再分析其来自录入错误、真实极端事件还是分布变化，据此采取删除、修正、截尾等措施，最后验证处理后的质量，所以 A、B、C、E 必要。直接忽略异常会留下偏差和风险，D 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-133",
+    "index": 133,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "处理异常值的常用方法有(    )。",
+    "options": [
+      "删除异常值",
+      "替换异常值为均值或中位数",
+      "对异常值进行变换",
+      "使用机器学习模型进行预测",
+      "替换异常值为最大值"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "确认是错误数据时可删除，合理时可用均值或中位数替换，也可通过对数等变换降低影响，或用模型估计合理值，因此 A、B、C、D 都是常用方法。无条件替换为最大值会人为制造边界偏差，E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-134",
+    "index": 134,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "噪声数据处理的技术主要包括(    )。",
+    "options": [
+      "去噪技术",
+      "量化技术",
+      "增强技术",
+      "特征提取技术",
+      "分类技术"
+    ],
+    "answer": [
+      "A",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "滤波、平滑等去噪技术直接抑制噪声，稳健的特征提取可保留有效信号并弱化无关扰动，所以 A、D 正确。量化可能引入误差，增强可能同时放大噪声，分类是下游任务，B、C、E 不是主要噪声处理技术。",
+    "points": 1
+  },
+  {
+    "id": "multi-135",
+    "index": 135,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "影响数据去重的效率和准确性的主要因素有(    )。",
+    "options": [
+      "数据的格式",
+      "数据的规模",
+      "数据的更新频率",
+      "数据的存储位置",
+      "数据的加密方式"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "格式是否统一决定记录能否正确匹配，数据规模影响比较和索引成本，更新频率决定增量去重压力，因此 A、B、C 是效率和准确性的主要因素。存储位置主要影响访问路径，加密方式属于安全设计，D、E 不是去重规则本身的主要决定因素。",
+    "points": 1
+  },
+  {
+    "id": "multi-136",
+    "index": 136,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "数据归一化的方法有(    )。",
+    "options": [
+      "最大最小归一化",
+      "均值归一化",
+      "指数归一化",
+      "众数归一化",
+      "零均值归一化"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "最大最小归一化把数值映射到固定区间，均值归一化按均值和范围缩放，零均值归一化使特征围绕零中心，因此 A、B、E 都是常见尺度处理方法。指数归一化和众数归一化不是通用标准方法，C、D 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-137",
+    "index": 137,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "数据白化处理的主要目的是(    )",
+    "options": [
+      "提高数据的可读性",
+      "减少数据的冗余",
+      "增强数据的可解释性",
+      "保护数据隐私",
+      "提高计算复杂度"
+    ],
+    "answer": [
+      "B"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "白化通过线性变换使特征去相关并统一方差，核心作用是减少由相关性造成的冗余，所以 B 正确。它不直接提升可读性或隐私，旋转后的分量往往更难作业务解释，也不会以提高计算复杂度为目标，A、C、D、E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-138",
+    "index": 138,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在机器学习和数据分析中,特征工程包括(    )。",
+    "options": [
+      "数据标注",
+      "数据清洗",
+      "特征选择",
+      "特征提取",
+      "特征缩放"
+    ],
+    "answer": [
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "特征工程通常以清洗后的可靠数据为基础，通过特征选择保留有效变量、特征提取构造表示、特征缩放统一量纲，所以 B、C、D、E 正确。数据标注产生监督标签，属于数据准备而非特征工程本身，A 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-139",
+    "index": 139,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "使用数据标注工具时,应该注意(    )。",
+    "options": [
+      "确保标注准确性和一致性",
+      "合理分配标注任务",
+      "定期检查标注质量",
+      "及时更新标注工具和库",
+      "避免过度依赖单一工具"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "标注必须以准确一致为首要标准，合理分配任务保持进度和难度均衡，定期抽检发现偏差，及时维护工具避免兼容或安全问题，同时避免被单一工具绑定。因此 A、B、C、D、E 都是使用标注工具时应注意的事项。",
+    "points": 1
+  },
+  {
+    "id": "multi-140",
+    "index": 140,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "(    )是数据标注的方式",
+    "options": [
+      "手动",
+      "自动化",
+      "半自动",
+      "众包",
+      "数据编程"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "标注可由人员手动完成，也可由模型自动生成，半自动方式结合模型预标与人工复核；众包按平台分发给多人，数据编程则用标注函数和规则弱监督生成标签。因此 A、B、C、D、E 都是有效标注方式。",
+    "points": 1
+  },
+  {
+    "id": "multi-141",
+    "index": 141,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在机器学习中,为了避免模型过拟合,通常需要对数据进行交叉验证。(    )正确的描述了交叉验证。",
+    "options": [
+      "交叉验证是一种数据划分方法",
+      "交叉验证是一种模型评估方法",
+      "交叉验证可以有效地避免模型过拟合",
+      "交叉验证可以有效地提高模型的泛化能力",
+      "交叉验证需要将数据集划分为训练集、验证集和测试集"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "交叉验证反复划分训练与验证折，既是一种数据划分方案，也是一种估计模型表现的方法；把它用于模型和参数选择可降低对单次划分的过拟合并改善所选模型的泛化，所以 A、B、C、D 正确。独立测试集通常另行保留，交叉验证本身不要求同时划分训练、验证、测试三套数据，E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-142",
+    "index": 142,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "自动化标注的优势包括(    )。",
+    "options": [
+      "提高标注效率",
+      "降低人力成本",
+      "减少标注误差",
+      "提高数据质量",
+      "增加标注速度"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "自动化能批量处理样本从而提高效率和速度，减少重复人工投入以降低成本；稳定规则与模型配合质量控制可减少人为不一致并提高整体数据质量。因此 A、B、C、D、E 都是自动化标注在适当审核机制下的优势。",
+    "points": 1
+  },
+  {
+    "id": "multi-143",
+    "index": 143,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "分布式数据处理的主要优势包括(    )。",
+    "options": [
+      "提高数据处理速度",
+      "降低单个节点的负载",
+      "增强系统的可扩展性",
+      "支持实时数据处理",
+      "保证数据的一致性"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "分布式处理把任务拆给多个节点并行执行，可提高速度、分散单节点负载、横向扩展资源，也能借助流处理架构支持实时计算，所以 A、B、C、D 正确。数据一致性需要额外协议和设计，分布式本身不能自动保证，E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-144",
+    "index": 144,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "数据可追溯性是指数据从产生到销毁的整个生命周期内,能够追踪和记录数据的来源、修改、传输和使用情况的能力。(    )符合数据可追溯性的定义。",
+    "options": [
+      "数据在存储过程中可以被篡改",
+      "数据在传输过程中可以被加密",
+      "数据在删除后可以被恢复",
+      "数据在创建时可以自动记录时间戳",
+      "数据在访问时可以进行身份验证"
+    ],
+    "answer": [
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "创建数据时自动记录时间戳，会直接留下数据产生环节的可追溯记录，因此D正确。可篡改会破坏追溯链，传输加密解决机密性，删除后恢复属于备份能力，A、B、C都不等于可追溯。访问时身份验证只是访问控制；若没有同时记录审计日志，不能追踪和记录数据使用情况，E也不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-145",
+    "index": 145,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "数据可追溯性的重要性是(    )。",
+    "options": [
+      "它确保了研究结果的可重复性",
+      "它允许追踪数据来源",
+      "它有助于保护知识产权",
+      "它减少了数据处理的成本",
+      "它增强了数据分析的透明度"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "完整的来源和处理记录使研究可复现，也能追踪数据出处和权属，从而支持知识产权证明，并让分析过程更透明，所以 A、B、C、E 正确。建立追溯机制需要额外记录和治理，不能保证降低处理成本，D 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-146",
+    "index": 146,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在Excel中进行数据清洗时,(    )操作是常用的数据预处理步骤。",
+    "options": [
+      "数据录入",
+      "数据筛选",
+      "数据排序",
+      "数据去重",
+      "数据透视"
+    ],
+    "answer": [
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "筛选可定位目标或异常记录，排序便于检查范围和顺序，去重直接清除重复项，因此 B、C、D 是 Excel 清洗中的常见预处理步骤。数据录入是采集过程，数据透视主要用于汇总分析，A、E 不属于清洗核心步骤。",
+    "points": 1
+  },
+  {
+    "id": "multi-147",
+    "index": 147,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "关于图像的读取、保存及显示方法,说法正确的是(    )。",
+    "options": [
+      "使用Python中的PIL库可以读取和保存图像文件",
+      "使用JavaScript中的Canvas API可以在网页上显示图像",
+      "使用C++中的OpenCV库可以读取和保存图像文件",
+      "使用Java中的BufferedImage类可以读取和保存图像文件",
+      "使用HTML中的br标签可以在网页上显示图像"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "PIL 可在 Python 中读写图像，Canvas API 能在网页绘制显示图像，OpenCV 提供 C++ 图像读写，Java 的 BufferedImage 配合 ImageIO 可读写图像，所以 A、B、C、D 正确。HTML 的 br 只插入换行，不能显示图像，E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-148",
+    "index": 148,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在文本类数据清洗和标注的过程中,人工智能训练师通常会遵循(    )规则与流程。",
+    "options": [
+      "去除或更正文本中的拼写错误",
+      "识别并处理文本中的同义词和近义词",
+      "对文本进行情感分析,标注正面或负面情感",
+      "保留文本中的所有特殊字符和标点符号",
+      "将文本数据转换为小写,以统一格式"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "更正拼写能降低噪声，统一同义近义表达有助于一致建模，情感分析可生成正负标签，按任务需要统一大小写能减少词形差异，所以 A、B、C、E 都是常见清洗或标注操作。所有特殊字符和标点一律保留会留下无关噪声，D 不符合按任务处理的原则。",
+    "points": 1
+  },
+  {
+    "id": "multi-149",
+    "index": 149,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在制定视觉类数据处理规范时,至关重要的依据有(    )。",
+    "options": [
+      "遵守行业标准和法规",
+      "确保数据隐私和安全",
+      "考虑数据的多样性和代表性",
+      "优化数据处理的效率和成本",
+      "参考竞争对手的数据处理方式"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "视觉数据规范必须遵守法规和行业标准，保护隐私安全，保证样本多样且有代表性，并在质量前提下控制处理效率和成本，因此 A、B、C、D 都是关键依据。竞争对手做法未必合法或适合自身任务，只能参考而不能作为规范的至关重要依据，E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-150",
+    "index": 150,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在算法训练过程中,(    )步骤是必不可少的。",
+    "options": [
+      "数据收集",
+      "特征工程",
+      "模型选择",
+      "模型训练",
+      "模型评估"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "算法训练需要取得数据，构造或选择有效特征，选定适合问题的模型，执行参数训练，并用独立指标评估效果。因此 A、B、C、D、E 共同构成从数据到验证的必要步骤。",
+    "points": 1
+  },
+  {
+    "id": "multi-151",
+    "index": 151,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在机器学习项目中,(    )是数据集划分时应考虑的因素。",
+    "options": [
+      "数据集应保持独立性,避免数据泄露",
+      "数据集应具有代表性,以覆盖各种情况",
+      "数据集划分应保证每个子集大小相同",
+      "数据集划分应考虑数据的类别平衡",
+      "数据集划分应基于随机抽样原则"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "训练、验证和测试样本应相互独立以防泄露，各子集要代表真实场景并保持类别平衡，通常还需随机或按组、时间等合理抽样，所以 A、B、D、E 正确。各子集承担不同职责，大小不必相同，C 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-152",
+    "index": 152,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "(    )是分布式数据库系统MyCat的三大功能。",
+    "options": [
+      "分表",
+      "导入",
+      "读写分离",
+      "备份",
+      "主从切换"
+    ],
+    "answer": [
+      "A",
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "MyCat 可把逻辑表路由到多个物理分片，支持把读请求分配到从库、写请求发往主库，并通过心跳和配置在主从节点间切换，所以 A、C、E 对应其核心数据库代理能力。数据导入和备份通常由数据库或专门工具负责，B、D 不是其三大核心功能。",
+    "points": 1
+  },
+  {
+    "id": "multi-153",
+    "index": 153,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "特征选择的主要目标是(    )。",
+    "options": [
+      "增加模型的复杂性",
+      "减少过拟合的风险",
+      "提高模型的预测性能",
+      "降低计算成本",
+      "使模型更易于解释"
+    ],
+    "answer": [
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "去除无关和冗余特征可降低过拟合风险，常能提升预测性能，减少训练推理成本，并使模型决策更易解释，因此 B、C、D、E 都是特征选择的目标。A 增加复杂性与精简特征的方向相反。",
+    "points": 1
+  },
+  {
+    "id": "multi-154",
+    "index": 154,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在深度学习项目中,数据标注可能涉及的任务有(    )。",
+    "options": [
+      "对象分类",
+      "噪声消除",
+      "实例分割",
+      "边缘检测",
+      "属性标注"
+    ],
+    "answer": [
+      "A",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "深度学习数据可标注对象类别、每个实例的像素区域、目标边缘或轮廓以及对象属性，所以 A、C、D、E 都可能形成监督标签。噪声消除是数据预处理操作，不是需要赋予样本语义标签的标注任务，B 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-155",
+    "index": 155,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在模型训练过程中,(    )步骤是必不可少的。",
+    "options": [
+      "数据预处理",
+      "模型构建",
+      "参数初始化",
+      "模型评估",
+      "模型优化"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "训练前要预处理数据并构建模型，开始优化前需初始化参数，训练过程中根据损失更新参数，之后评估模型并继续优化。因此 A、B、C、D、E 都是完整模型训练流程中的必要环节。",
+    "points": 1
+  },
+  {
+    "id": "multi-156",
+    "index": 156,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在深度学习中,为了提高模型的泛化能力,通常会使用正则化技术。关于正则化技术的分类和特点的描述,(    )描述是正确的。",
+    "options": [
+      "L1正则化是一种在损失函数中加入参数绝对值之和的方法",
+      "L2正则化是一种在损失函数中加入参数平方和的方法",
+      "Dropout是一种在训练过程中随机丢弃一部分神经元的方法",
+      "Early stopping是一种在验证集上性能不再提升时提前终止训练的方法",
+      "数据增强是一种通过对原始数据进行变换来增加数据多样性的方法"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "L1 在损失中加入参数绝对值和，L2 加入平方和，Dropout 随机屏蔽神经元，早停在验证性能不再改善时终止，数据增强通过输入变换扩大有效样本。A、B、C、D、E 的描述均正确，后四种连同 L1、L2 都可发挥正则化作用。",
+    "points": 1
+  },
+  {
+    "id": "multi-157",
+    "index": 157,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "算法训练环境搭建的要素包括(    )。",
+    "options": [
+      "硬件设备",
+      "软件工具",
+      "数据集",
+      "网络连接",
+      "算法实现"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "训练环境需要适配的计算硬件和软件依赖，准备可访问的数据集，分布式、云端或依赖下载场景需要网络连接，还要部署可执行的算法实现。因此 A、B、C、D、E 都可能是环境搭建的必要要素。",
+    "points": 1
+  },
+  {
+    "id": "multi-158",
+    "index": 158,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "(    )机器学习框架支持深度学习,并且广泛用于工业界和学术界。",
+    "options": [
+      "TensorFlow",
+      "PyTorch",
+      "Scikit-learn",
+      "Keras",
+      "XGBoost"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "TensorFlow 和 PyTorch 是完整深度学习框架，Keras 提供广泛使用的高层神经网络接口，因此 A、B、D 正确。Scikit-learn 主要服务传统机器学习，XGBoost 是梯度提升树库，C、E 不是通用深度学习框架。",
+    "points": 1
+  },
+  {
+    "id": "multi-159",
+    "index": 159,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "(    )正确反映了“人工智能训练师”和“算法验证技术”的概念及其作用。",
+    "options": [
+      "人工智能训练师负责设计和实施机器学习模型的训练流程。",
+      "算法验证技术主要关注于确保机器学习模型在现实世界应用中的稳定性和可靠性。",
+      "人工智能训练师通常需要掌握编程、数据处理和统计分析等多方面的技能。",
+      "算法验证技术不涉及对模型的测试,只关注算法的理论研究。",
+      "人工智能训练师的工作仅限于数据的收集和预处理,不包括模型的选择和调优。"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "人工智能训练师会设计并实施训练流程，并需掌握编程、数据处理和统计分析；算法验证则通过测试确认模型在真实应用中的稳定可靠，所以 A、B、C 正确。验证必然涉及测试，训练师职责也不只限于数据收集预处理，D、E 错误。",
+    "points": 1
+  },
+  {
+    "id": "multi-160",
+    "index": 160,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "超参数调优的策略包括(    )。",
+    "options": [
+      "网格搜索",
+      "随机搜索",
+      "贝叶斯优化",
+      "遗传算法",
+      "梯度下降法"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "网格搜索穷举候选组合，随机搜索抽样参数空间，贝叶斯优化利用历史结果选择下一点，遗传算法通过群体进化搜索，故 A、B、C、D 都是超参数调优策略。普通梯度下降更新可微模型参数，不是适用于任意超参数的通用搜索方法，E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-161",
+    "index": 161,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "模型训练动态监控工具常见的功能是(    )。",
+    "options": [
+      "实时显示模型的训练进度",
+      "能够保存和加载模型检查点",
+      "自动修复训练过程中出现的错误",
+      "提供多种方式来展示模型训练状态",
+      "允许用户设置阈值以在特定条件下触发警报或动作"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "动态监控工具可实时展示训练进度，保存和恢复检查点，用曲线、表格等多种形式呈现状态，并按阈值触发告警或动作，所以 A、B、D、E 正确。训练错误往往需要诊断和干预，工具不能保证自动修复，C 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-162",
+    "index": 162,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在调试模型时,推荐的做法是(    )。",
+    "options": [
+      "逐步调整超参数",
+      "同时调整多个超参数",
+      "记录每次调试的结果以便分析",
+      "仅关注训练损失而不考虑验证损失",
+      "在不同的数据集上验证模型性能"
+    ],
+    "answer": [
+      "A",
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "逐步调整超参数有利于隔离影响，记录每次结果便于复现比较，在不同但适当的数据集上验证可检查泛化，所以 A、C、E 是推荐做法。同时改变多个参数难以定位原因，只看训练损失会忽略过拟合，B、D 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-163",
+    "index": 163,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在选择算法测试的评价指标时,需要考虑(    )因素。",
+    "options": [
+      "算法的准确性",
+      "算法的效率",
+      "算法的稳定性",
+      "算法的代码长度",
+      "算法的可读性"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "评价指标应覆盖结果准确性、运行效率和面对扰动时的稳定性，因此 A、B、C 是算法测试的核心因素。代码长度和可读性属于实现质量或维护性，不直接衡量算法测试效果，D、E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-164",
+    "index": 164,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "(    )是在模型部署阶段进行的。",
+    "options": [
+      "模型训练",
+      "模型验证",
+      "模型转换",
+      "环境配置",
+      "性能测试"
+    ],
+    "answer": [
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "部署时常需把模型转换为目标运行时格式，配置依赖、硬件和服务环境，并在实际环境进行时延、吞吐和资源测试，所以 C、D、E 正确。模型训练与主要离线验证应在部署前完成，A、B 不属于部署阶段核心工作。",
+    "points": 1
+  },
+  {
+    "id": "multi-165",
+    "index": 165,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "(    )工具提供了模型转换功能,以便于模型部署。",
+    "options": [
+      "TensorFlowSavedModel",
+      "ONNXConverter",
+      "PyTorchTorchScript",
+      "TensorFlowLiteConverter",
+      "Django"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "SavedModel 提供 TensorFlow 可部署表示，ONNX 转换器把模型转换为开放格式，TorchScript 将 PyTorch 模型转成可序列化执行图，TensorFlow Lite Converter 面向移动端格式，因此 A、B、C、D 都支持部署转换。Django 是 Web 框架，不负责模型格式转换，E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-166",
+    "index": 166,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "云平台使用的优势包括(    )。",
+    "options": [
+      "提高资源利用率",
+      "降低运维成本",
+      "实现弹性伸缩",
+      "支持多种开发语言",
+      "提供安全可靠的存储服务"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "云平台通过资源池化提高利用率，托管服务减少自建运维，按需弹性伸缩应对负载，SDK 和运行环境支持多种语言，并提供带冗余和权限控制的存储服务。因此 A、B、C、D、E 都是合理优势。",
+    "points": 1
+  },
+  {
+    "id": "multi-167",
+    "index": 167,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "容器化技术的主要特点包括(    )。",
+    "options": [
+      "轻量级",
+      "隔离性",
+      "可移植性",
+      "数据持久化",
+      "版本控制和组件重用"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "容器共享宿主内核而轻量，利用命名空间和资源限制实现隔离，镜像使应用可在兼容环境移植，镜像分层与标签又支持版本管理和组件复用，所以 A、B、C、E 正确。容器可挂载持久卷，但容器可写层本身通常是临时的，D 不是其固有主要特点。",
+    "points": 1
+  },
+  {
+    "id": "multi-168",
+    "index": 168,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "(    )正确描述了容器化技术与虚拟机技术的区别。",
+    "options": [
+      "容器化技术比虚拟机技术更轻量级",
+      "虚拟机技术需要模拟整个操作系统,而容器化技术则共享宿主机操作系统",
+      "容器化技术在启动速度上通常优于虚拟机技术",
+      "虚拟机技术在隔离性方面通常优于容器化技术",
+      "容器化技术和虚拟机技术都可以用于云计算环境"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "容器共享宿主机内核，因而比包含完整客户操作系统的虚拟机更轻、启动更快；虚拟机拥有独立内核，通常隔离边界更强。两者都能用于云环境，所以 A、B、C、D、E 的比较均成立。",
+    "points": 1
+  },
+  {
+    "id": "multi-169",
+    "index": 169,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在选择数据处理框架时,需要考虑(    )因素。",
+    "options": [
+      "性能需求",
+      "数据量大小",
+      "开发团队的熟悉程度",
+      "框架的社区支持",
+      "框架的学习曲线"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "性能需求和数据规模决定框架能力边界，团队熟悉程度与学习曲线影响交付成本，社区支持影响缺陷修复和长期维护。因此 A、B、C、D、E 都是数据处理框架选型的重要因素。",
+    "points": 1
+  },
+  {
+    "id": "multi-170",
+    "index": 170,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "高性能计算资源利用的策略包括(    )。",
+    "options": [
+      "资源分配策略",
+      "负载均衡策略",
+      "节能策略",
+      "安全策略",
+      "性能监控策略"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "合理分配 CPU、GPU 和内存，均衡节点负载，采用节能调度，并持续监控利用率和瓶颈，都能提高高性能计算资源使用效果，所以 A、B、C、E 正确。安全策略虽必要，但主要保护资源和数据，不直接构成性能资源利用策略，D 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-171",
+    "index": 171,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "人工智能训练师在使用性能监控工具时可以关注(    )。",
+    "options": [
+      "监控模型训练过程中的资源使用情况",
+      "分析模型训练过程中的性能指标",
+      "实时调整模型参数以优化训练效果",
+      "监控并预测硬件故障,确保训练环境的稳定性",
+      "评估不同算法在同一数据集上的性能表现"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "训练师可监控 CPU、GPU、内存等资源，分析损失和吞吐等训练指标，观察硬件健康并预警故障，还可在同一数据集上对比不同算法的记录指标，所以 A、B、D、E 都是合理关注点。实时修改模型参数属于训练控制动作，不是性能监控工具本身的观察职责，C 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-172",
+    "index": 172,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "一个良好的测试用例通常具备(    )的属性。",
+    "options": [
+      "明确性",
+      "完整性",
+      "可重复性",
+      "必要性",
+      "无限性"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "良好用例要有明确输入和预期结果，覆盖完成验证目标，在相同条件下可重复执行，并且每个用例都服务于必要风险或需求，所以 A、B、C、D 正确。测试范围应有限且可管理，不存在要求用例无限的属性，E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-173",
+    "index": 173,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "人工智能测试的主要目包括(    )。",
+    "options": [
+      "验证AI系统的正确性",
+      "评估AI系统的性能",
+      "增强用户体验",
+      "确保安全性和隐私保护",
+      "探索新的AI应用"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "AI 测试要验证功能和决策正确性，衡量精度、时延等性能，检查交互以改善用户体验，并确认系统安全和隐私保护，因此 A、B、C、D 正确。探索新的应用属于研究或产品规划，不是测试的主要目的，E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-174",
+    "index": 174,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "人工智能测试方法包括(    )。",
+    "options": [
+      "黑盒测试",
+      "白盒测试",
+      "灰盒测试",
+      "红盒测试",
+      "蓝盒测试"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "黑盒测试从输入输出验证行为，白盒测试检查内部结构和逻辑，灰盒测试在掌握部分内部信息时综合验证，因此 A、B、C 都是通行测试方法。红盒和蓝盒不是这组按内部可见程度划分的标准类型，D、E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-175",
+    "index": 175,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在选择测试框架时,需要考虑的主要因素有(    )。",
+    "options": [
+      "支持的编程语言",
+      "测试框架的流行程度",
+      "框架的社区支持和文档",
+      "是否支持并行测试执行",
+      "框架是否免费或开源"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "框架必须支持项目语言，流行度可反映生态和人才供给，社区文档影响学习排障，并行执行能力影响效率，许可和成本决定能否合规采用。因此 A、B、C、D、E 都是选型时应权衡的因素。",
+    "points": 1
+  },
+  {
+    "id": "multi-176",
+    "index": 176,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "关于自动化和手动测试方法的比较与选择,描述正确的是(    )。",
+    "options": [
+      "自动化测试可以完全替代手动测试",
+      "自动化测试可以提高测试效率",
+      "自动化测试可以覆盖更多的测试场景",
+      "自动化测试可以降低测试成本",
+      "自动化测试可以减少人为错误"
+    ],
+    "answer": [
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "自动化能快速重复执行用例，提高效率并扩展回归覆盖，长期运行可降低重复测试成本，还能减少手工操作错误，所以 B、C、D、E 正确。探索性、体验等场景仍需人工判断，自动化不能完全替代手动测试，A 错误。",
+    "points": 1
+  },
+  {
+    "id": "multi-177",
+    "index": 177,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在监控算法性能时,(    )指标是评估分类算法有效性的重要标准。",
+    "options": [
+      "准确率",
+      "召回率",
+      "精确率",
+      "F1分数",
+      "处理时间"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "准确率衡量总体正确比例，召回率关注实际正例覆盖，精确率关注预测正例可信度，F1 综合精确率和召回率，因此 A、B、C、D 都是分类有效性的主要标准。处理时间衡量效率而非分类判定质量，E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-178",
+    "index": 178,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在算法准确度测试中,通常使用(    )来衡量算法的准确性。",
+    "options": [
+      "精确率",
+      "召回率",
+      "F1值",
+      "均方误差",
+      "对数损失"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "分类任务可用精确率、召回率和 F1 衡量预测质量；回归任务可用均方误差衡量数值预测偏差；概率分类还可用对数损失评价概率准确性。因此 A、B、C、D、E 都能在相应算法类型中衡量预测准确表现。",
+    "points": 1
+  },
+  {
+    "id": "multi-179",
+    "index": 179,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "(    )正确描述了人工智能训练师和算法鲁棒性测试的关系。",
+    "options": [
+      "人工智能训练师负责设计和实施算法的训练计划,确保模型能够达到预定的性能标准。",
+      "算法鲁棒性测试旨在评估模型对异常输入或故意攻击的抵抗力。",
+      "人工智能训练师通常不参与模型的鲁棒性测试,这通常是质量保证团队的职责。",
+      "算法鲁棒性测试包括对模型进行压力测试,以观察其在极端数据情况下的行为。",
+      "人工智能训练师仅关注模型的准确性,而不考虑其对现实世界变化的适应能力。"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "训练师负责设计训练计划并达到性能目标，也应参与验证模型在异常输入和攻击下的抵抗力；压力测试极端数据正是鲁棒性评估手段，所以 A、B、D 正确。训练师不能把鲁棒性全部推给质量团队，也不能只看准确率而忽略现实变化，C、E 错误。",
+    "points": 1
+  },
+  {
+    "id": "multi-180",
+    "index": 180,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "算法安全性测试的目的是(    )",
+    "options": [
+      "检查算法的正确性",
+      "评估算法的性能",
+      "确保算法的机密性",
+      "检测算法的漏洞和缺陷",
+      "验证算法的可用性"
+    ],
+    "answer": [
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "安全性测试要防止模型、参数和敏感数据泄露，发现可被利用的漏洞缺陷，并确认在攻击或故障下仍能提供授权服务，因此 C、D、E 对应机密性、风险发现和可用性。功能正确性与一般性能属于其他测试维度，A、B 不是安全测试的主要目的。",
+    "points": 1
+  },
+  {
+    "id": "multi-181",
+    "index": 181,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在进行算法可解释性与透明度测试时,(    )因素是需要考虑的。",
+    "options": [
+      "算法的应用场景。",
+      "算法的目标和需求。",
+      "用户的接受程度。",
+      "法律法规的要求。",
+      "算法的技术实现细节。"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "解释需求取决于应用风险和使用场景，也要对应算法目标、用户理解接受程度以及法律披露要求；要验证解释是否真实，还必须了解模型输入、结构和处理细节。因此 A、B、C、D、E 都是可解释性与透明度测试应考虑的因素。",
+    "points": 1
+  },
+  {
+    "id": "multi-182",
+    "index": 182,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在进行数据多样性测试时,必须遵守的原则是(    )。",
+    "options": [
+      "确保数据集覆盖所有关键特征",
+      "数据应反映真实世界的分布",
+      "避免数据集中存在偏见或歧视",
+      "数据集必须包含足够的异常值",
+      "数据集应定期更新以反映最新趋势"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "多样性测试应覆盖任务关键特征，使样本总体接近真实分布，检查并减少群体偏见，同时定期更新以反映环境变化，所以 A、B、C、E 正确。异常样本应按风险合理覆盖，但不要求数据集必须含某个固定的足够数量，D 的绝对表述不成立。",
+    "points": 1
+  },
+  {
+    "id": "multi-183",
+    "index": 183,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在进行交叉验证时,(    )步骤是必要的。",
+    "options": [
+      "划分训练集和测试集",
+      "选择合适的交叉验证方法",
+      "重复执行交叉验证过程",
+      "分析交叉验证结果",
+      "调整模型参数"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "交叉验证要保留独立测试数据或明确训练验证边界，选择适合数据结构的折分方法，按各折重复训练验证，并汇总分析结果，因此 A、B、C、D 是必要步骤。参数调整是使用验证结果的后续选择动作，不是每次执行交叉验证都必须包含，E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-184",
+    "index": 184,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在算法部署效果测试中,需要关注的环节有(    )。",
+    "options": [
+      "算法性能",
+      "模型准确性",
+      "系统稳定性",
+      "用户体验",
+      "算法代码长度"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "部署效果测试要检查时延、吞吐和资源等算法性能，确认线上准确性，观察服务稳定性，并评估真实用户交互体验，所以 A、B、C、D 都需关注。代码长度不直接表示部署质量，E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-185",
+    "index": 185,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "(    )正确描述了人工智能训练师在用户反馈集成过程中的职责。",
+    "options": [
+      "人工智能训练师负责收集和分析用户的反馈信息,以优化AI系统的性能。",
+      "人工智能训练师不参与用户反馈的收集工作,这一任务通常由客户服务团队完成。",
+      "人工智能训练师利用用户反馈调整算法参数,以提高系统的用户满意度。",
+      "人工智能训练师只关注技术层面的反馈,如系统错误或性能问题,而忽略用户的主观感受。",
+      "人工智能训练师需要将用户反馈转化为具体的训练目标和策略,确保模型持续改进。"
+    ],
+    "answer": [
+      "A",
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "训练师应参与收集分析反馈，依据反馈调整参数或数据策略，并把问题转成可执行训练目标以持续改进，所以 A、C、E 正确。反馈工作可与客服协作但不能完全不参与，也要重视用户主观体验而非只看技术故障，B、D 错误。",
+    "points": 1
+  },
+  {
+    "id": "multi-186",
+    "index": 186,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在分析算法测试结果的统计显著性时,(    )方法可以用来判断算法间性能差异是否显著。",
+    "options": [
+      "配对t检验",
+      "Mann-WhitneyU检验",
+      "方差分析",
+      "相关系数",
+      "皮尔逊卡方检验"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "同一对象或数据集上的算法结果可用配对 t 检验比较均值，非正态或独立样本可用 Mann-Whitney U 检验，多算法均值可用方差分析，所以 A、B、C 都能检验性能差异。相关系数衡量共同变化，皮尔逊卡方主要检验分类变量关联，D、E 不是连续性能差异的通用检验。",
+    "points": 1
+  },
+  {
+    "id": "multi-187",
+    "index": 187,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "为了确保算法测试报告的清晰性和可读性,应该采取的措施有(    )。",
+    "options": [
+      "使用行业标准术语和定义",
+      "包含详细的测试用例和步骤",
+      "提供测试结果的图表和可视化",
+      "附带所有原始数据和日志文件",
+      "按照时间顺序编排测试事件"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "统一使用行业术语可减少歧义，详细列明测试用例和步骤便于复现，图表可直观呈现比较和趋势，因此 A、B、C 有助于清晰可读。全部原始数据日志应作为附件按需提供，事件也应按主题和结论组织而非一律按时间罗列，D、E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-188",
+    "index": 188,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "(    )正确描述了人工智能训练师在调试与问题定位中使用的方法与技巧。",
+    "options": [
+      "人工智能训练师通常使用逐层检查的方法来识别深度学习模型中的性能瓶颈。",
+      "为了定位问题,人工智能训练师不会修改输入数据,以避免数据污染导致的误判。",
+      "人工智能训练师会运用可视化工具来理解模型内部状态和中间层的输出。",
+      "在定位模型性能问题时,人工智能训练师可能会对数据集进行重新采样,以便更好地评估模型的泛化能力。",
+      "人工智能训练师往往忽略模型的过拟合问题,因为这只是表明模型已经很好地学习到了训练数据。"
+    ],
+    "answer": [
+      "A",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "逐层检查可定位深度网络瓶颈，可视化中间层帮助理解内部状态，重新采样能验证结果是否依赖特定数据分布，所以 A、C、D 正确。调试时可构造或扰动输入复现问题，不能绝对拒绝修改副本；过拟合也是必须处理的问题，B、E 错误。",
+    "points": 1
+  },
+  {
+    "id": "multi-189",
+    "index": 189,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "TensorBoard提供的(    )功能有助于模型的监控和调试。",
+    "options": [
+      "实时显示模型训练过程中的损失函数变化",
+      "自动优化模型的超参数",
+      "可视化神经网络的架构",
+      "直观展示模型在不同数据集上的性能差异",
+      "自动生成模型代码"
+    ],
+    "answer": [
+      "A",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "TensorBoard 可绘制损失等标量随训练变化的曲线，展示计算图或网络结构，并通过不同运行记录对比模型在不同数据集或实验上的指标，因此 A、C、D 有助于监控调试。它不会自动完成超参数优化，也不会自动生成模型代码，B、E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-190",
+    "index": 190,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在进行日志分析时,(    )技巧可以帮助提高分析的效率和质量。",
+    "options": [
+      "使用正则表达式来提取关键信息",
+      "对日志进行分类和标签化",
+      "利用日志分析工具自动识别异常行为",
+      "定期清理和归档日志文件",
+      "将日志数据与其他数据源进行关联分析"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "正则表达式可抽取字段，分类标签便于检索统计，分析工具能自动发现异常，定期归档控制规模并保留历史，关联其他数据源可补充上下文。因此 A、B、C、D、E 都能从不同方面提升日志分析效率和质量。",
+    "points": 1
+  },
+  {
+    "id": "multi-191",
+    "index": 191,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "算法测试实验管理中,(    )策略可以提高实验效率。",
+    "options": [
+      "制定详细的实验计划",
+      "使用自动化测试工具",
+      "对实验结果进行实时监控",
+      "忽略实验过程中的问题",
+      "定期回顾和总结实验经验"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "详细计划减少资源冲突，自动化工具加速重复测试，实时监控及时发现异常，定期复盘沉淀经验，所以 A、B、C、E 都能提高实验效率。忽略过程问题会使结果失真或重复失败，D 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-192",
+    "index": 192,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在修复与迭代过程中,(    )工具和技术可以帮助团队提高工作效率。",
+    "options": [
+      "敏捷开发方法",
+      "单次大规模发布",
+      "自动化测试",
+      "代码审查",
+      "项目管理软件"
+    ],
+    "answer": [
+      "A",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "敏捷方法支持小步迭代，自动化测试快速回归，代码审查提前发现缺陷，项目管理软件协调任务和进度，故 A、C、D、E 能提高修复迭代效率。单次大规模发布反馈慢且风险集中，B 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-193",
+    "index": 193,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "合规性测试的标准包括(    )方面。",
+    "options": [
+      "符合法律法规要求",
+      "符合行业规范",
+      "符合公司内部政策",
+      "符合客户期望",
+      "符合员工需求"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "合规性测试应核对法律法规、适用行业规范以及组织已承诺执行的内部政策，因此 A、B、C 构成正式标准来源。客户期望和员工需求可影响产品设计，但未转化为合同、制度或规范前不是合规判定标准，D、E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-194",
+    "index": 194,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在进行性能优化策略的选择与实施时,需要考虑的因素包括(    )。",
+    "options": [
+      "系统架构",
+      "用户体验",
+      "成本预算",
+      "技术可行性",
+      "数据安全性"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "official",
+    "answerBasis": "manual_official",
+    "confidence": "high",
+    "explanation": "性能优化必须适配系统架构，否则局部调整可能破坏整体；还要保证用户体验，受成本预算和技术可行性约束，并避免因缓存、传输或权限调整削弱数据安全。因此 A、B、C、D、E 都是策略选择和实施时需要共同考虑的因素。",
+    "points": 1
+  },
+  {
+    "id": "multi-195",
+    "index": 195,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能训练",
+    "section": "数据处理与算法测试",
+    "stem": "在人工智能系统测试阶段应该包括对算法决策过程的伦理评估,确保(    )。",
+    "options": [
+      "算法的公正性",
+      "算法的鲁棒性",
+      "算法的透明性",
+      "算法的可解释性",
+      "算法的高可用"
+    ],
+    "answer": [
+      "A",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "伦理评估要检查不同群体是否受到公平对待，决策依据和限制是否透明，并提供人能够理解和质疑的解释，因此 A、C、D 正确。鲁棒性和高可用属于重要技术质量，但不直接回答决策过程的伦理正当性，B、E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-196",
+    "index": 196,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "(    )方法属于数据拆解的常用手段。",
+    "options": [
+      "维度拆解",
+      "指标拆解",
+      "流程拆解",
+      "随机拆解",
+      "关联拆解"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "数据可按地区、产品等维度拆解，也可按业务指标、流程阶段和变量关联关系拆解，所以 A、B、C、E 都是常用分析手段。随机拆解缺少业务或统计依据，通常不能形成可解释结论，D 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-197",
+    "index": 197,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "数据拆解对模型性能的影响可能是(    )。",
+    "options": [
+      "提高模型的预测准确性",
+      "降低模型的过拟合风险",
+      "加速模型的训练过程",
+      "增加模型的复杂度",
+      "减少模型调参的工作量"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "合理拆解可提取更清晰的子模式以提高预测准确性，减少混杂从而降低过拟合，并让分块或并行训练更快；同时引入更多子任务或特征也可能增加模型复杂度。因此 A、B、C、D 都是可能影响。调参工作量取决于方案，不能保证减少，E 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-198",
+    "index": 198,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "验证集的主要作用是(    )。",
+    "options": [
+      "用于训练模型",
+      "用于评估模型的泛化能力",
+      "用于选择最佳的模型配置",
+      "用于测试模型的预测能力",
+      "用于调整模型的超参数"
+    ],
+    "answer": [
+      "B",
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "验证集用于估计候选模型的泛化表现，据此选择最佳结构或配置并调整超参数，所以 B、C、E 是主要作用。模型参数由训练集拟合，最终预测能力应由未参与选择的测试集评估，A、D 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-199",
+    "index": 199,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "属于特征降维的常用方法的是(    )。",
+    "options": [
+      "主成分分析",
+      "线性判别分析",
+      "独立成分分析",
+      "聚类分析",
+      "朴素贝叶斯分类器"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "主成分分析通过最大方差投影降维，线性判别分析寻找判别子空间，独立成分分析分离独立源成分，因此 A、B、C 都是常见特征降维方法。聚类主要分组样本，朴素贝叶斯是分类器，D、E 不是标准降维方法。",
+    "points": 1
+  },
+  {
+    "id": "multi-200",
+    "index": 200,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "基于统计的特征拆解的目的是(    )。",
+    "options": [
+      "提取数据中的有用信息",
+      "简化特征结构",
+      "增加特征的个数",
+      "降低计算复杂度",
+      "提高模型性能"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "统计特征拆解旨在提取有效规律并简化原有结构，由此降低计算复杂度，且更合适的表示可能提升模型性能，所以 A、B、D、E 正确。它强调压缩和重组信息，不以无目的增加特征数量为目标，C 不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-201",
+    "index": 201,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在特征选择过程中,可以使用(    )方法来评估特征的重要性。",
+    "options": [
+      "基于模型的特征重要性评估",
+      "基于统计量的特征重要性评估",
+      "基于可视化技术的特征重要性评估",
+      "基于专家经验的特征重要性评估",
+      "基于计算复杂度的特征重要性评估"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "A可由模型系数或树的重要性评分特征，B可用相关性和统计检验，C能直观比较特征与目标的关系，D可引入领域经验；E衡量计算代价，不直接衡量预测重要性。",
+    "points": 1
+  },
+  {
+    "id": "multi-202",
+    "index": 202,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在进行时间序列数据的拆解和处理时,通常需要考虑(    )因素。",
+    "options": [
+      "数据的周期性",
+      "数据的趋势性",
+      "数据的季节性",
+      "数据的随机性",
+      "数据的分组特征"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "A周期、B长期趋势、C季节波动和D随机扰动都是时间序列拆解需要识别的成分；E分组特征不是时间维度本身的通用组成。",
+    "points": 1
+  },
+  {
+    "id": "multi-203",
+    "index": 203,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "文本数据的拆解技术主要包括(    )方面。",
+    "options": [
+      "词性标注",
+      "命名实体识别",
+      "依存关系分析",
+      "语义角色标注",
+      "句法分析"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "A词性、B实体、C依存关系、D语义角色和E句法结构分别从词汇、实体、结构与语义层面拆解文本，五项均属于常见文本分析技术。",
+    "points": 1
+  },
+  {
+    "id": "multi-204",
+    "index": 204,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "时间序列分析在天气预报中的主要作用是(    )。",
+    "options": [
+      "预测未来天气状况",
+      "分析历史天气数据",
+      "确定天气变化趋势",
+      "评估天气模型的准确性",
+      "优化气象观测网络"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "时间序列可用A预测天气、B分析历史观测、C识别变化趋势，并以回测等方式D评估预测准确性；E观测网络布局优化属于另一类系统工程任务。",
+    "points": 1
+  },
+  {
+    "id": "multi-205",
+    "index": 205,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在网络分析中,节点通常不能用来表示(    )。",
+    "options": [
+      "实体",
+      "关系",
+      "属性",
+      "数据",
+      "模型"
+    ],
+    "answer": [
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "按基础网络模型，A实体由节点表示；B关系通常由边表示，C是节点或边的属性，D数据和E模型也不是该语境下约定的节点类型，因此选择B、C、D、E。",
+    "points": 1
+  },
+  {
+    "id": "multi-206",
+    "index": 206,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "(    )正确描述了人工智能训练师和网络分析方法在社会网络研究中的应用。",
+    "options": [
+      "人工智能训练师通过标注和反馈数据,帮助机器学习算法优化社交网络中的用户行为预测模型。",
+      "网络分析方法用于识别社交网络中的关键节点,从而理解信息传播的模式。",
+      "人工智能训练师不直接参与社会网络分析,他们的主要工作集中在数据清洗和预处理阶段。",
+      "社交网络中的大量数据为人工智能训练师提供了丰富的训练资源,用于改进推荐系统的精准度。",
+      "网络分析方法通过计算节点的中心性指数,分析社交网络的结构和动态。"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "A说明标注反馈可优化行为预测，B和E分别体现关键节点识别及中心性分析，D说明社交数据可改进推荐；C错误，训练师的职责不只限于清洗预处理。",
+    "points": 1
+  },
+  {
+    "id": "multi-207",
+    "index": 207,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "多维度数据分解的主要目的是(    )。",
+    "options": [
+      "简化数据结构",
+      "提高数据处理效率",
+      "增强数据的可解释性",
+      "降低数据存储成本",
+      "增加数据的复杂性"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "分解以A简化复杂结构、B提高后续处理效率和C揭示各维度含义为主要目标；D存储成本未必下降，E增加复杂性与目标相反。",
+    "points": 1
+  },
+  {
+    "id": "multi-208",
+    "index": 208,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在图像处理中,多维度数据分解的主要目的是(    )。",
+    "options": [
+      "提高图像质量",
+      "提高图像处理的效率",
+      "降低图像存储成本",
+      "提取有用的图像信息",
+      "降低计算复杂度"
+    ],
+    "answer": [
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "多维分解或PCA以较少成分保留主要图像信息，因此D正确；维数和系数数量下降会减少后续运算量、存储量与计算复杂度，所以B、C、E也正确。分解可能顺带去噪，但并不必然提高图像质量，A不选。",
+    "points": 1
+  },
+  {
+    "id": "multi-209",
+    "index": 209,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "(    )正确描述了人工智能训练师与机器学习特征工程分类之间的关系,",
+    "options": [
+      "人工智能训练师负责使用机器学习算法和深度学习技术来训练模型,而特征工程是这一过程中提升模型性能的关键步骤。",
+      "机器学习特征工程主要分为监督学习和无监督学习两大类,每种分类下的特征处理方式有所不同。",
+      "人工智能训练师在模型训练过程中,需要依据特征工程的分类来选择合适的处理策略。",
+      "特征工程包括数据预处理、特征选择、特征构造和特征降维等步骤,这些步骤完全由人工智能训练师自主完成,无需其他团队支持。",
+      "机器学习特征工程的分类有助于人工智能训练师更好地理解数据,从而设计出更有效的训练策略和优化方案。"
+    ],
+    "answer": [
+      "A",
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "A说明特征工程对训练性能的重要性，C说明训练师需按特征类型选择策略，E说明分类有助于理解数据和优化方案；B混淆学习范式与特征工程分类，D错误排除团队协作。",
+    "points": 1
+  },
+  {
+    "id": "multi-210",
+    "index": 210,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "机器学习特征工程在自然语言处理中的应用主要包括(    )。",
+    "options": [
+      "文本分类",
+      "情感分析",
+      "命名实体识别",
+      "推荐系统",
+      "拼写检查和语法纠错"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "A文本分类、B情感分析、C实体识别和E拼写语法纠错都依赖词法、句法或语义特征；D推荐系统可以利用文本，但不属于这里列举的主要NLP任务。",
+    "points": 1
+  },
+  {
+    "id": "multi-211",
+    "index": 211,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "针对大规模数据集的机器学习模型,(    )可以帮助减少响应时间。",
+    "options": [
+      "实施模型剪枝以减少冗余权重",
+      "应用量化技术降低模型精度要求",
+      "使用更复杂的优化算法以提高训练速度",
+      "扩大数据集规模以提高模型泛化能力",
+      "利用分布式计算框架进行并行处理"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "A剪枝减少参数运算，B量化降低数值位宽，E并行计算分摊工作量，均可降低响应时间；C针对训练算法且更复杂未必更快，D扩大数据集会增加负担。",
+    "points": 1
+  },
+  {
+    "id": "multi-212",
+    "index": 212,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在进行安全性分析时,需要考虑的因素包括(    )。",
+    "options": [
+      "人员因素",
+      "环境因素",
+      "技术因素",
+      "管理因素",
+      "经济因素"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "安全风险来自A人员操作、B物理与运行环境、C系统技术和D制度管理四个方面；E经济因素会影响投入决策，但不是该题安全分析的直接风险类别。",
+    "points": 1
+  },
+  {
+    "id": "multi-213",
+    "index": 213,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在分布式系统中,为了实现负载均衡,(    )策略可以被采用。",
+    "options": [
+      "随机分发",
+      "轮询分发",
+      "最少连接数分发",
+      "源地址哈希分发",
+      "最少响应时间分发"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "official",
+    "answerBasis": "manual_official",
+    "confidence": "high",
+    "explanation": "A随机、B轮询、C最少连接、D源地址哈希和E最少响应时间分别按随机性、顺序、负载、会话一致性或实时性能分发请求，均是负载均衡策略。",
+    "points": 1
+  },
+  {
+    "id": "multi-214",
+    "index": 214,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在文本数据预处理中,常见的步骤包括(    )。",
+    "options": [
+      "分词",
+      "去除停用词",
+      "词干提取和词形还原",
+      "将文本转换为数字向量表示",
+      "增加文本的字数"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "A分词确定处理单元，B去停用词减少低信息词，C词干或词形还原统一变体，D向量化生成模型输入；E机械增加字数不是预处理目标。",
+    "points": 1
+  },
+  {
+    "id": "multi-215",
+    "index": 215,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "数据分析的标准流程通常包括(    )步骤。",
+    "options": [
+      "数据收集",
+      "数据清洗",
+      "数据可视化",
+      "数据挖掘",
+      "数据分析报告"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "标准分析流程包含A收集原始数据、B清洗质量问题、C可视化探索、D挖掘规律以及E形成报告沟通结论，五项构成完整闭环。",
+    "points": 1
+  },
+  {
+    "id": "multi-216",
+    "index": 216,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在选择统计模型时,应该被考虑的因素是(    )。",
+    "options": [
+      "模型的复杂性",
+      "数据的可用性",
+      "模型的预测能力",
+      "模型的易解释性",
+      "模型的训练时间"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "模型选择需同时权衡A复杂性、B数据条件、C预测表现、D解释要求和E训练时间；任一因素都可能改变可用模型范围。",
+    "points": 1
+  },
+  {
+    "id": "multi-217",
+    "index": 217,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在应用机器学习算法时,为了加快模型的训练速度,可以采取以下(    )策略。",
+    "options": [
+      "增加正则化强度",
+      "优化算法实现",
+      "使用更复杂的模型结构",
+      "采用随机梯度下降",
+      "增加学习率"
+    ],
+    "answer": [
+      "B",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "B优化实现可减少计算开销，D随机梯度下降降低单次更新成本，E在稳定范围内增大学习率可减少迭代；A正则化不以提速为目标，C复杂结构通常更慢。",
+    "points": 1
+  },
+  {
+    "id": "multi-218",
+    "index": 218,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "聚类分析是一种无监督学习方法,用于将数据集划分为多个组或簇,使得同一组内的数据点尽可能相似,而不同组之间的数据点尽可能不同。(    )算法属于聚类分析的常用算法。",
+    "options": [
+      "K-means算法",
+      "层次聚类算法",
+      "DBSCAN算法",
+      "主成分分析",
+      "线性判别分析"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "A K-means、B层次聚类和C DBSCAN都按相似性或密度划分簇；D主成分分析用于降维，E线性判别分析是有监督的判别降维方法。",
+    "points": 1
+  },
+  {
+    "id": "multi-219",
+    "index": 219,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "(    )正确描述了人工智能训练师与关联规则学习挖掘过程之间的关系及其内容。",
+    "options": [
+      "人工智能训练师首先需要进行数据预处理,以确保数据质量。",
+      "在挖掘关联规则时,人工智能训练师不参与设定最小支持度和置信度阈值。",
+      "人工智能训练师负责解释和评估挖掘出的关联规则,以确定其业务价值。",
+      "关联规则的挖掘完全自动化,人工智能训练师不参与整个流程。",
+      "人工智能训练师会使用领域知识来指导关联规则的挖掘,并帮助筛选有意义的规则。"
+    ],
+    "answer": [
+      "A",
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "A数据预处理保证事务数据质量，C需解释规则并评价业务价值，E用领域知识筛除伪相关；B错误，训练师应参与阈值设定，D也错误，流程不能完全脱离人工。",
+    "points": 1
+  },
+  {
+    "id": "multi-220",
+    "index": 220,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "(    )描述了人工智能训练师在回归分析模型建立过程中的职责。",
+    "options": [
+      "人工智能训练师负责确定回归模型的自变量和因变量。",
+      "在建立回归模型时,人工智能训练师不参与数据清洗和预处理工作。",
+      "人工智能训练师会进行模型诊断,以确保回归模型没有违反任何统计假设。",
+      "回归模型一旦建立,人工智能训练师就不再需要进行任何后续的调整或优化。",
+      "人工智能训练师负责向非技术利益相关者解释回归模型的结果和影响。"
+    ],
+    "answer": [
+      "A",
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "A确定变量与问题定义，C检查残差等统计假设，E向利益相关者解释结果，均属训练师职责；B错误排除数据准备，D错误否认模型迭代。",
+    "points": 1
+  },
+  {
+    "id": "multi-221",
+    "index": 221,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在决策树分析中,(    )确定最优的划分标准。",
+    "options": [
+      "信息增益率",
+      "基尼指数",
+      "最大似然估计",
+      "交叉熵",
+      "方差减小"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "A信息增益率、B基尼指数和D交叉熵可评价分类节点纯度，E方差减小可评价回归划分；C最大似然估计是参数估计原则，不是常用树划分指标。",
+    "points": 1
+  },
+  {
+    "id": "multi-222",
+    "index": 222,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "神经网络分析中,激活机制的作用是(    )。",
+    "options": [
+      "增强网络的非线性表达能力",
+      "提供网络的稀疏性",
+      "帮助网络学习复杂的模式",
+      "增加网络的计算量",
+      "使网络具有自我修正的能力"
+    ],
+    "answer": [
+      "A",
+      "C"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "A非线性激活使多层网络不再退化为线性映射，进而C学习复杂模式；B稀疏性并非所有激活都提供，D是可能的计算代价，E自我修正来自训练机制。",
+    "points": 1
+  },
+  {
+    "id": "multi-223",
+    "index": 223,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "(    )正确描述了人工智能训练师在使用贝叶斯网络进行概率推断的职责。",
+    "options": [
+      "人工智能训练师负责构建贝叶斯网络的结构,包括确定节点和它们之间的依赖关系。",
+      "在贝叶斯网络中,人工智能训练师不参与概率分布的指定和参数估计。",
+      "人工智能训练师使用贝叶斯网络来预测未来事件的概率,并据此做出决策。",
+      "一旦贝叶斯网络建立,人工智能训练师就无需再对其进行任何更新或修正。",
+      "人工智能训练师需要向利益相关者解释贝叶斯网络概率推断的结果和其对决策的影响。"
+    ],
+    "answer": [
+      "A",
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "A需确定节点及依赖结构，C可用后验概率预测并支持决策，E要解释推断含义；B错误排除参数估计，D错误认为模型无需随新证据更新。",
+    "points": 1
+  },
+  {
+    "id": "multi-224",
+    "index": 224,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在集成学习中,Boosting方法通过(    )方式提高模型的准确性。",
+    "options": [
+      "增加训练数据的数量",
+      "减少训练数据的数量",
+      "调整基学习器的权重",
+      "改变基学习器的类型",
+      "优化损失函数"
+    ],
+    "answer": [
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "Boosting通过C调整样本或基学习器在组合中的权重，并在梯度提升中E逐步优化损失；A、B改变数据量和D更换学习器类型都不是其核心机制。",
+    "points": 1
+  },
+  {
+    "id": "multi-225",
+    "index": 225,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "深度学习中常用的网络结构包括(    )。",
+    "options": [
+      "卷积神经网络",
+      "循环神经网络",
+      "长短时记忆网络",
+      "生成对抗网络",
+      "全连接神经网络"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "A卷积网络处理局部结构，B循环网络和C LSTM处理序列，D生成对抗网络进行对抗生成，E全连接网络构成基础深层结构，五项均常用。",
+    "points": 1
+  },
+  {
+    "id": "multi-226",
+    "index": 226,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "强化学习策略的目标是实现奖励最大化。在选择动作时,通常采用的策略包括(    )。",
+    "options": [
+      "贪心策略",
+      "ε-贪婪策略",
+      "玻尔兹曼探索",
+      "UCB策略",
+      "随机策略"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "A贪心用于利用当前最优动作，B ε-贪婪、C玻尔兹曼、D UCB和E随机策略以不同方式安排探索，五项都是动作选择策略。",
+    "points": 1
+  },
+  {
+    "id": "multi-227",
+    "index": 227,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "自然语言处理中的文本分析技术主要包括(    )方面。",
+    "options": [
+      "词法分析",
+      "句法分析",
+      "语义分析",
+      "情感分析",
+      "主题建模"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "文本分析覆盖A词法单元、B句法结构、C语义含义、D情感倾向及E潜在主题，五个层面共同刻画文本。",
+    "points": 1
+  },
+  {
+    "id": "multi-228",
+    "index": 228,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在进行时间序列分析时,(    )步骤是必要的。",
+    "options": [
+      "数据清洗",
+      "异常值检测",
+      "趋势分析",
+      "周期性分析",
+      "预测未来趋势"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "A清洗与B异常检测保证输入质量，C趋势和D周期分析识别序列结构；E预测未来只在预测型任务中需要，不是所有时间序列分析的必要步骤。",
+    "points": 1
+  },
+  {
+    "id": "multi-229",
+    "index": 229,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在应用维度约简技术进行数据压缩时,(    )因素需要考虑。",
+    "options": [
+      "数据的编码格式",
+      "数据的维度",
+      "数据的稀疏性",
+      "数据的分布情况",
+      "数据的噪声水平"
+    ],
+    "answer": [
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "B原始维数决定压缩空间，C稀疏性影响算法选择，D分布决定保留结构，E噪声影响有效成分；A文件编码格式不是维度约简的核心统计因素。",
+    "points": 1
+  },
+  {
+    "id": "multi-230",
+    "index": 230,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "(    )技术可用于处理检测到的异常值。",
+    "options": [
+      "删除异常值",
+      "替换异常值",
+      "通过插值填补异常值",
+      "使用异常值进行模型训练",
+      "基于领域知识修正异常值"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "确认异常后可A删除错误记录、B用合理值替换、C按邻近信息插值或E依据领域规则修正；D直接拿异常值训练不是通用处理办法。",
+    "points": 1
+  },
+  {
+    "id": "multi-231",
+    "index": 231,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "人工智能训练师在数据融合技术综合利用中,主要用于提升模型的(    )。",
+    "options": [
+      "准确性",
+      "效率",
+      "稳定性",
+      "扩展性",
+      "复杂性"
+    ],
+    "answer": [
+      "A",
+      "C"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "多源信息互补可A提高预测准确性，并C降低单一来源波动带来的不稳定；B计算效率未必提高，D扩展性不是直接目标，E复杂性增加更非目标。",
+    "points": 1
+  },
+  {
+    "id": "multi-232",
+    "index": 232,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在设计智能解决方案时,需要考虑的要素包括(    )。",
+    "options": [
+      "技术可行性",
+      "经济可行性",
+      "社会可行性",
+      "环境可行性",
+      "法律可行性"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "方案落地需同时验证A技术实现、B成本收益、C社会接受、D环境影响和E法律合规，五类可行性缺一都可能导致项目失败。",
+    "points": 1
+  },
+  {
+    "id": "multi-233",
+    "index": 233,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "用户需求分析的目的是(    )。",
+    "options": [
+      "了解用户的需求和期望",
+      "评估产品的功能和性能",
+      "确定产品的市场定位",
+      "制定产品的开发计划",
+      "优化产品的用户体验"
+    ],
+    "answer": [
+      "A",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "用户需求分析直接用于A识别需求期望并E据此优化体验；B功能性能评测、C市场定位和D开发计划属于其他环节或后续产出。",
+    "points": 1
+  },
+  {
+    "id": "multi-234",
+    "index": 234,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在产品功能规划中,(    )步骤是必不可少的。",
+    "options": [
+      "市场调研",
+      "用户需求分析",
+      "功能优先级排序",
+      "技术可行性评估",
+      "成本效益分析"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "A市场调研和B需求分析确定价值，C排序控制范围，D技术评估保证可实现，E成本效益判断是否值得投入，五步均不可缺。",
+    "points": 1
+  },
+  {
+    "id": "multi-235",
+    "index": 235,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在选择人工智能算法时,训练师应关注算法的(    ),以确保模型的高效运行。",
+    "options": [
+      "计算复杂度",
+      "时间复杂度",
+      "空间复杂度",
+      "数据利用率",
+      "模型精度"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "A总体计算复杂度、B运行时间、C内存需求和D数据利用效率都会影响高效运行；E模型精度衡量预测质量，不是运行效率指标。",
+    "points": 1
+  },
+  {
+    "id": "multi-236",
+    "index": 236,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在模型训练与验证的过程中,(    )方法可以用来评估模型的性能。",
+    "options": [
+      "交叉验证",
+      "留一法",
+      "自助法",
+      "均值法",
+      "方差法"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "A交叉验证、B留一法和C自助法都通过重采样或轮换留出数据评估泛化；D均值法和E方差法只是统计量计算，不是完整验证方法。",
+    "points": 1
+  },
+  {
+    "id": "multi-237",
+    "index": 237,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "系统集成设计时,应遵循的规则包括(    )。",
+    "options": [
+      "模块化设计原则",
+      "可扩展性原则",
+      "安全性原则",
+      "可靠性原则",
+      "封闭性原则"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "集成设计应具备A模块化、B可扩展、C安全和D可靠四项原则；E封闭性会阻碍标准接口和系统互操作。",
+    "points": 1
+  },
+  {
+    "id": "multi-238",
+    "index": 238,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在用户界面设计UI中,有助于提高用户体验的设计特点是(    )。",
+    "options": [
+      "简洁明了",
+      "色彩搭配",
+      "布局合理",
+      "响应式设计",
+      "复杂操作"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "A简洁降低认知负担，B恰当色彩强化层级，C合理布局支持任务流，D响应式适配设备；E复杂操作会降低可用性。",
+    "points": 1
+  },
+  {
+    "id": "multi-239",
+    "index": 239,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "用户体验设计UX的原则包括(    )。",
+    "options": [
+      "以用户为中心的设计",
+      "简洁明了的界面",
+      "可用性",
+      "非响应式设计",
+      "设计一致性"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "UX强调A用户中心、B界面清晰、C可用和E一致性；D非响应式设计会损害跨设备体验，不是原则。",
+    "points": 1
+  },
+  {
+    "id": "multi-240",
+    "index": 240,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在安全性和隐私保护方面,人工智能训练师确保产品差异化的方法有(    )。",
+    "options": [
+      "集成先进的加密技术",
+      "实施严格的数据访问控制",
+      "提供透明的数据使用政策",
+      "忽视用户数据保护法规",
+      "减少安全措施以提高性能"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "A先进加密、B严格访问控制和C透明政策可形成可信的安全隐私差异；D无视法规违法，E削减安全会放大风险。",
+    "points": 1
+  },
+  {
+    "id": "multi-241",
+    "index": 241,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在进行安全性考虑与设计时,(    )因素是需要关注的。",
+    "options": [
+      "用户隐私保护",
+      "数据加密技术",
+      "访问控制策略",
+      "物理安全措施",
+      "网络安全措施"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "安全设计需覆盖A隐私、B数据加密、C访问权限、D设备场所和E网络边界，五项分别保护数据、身份、设施与通信。",
+    "points": 1
+  },
+  {
+    "id": "multi-242",
+    "index": 242,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "云服务集成中的API集成通常采用(    )方式。",
+    "options": [
+      "RESTful API",
+      "SOAP API",
+      "RPC API",
+      "XML-RPC API",
+      "JSON-RPC API"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "云集成可采用A REST、B SOAP、C一般RPC，以及其D XML-RPC和E JSON-RPC实现，五项都是实际存在的API调用方式。",
+    "points": 1
+  },
+  {
+    "id": "multi-243",
+    "index": 243,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "关于代码优化,可以提升程序运行效率的实践是(    )。",
+    "options": [
+      "使用全局变量而非局部变量",
+      "避免不必要的循环和递归调用",
+      "选择更快的算法和数据结构",
+      "减少函数调用开销",
+      "通过增加冗余代码来提高可读性"
+    ],
+    "answer": [
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "B消除无效循环递归、C选用更优算法结构、D减少高频调用开销均可提速；A全局变量不必然更快且损害维护，E冗余代码增加负担。",
+    "points": 1
+  },
+  {
+    "id": "multi-244",
+    "index": 244,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在可扩展性设计中,(    )方法可以提高系统的灵活性。",
+    "options": [
+      "模块化设计",
+      "使用中间件",
+      "采用微服务架构",
+      "优化数据库查询",
+      "使用缓存技术"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "A模块化便于替换组合，B中间件解耦系统，C微服务支持独立演进，均提升结构灵活性；D查询优化和E缓存主要改善性能。",
+    "points": 1
+  },
+  {
+    "id": "multi-245",
+    "index": 245,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "代码审计与优化的重要性体现在(    )方面。",
+    "options": [
+      "提高代码质量",
+      "减少潜在的安全风险",
+      "提升系统性能",
+      "降低维护成本",
+      "增强团队协作"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "代码审计与优化可通过规范实现提高代码质量A，发现漏洞降低安全风险B，消除低效路径提升性能C，减少返工与技术债以降低维护成本D；统一规范、提升可读性和评审共享也会增强团队协作E，因此五项均成立。",
+    "points": 1
+  },
+  {
+    "id": "multi-246",
+    "index": 246,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在处理用户数据时,公司应该遵循(    )原则。",
+    "options": [
+      "最小化",
+      "有目的性",
+      "公开透明",
+      "灵活性",
+      "用户授权"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "处理用户数据应遵循A最小必要、B目的限定、C公开透明和E合法授权；D笼统的灵活性不是个人信息保护原则。",
+    "points": 1
+  },
+  {
+    "id": "multi-247",
+    "index": 247,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "故障恢复的策略性设计需要考虑(    )方面。",
+    "options": [
+      "备份策略",
+      "恢复策略",
+      "容灾策略",
+      "监控策略",
+      "优化策略"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "故障恢复需A保留可用备份、B规定恢复步骤、C准备异地容灾并D监测故障触发处置；E一般优化不是恢复策略的专门组成。",
+    "points": 1
+  },
+  {
+    "id": "multi-248",
+    "index": 248,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "关于产品维护与升级的策略,(    )是正确的描述。",
+    "options": [
+      "定期进行版本迭代",
+      "优先解决紧急问题",
+      "保持技术债务最小化",
+      "忽略长期规划",
+      "持续监控市场动态"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "A有计划迭代、B优先修复紧急问题、C控制技术债和E跟踪市场都支持健康维护；D忽略长期规划会积累风险。",
+    "points": 1
+  },
+  {
+    "id": "multi-249",
+    "index": 249,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在用户反馈与迭代过程的管理中,(    )因素可能会影响改进计划的制定。",
+    "options": [
+      "资源限制",
+      "技术可行性",
+      "市场环境",
+      "用户满意度",
+      "竞争对手策略"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "改进优先级会同时受A资源、B技术可行性、C市场变化、D满意度和E竞品策略影响，五项均可能改变计划。",
+    "points": 1
+  },
+  {
+    "id": "multi-250",
+    "index": 250,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "(    )与人工智能训练师和人机交互的定义紧密相关。",
+    "options": [
+      "数据标注与预处理",
+      "用户行为分析",
+      "算法设计与优化",
+      "用户界面设计与优化",
+      "用户反馈收集与处理"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "A数据准备和C算法优化体现训练师工作，B行为分析、D界面优化和E反馈处理体现人机交互；五项共同连接AI训练与用户交互。",
+    "points": 1
+  },
+  {
+    "id": "multi-251",
+    "index": 251,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "人机交互的目的是(    )。",
+    "options": [
+      "提高计算机的性能",
+      "提高用户的操作效率",
+      "实现人与计算机之间的信息交换",
+      "实现人与计算机之间的自然交流",
+      "实现人与计算机之间的无缝连接"
+    ],
+    "answer": [
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "人机交互旨在B提升操作效率、C实现双向信息交换并D让交流更自然；A提高计算机硬件性能不是交互目标，E“无缝连接”过于绝对且含义不明确。",
+    "points": 1
+  },
+  {
+    "id": "multi-252",
+    "index": 252,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "人机交互的模型包括(    )方面。",
+    "options": [
+      "用户研究",
+      "设计原则",
+      "交互方式",
+      "评估方法",
+      "技术实现"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "HCI模型需涵盖A用户研究、B设计规则、C交互方式和D评价方法；E技术实现是落地层，不是本题所述模型分析方面。",
+    "points": 1
+  },
+  {
+    "id": "multi-253",
+    "index": 253,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "人机交互设计的基本原则包括(    )。",
+    "options": [
+      "直观性原则",
+      "一致性原则",
+      "反馈性原则",
+      "容错性原则",
+      "复杂性原则"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "良好交互应A直观、B一致、C及时反馈并D允许防错纠错；E增加复杂性会提高学习成本，不是基本原则。",
+    "points": 1
+  },
+  {
+    "id": "multi-254",
+    "index": 254,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在设计输入与输出系统时,需要考虑的因素包括(    )。",
+    "options": [
+      "用户的需求",
+      "系统的性能",
+      "数据的准确性",
+      "设备的兼容性",
+      "环境的适应性"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "输入输出设计要满足A用户目标、B时延吞吐、C数据准确、D设备兼容和E不同环境适配，五项都影响系统可用性。",
+    "points": 1
+  },
+  {
+    "id": "multi-255",
+    "index": 255,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "为了确保反馈机制的有效性,需要考虑的因素有(    )。",
+    "options": [
+      "反馈的及时性",
+      "反馈的准确性",
+      "反馈的主观性",
+      "反馈的针对性",
+      "反馈的激励性"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "有效反馈应A及时、B准确、D针对具体行为并E促使改进；C主观性会降低一致性和可信度，不是应追求的因素。",
+    "points": 1
+  },
+  {
+    "id": "multi-256",
+    "index": 256,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在设计过程中,为了提高产品的适应性,需要考虑的因素有(    )。",
+    "options": [
+      "用户的需求和期望",
+      "技术的可行性和成本",
+      "市场竞争状况",
+      "法律法规的要求",
+      "文化和社会背景"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "适应性取决于A用户变化、B技术成本、C竞争环境、D合规边界和E文化社会差异，五项都应在设计中权衡。",
+    "points": 1
+  },
+  {
+    "id": "multi-257",
+    "index": 257,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "电阻式触摸技术的缺点包括(    )。",
+    "options": [
+      "灵敏度低",
+      "耐久性差",
+      "透光性差",
+      "抗干扰能力弱",
+      "价格昂贵"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "电阻屏通常A需要按压而灵敏度较低，B表层易磨损，C多层结构降低透光率；D一般并非其典型弱点，E相反，其成本通常较低。",
+    "points": 1
+  },
+  {
+    "id": "multi-258",
+    "index": 258,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "语音交互设计的关键细节包括(    )。",
+    "options": [
+      "语音识别准确性",
+      "自然语言理解能力",
+      "语音合成自然度",
+      "用户界面设计",
+      "语音信号处理技术"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "语音交互需要A准确识别语音、B理解语言意图、C自然合成回复，并由E信号处理完成降噪、端点检测等声学处理；D用户界面或对话界面还负责提示可说内容、显示状态和支持纠错恢复，也是关键设计细节。因此A至E均应考虑。",
+    "points": 1
+  },
+  {
+    "id": "multi-259",
+    "index": 259,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "增强现实AR在人工智能训练师的工作中,可以用于提升训练效果的方面包括(    )。",
+    "options": [
+      "提供实时数据可视化",
+      "模拟复杂环境下的操作",
+      "实现远程协同培训",
+      "增强学习者的记忆力",
+      "减少实际操作的风险"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "AR可A叠加实时数据、B安全模拟复杂场景、C支持远程协同并E减少真实操作风险；D提高记忆力不是技术本身能够普遍保证的结果。",
+    "points": 1
+  },
+  {
+    "id": "multi-260",
+    "index": 260,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在虚拟现实VR交互设计中,(    )方法可以提高用户的沉浸感。",
+    "options": [
+      "使用高质量的图像和视频",
+      "提供真实的触觉反馈",
+      "采用自然的手势和动作交互",
+      "限制视野范围",
+      "增加声音效果"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "A高质量视觉、B触觉反馈、C自然动作和E空间声音共同增强临场感；D限制视野会削弱沉浸并可能影响交互。",
+    "points": 1
+  },
+  {
+    "id": "multi-261",
+    "index": 261,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "多模态交互的综合设计需要考虑(    )方面。",
+    "options": [
+      "用户体验",
+      "界面设计",
+      "交互逻辑",
+      "技术支持",
+      "数据分析"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "多模态综合设计需统筹A整体体验、B信息呈现、C模态切换逻辑和D识别融合技术；E数据分析可支持评估，但不是交互整合设计的核心方面。",
+    "points": 1
+  },
+  {
+    "id": "multi-262",
+    "index": 262,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "用户研究方法论的目的是(    )。",
+    "options": [
+      "了解用户需求",
+      "优化产品设计",
+      "提高用户体验",
+      "评估产品性能",
+      "预测市场趋势"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "用户研究直接用于A理解需求，并据此B优化设计、C改善体验；D产品性能评测和E市场趋势预测属于相邻但不同的研究任务。",
+    "points": 1
+  },
+  {
+    "id": "multi-263",
+    "index": 263,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在人工智能训练师的工作流程中,原型设计与测试的实施过程包括(    )。",
+    "options": [
+      "需求分析",
+      "模型构建",
+      "数据准备",
+      "算法优化",
+      "系统测试"
+    ],
+    "answer": [
+      "A",
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "实施原型测试需A明确需求、C准备代表性数据和E执行系统测试；B正式模型构建与D算法优化属于模型开发环节，不是题目所划定的原型测试步骤。",
+    "points": 1
+  },
+  {
+    "id": "multi-264",
+    "index": 264,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在用户测试阶段,人工智能训练师应确保测试环境的(    )以避免对用户产生误导。",
+    "options": [
+      "真实性",
+      "控制性",
+      "一致性",
+      "安全性",
+      "多样性"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "official",
+    "answerBasis": "manual_official",
+    "confidence": "high",
+    "explanation": "测试环境应A贴近真实使用、B控制干扰变量、C对参与者保持一致并D保障人员数据安全；E多样性属于样本与场景覆盖设计，不是避免环境误导的直接条件。",
+    "points": 1
+  },
+  {
+    "id": "multi-265",
+    "index": 265,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "通过(    ),使AI系统更好地理解用户。",
+    "options": [
+      "开发高级的自然语言处理技术",
+      "集成面部表情识别技术",
+      "应用情感语义分析",
+      "增加系统响应的延迟时间",
+      "设计固定不变的交互模式"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "A自然语言处理理解语言，B表情识别获取非语言信号，C情感分析判断态度，三者都增强用户理解；D延迟和E固定模式会恶化交互。",
+    "points": 1
+  },
+  {
+    "id": "multi-266",
+    "index": 266,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "当用户向智能助手提问时,NLP如何帮助AI理解问题并给出恰当的回答的原理是(    )。",
+    "options": [
+      "通过关键词匹配找到最相似的答案",
+      "利用深度学习模型解析语句结构和上下文",
+      "依靠预设的问答数据库",
+      "通过语义理解捕捉问题的真实意图",
+      "使用模式匹配技术识别问题类型"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "NLP可用A关键词检索、B深度模型解析上下文、D语义理解识别意图以及E模式识别判断问题类型；C预设问答库提供答案内容，本身不完成语言理解。",
+    "points": 1
+  },
+  {
+    "id": "multi-267",
+    "index": 267,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "人机交互系统的性能评价标准通常包括(    )。",
+    "options": [
+      "响应时间",
+      "准确性",
+      "可靠性",
+      "易用性",
+      "安全性"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "交互系统需同时评价A时延、B输入输出正确性、C稳定可靠、D使用难度和E安全风险，五项共同决定实际质量。",
+    "points": 1
+  },
+  {
+    "id": "multi-268",
+    "index": 268,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "用户中心的设计原则包括(    )。",
+    "options": [
+      "简洁明了的界面设计",
+      "提供个性化服务",
+      "确保用户隐私安全",
+      "快速响应和高效操作",
+      "提供多种支付方式"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "用户中心设计强调A界面清晰、B按需个性化、C隐私保护和D高效响应；E多种支付方式只适用于特定交易产品。",
+    "points": 1
+  },
+  {
+    "id": "multi-269",
+    "index": 269,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在设计过程中,为了提高产品的可用性,应该遵循(    )原则。",
+    "options": [
+      "简洁明了",
+      "一致性",
+      "可预测性",
+      "容错性",
+      "用户控制与自由"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "A简洁、B一致、C结果可预测、D允许纠错以及E让用户可撤销退出，五项均能降低操作成本并提升可用性。",
+    "points": 1
+  },
+  {
+    "id": "multi-270",
+    "index": 270,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在设计AI助手的交互界面时,促进用户与AI进行有效沟通的关键因素是(    )",
+    "options": [
+      "使用复杂的图形界面确保信息的丰富性",
+      "提供清晰的反馈机制,让用户知道AI正在处理请求",
+      "设计直观的语音识别功能,使对话流畅",
+      "限制用户输入,以简化AI的理解过程",
+      "采用一致的视觉和语言风格,增强用户体验的一致性"
+    ],
+    "answer": [
+      "B",
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "B处理状态反馈、C直观语音交互和E一致的视觉语言风格有助于顺畅沟通；A复杂界面增加负担，D过度限制输入损害表达。",
+    "points": 1
+  },
+  {
+    "id": "multi-271",
+    "index": 271,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "当遇到与现有设计过程或预期目标相悖的用户反馈时,正确处理方式是(    )。",
+    "options": [
+      "直接忽略用户的反馈",
+      "对用户反馈进行筛选和分类",
+      "与用户进行进一步的沟通以理解他们的需求",
+      "根据用户反馈调整产品设计",
+      "将用户反馈作为产品开发的新思路"
+    ],
+    "answer": [
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "应先B分类核验反馈，再C沟通理解原因，并视证据D调整设计或E形成新思路；A直接忽略会丢失真实问题。",
+    "points": 1
+  },
+  {
+    "id": "multi-272",
+    "index": 272,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "任务分解的输出结果应该包括(    )。",
+    "options": [
+      "任务清单",
+      "任务分解图",
+      "任务责任分配表",
+      "风险评估报告",
+      "时间和资源计划"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "任务分解应输出A任务清单、B层级分解图、C责任分工和E时间资源计划；D风险评估报告通常在后续风险管理中单独形成。",
+    "points": 1
+  },
+  {
+    "id": "multi-273",
+    "index": 273,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在界面设计中,为了提高信息的可读性和易理解性,通常会采用(    )哪些布局策略。",
+    "options": [
+      "对比布局",
+      "对齐布局",
+      "重复布局",
+      "亲密性布局",
+      "层次感布局"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "A对比突出差异，B对齐建立秩序，C重复保持一致，D亲密性分组相关信息，E层次引导阅读，五项均提高可读性。",
+    "points": 1
+  },
+  {
+    "id": "multi-274",
+    "index": 274,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在使用情境的分析工具时,需要考虑的因素有(    )。",
+    "options": [
+      "用户的行为模式",
+      "用户的使用频率",
+      "用户的反馈信息",
+      "用户的隐私数据",
+      "用户的网络环境"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "answerSource": "official",
+    "answerBasis": "manual_official",
+    "confidence": "high",
+    "explanation": "情境分析核心关注A行为模式、B使用频率和C反馈信息；D隐私数据不能因分析而任意使用，E网络环境可另作技术适配测试，非本题官方核心项。",
+    "points": 1
+  },
+  {
+    "id": "multi-275",
+    "index": 275,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在Adobe XD中,(    )是创建原型的方法。",
+    "options": [
+      "使用预设模板",
+      "从Photoshop导入设计",
+      "使用Adobe Illustrator设计",
+      "手动绘制界面元素",
+      "使用Sketch设计"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "Adobe XD可利用A预设模板或UI资源快速起稿，也能B导入Photoshop设计并D直接绘制界面；Illustrator与Sketch设计可作为可导入或转换的原型素材，因此C、E也属于实际创建工作流。五种方式都可用于形成XD原型。",
+    "points": 1
+  },
+  {
+    "id": "multi-276",
+    "index": 276,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "Adobe XD的视觉设计工具适用于(    )场景。",
+    "options": [
+      "移动应用设计",
+      "网页设计",
+      "平面设计",
+      "用户体验设计",
+      "广告设计"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "Adobe XD主要面向A移动界面、B网页界面和D用户体验原型；C通用平面设计和E广告制作更适合其他专业工具。",
+    "points": 1
+  },
+  {
+    "id": "multi-277",
+    "index": 277,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在人工智能培训中,Axure RP可以用来进行复杂交互模拟(    )方面。",
+    "options": [
+      "界面布局设计",
+      "功能流程图绘制",
+      "条件逻辑模拟",
+      "数据驱动的动态内容展示",
+      "用户界面动画效果"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "Axure可A布置界面、B表达流程、C设置条件、D用变量或中继器展示动态数据，并E配置动态面板与过渡动画，五项均可参与复杂原型模拟。",
+    "points": 1
+  },
+  {
+    "id": "multi-278",
+    "index": 278,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在使用Axure RP进行原型设计时,条件逻辑设置可以用于实现(    )交互特性。",
+    "options": [
+      "显示或隐藏界面元素",
+      "动态调整文本和图像内容",
+      "导航到不同的页面",
+      "数据驱动的表单验证",
+      "生成基于用户输入的动态列表"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "条件逻辑可以A控制显隐、B更换内容、C选择导航目标、D校验表单，并结合变量和中继器E生成动态列表，五项均能实现。",
+    "points": 1
+  },
+  {
+    "id": "multi-279",
+    "index": 279,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在使用Balsamiq Mockups进行低保真设计时,(    )操作可以帮助你更好地组织和管理你的设计元素。",
+    "options": [
+      "使用画布上的网格来对齐元素",
+      "为不同的页面或屏幕创建单独的画布",
+      "使用图层来管理不同层次的设计元素",
+      "通过颜色编码来区分不同类型的元素",
+      "将常用的组件保存到组件库中以方便重复使用"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "A网格与对齐辅助线可整理元素位置，B分页面管理不同屏幕，E复用组件保存常用控件；C完整图层管理并非其核心工作方式，D颜色编码不是主要组织机制。",
+    "points": 1
+  },
+  {
+    "id": "multi-280",
+    "index": 280,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "Figma的设计系统支持(    )功能。",
+    "options": [
+      "组件化设计",
+      "响应式设计",
+      "颜色和字体管理",
+      "图标库",
+      "文档导出"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "Figma设计系统支持A组件复用、B响应式约束与布局、C颜色字体样式和D图标资产库；E文档导出是通用交付能力，不是设计系统核心功能。",
+    "points": 1
+  },
+  {
+    "id": "multi-281",
+    "index": 281,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在Marvel的简单交互设计中,用户可以通过(    )方式进行操作。",
+    "options": [
+      "点击",
+      "滑动",
+      "长按",
+      "拖拽",
+      "语音控制"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "Marvel原型可配置A点击、B滑动、C长按和D拖拽等常见触控手势；E语音控制不是其简单交互编辑的标准操作。",
+    "points": 1
+  },
+  {
+    "id": "multi-282",
+    "index": 282,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "Marvel的设计评审功能可以帮助设计师们发现设计中的(    )问题。",
+    "options": [
+      "布局不合理",
+      "色彩搭配不协调",
+      "用户体验不佳",
+      "功能实现不完整",
+      "设计风格与品牌定位不符"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "协作评审可从A布局、B颜色、C体验、D功能完整性和E品牌一致性五个维度发表评论并发现问题，所有选项都属于可审查内容。",
+    "points": 1
+  },
+  {
+    "id": "multi-283",
+    "index": 283,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "Marvel的响应式设计预览中,(    )功能可以帮助用户在不同设备上获得最佳体验。",
+    "options": [
+      "自动调整页面布局",
+      "提供多种主题颜色",
+      "支持触摸操作",
+      "提供个性化设置",
+      "支持语音输入"
+    ],
+    "answer": [
+      "A",
+      "C"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "响应式预览通过A调整不同尺寸布局并C验证触摸交互来适配设备；B主题、D个性化和E语音输入不属于响应式预览的核心功能。",
+    "points": 1
+  },
+  {
+    "id": "multi-284",
+    "index": 284,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在Sketch的插件生态系统中,(    )插件可以帮助设计师提高工作效率。",
+    "options": [
+      "Sketch Measure",
+      "Artboard Snapping",
+      "Color Palettes",
+      "Auto Layout",
+      "3D渲染引擎"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "A标注交付、B画板吸附、C色板管理和D自动布局类插件均能减少重复设计操作；E三维渲染引擎不是该列表中的常用Sketch效率插件。",
+    "points": 1
+  },
+  {
+    "id": "multi-285",
+    "index": 285,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "智能系统设计",
+    "section": "系统优化与人机交互",
+    "stem": "在Sketch中,矢量图形的编辑可以通过(    )来实现精确的节点控制。",
+    "options": [
+      "直接选择工具",
+      "钢笔工具",
+      "矢量网格工具",
+      "剪刀工具",
+      "放大镜工具"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "A直接选择可移动锚点，B钢笔可创建和调整路径，D剪刀可在节点处分割路径；C矢量网格不是Sketch标准节点工具，E放大镜只改变视图。",
+    "points": 1
+  },
+  {
+    "id": "multi-286",
+    "index": 286,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "培训与指导",
+    "section": "培训实施与问题指导",
+    "stem": "编写培训讲义时,应遵循(    )原则。",
+    "options": [
+      "针对性原则",
+      "实用性原则",
+      "系统性原则",
+      "创新性原则",
+      "主观性原则"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "讲义应A针对学员和目标、B便于实际应用、C结构完整连贯，并D采用适当新案例或表达；E主观性会损害准确客观。",
+    "points": 1
+  },
+  {
+    "id": "multi-287",
+    "index": 287,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "培训与指导",
+    "section": "培训实施与问题指导",
+    "stem": "为了提高培训效果,培训讲义结构设计的方法是(    )。",
+    "options": [
+      "引入部分",
+      "主体部分",
+      "结尾部分",
+      "总结部分",
+      "互动环节"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "讲义可由A引入目标、B展开主体、C设置结尾、D总结要点并E安排互动练习，五类结构共同促进理解和参与。",
+    "points": 1
+  },
+  {
+    "id": "multi-288",
+    "index": 288,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "培训与指导",
+    "section": "培训实施与问题指导",
+    "stem": "在人工智能领域,成为一名合格的人工智能训练师需要具备(    )能力或知识。",
+    "options": [
+      "理解并掌握机器学习和深度学习的基本原理",
+      "能够设计并实现有效的数据预处理和特征工程策略",
+      "精通至少一种编程语言,如Python,并能使用相关库进行数据处理和模型训练",
+      "了解人工智能伦理、隐私保护和相关法律法规",
+      "拥有优秀的沟通技巧,能够清晰地向非技术人员解释复杂概念"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "合格训练师需A理解算法原理、B设计数据与特征流程、C具备编程实现、D掌握伦理法规，并E能与非技术人员清晰沟通，五项都是岗位能力。",
+    "points": 1
+  },
+  {
+    "id": "multi-289",
+    "index": 289,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "培训与指导",
+    "section": "培训实施与问题指导",
+    "stem": "在领导力培训中,常用的方法包括(    )。",
+    "options": [
+      "自我评估工具",
+      "360度反馈",
+      "情景模拟",
+      "角色扮演",
+      "心理测试"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "领导力培训可用A自评建立认知、B 360度反馈获取多方观察、C情景模拟和D角色扮演练习行为，也可E使用经验证的心理测评辅助发展。",
+    "points": 1
+  },
+  {
+    "id": "multi-290",
+    "index": 290,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "培训与指导",
+    "section": "培训实施与问题指导",
+    "stem": "(    )培训方法可以帮助员工更好地理解和掌握新知识。",
+    "options": [
+      "讲授法",
+      "演示法",
+      "模拟练习法",
+      "独立学习",
+      "案例分析法"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "A讲授建立框架，B演示呈现操作，C模拟练习巩固技能，D独立学习支持自主掌握，E案例分析促进迁移，五种方法都可帮助学习。",
+    "points": 1
+  },
+  {
+    "id": "multi-291",
+    "index": 291,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "培训与指导",
+    "section": "培训实施与问题指导",
+    "stem": "人工智能训练师的培训方法中,(    )可能导致培训效果不佳。",
+    "options": [
+      "培训过程中缺乏实践机会",
+      "培训课程内容不够全面",
+      "培训师缺乏行业经验",
+      "培训方法过于理论化",
+      "学员学习动力不足"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "A缺实践、B内容缺口、C师资经验不足、D过度理论化和E动力不足分别影响迁移、覆盖、指导、参与及坚持，五项都可能降低培训效果。",
+    "points": 1
+  },
+  {
+    "id": "multi-292",
+    "index": 292,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "培训与指导",
+    "section": "培训实施与问题指导",
+    "stem": "在选择培训方法时,需要考虑的因素包括(    )。",
+    "options": [
+      "培训目标",
+      "学员特点",
+      "培训资源",
+      "培训时间",
+      "培训成本"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "培训方法需匹配A学习目标、B学员基础、C可用资源、D时间安排和E成本预算，五项都会约束方法选择。",
+    "points": 1
+  },
+  {
+    "id": "multi-293",
+    "index": 293,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "培训与指导",
+    "section": "培训实施与问题指导",
+    "stem": "人工智能训练师在数据采集和处理流程中,需要关注(    )以确保数据质量。",
+    "options": [
+      "数据的多样性",
+      "数据的时效性",
+      "数据的完整性",
+      "数据的准确性",
+      "数据的标注质量"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "数据质量需同时检查A覆盖多样性、B时效、C完整、D准确和E标签可靠，任一维度不足都可能使模型产生偏差。",
+    "points": 1
+  },
+  {
+    "id": "multi-294",
+    "index": 294,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "培训与指导",
+    "section": "培训实施与问题指导",
+    "stem": "在数据处理过程中,(    )步骤可能会导致数据丢失或错误。",
+    "options": [
+      "数据清洗",
+      "数据转换",
+      "数据加载",
+      "数据计算",
+      "数据可视化"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "A清洗可能误删，B转换可能映射错误，C加载可能截断或错位，D计算可能因公式、类型或精度产生错误；E可视化通常不改变底层数据。",
+    "points": 1
+  },
+  {
+    "id": "multi-295",
+    "index": 295,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "培训与指导",
+    "section": "培训实施与问题指导",
+    "stem": "在数据采集和处理流程中,常见的错误包括(    )。",
+    "options": [
+      "数据格式不一致",
+      "数据缺失",
+      "数据处理速度慢",
+      "数据存储不安全",
+      "数据分析不准确"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "D"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "A格式不一致、B字段缺失和D存储安全不足都是采集处理流程的常见问题；C速度慢是性能问题，E分析不准属于后续分析结果。",
+    "points": 1
+  },
+  {
+    "id": "multi-296",
+    "index": 296,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "培训与指导",
+    "section": "培训实施与问题指导",
+    "stem": "在解决数据采集和处理问题时,(    )方法可以帮助我们提高数据质量。",
+    "options": [
+      "使用专业的数据采集工具",
+      "对数据进行清洗和预处理",
+      "对数据进行验证和校对",
+      "对数据进行加密和安全存储",
+      "对数据进行备份和恢复"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "A专业工具减少采集错误，B清洗预处理修正质量问题，C验证校对发现偏差，三项直接提高准确性和完整性；D加密与E备份主要保护机密性和可用性。",
+    "points": 1
+  },
+  {
+    "id": "multi-297",
+    "index": 297,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "培训与指导",
+    "section": "培训实施与问题指导",
+    "stem": "数据标注流程中的重点分析包括(    )。",
+    "options": [
+      "数据清洗与预处理",
+      "标注指南的制定",
+      "标注人员的培训与管理",
+      "数据质量控制",
+      "数据的存储与维护"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "editorial_review",
+    "confidence": "medium",
+    "explanation": "完整数据标注流程要先A清洗并规范待标数据，再B制定指南、C培训管理标注人员、D实施一致性与抽检控制；标注结果还需E版本化存储和维护，才能持续追踪、复用与修订。因此A至E均属于重点。",
+    "points": 1
+  },
+  {
+    "id": "multi-298",
+    "index": 298,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "培训与指导",
+    "section": "培训实施与问题指导",
+    "stem": "数据标注过程中,解决标注人员水平参差不齐问题的方法有(    )。",
+    "options": [
+      "提供统一的培训资料",
+      "对标注人员进行定期考核",
+      "采用自动化的标注工具",
+      "增加标注人员的数量",
+      "提高标注任务的难度"
+    ],
+    "answer": [
+      "A",
+      "B"
+    ],
+    "answerSource": "official",
+    "answerBasis": "manual_official",
+    "confidence": "high",
+    "explanation": "A统一培训资料可对齐知识与规则，B定期考核能发现差距并安排再培训；C工具不能消除人员理解差异，D增加人数无助于水平统一，E提高难度反会放大问题。",
+    "points": 1
+  },
+  {
+    "id": "multi-299",
+    "index": 299,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "培训与指导",
+    "section": "培训实施与问题指导",
+    "stem": "标注人员培训不足,可能会带来的负面影响包括(    )。",
+    "options": [
+      "标注结果出现较多的错误",
+      "标注人员对标注任务失去兴趣",
+      "数据标注工具的更新频率加快",
+      "项目延期,无法按时交付",
+      "标注成本因返工而增加"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "培训不足会A增加错标，B造成挫败或兴趣下降，D因返工拖延交付并E抬高成本；C工具更新频率由产品维护决定，与人员培训无直接关系。",
+    "points": 1
+  },
+  {
+    "id": "multi-300",
+    "index": 300,
+    "type": "multi",
+    "typeLabel": "多选题",
+    "category": "培训与指导",
+    "section": "培训实施与问题指导",
+    "stem": "在解决数据标注问题时,(    )可以提高标注的准确性。",
+    "options": [
+      "选择经验丰富的标注人员",
+      "采用多人协作的标注方式",
+      "使用专业的标注工具",
+      "对标注人员进行严格的考核",
+      "对标注结果进行多次审核"
+    ],
+    "answer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "answerSource": "derived",
+    "answerBasis": "third_party_reference",
+    "confidence": "medium",
+    "explanation": "A经验人员减少理解错误，B多人协作可交叉验证，C专业工具规范操作，D考核保障能力，E多轮审核拦截错漏，五项均能提升准确性。",
+    "points": 1
+  }
+]

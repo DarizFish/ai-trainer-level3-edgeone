@@ -1,0 +1,153 @@
+{
+  "code": "2.2.5",
+  "title": "智能步数预测模型开发与测试",
+  "category": "智能训练",
+  "unit": "算法测试",
+  "group": "2.2",
+  "durationMinutes": 20,
+  "maxScore": 20,
+  "description": "随着健康意识的增强，越来越多的人开始使用智能设备跟踪自己的日常活动。准确预测每日步数对于用户来说至关重要，因为它可以帮助他们更好地管理健康状况，设定合理的运动目标，并提高生活质量。现要求根据提供的预处理好的fitness analysis数据集，补全2.2.5.ipynb代码。选择合适的特征，开发一个步数预测模型，对用户未来一段时间内的每日步数进行预测。利用测试工具对模型进行测试，并对测试结果进行分析，完成测试报告，并运用工具对错误原因进行纠正。\n（1）正确加载数据集，并显示前五行的数据。\n（2）请使用决策树模型，要求设定自变量和因变量（设定daily_steps为目标变量），并根据自变量特征进行模型训练，最终将训练好的模型以文件名2.2.5_model.pkl保存到考生文件夹，结果文件以2.2.5_results.txt保存到考生文件夹。\n（3）使用测试工具对模型进行测试，并记录测试结果，命名2.2.5_report.txt，保存到考生文件夹。\n（4）对测试结果进行详细分析，并编写测试报告，包括模型性能评估、错误分析及改进建议，将答案写到答题卷文件中，答题卷文件命名为“2.2.5.docx”，保存到考生文件夹。\n（5）将以上代码以及运行结果，以html格式保存并命名为2.2.5.html，保存到考生文件夹，考生文件夹命名为“准考证号+身份证后6位”。",
+  "officialTaskSheet": {
+    "equipmentRequirements": "（1）人工智能训练师主机 1 台；\n（2）Python 编译环境；\n（3）fitness analysis数据集。",
+    "skillRequirements": "(1)能维护日常训练集与测试集。\n(2)能使用工具对算法进行训练。\n(3)能使用测试工具对人工智能产品的使用进行测试。\n(4)能对测试结果进行分析，编写测试报告。\n(5)能运用工具，分析算法中错误案例产生的原因并进行纠正。",
+    "qualityIndicators": "(1)深入理解业务，训练符合业务需求的模型。\n(2)数据预处理步骤完整，方法选择合理。\n(3)代码实现正确，结果符合预期。\n(4)测试结果分析全面，报告详细"
+  },
+  "rubric": [
+    {
+      "id": "M1",
+      "points": 2.0,
+      "description": "正确加载数据集得1分，显示前五行的数据得1分，总计得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M2",
+      "points": 2.0,
+      "description": "正确将分类变量转为数值变量得1分，设置目标变量得1分，总计得2分；",
+      "mode": "self"
+    },
+    {
+      "id": "M3",
+      "points": 1.0,
+      "description": "训练集与测试集的准确划分得1分；",
+      "mode": "self"
+    },
+    {
+      "id": "M4",
+      "points": 2.0,
+      "description": "初始化决策树模型得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M5",
+      "points": 2.0,
+      "description": "训练模型得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M6",
+      "points": 1.0,
+      "description": "正确保存模型文件得1分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M7",
+      "points": 1.0,
+      "description": "在测试集上进行预测得1分；",
+      "mode": "self"
+    },
+    {
+      "id": "M8",
+      "points": 1.0,
+      "description": "保存预测结果得1分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M9",
+      "points": 2.0,
+      "description": "正确生成模型测试报告得2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M10",
+      "points": 1.0,
+      "description": "正确计算模型的均方误差得1分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M11",
+      "points": 1.0,
+      "description": "正确计算模型的平均绝对误差得1分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M12",
+      "points": 1.0,
+      "description": "正确计算模型的决定系数得1分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M13",
+      "points": 3.0,
+      "description": "正确填写2.2.5.docx测试报告：其中模型性能评估得1分、错误分析得1分，改进建议得1分，总计得3分；",
+      "mode": "auto"
+    }
+  ],
+  "answerSource": "derived",
+  "answerBasis": "completed_reference_notebook",
+  "referenceAnswer": "建议答案应完整覆盖以下评分点：\nM1（2分）：正确加载数据集得1分，显示前五行的数据得1分，总计得2分；\nM2（2分）：正确将分类变量转为数值变量得1分，设置目标变量得1分，总计得2分；\nM3（1分）：训练集与测试集的准确划分得1分；\nM4（2分）：初始化决策树模型得2分；\nM5（2分）：训练模型得2分；\nM6（1分）：正确保存模型文件得1分；\nM7（1分）：在测试集上进行预测得1分；\nM8（1分）：保存预测结果得1分；\nM9（2分）：正确生成模型测试报告得2分；\nM10（1分）：正确计算模型的均方误差得1分；\nM11（1分）：正确计算模型的平均绝对误差得1分；\nM12（1分）：正确计算模型的决定系数得1分；\nM13（3分）：正确填写2.2.5.docx测试报告：其中模型性能评估得1分、错误分析得1分，改进建议得1分，总计得3分；\n\nWord 交付物作答示例（本站依据官方题干与评分表整理，非指导手册标准答案）\nWord 交付物要求\n本题评分点以 Notebook 代码为主，Word 文档用于提交运行结果截图与结论说明：\n1. 截图需完整显示模型在测试集上的预测输出与评估指标。\n2. 用一句话说明步数预测结果的可用性与主要误差来源。\n\nPython 参考代码：已从配套完成版 Notebook 提取 1 个代码单元。请在实验室的“答案与来源”中查看或下载；该代码不是指导手册官方标准答案。",
+  "materials": [
+    {
+      "name": "2.2.5.docx",
+      "kind": "document",
+      "label": "配套文档",
+      "size": 14045,
+      "sha256": "449300de7f0e64c30542bb9201fcdad37838feb1384d2e84982442c5661b43a8",
+      "note": "官方配套文档；6 个正文段落，0 个表格",
+      "url": "/materials/2.2.5/2.2.5.docx"
+    },
+    {
+      "name": "2.2.5.ipynb",
+      "kind": "notebook",
+      "label": "Notebook 模板",
+      "size": 2495,
+      "sha256": "41b0e844c9e0784e721e99c8220e4be6fddfc446dabb1c15b959ec025450dd34",
+      "note": "官方 Notebook 模板；2 个代码单元",
+      "url": "/lite/files/2-2-5/2.2.5.ipynb"
+    },
+    {
+      "name": "fitness analysis.csv",
+      "kind": "dataset",
+      "label": "CSV 数据集",
+      "size": 149669,
+      "sha256": "d1b18b5115bc4ef833b6cc00c4bda1bf5223c65c1ec5f3ace0cc8900e00e28e3",
+      "note": "545 行数据 × 19 列；字段：Timestamp、Your name 、Your gender 、Your age 、How important is exercise to you ?…",
+      "url": "/labs/2.2.5/fitness%20analysis.csv"
+    }
+  ],
+  "hasNotebook": true,
+  "notebook": {
+    "cells": [
+      {
+        "id": "cell-1",
+        "source": "import pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.tree import DecisionTreeRegressor\nimport pickle\nfrom sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score\n\n# 加载数据集\ndf = __________\n\n# 显示前五行数据\nprint(__________)\n\n# 选择相关特征进行建模\nX = df[['Your gender ', 'How important is exercise to you ?', 'How healthy do you consider yourself?']]\nX = __________(X)  # 将分类变量转为数值变量\n\n# 设置目标变量\ny = __________  \n\n# 将数据集划分为训练集和测试集（测试集占20%）\nX_train, X_test, y_train, y_test = __________(__________, random_state=42)\n\n# 创建并训练决策树回归模型\n__________ = __________(random_state=42)\n# 训练决策树回归模型\n__________\n\n# 保存训练好的模型\nwith open('2.2.5_model.pkl', 'wb') as model_file:\n    pickle.__________\n\n# 进行预测\ny_pred = __________\n\n# 将结果保存到文本文件中\nresults = pd.DataFrame({'实际值': y_test, '预测值': y_pred})\nresults_filename = '2.2.5_results.txt'\n__________(__________, index=False, sep='\\t')  \n\n# 将测试结果保存到报告文件中\nreport_filename = '2.2.5_report.txt'\nwith open(__________) as f:\n    f.write(f'均方误差: {__________}\\n')\n    f.write(f'平均绝对误差: {__________}\\n')\n    f.write(f'决定系数: {__________}\\n')"
+      },
+      {
+        "id": "cell-2",
+        "source": ""
+      }
+    ],
+    "assets": [
+      "2.2.5.docx",
+      "fitness analysis.csv"
+    ],
+    "browserAdapted": false,
+    "solutionCells": [
+      {
+        "id": "solution-1",
+        "source": "import pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.tree import DecisionTreeRegressor\nimport pickle\nfrom sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score\n\n# 加载数据集\ndf = pd.read_csv('fitness analysis.csv')\n\n# 显示前五行数据\nprint(df.head())\n\n# 选择相关特征进行建模\nX = df[['Your gender ', 'How important is exercise to you ?', 'How healthy do you consider yourself?']]\nX = pd.get_dummies(X)  # 将分类变量转为数值变量\n\n# 设置目标变量\ny = df['daily_steps']\n\n# 将数据集划分为训练集和测试集（测试集占20%）\nX_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2, random_state=42)\n\n# 创建并训练决策树回归模型\nmodel = DecisionTreeRegressor(random_state=42)\n# 训练决策树回归模型\nmodel.fit(X_train,y_train)\n\n# 保存训练好的模型\nwith open('2.2.5_model.pkl', 'wb') as model_file:\n    pickle.dump(model, model_file)\n\n# 进行预测\ny_pred = model.predict(X_test)\n\n# 将结果保存到文本文件中\nresults = pd.DataFrame({'实际值': y_test, '预测值': y_pred})\nresults_filename = '2.2.5_results.txt'\nresults.to_csv(results_filename, index=False, sep='\\t')  \n\n# 将测试结果保存到报告文件中\nreport_filename = '2.2.5_report.txt'\nwith open(report_filename,'w') as f:\n    f.write(f'均方误差: {mean_squared_error(y_test,y_pred)}\\n')\n    f.write(f'平均绝对误差: {mean_absolute_error(y_test,y_pred)}\\n')\n    f.write(f'决定系数: {r2_score(y_test,y_pred)}\\n')\n"
+      }
+    ],
+    "solutionSource": "completed_reference_notebook",
+    "solutionSha256": "99dfe8e80bef40e4f44528f100e887e91693e9d12f62bee7aed34f0192b6c68d"
+  }
+}

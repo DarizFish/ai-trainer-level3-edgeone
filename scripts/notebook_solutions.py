@@ -11,6 +11,10 @@ from datetime import date
 from pathlib import Path
 from typing import Any
 
+import sys as _sys
+_sys.path.insert(0, str(Path(__file__).resolve().parent))
+from content_entities import load_bank, write_bank  # noqa: E402
+
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SNAPSHOT_VERSION = "2026-07-16-v1"
@@ -137,7 +141,7 @@ def snapshot_command(args: argparse.Namespace) -> None:
     materials = args.materials.resolve()
     if not materials.is_dir():
         raise FileNotFoundError(f"完成版 Notebook 素材目录不存在：{materials}")
-    canonical = json.loads((PROJECT_ROOT / "data" / "content.json").read_text(encoding="utf-8"))
+    canonical = load_bank()
     notebook_codes = sorted(task["code"] for task in canonical["practical"] if task.get("hasNotebook"))
     solutions = []
     for code in notebook_codes:
@@ -168,13 +172,13 @@ def snapshot_command(args: argparse.Namespace) -> None:
 
 
 def apply_command(args: argparse.Namespace) -> None:
-    content = json.loads(args.content.read_text(encoding="utf-8"))
+    content = load_bank()
     snapshot = load_snapshot(args.snapshot)
     audit = apply_notebook_solutions(content["practical"], snapshot)
     if args.content_version:
         content["version"] = args.content_version
     content["notebookSolutions"] = content_metadata(snapshot, audit)
-    write_json(args.content, content, compact=True)
+    write_bank(content)
     write_json(args.audit, audit)
     print(json.dumps(audit["summary"], ensure_ascii=False, indent=2))
 

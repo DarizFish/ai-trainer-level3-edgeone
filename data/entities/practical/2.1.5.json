@@ -1,0 +1,139 @@
+{
+  "code": "2.1.5",
+  "title": "健康与营养咨询数据预处理与数据规范设计",
+  "category": "智能训练",
+  "unit": "数据处理规范制定",
+  "group": "2.1",
+  "durationMinutes": 20,
+  "maxScore": 15,
+  "description": "在健康与营养咨询领域，客户的健康数据是评估其饮食和生活方式建议的重要依据。通过对客户健康数据的分析，可以帮助健康咨询师更准确地评估客户的健康状况，并制定个性化的营养和健康管理计划。现提供一份健康咨询客户数据集。请补全2.1.5.ipynb代码，完成下面的数据预处理任务：\n（1）加载数据集：查看表的数据类型，表结构和显示每一列的空缺值数量；\n（2）缺失值处理：对于含有缺失值的行进行删除操作；\n（3）数据类型转换：将“Your age”列的数据类型转换为整数类型，并处理其中的异常值；\n（4）数据去重：检查数据集中的重复值并删除所有重复值，并记录删除的行数；\n（5）数据归一化处理：对“如何形容你的当前健身水平？”（How do you describe your current level of fitness ?）列中的数据进行归一化处理；\n（6）绘制健身频率分布的饼图；\n（7）对数据进行标注划分；\n（8）保存处理后的数据，并命名为：2.1.5_cleaned_data.csv，保存到考生文件夹；\n（9）制定数据清洗和数据标注规范，将答案写到答题卷文件中，答题卷文件命名为“2.1.5.docx”，保存到考生文件夹；\n（10）将以上代码以及运行结果，以html格式保存并命名为2.1.5.html，保存到考生文件夹，考生文件夹命名为“准考证号+身份证后6位”。",
+  "officialTaskSheet": {
+    "equipmentRequirements": "（1）人工智能训练师主机 1 台；\n（2）Python 编译环境；\n（3）健康咨询客户数据集。",
+    "skillRequirements": "（1）能结合人工智能技术要求和业务特征，设计数据清洗和标注流程；\n（2）能结合人工智能技术要求和业务特征，制定数据清洗和标注规范。",
+    "qualityIndicators": "（1）深入理解业务，训练符合业务需求的模型。"
+  },
+  "rubric": [
+    {
+      "id": "M1",
+      "points": 2.0,
+      "description": "数据集正确加载的1分，查看表结构基本信息得1分，总共2分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M2",
+      "points": 1.0,
+      "description": "查看每一列的空缺值数量正确得1分；",
+      "mode": "self"
+    },
+    {
+      "id": "M3",
+      "points": 1.0,
+      "description": "删除含有缺失值的行正确得1分；",
+      "mode": "self"
+    },
+    {
+      "id": "M4",
+      "points": 1.0,
+      "description": "将“Your age”列的数据类型转换为整数类型并处理异常值得1分；",
+      "mode": "self"
+    },
+    {
+      "id": "M5",
+      "points": 1.0,
+      "description": "删除所有重复值正确得1分；",
+      "mode": "self"
+    },
+    {
+      "id": "M6",
+      "points": 1.0,
+      "description": "对数据进行归一化处理得1分；",
+      "mode": "self"
+    },
+    {
+      "id": "M7",
+      "points": 1.0,
+      "description": "绘制健身频率分布的饼图得1分；",
+      "mode": "self"
+    },
+    {
+      "id": "M8",
+      "points": 1.0,
+      "description": "对数据集进行划分正确得1分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M9",
+      "points": 1.0,
+      "description": "保存处理后的数据正确得1分；",
+      "mode": "auto"
+    },
+    {
+      "id": "M10",
+      "points": 2.0,
+      "description": "回答数据清洗规范：每回答正确1个规范点，得1分，最高得2分；",
+      "mode": "self"
+    },
+    {
+      "id": "M11",
+      "points": 3.0,
+      "description": "回答数据标注规范：每回答正确1个规范点，得1分，最高得3分；",
+      "mode": "self"
+    }
+  ],
+  "answerSource": "derived",
+  "answerBasis": "completed_reference_notebook",
+  "referenceAnswer": "建议答案应完整覆盖以下评分点：\nM1（2分）：数据集正确加载的1分，查看表结构基本信息得1分，总共2分；\nM2（1分）：查看每一列的空缺值数量正确得1分；\nM3（1分）：删除含有缺失值的行正确得1分；\nM4（1分）：将“Your age”列的数据类型转换为整数类型并处理异常值得1分；\nM5（1分）：删除所有重复值正确得1分；\nM6（1分）：对数据进行归一化处理得1分；\nM7（1分）：绘制健身频率分布的饼图得1分；\nM8（1分）：对数据集进行划分正确得1分；\nM9（1分）：保存处理后的数据正确得1分；\nM10（2分）：回答数据清洗规范：每回答正确1个规范点，得1分，最高得2分；\nM11（3分）：回答数据标注规范：每回答正确1个规范点，得1分，最高得3分；\n\nWord 交付物作答示例（本站依据官方题干与评分表整理，非指导手册标准答案）\n一、数据清洗规范（M10，每点 1 分，最高 2 分）\n1. 缺失与类型规范：先按列统计空缺数量，含缺失的行按业务重要性决定删除或填充；年龄等字段须转换为整数类型并剔除明显不合理的取值。\n2. 去重与归一化规范：删除完全重复的问卷记录，对连续型指标做归一化，避免量纲差异影响后续统计与建模。\n\n二、数据标注规范（M11，每点 1 分，最高 3 分）\n1. 标签体系规范：明确健身频率、饮食结构等标签的分级口径，每个等级给出可判定的区间或示例。\n2. 一致性规范：标注员须使用统一标注手册，先做小批量试标并统计一致性，达标后再全量标注。\n3. 审核与留痕规范：按批次抽检标注质量，问题样本返工；保留标注人、时间与修改记录，保证结果可追溯。\n\nPython 参考代码：已从配套完成版 Notebook 提取 1 个代码单元。请在实验室的“答案与来源”中查看或下载；该代码不是指导手册官方标准答案。",
+  "materials": [
+    {
+      "name": "2.1.5.docx",
+      "kind": "document",
+      "label": "配套文档",
+      "size": 15056,
+      "sha256": "f800411dc61203eea6afaff22153d26c1b917a04a44932aa93ffa0b643bcc3c2",
+      "note": "官方配套文档；7 个正文段落，0 个表格",
+      "url": "/materials/2.1.5/2.1.5.docx"
+    },
+    {
+      "name": "2.1.5.ipynb",
+      "kind": "notebook",
+      "label": "Notebook 模板",
+      "size": 3264,
+      "sha256": "fb67f3ae3a327d40aac940931406ab8db1668cb824b832a5c07c9d56a5f03edd",
+      "note": "官方 Notebook 模板；1 个代码单元",
+      "url": "/lite/files/2-1-5/2.1.5.ipynb"
+    },
+    {
+      "name": "健康咨询客户数据集.csv",
+      "kind": "dataset",
+      "label": "CSV 数据集",
+      "size": 148487,
+      "sha256": "dec4252edc32d931aa0d6f50f4c33f1381f7334e75adbabf46777c4cc955c09b",
+      "note": "551 行数据 × 18 列；字段：Timestamp、Your name、Your gender、Your age、How important is exercise to you ?…",
+      "url": "/labs/2.1.5/%E5%81%A5%E5%BA%B7%E5%92%A8%E8%AF%A2%E5%AE%A2%E6%88%B7%E6%95%B0%E6%8D%AE%E9%9B%86.csv",
+      "sourceSize": 149039,
+      "sourceSha256": "c9efeb02a7aca45f1d17e99c4fbf72d2dc475bfef32b0a86083480a95e1e99d3"
+    }
+  ],
+  "hasNotebook": true,
+  "notebook": {
+    "cells": [
+      {
+        "id": "cell-1",
+        "source": "import pandas as pd\n\n# 加载数据集\ndata = __________\n\n# 查看表结构基本信息\nprint(__________)\n\n# 显示每一列的空缺值数量\nprint(__________)\n\n# 删除含有缺失值的行\ndata_cleaned = __________\n\n# 转换 'Your age' 列的数据类型为整数类型，并处理异常值\ndata_cleaned.loc[:, 'Your age'] = __________(__________, errors='coerce')\ndata_cleaned = data_cleaned.dropna(subset=['Your age'])\ndata_cleaned = data_cleaned[data_cleaned['Your age'] >= 0]\ndata_cleaned.loc[:, 'Your age'] = data_cleaned['Your age'].__________\n\nprint(data_cleaned['Your age'].dtype)\n\n# 检查和删除重复值\nduplicates_removed = data_cleaned.duplicated().sum()\ndata_cleaned = __________\n\nprint(f\"Removed {duplicates_removed} duplicate rows\")\n\nfrom sklearn.preprocessing import LabelEncoder\n\n# 归一化 'How do you describe your current level of fitness ?' 列\nlabel_encoder = LabelEncoder()\ndata_cleaned[__________] = __________\n\nprint(data_cleaned['How do you describe your current level of fitness ?'].unique())\n\nfrom sklearn.preprocessing import LabelEncoder\nimport matplotlib.pyplot as plt\n\n# 去掉列名中的空格\ndata.columns = data.columns.str.strip()\n# 显示数据集的列名\nprint(data.columns)\n\n# 删除包含缺失值的行\ndata_cleaned = data.dropna(subset=['How often do you exercise?'])\n\n# 统计不同健身频率的分布情况\nexercise_frequency_counts = data_cleaned['How often do you exercise?'].value_counts()\n\n# 绘制饼图\nplt.figure(figsize=(10, 6))\n__________(autopct='%1.1f%%', startangle=90, colors=plt.cm.Paired.colors)\nplt.title('Distribution of Exercise Frequency')\nplt.ylabel('')\nplt.show()\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nimport matplotlib.pyplot as plt\n\n# 填充缺失值\ndata_filled = data.apply(lambda x: x.fillna(x.mode()[0]))\n\n# 划分数据（测试集占比20%）\ntrain_data, test_data = __________(__________, random_state=42)\n\n# 保存处理后的数据\ncleaned_file_path = '__________'\n__________(__________, index=False)\n"
+      }
+    ],
+    "assets": [
+      "2.1.5.docx",
+      "健康咨询客户数据集.csv"
+    ],
+    "browserAdapted": false,
+    "solutionCells": [
+      {
+        "id": "solution-1",
+        "source": "import pandas as pd\n\n# 加载数据集\ndata = pd.read_csv('健康咨询客户数据集.csv')\n\n# 查看表结构基本信息\nprint(data.info())\n\n# 显示每一列的空缺值数量\nprint(data.isnull().sum())\n\n# 删除含有缺失值的行\ndata_cleaned = data.dropna()\n\n# 转换 'Your age' 列的数据类型为整数类型，并处理异常值\ndata_cleaned.loc[:, 'Your age'] = pd.to_numeric(data['Your age'], errors='coerce')\ndata_cleaned = data_cleaned.dropna(subset=['Your age'])\ndata_cleaned = data_cleaned[data_cleaned['Your age'] >= 0]\ndata_cleaned.loc[:, 'Your age'] = data_cleaned['Your age'].astype(int)\n\nprint(data_cleaned['Your age'].dtype)\n\n# 检查和删除重复值\nduplicates_removed = data_cleaned.duplicated().sum()\ndata_cleaned = data_cleaned.drop_duplicates()\n\nprint(f\"Removed {duplicates_removed} duplicate rows\")\n\nfrom sklearn.preprocessing import LabelEncoder\n\n# 归一化 'How do you describe your current level of fitness ?' 列\nlabel_encoder = LabelEncoder()\ndata_cleaned['How do you describe your current level of fitness ?'] = label_encoder.fit_transform(data_cleaned['How do you describe your current level of fitness ?'])\n\nprint(data_cleaned['How do you describe your current level of fitness ?'].unique())\n\nfrom sklearn.preprocessing import LabelEncoder\nimport matplotlib.pyplot as plt\n\n# 去掉列名中的空格\ndata.columns = data.columns.str.strip()\n# 显示数据集的列名\nprint(data.columns)\n\n# 删除包含缺失值的行\ndata_cleaned = data.dropna(subset=['How often do you exercise?'])\n\n# 统计不同健身频率的分布情况\nexercise_frequency_counts = data_cleaned['How often do you exercise?'].value_counts()\n\n# 绘制饼图\nplt.figure(figsize=(10, 6))\nexercise_frequency_counts.plot.pie(autopct='%1.1f%%', startangle=90, colors=plt.cm.Paired.colors)\nplt.title('Distribution of Exercise Frequency')\nplt.ylabel('')\nplt.show()\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nimport matplotlib.pyplot as plt\n\n# 填充缺失值\ndata_filled = data.apply(lambda x: x.fillna(x.mode()[0]))\n\n# 划分数据（测试集占比20%）\ntrain_data, test_data = train_test_split(data_filled,test_size=0.2, random_state=42)\n\n# 保存处理后的数据\ncleaned_file_path = '2.1.5_cleaned_data.csv'\ndata_filled.to_csv(cleaned_file_path, index=False)\n"
+      }
+    ],
+    "solutionSource": "completed_reference_notebook",
+    "solutionSha256": "0f1a281ea1b9d4f541523935cc7bc310211cddea57ff19b7f1c57bc32bd8a3e9"
+  }
+}

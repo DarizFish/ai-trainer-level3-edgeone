@@ -1,4 +1,7 @@
 import assert from "node:assert/strict";
+
+// 题库来自 data/entities/ 的实体层，不再有 data/content.json 这个单行大文件。
+const loadContentBank = async () => (await import("../scripts/assemble-entities.mjs")).assembleBank();
 import { createHash } from "node:crypto";
 import { readdir, readFile } from "node:fs/promises";
 import test from "node:test";
@@ -115,7 +118,7 @@ test("public route shells are static while answer scoring is immediate and persi
 });
 
 test("versioned public content banks exactly match the source content", async () => {
-  const content = JSON.parse(await readFile(new URL("../data/content.json", import.meta.url), "utf8"));
+  const content = await loadContentBank();
   const [theory, practical, catalog] = await Promise.all([
     readFile(new URL(`../public/content/theory-${content.version}.json`, import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL(`../public/content/practical-${content.version}.json`, import.meta.url), "utf8").then(JSON.parse),
@@ -344,7 +347,7 @@ test("theory types and practical chapters can reset their own progress", async (
     readFile(new URL("../components/PracticalCatalog.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/JupyterLiteLab.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
-    readFile(new URL("../data/content.json", import.meta.url), "utf8").then(JSON.parse),
+    loadContentBank(),
   ]);
 
   assert.match(resetApi, /theoryTypes.*judge.*single.*multi/);
@@ -368,7 +371,7 @@ test("theory types and practical chapters can reset their own progress", async (
 });
 
 test("content and lab manifests contain the complete versioned bank", async () => {
-  const content = JSON.parse(await readFile(new URL("../data/content.json", import.meta.url), "utf8"));
+  const content = await loadContentBank();
   const manifest = JSON.parse(await readFile(new URL("../public/labs/manifest.json", import.meta.url), "utf8"));
   assert.deepEqual(content.stats, { theoryQuestions: 900, officialTheoryAnswers: 190, derivedTheoryAnswers: 710, practicalTasks: 40, notebookTasks: 20, officialPracticalAnswers: 6 });
   assert.equal(Object.keys(manifest.tasks).length, 20);
@@ -389,7 +392,7 @@ test("content and lab manifests contain the complete versioned bank", async () =
 
 test("practical source audit covers every official task, rubric, material, and deliverable workspace", async () => {
   const [content, sourceAudit, materialAudit, catalog, workspace, materials, examWorkspace, outcomeCheck, practicalApi, scoring, practicalMock, practicalStorage, contentRequirements, styles] = await Promise.all([
-    readFile(new URL("../data/content.json", import.meta.url), "utf8").then(JSON.parse),
+    loadContentBank(),
     readFile(new URL("../data/references/practical-source-audit.json", import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL("../data/references/practical-material-audit.json", import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL("../components/PracticalCatalog.tsx", import.meta.url), "utf8"),
@@ -464,7 +467,7 @@ test("practical source audit covers every official task, rubric, material, and d
 
 test("Word template practical tasks use five contextual answer fields instead of the generic scoring panel", async () => {
   const [content, helper, component, workspace, detailPage, styles] = await Promise.all([
-    readFile(new URL("../data/content.json", import.meta.url), "utf8").then(JSON.parse),
+    loadContentBank(),
     import(new URL("../lib/practical-word-exercise.ts", import.meta.url)),
     readFile(new URL("../components/WordTemplateExercise.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/PracticalWorkspace.tsx", import.meta.url), "utf8"),
@@ -516,7 +519,7 @@ test("Word template practical tasks use five contextual answer fields instead of
 
 test("two-deliverable Word tasks share the 1.2 paper answer sheet and completion checks", async () => {
   const [content, helper, component, workspace, styles] = await Promise.all([
-    readFile(new URL("../data/content.json", import.meta.url), "utf8").then(JSON.parse),
+    loadContentBank(),
     import(new URL("../lib/practical-response-exercise.ts", import.meta.url)),
     readFile(new URL("../components/BusinessAnalysisAnswerSheet.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/PracticalWorkspace.tsx", import.meta.url), "utf8"),
@@ -558,7 +561,7 @@ test("two-deliverable Word tasks share the 1.2 paper answer sheet and completion
 
 test("Notebook Word answer sheets appear only where the official task requires a Word document", async () => {
   const [content, helper, references, component, styles] = await Promise.all([
-    readFile(new URL("../data/content.json", import.meta.url), "utf8").then(JSON.parse),
+    loadContentBank(),
     import(new URL("../lib/practical-word-deliverable.ts", import.meta.url)),
     import(new URL("../lib/practical-reference.ts", import.meta.url)),
     readFile(new URL("../components/PracticalWordDeliverable.tsx", import.meta.url), "utf8"),
@@ -590,7 +593,7 @@ test("Notebook Word answer sheets appear only where the official task requires a
 
 test("business-optimization tasks start with the official two-question blank answer sheet", async () => {
   const [content, helper, component, workspace, detailPage, brief, styles] = await Promise.all([
-    readFile(new URL("../data/content.json", import.meta.url), "utf8").then(JSON.parse),
+    loadContentBank(),
     import(new URL("../lib/practical-response-exercise.ts", import.meta.url)),
     readFile(new URL("../components/BusinessAnalysisAnswerSheet.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/PracticalWorkspace.tsx", import.meta.url), "utf8"),
@@ -643,7 +646,7 @@ test("practical rubric scoring preserves partial points and rejects invalid valu
 
 test("historical theory references remain hash-bound without changing official answers", async () => {
   const [content, reference, editorial, audit, importer, validator, practice] = await Promise.all([
-    readFile(new URL("../data/content.json", import.meta.url), "utf8").then(JSON.parse),
+    loadContentBank(),
     readFile(new URL("../data/references/theory-question-bank-2026-07-16.json", import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL("../data/references/theory-editorial-review-2026-07-17.json", import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL("../data/references/theory-reference-audit.json", import.meta.url), "utf8").then(JSON.parse),
@@ -689,7 +692,7 @@ test("historical theory references remain hash-bound without changing official a
 
 test("published theory review is complete, independently cross-reviewed, and audit-bound", async () => {
   const [content, reviewAudit, reviewManifestText, validator] = await Promise.all([
-    readFile(new URL("../data/content.json", import.meta.url), "utf8").then(JSON.parse),
+    loadContentBank(),
     readFile(new URL("../data/references/theory-review-audit.json", import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL("../data/references/theory-review-state/manifest.json", import.meta.url), "utf8"),
     readFile(new URL("../scripts/validate-content.py", import.meta.url), "utf8"),
@@ -767,7 +770,7 @@ test("user-facing study surfaces omit answer provenance while audit metadata rem
 
 test("official Word templates expose hash-bound fill examples for every blank", async () => {
   const [content, snapshot, importer, validator] = await Promise.all([
-    readFile(new URL("../data/content.json", import.meta.url), "utf8").then(JSON.parse),
+    loadContentBank(),
     readFile(new URL("../data/references/practical-template-answers-2026-07-17.json", import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL("../scripts/import-reference.py", import.meta.url), "utf8"),
     readFile(new URL("../scripts/validate-content.py", import.meta.url), "utf8"),
@@ -802,7 +805,7 @@ test("official Word templates expose hash-bound fill examples for every blank", 
 
 test("material-free business optimization tasks expose complete rubric-bound examples", async () => {
   const [content, snapshot, importer, validator] = await Promise.all([
-    readFile(new URL("../data/content.json", import.meta.url), "utf8").then(JSON.parse),
+    loadContentBank(),
     readFile(new URL("../data/references/practical-rubric-answers-2026-07-17.json", import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL("../scripts/import-reference.py", import.meta.url), "utf8"),
     readFile(new URL("../scripts/validate-content.py", import.meta.url), "utf8"),
@@ -836,7 +839,7 @@ test("material-free business optimization tasks expose complete rubric-bound exa
 
 test("all Python practical tasks expose audited completed-notebook reference code", async () => {
   const [content, snapshot, audit, importer, lab, bridgeExtension] = await Promise.all([
-    readFile(new URL("../data/content.json", import.meta.url), "utf8").then(JSON.parse),
+    loadContentBank(),
     readFile(new URL("../data/references/notebook-solutions-2026-07-16.json", import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL("../data/references/notebook-solution-audit.json", import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL("../scripts/import-reference.py", import.meta.url), "utf8"),
@@ -879,7 +882,7 @@ test("all Python practical tasks expose audited completed-notebook reference cod
 
 test("每题素材有清单兜底，跨域隔离失效时也能读到数据文件", async () => {
   const [content, labManifest, bridgeExtension] = await Promise.all([
-    readFile(new URL("../data/content.json", import.meta.url), "utf8").then(JSON.parse),
+    loadContentBank(),
     readFile(new URL("../public/labs/manifest.json", import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL("../jupyterlite-extension/src/index.ts", import.meta.url), "utf8"),
   ]);
@@ -910,7 +913,7 @@ test("每题素材有清单兜底，跨域隔离失效时也能读到数据文�
 
 test("Word deliverable answers never expose Python code to learners", async () => {
   const [content, narrative] = await Promise.all([
-    readFile(new URL("../data/content.json", import.meta.url), "utf8").then(JSON.parse),
+    loadContentBank(),
     readFile(new URL("../lib/practical-reference.ts", import.meta.url), "utf8"),
   ]);
   // 学员在 Word 题点「查看答案」时，只该看到 Word 作答内容：不含 Python 代码，也不
@@ -951,7 +954,7 @@ test("Word deliverable answers never expose Python code to learners", async () =
 
 test("official practical answers stop at their Word answer boundary", async () => {
   const [content, importer] = await Promise.all([
-    readFile(new URL("../data/content.json", import.meta.url), "utf8").then(JSON.parse),
+    loadContentBank(),
     readFile(new URL("../scripts/import-reference.py", import.meta.url), "utf8"),
   ]);
   const official = content.practical.filter(task => task.answerSource === "official");
@@ -1058,7 +1061,7 @@ test("theory mock review paginates the 189-unanswered edge case and separates st
 
 test("completed theory mock snapshots survive refresh and reject stale or forged results", async () => {
   const [content, storage, scoring, mock, page] = await Promise.all([
-    readFile(new URL("../data/content.json", import.meta.url), "utf8").then(JSON.parse),
+    loadContentBank(),
     import(new URL("../lib/theory-exam-storage.ts", import.meta.url)),
     import(new URL("../lib/scoring.ts", import.meta.url)),
     readFile(new URL("../components/TheoryMock.tsx", import.meta.url), "utf8"),
@@ -1097,7 +1100,7 @@ test("completed theory mock snapshots survive refresh and reject stale or forged
 
 test("practical mock snapshots and batch submission enforce the six-module blueprint", async () => {
   const [content, storage, mock, page, practicalApi] = await Promise.all([
-    readFile(new URL("../data/content.json", import.meta.url), "utf8").then(JSON.parse),
+    loadContentBank(),
     import(new URL("../lib/practical-exam-storage.ts", import.meta.url)),
     readFile(new URL("../components/PracticalMock.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/practical/mock/page.tsx", import.meta.url), "utf8"),
@@ -1243,7 +1246,7 @@ test("starter preview is fully removed and social metadata asset exists", async 
 
 test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes, and both site bridge extensions", async () => {
   const [content, lite, host, labShell, configUtils, bridgeExtension, bridgePackage, pyodideKernelPackage, buildScript, patchScript, extensionBuildScript, runtimeCopyScript, packageJson, edgeOneConfig, labManifest, nextConfig, notebookGenerator] = await Promise.all([
-    readFile(new URL("../data/content.json", import.meta.url), "utf8").then(JSON.parse),
+    loadContentBank(),
     readFile(new URL("../public/lite/jupyter-lite.json", import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL("../components/JupyterLiteLab.tsx", import.meta.url), "utf8"),
     readFile(new URL("../public/lite/lab/index.html", import.meta.url), "utf8"),
@@ -1718,4 +1721,63 @@ test("Chinese paragraphs are not wrapped in JSX source", async () => {
     const source = await readFile(new URL(`../${file}`, import.meta.url), "utf8");
     assert.doesNotMatch(source, wrapped, `${file} 有被换行截断的中文段落，渲染后会多出空格`);
   }
+});
+
+test("content lives in a reviewable entity layer, not one 944KB single-line blob", async () => {
+  // data/content.json 曾是 944KB 挤在一行：`git log --numstat` 对它永远输出 `1 1`，
+  // 一行改、一行增。内容正确性是这个产品的核心价值，而每一次内容变更都无法评审。
+  // 现在题库拆成 data/entities/ 下的实体文件，改一道题只碰一个几 KB 的文件。
+  const { assembleBank, entitiesRoot, practicalCodes } = await import("../scripts/assemble-entities.mjs");
+  const { readdir, readFile, access } = await import("node:fs/promises");
+  const { join } = await import("node:path");
+
+  await assert.rejects(access(new URL("../data/content.json", import.meta.url)), "旧的单文件不应再存在");
+
+  const codes = await practicalCodes();
+  assert.equal(codes.length, 40);
+  for (const name of ["judge", "single", "multi"]) {
+    const questions = JSON.parse(await readFile(join(entitiesRoot, "theory", `${name}.json`), "utf8"));
+    assert.equal(questions.length, 300, `${name} 应为 300 题`);
+    assert.ok(questions.every(q => q.type === name), `${name}.json 混入了别的题型`);
+  }
+
+  // 每个实体文件都必须是可评审的格式：缩进两格、中文不转义、结尾换行。
+  // 少了这条，任何一个写入方用 json.dumps 默认参数就会把全文重排，diff 再次不可读。
+  const walk = async (dir) => {
+    const out = [];
+    for (const item of await readdir(dir, { withFileTypes: true })) {
+      const full = join(dir, item.name);
+      if (item.isDirectory()) out.push(...await walk(full));
+      else if (item.name.endsWith(".json")) out.push(full);
+    }
+    return out;
+  };
+  const files = await walk(entitiesRoot);
+  assert.ok(files.length >= 50, `实体文件应有 50 个以上，实际 ${files.length}`);
+  for (const file of files) {
+    const text = await readFile(file, "utf8");
+    // 判据是「可评审」，不是「与 JS 序列化器逐字节相等」——写入方是 Python，两者对浮点的
+    // 写法不同（Python 保留 1.0，JS 归一成 1），拿 JSON.stringify 当基准会误报。
+    JSON.parse(text);
+    assert.ok(text.endsWith("\n"), `${file} 应以换行结尾`);
+    assert.ok(text.includes("\n  "), `${file} 应缩进落盘，而不是挤成一行`);
+    // 中文必须直接落盘，否则 diff 全是 \uXXXX 没法读。但控制字符（题干里确实有 ）
+    // 是 JSON 规范强制要求转义的，不能一并禁掉。
+    const escapes = [...text.matchAll(/\\u([0-9a-f]{4})/gi)].map(m => Number.parseInt(m[1], 16));
+    const printableEscapes = escapes.filter(code => code >= 0x20);
+    assert.deepEqual(printableEscapes, [], `${file} 把可打印字符转义了，中文应直接落盘`);
+  }
+
+  // TS 侧的装配入口是生成的，必须与目录内容一致——漏跑生成器会让应用少读几道题。
+  const indexSource = await readFile(new URL("../data/entities/index.ts", import.meta.url), "utf8");
+  for (const code of codes) assert.ok(indexSource.includes(`./practical/${code}.json`), `index.ts 缺少 ${code}`);
+  const importedPractical = [...indexSource.matchAll(/\.\/practical\/([^"]+)\.json/g)].map(m => m[1]);
+  assert.deepEqual(importedPractical.sort(), [...codes].sort(), "index.ts 与 practical 目录不一致");
+
+  // 拼装结果必须与发布产物完全对齐；stats 是推导值，不存储。
+  const bank = await assembleBank();
+  assert.equal(bank.stats.theoryQuestions, 900);
+  assert.equal(bank.stats.practicalTasks, 40);
+  const published = JSON.parse(await readFile(new URL(`../public/content/theory-${bank.version}.json`, import.meta.url), "utf8"));
+  assert.deepEqual(published.questions, bank.theory, "发布的理论题库与实体层不一致");
 });

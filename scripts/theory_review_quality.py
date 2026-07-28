@@ -14,6 +14,10 @@ from pathlib import Path
 from typing import Any
 
 from theory_reference import reference_local_id
+
+import sys as _sys
+_sys.path.insert(0, str(Path(__file__).resolve().parent))
+from content_entities import load_bank  # noqa: E402
 from theory_review_state import (
     DEFAULT_AUDIT_PATH,
     DEFAULT_CONTENT_PATH,
@@ -56,7 +60,7 @@ def load_entries(state_dir: Path) -> list[dict[str, Any]]:
 
 def build_report(
     *,
-    content_path: Path,
+    content_path: Path | None,
     reference_path: Path,
     audit_path: Path,
     state_dir: Path,
@@ -68,7 +72,9 @@ def build_report(
         audit_path=audit_path,
         state_dir=state_dir,
     )
-    content = read_json(content_path)
+    # 给了具体路径就读那个文件（发布流程与测试夹具都按「一份 bank 文件」操作），
+    # 传 None 才表示「当前线上题库」，从实体层装配。
+    content = load_bank() if content_path is None else read_json(content_path)
     reference = read_json(reference_path)
     entries = load_entries(state_dir)
     manifest = read_json(state_dir / "manifest.json")
