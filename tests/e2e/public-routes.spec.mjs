@@ -139,26 +139,38 @@ test("full official prompt becomes a viewport-sized reading layer on mobile", as
   expect(box.height).toBeGreaterThanOrEqual(843);
 });
 
-test("mobile theory options are never buried under the action bar", async ({ page }) => {
-  // 多选题有 5 个选项，390×780 的手机上装不下「题干 + 5 选项 + 两行操作栏」。操作栏
-  // 原先在窄屏也吸底，96% 不透明，抽样 18 道多选题有 18 道的末选项压在它下面——学员
-  // 看到的是「C 之后就没了」。改为静态排布后，选项最多被屏幕下沿截断，那是所有人都
-  // 认得的「还有内容」信号，而不是一条看起来像页脚的横栏。
+test("mobile theory keeps navigation docked without permanently burying content", async ({ page }) => {
+  // 翻题是刷题的热路径，手机上「上一题 / 下一题」吸底常驻。代价是它会盖住视口底部
+  // 63px，所以必须保证内容能滚到它上方——页面底部留了等高的空白。少了那段空白，
+  // 长题目的末选项就会永远够不到，这正是本断言要挡住的回归。
   await page.setViewportSize({ width: 390, height: 780 });
-  // 直接定位到最坏的一道：300 道多选题全是 5 个选项，multi-218 的题干最长（82 字），
-  // 它的末选项能让开操作栏，其余 299 道就都能。走 ?question= 而不是点题型抽屉，是因为
-  // 切题型会触发登录判定，测试不该依赖账号状态。
+  // 300 道多选题全是 5 个选项，multi-218 题干最长（82 字），是最坏情况。
   await page.goto("/theory?question=multi-218", { waitUntil: "domcontentloaded" });
   await expect(page.locator(".practice-question-card .chip").first()).toHaveText("多选题");
   await expect(page.locator(".practice-option")).toHaveCount(5);
 
-  // 只约束结果不约束做法：将来换别的方式让开操作栏也应当算通过。
-  const gap = await page.evaluate(() => {
+  const dock = page.locator(".practice-nav-dock");
+  await expect(dock.getByRole("button", { name: "上一题" })).toBeVisible();
+
+  // 吸底：滚动前后都贴在视口底部。
+  const dockTop = () => dock.evaluate(el => Math.round(el.getBoundingClientRect().top));
+  const atTop = await dockTop();
+  await page.evaluate(() => window.scrollTo(0, 260));
+  expect(await dockTop()).toBe(atTop);
+
+  // 留在题目下方的那组按钮不得压住选项。
+  const staticGap = await page.evaluate(() => {
     const barTop = document.querySelector(".practice-bottom-bar").getBoundingClientRect().top;
     const last = [...document.querySelectorAll(".practice-option")].at(-1).getBoundingClientRect();
     return Math.round(barTop - last.bottom);
   });
-  expect(gap).toBeGreaterThanOrEqual(0);
+  expect(staticGap).toBeGreaterThanOrEqual(0);
+
+  // 常驻是拿视口高度换的：吸底栏每高一分，多选题末选项被遮的比例就大一分（抽样 40 道
+  // 已有 3 道被遮）。所以它只许放导航两颗、单行。往里加第三颗按钮或加一行，这条会拦下。
+  const dockHeight = await dock.evaluate(el => Math.round(el.getBoundingClientRect().height));
+  expect(dockHeight).toBeLessThanOrEqual(80);
+  await expect(dock.locator("button")).toHaveCount(2);
 
   // 题号抽屉是用手指点的，300 个格子密排，点错就跳错题。
   await page.locator(".question-map-trigger").click();

@@ -160,6 +160,7 @@ export default function TheoryPractice({ questions, contentVersion }: { question
     return question ? [question] : [];
   }), [questionById, sessionIds]);
   const currentQuestion = sessionQuestions[currentIndex];
+  const isLastQuestion = currentIndex === sessionQuestions.length - 1;
   const { answeredCount, correctCount, sessionWrongIds } = useMemo(() => {
     let answered = 0;
     let correct = 0;
@@ -591,15 +592,24 @@ export default function TheoryPractice({ questions, contentVersion }: { question
             </p>}
           </div>}
 
+          {/* 按钮按职责分成两组：答题动作（收藏、提交）跟着题目走，导航（上一题/下一题）
+              单独放进 practice-nav-dock。手机上刷题时翻题是热路径，那一组吸底常驻，不用
+              为了点「下一题」先把页面滚到底。桌面端 dock 是 display:contents，两组仍然
+              排在同一行，外观不变。 */}
           <div className="practice-bottom-bar">
-            <button type="button" className="button button-quiet" disabled={currentIndex === 0} onClick={() => goToQuestion(currentIndex - 1)}>上一题</button>
             <button type="button" className="button button-quiet favorite-action" aria-pressed={Boolean(favorites[currentQuestion.id])} onClick={() => void toggleFavorite(currentQuestion.id)}>{favorites[currentQuestion.id] ? "★ 已收藏" : "☆ 收藏"}</button>
-            {!revealed[currentQuestion.id] && currentIndex < sessionQuestions.length - 1 && <button type="button" className="button button-quiet skip-action" onClick={() => goToQuestion(currentIndex + 1)}>暂不作答</button>}
             {revealed[currentQuestion.id]
-              ? <button type="button" className="button button-primary primary-action" onClick={() => currentIndex === sessionQuestions.length - 1 ? completePractice() : goToQuestion(currentIndex + 1)}>{currentIndex === sessionQuestions.length - 1 ? "查看本组结果" : "下一题"}</button>
+              ? isLastQuestion && <button type="button" className="button button-primary answer-action" onClick={() => completePractice()}>查看本组结果</button>
               : currentQuestion.type === "multi"
-                ? <button type="button" className="button button-primary primary-action" disabled={!(answers[currentQuestion.id] ?? []).length} onClick={() => void submit(currentQuestion)}>提交多选答案</button>
-                : <button type="button" className="button button-primary primary-action" disabled>选择答案后自动判分</button>}
+                ? <button type="button" className="button button-primary answer-action" disabled={!(answers[currentQuestion.id] ?? []).length} onClick={() => void submit(currentQuestion)}>提交多选答案</button>
+                : <button type="button" className="button button-primary answer-action" disabled>选择答案后自动判分</button>}
+            <div className="practice-nav-dock">
+              <button type="button" className="button button-quiet nav-prev" disabled={currentIndex === 0} onClick={() => goToQuestion(currentIndex - 1)}>上一题</button>
+              {/* 未作答时这颗按钮仍叫「暂不作答」：它同样是往后翻，但要让人知道这一题不会被记录。 */}
+              {revealed[currentQuestion.id]
+                ? <button type="button" className="button button-primary nav-next" disabled={isLastQuestion} onClick={() => goToQuestion(currentIndex + 1)}>下一题</button>
+                : <button type="button" className="button button-quiet nav-next" disabled={isLastQuestion} onClick={() => goToQuestion(currentIndex + 1)}>暂不作答</button>}
+            </div>
           </div>
         </article>
       </section>}

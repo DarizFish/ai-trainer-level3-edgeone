@@ -1083,6 +1083,14 @@ button { color: inherit; }
 .practice-feedback small { display: block; margin-top: 8px; color: #745e27; }
 .practice-bottom-bar { position: sticky; bottom: 0; display: grid; grid-template-columns: auto auto 1fr; gap: 9px; margin: 30px -34px 0; padding: 13px 34px; border-top: 1px solid var(--line); background: rgba(255,253,247,.96); backdrop-filter: blur(10px); }
 .practice-bottom-bar .button:last-child { min-width: 180px; justify-self: end; }
+/* 导航按钮拆成了独立的 practice-nav-dock，手机端要吸底。桌面端用 display:contents
+   让它的两颗按钮直接参与操作栏的网格，order 保证顺序仍是
+   上一题 | 收藏 | 暂不作答（或下一题） | 答题按钮，与拆分前一致。 */
+.practice-nav-dock { display: contents; }
+.practice-bottom-bar .nav-prev { order: 1; }
+.practice-bottom-bar .favorite-action { order: 2; }
+.practice-bottom-bar .nav-next { order: 3; }
+.practice-bottom-bar .answer-action { order: 4; }
 @media (max-width: 640px) {
   .practice-question-card { min-height: 0; padding: 21px 16px 0; }
   .practice-question-title { font-size: 20px; }
@@ -1096,7 +1104,6 @@ button { color: inherit; }
      而且读解析本来就要往下滚，按钮正好在解析后面，顺序是对的。 */
   .practice-bottom-bar { position: static; grid-template-columns: 1fr 1fr; margin: 24px -16px 0; padding: 11px 16px calc(11px + env(safe-area-inset-bottom)); }
   .practice-bottom-bar .button { min-width: 0; width: 100%; padding: 0 8px; }
-  .practice-bottom-bar .favorite-action { order: 3; grid-column: 1 / -1; }
   .practice-bottom-bar .button:last-child { min-width: 0; justify-self: stretch; }
 }
 
@@ -1226,7 +1233,12 @@ button { color: inherit; }
 .theory-study-layout .practice-option { min-height: 55px; }
 .practice-judging { margin-top: 16px; color: var(--ink-soft); font-size: 12px; font-weight: 800; }
 .theory-study-layout .practice-bottom-bar { grid-template-columns: auto auto auto minmax(150px, 1fr); margin: 28px -30px 0; padding: 12px 30px; }
-.theory-study-layout .practice-bottom-bar .primary-action { min-width: 170px; justify-self: end; }
+/* 不能给它 min-width：这颗按钮所在的轨道是 minmax(150px,1fr)，min-width 一旦超过轨道宽，
+   按钮就会溢出轨道，再被 justify-self:end 往左推，直接压在「暂不作答」上。601–660px 和
+   1081px 附近都栽在这里。让它跟着轨道走，窄的时候靠 answer-action:disabled 的 11px 字号
+   把文案收进去。 */
+.theory-study-layout .practice-bottom-bar .answer-action { min-width: 0; justify-self: end; }
+.theory-study-layout .practice-bottom-bar .answer-action:disabled { font-size: 11px; }
 .theory-study-layout .practice-palette { display: block; padding: 0 14px 15px; }
 .theory-study-layout .practice-palette .theory-side-head { margin: 0 -14px 14px; }
 .practice-palette-summary { display: flex; align-items: end; justify-content: space-between; gap: 8px; margin-bottom: 11px; }
@@ -1293,35 +1305,43 @@ button { color: inherit; }
   .theory-page-head { min-height: 0; padding: 0; border-bottom: 0; }
   .theory-page-head .breadcrumbs { display: none; }
   .theory-page-head h1 { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
-  .theory-workspace { padding-top: 12px; padding-bottom: 40px; }
+  .theory-workspace { padding-top: 12px; padding-bottom: calc(88px + env(safe-area-inset-bottom)); }
   .theory-study-layout .practice-question-card { min-height: calc(100dvh - 232px); padding: 20px 15px 0; }
   .theory-study-layout .practice-question-title { margin: 10px 0 18px; font-size: 19px; line-height: 1.58; }
   .theory-study-layout .practice-option { min-height: 54px; }
-  .theory-study-layout .practice-bottom-bar { grid-template-columns: 1fr 1fr; margin: 22px -15px 0; padding: 10px 15px calc(10px + env(safe-area-inset-bottom)); }
+  /* 必须去掉 backdrop-filter：带它的元素会给 position:fixed 的后代建立新的包含块，
+     吸底导航会被钉在操作栏内部而不是视口底部。窄屏下操作栏已是静态排布，这层模糊
+     本来就是当初为吸底准备的，没有用途了。 */
+  .theory-study-layout .practice-bottom-bar { grid-template-columns: 1fr 1fr; margin: 22px -15px 0; padding: 10px 15px 0; backdrop-filter: none; background: none; border-top: 0; }
   .theory-study-layout .practice-bottom-bar .button { min-width: 0; width: 100%; }
-  .theory-study-layout .practice-bottom-bar .favorite-action { order: initial; grid-column: auto; }
-  .theory-study-layout .practice-bottom-bar .skip-action { grid-column: 1; }
-  .theory-study-layout .practice-bottom-bar .primary-action { min-width: 0; grid-column: 1 / -1; justify-self: stretch; }
-  .theory-study-layout .practice-bottom-bar:has(.skip-action) .primary-action { grid-column: 2; }
+  .theory-study-layout .practice-bottom-bar .answer-action { min-width: 0; justify-self: stretch; }
+  /* 已作答且不是最后一题时操作栏只剩「收藏」，让它占满整行而不是孤零零半格。 */
+  .theory-study-layout .practice-bottom-bar:not(:has(.answer-action)) .favorite-action { grid-column: 1 / -1; }
+  /* 翻题是刷题的热路径：手机上导航常驻屏幕底部，不必为了点「下一题」先滚到页面末尾。
+     只放导航两颗（约 60px）。整条四按钮操作栏吸底会占掉 122px，多选题的末选项又会
+     被埋回去——那正是上一轮修掉的问题。 */
+  .practice-nav-dock { position: fixed; z-index: 60; right: 0; bottom: 0; left: 0;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+    padding: 8px 15px calc(8px + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--line); background: rgba(255,253,247,.96); backdrop-filter: blur(10px); }
+  .practice-nav-dock .button { min-width: 0; width: 100%; }
   .question-map-trigger span { display: none; }
   .theory-result-panel { min-height: calc(100dvh - 210px); padding: 34px 16px; }
   .theory-result-panel h2 { font-size: 28px; }
   .theory-result-panel .hero-actions { width: 100%; display: grid; grid-template-columns: 1fr; }
 }
 
-/* 901px 往上三栏布局回归，内容列反而比手机竖屏更窄（操作栏只有 430–550px），四个按钮
+/* 901px 往上三栏布局回归，内容列反而比手机竖屏更窄（操作栏只有 430–590px），四个按钮
    挤不进桌面那套一行四列。primary 的 min-width:170px 大于它 150px 的轨道，justify-self:end
    又把它往左推，直接压在「暂不作答」上——实测重叠 11px，920–960px 时按钮文案还会折成
    三行、高到 108px。这一段沿用窄屏的两行布局。
    落在这个区间的是大屏手机横屏（Pixel 915、iPhone Pro Max 932）和 1024×768 的笔记本。 */
-@media (min-width: 901px) and (max-width: 1080px) {
+@media (min-width: 901px) and (max-width: 1140px) {
   .theory-study-layout .practice-bottom-bar { grid-template-columns: 1fr 1fr; }
   .theory-study-layout .practice-bottom-bar .button { min-width: 0; width: 100%; }
-  .theory-study-layout .practice-bottom-bar .skip-action { grid-column: 1; }
-  .theory-study-layout .practice-bottom-bar .primary-action { min-width: 0; grid-column: 1 / -1; justify-self: stretch; }
-  .theory-study-layout .practice-bottom-bar:has(.skip-action) .primary-action { grid-column: 2; }
+  .theory-study-layout .practice-bottom-bar .answer-action { min-width: 0; justify-self: stretch; }
   /* 「选择答案后自动判分」九个字，默认字号在半栏宽里会把「分」挤到第二行。 */
-  .theory-study-layout .practice-bottom-bar .primary-action:disabled { font-size: 11px; }
+  .theory-study-layout .practice-bottom-bar .answer-action:disabled { font-size: 11px; }
 }
 
 /* Practical catalog navigation: sidebar on desktop, full-width panel on compact screens. */
@@ -1863,7 +1883,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
   .lab-promo { gap: 36px; }
 
   .theory-study-layout .practice-question-card { min-height: 0; }
-  .theory-study-layout .practice-bottom-bar .primary-action:disabled { font-size: 11px; }
+  .theory-study-layout .practice-bottom-bar .answer-action:disabled { font-size: 11px; }
 
   .progress-grid.theory-progress-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
   .progress-grid.theory-progress-grid .progress-stat { min-width: 0; padding: 14px 10px; }
