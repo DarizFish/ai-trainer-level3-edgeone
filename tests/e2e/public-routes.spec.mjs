@@ -138,3 +138,32 @@ test("full official prompt becomes a viewport-sized reading layer on mobile", as
   expect(box.width).toBeGreaterThanOrEqual(389);
   expect(box.height).toBeGreaterThanOrEqual(843);
 });
+
+test("mobile theory options are never buried under the action bar", async ({ page }) => {
+  // 多选题有 5 个选项，390×780 的手机上装不下「题干 + 5 选项 + 两行操作栏」。操作栏
+  // 原先在窄屏也吸底，96% 不透明，抽样 18 道多选题有 18 道的末选项压在它下面——学员
+  // 看到的是「C 之后就没了」。改为静态排布后，选项最多被屏幕下沿截断，那是所有人都
+  // 认得的「还有内容」信号，而不是一条看起来像页脚的横栏。
+  await page.setViewportSize({ width: 390, height: 780 });
+  // 直接定位到最坏的一道：300 道多选题全是 5 个选项，multi-218 的题干最长（82 字），
+  // 它的末选项能让开操作栏，其余 299 道就都能。走 ?question= 而不是点题型抽屉，是因为
+  // 切题型会触发登录判定，测试不该依赖账号状态。
+  await page.goto("/theory?question=multi-218", { waitUntil: "domcontentloaded" });
+  await expect(page.locator(".practice-question-card .chip").first()).toHaveText("多选题");
+  await expect(page.locator(".practice-option")).toHaveCount(5);
+
+  // 只约束结果不约束做法：将来换别的方式让开操作栏也应当算通过。
+  const gap = await page.evaluate(() => {
+    const barTop = document.querySelector(".practice-bottom-bar").getBoundingClientRect().top;
+    const last = [...document.querySelectorAll(".practice-option")].at(-1).getBoundingClientRect();
+    return Math.round(barTop - last.bottom);
+  });
+  expect(gap).toBeGreaterThanOrEqual(0);
+
+  // 题号抽屉是用手指点的，300 个格子密排，点错就跳错题。
+  await page.locator(".question-map-trigger").click();
+  const cell = page.locator(".question-number-grid button").first();
+  await expect(cell).toBeVisible();
+  const cellBox = await cell.boundingBox();
+  expect(cellBox.height).toBeGreaterThanOrEqual(44);
+});

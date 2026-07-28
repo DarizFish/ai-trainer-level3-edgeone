@@ -142,7 +142,7 @@ button { color: inherit; }
 .practical-catalog { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 24px; align-items: start; }
 .practical-catalog-sidebar { position: sticky; top: 82px; max-height: calc(100dvh - 98px); overflow: auto; border: 1px solid var(--line); background: var(--card); box-shadow: 0 7px 25px rgba(40,35,25,.06); scrollbar-width: thin; }
 .catalog-sidebar-head { padding: 18px; border-bottom: 1px solid var(--line); }
-.catalog-sidebar-head .breadcrumbs { margin-bottom: 7px; font-size: 10px; }
+.catalog-sidebar-head .breadcrumbs { margin-bottom: 7px; font-size: 12px; }
 .catalog-sidebar-head h1 { margin: 0; font: 800 28px/1.2 "Noto Serif SC", STSong, serif; }
 .catalog-sidebar-head > p { margin: 9px 0 14px; color: var(--ink-soft); font-size: 11px; }
 .catalog-sidebar-head > p b { color: var(--red); font: 800 19px/1 Georgia, serif; }
@@ -233,7 +233,7 @@ button { color: inherit; }
 .account-notice { margin: 20px 0 0; color: var(--ink-soft); font-size: 12px; line-height: 1.7; }
 .result-bar { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 18px; color: var(--ink-soft); font-size: 13px; }
 .chip-row { display: flex; flex-wrap: wrap; gap: 7px; }
-.chip { min-height: 24px; display: inline-flex; align-items: center; padding: 3px 7px; border: 1px solid rgba(16,42,67,.1); border-radius: 2px; background: #f1eadb; color: var(--ink-soft); font-size: 10px; line-height: 1.2; }
+.chip { min-height: 24px; display: inline-flex; align-items: center; padding: 3px 8px; border: 1px solid rgba(16,42,67,.1); border-radius: 2px; background: #f1eadb; color: var(--ink-soft); font-size: 11px; line-height: 1.2; }
 .question-list { display: grid; gap: 16px; }
 .question-card { background: var(--card); border: 1px solid var(--line); padding: 26px 28px; box-shadow: 0 5px 22px rgba(40,35,25,.035); }
 .question-meta { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; margin-bottom: 16px; }
@@ -1085,7 +1085,14 @@ button { color: inherit; }
   .practice-question-card { min-height: 0; padding: 21px 16px 0; }
   .practice-question-title { font-size: 20px; }
   .practice-option { grid-template-columns: auto 32px 1fr; padding: 10px; }
-  .practice-bottom-bar { grid-template-columns: 1fr 1fr; margin: 24px -16px 0; padding: 11px 16px calc(11px + env(safe-area-inset-bottom)); }
+  /* 窄屏取消吸底。这条栏在手机上是两行、122px 高，占掉 780px 视口的 16%，而它又不
+     透明——多选题 5 个选项抽样 18 道有 18 道的末选项压在它下面，单选题 18 道中 5 道，
+     用户看到的是「C 之后就没了」，根本不知道 D、E 存在。
+     390×780 下无论怎么压缩都塞不下「题干 + 5 选项 + 122px 操作栏」，所以方向不是让它
+     挤进去，而是别挡：静态排布后选项在折线处自然被截断一半，那是所有人都认得的
+     「还有内容」信号。代价是答错后要滚一下才够到「下一题」，但页面本来就只有 1.2–1.5 屏，
+     而且读解析本来就要往下滚，按钮正好在解析后面，顺序是对的。 */
+  .practice-bottom-bar { position: static; grid-template-columns: 1fr 1fr; margin: 24px -16px 0; padding: 11px 16px calc(11px + env(safe-area-inset-bottom)); }
   .practice-bottom-bar .button { min-width: 0; width: 100%; padding: 0 8px; }
   .practice-bottom-bar .favorite-action { order: 3; grid-column: 1 / -1; }
   .practice-bottom-bar .button:last-child { min-width: 0; justify-self: stretch; }
@@ -1093,13 +1100,13 @@ button { color: inherit; }
 
 /* Direct-to-question theory workbench */
 .theory-page-head { min-height: 94px; display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 18px 0 13px; border-bottom: 1px solid var(--line); }
-.theory-page-head .breadcrumbs { margin-bottom: 4px; font-size: 11px; }
+.theory-page-head .breadcrumbs { margin-bottom: 4px; font-size: 12px; }
 .theory-page-head h1 { margin: 0; font: 800 31px/1.2 "Noto Serif SC", STSong, serif; }
 .theory-page-head > p { margin: 0; color: var(--ink-soft); font-size: 13px; }
 .theory-page-head > p b { color: var(--red); font: 800 20px/1 Georgia, serif; }
 .theory-workspace { padding: 14px 0 72px; }
 .practical-page-head { min-height: 94px; display: grid; grid-template-columns: minmax(220px, 1fr) auto auto; align-items: center; gap: 24px; padding: 18px 0 13px; border-bottom: 1px solid var(--line); }
-.practical-page-head .breadcrumbs { margin-bottom: 4px; font-size: 11px; }
+.practical-page-head .breadcrumbs { margin-bottom: 4px; font-size: 12px; }
 .practical-page-head h1 { margin: 0; font: 800 31px/1.2 "Noto Serif SC", STSong, serif; }
 .practical-page-head > p { margin: 0; color: var(--ink-soft); font-size: 13px; white-space: nowrap; }
 .practical-page-head > p b { color: var(--red); font: 800 20px/1 Georgia, serif; }
@@ -1108,7 +1115,7 @@ button { color: inherit; }
 .practical-page-head nav a:hover { color: var(--red); border-color: var(--red); }
 .practical-workspace { width: min(1420px, calc(100% - 32px)); padding: 18px 0 72px; }
 .mock-page-head { min-height: 94px; display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 18px 0 13px; border-bottom: 1px solid var(--line); }
-.mock-page-head .breadcrumbs { margin-bottom: 4px; font-size: 11px; }
+.mock-page-head .breadcrumbs { margin-bottom: 4px; font-size: 12px; }
 .mock-page-head h1 { margin: 0; font: 800 31px/1.2 "Noto Serif SC", STSong, serif; }
 .mock-page-head > p { margin: 0; color: var(--ink-soft); font-size: 13px; white-space: nowrap; }
 .mock-page-head > p b { color: var(--red); font: 800 20px/1 Georgia, serif; }
@@ -1268,6 +1275,12 @@ button { color: inherit; }
   .theory-study-content { grid-column: 1; }
   .question-map-trigger { display: inline-flex; }
   .theory-study-layout .practice-question-card { min-height: calc(100dvh - 206px); }
+  /* 题号从这一档起变成抽屉，是用手指点的：桌面上 57×34 的格子够用，手机上不够。
+     44px 是 iOS 人机界面指南的下限，而格子有 300 个密排，误点的代价是跳错题。
+     抽屉本身有整屏高，网格不必再限制在 280px 里。 */
+  .theory-study-layout .question-number-grid { max-height: calc(100dvh - 330px); }
+  .theory-study-layout .question-number-grid button { min-height: 44px; font-size: 12px; }
+  .question-map-ranges button { min-height: 40px; font-size: 11px; }
 }
 
 @media (max-width: 640px) {
@@ -1509,7 +1522,7 @@ button { color: inherit; }
 .lab-rail-expand-label { padding-top: 7px; border-top: 1px solid var(--line); color: var(--ink-soft); font-size: 10px; font-weight: 800; letter-spacing: .18em; writing-mode: vertical-rl; }
 /* Shared practical task header — used by both the detail page (variant page)
    and the notebook lab sidebar (variant rail). */
-.practical-task-header .breadcrumbs { margin: 0; font-size: 10px; color: var(--ink-soft); }
+.practical-task-header .breadcrumbs { margin: 0; font-size: 12px; color: var(--ink-soft); }
 .practical-task-header .question-number { color: var(--red); font: 700 13px/1 Georgia, serif; }
 .practical-task-header h1 { margin: 0; color: var(--ink); font: 700 18px/1.35 "Noto Serif SC", STSong, serif; }
 
