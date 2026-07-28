@@ -214,7 +214,14 @@ test("theory opens as a direct study console and Python tasks enter a code-first
   assert.match(theory, /question-number-grid/);
   assert.doesNotMatch(theory, /theory-builder-panel|theory-browser|CUSTOM PRACTICE|题库检索/);
   assert.match(theory, /useState<Screen>\("practice"\)/);
-  assert.match(theory, /选择答案后自动判分/);
+  // 前进只有一颗按钮：多选题选了但没交时是「提交答案」，其余情况是「下一题」，
+  // 并且放在吸底导航里——原来的提交按钮留在题目下方，多选题选项一长就得下拉才够得到。
+  // 「暂不作答」的职责由这颗按钮一并承担，不再单列。判断/单选仍是选中即判分，
+  // 那条行为由下面的 void submit(question, answer) 保障，不靠文案。
+  assert.match(theory, /practice-nav-dock/);
+  assert.match(theory, /提交答案/);
+  // 只看 JSX 文本节点，免得匹配到解释这次合并的代码注释。
+  assert.doesNotMatch(theory, />(暂不作答|选择答案后自动判分)</);
   assert.match(theory, /question\.type === "multi"/);
   assert.match(theory, /void submit\(question, answer\)/);
   assert.match(theory, /键盘快捷键/);

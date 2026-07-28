@@ -598,17 +598,16 @@ export default function TheoryPractice({ questions, contentVersion }: { question
               排在同一行，外观不变。 */}
           <div className="practice-bottom-bar">
             <button type="button" className="button button-quiet favorite-action" aria-pressed={Boolean(favorites[currentQuestion.id])} onClick={() => void toggleFavorite(currentQuestion.id)}>{favorites[currentQuestion.id] ? "★ 已收藏" : "☆ 收藏"}</button>
-            {revealed[currentQuestion.id]
-              ? isLastQuestion && <button type="button" className="button button-primary answer-action" onClick={() => completePractice()}>查看本组结果</button>
-              : currentQuestion.type === "multi"
-                ? <button type="button" className="button button-primary answer-action" disabled={!(answers[currentQuestion.id] ?? []).length} onClick={() => void submit(currentQuestion)}>提交多选答案</button>
-                : <button type="button" className="button button-primary answer-action" disabled>选择答案后自动判分</button>}
             <div className="practice-nav-dock">
               <button type="button" className="button button-quiet nav-prev" disabled={currentIndex === 0} onClick={() => goToQuestion(currentIndex - 1)}>上一题</button>
-              {/* 未作答时这颗按钮仍叫「暂不作答」：它同样是往后翻，但要让人知道这一题不会被记录。 */}
-              {revealed[currentQuestion.id]
-                ? <button type="button" className="button button-primary nav-next" disabled={isLastQuestion} onClick={() => goToQuestion(currentIndex + 1)}>下一题</button>
-                : <button type="button" className="button button-quiet nav-next" disabled={isLastQuestion} onClick={() => goToQuestion(currentIndex + 1)}>暂不作答</button>}
+              {/* 前进只有一颗按钮。多选题选了但还没交时它是「提交答案」，其余情况都是「下一题」——
+                  原来的「暂不作答」就是往后翻，合并后由它一并承担，不再单列。
+                  提交按钮此前留在题目下方，多选题选项一长就得先下拉才够得到，这是合并的直接原因。 */}
+              {!revealed[currentQuestion.id] && currentQuestion.type === "multi" && (answers[currentQuestion.id] ?? []).length > 0
+                ? <button type="button" className="button button-primary nav-next" onClick={() => void submit(currentQuestion)}>提交答案</button>
+                : isLastQuestion
+                  ? <button type="button" className="button button-primary nav-next" onClick={() => completePractice()}>查看本组结果</button>
+                  : <button type="button" className={`button ${revealed[currentQuestion.id] ? "button-primary" : "button-quiet"} nav-next`} onClick={() => goToQuestion(currentIndex + 1)}>下一题</button>}
             </div>
           </div>
         </article>
