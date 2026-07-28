@@ -34,6 +34,7 @@
     "content:notebook-solutions:apply": "python scripts/notebook_solutions.py apply",
     "content:practical-materials": "python scripts/sync-practical-materials.py",
     "content:validate": "python scripts/validate-content.py",
+    "og:build": "node scripts/build-og-image.mjs",
     "labs:quantize": "python scripts/quantize-browser-models.py",
     "labs:prepare": "python scripts/prepare-lab-assets.py",
     "labs:runtime": "node scripts/copy-onnxruntime-web.mjs",
