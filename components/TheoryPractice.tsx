@@ -583,8 +583,10 @@ export default function TheoryPractice({ questions, contentVersion }: { question
             {/* 答对会自动跳到下一题。不明说的话，用户会以为页面自己跳了；也要让他知道
                 想留下看解析只需点一下或滚动一下。取消后提示改为「已停留」，不再倒计时。 */}
             {feedback[currentQuestion.id] && <p className={`practice-auto-advance ${autoAdvancing ? "is-running" : "is-paused"}`} aria-live="polite">
+              {/* 拆成两个短语各自成为一个 flex 项：390px 下这行放不下，整句排版会在
+                  「停留」前断开，末行只剩两个字。拆开后换行发生在短语之间。 */}
               {autoAdvancing
-                ? <><span className="practice-auto-advance-bar" aria-hidden="true" /><span>正在自动进入下一题　·　点击或滚动可停留</span></>
+                ? <><span className="practice-auto-advance-bar" aria-hidden="true" /><span>正在自动进入下一题</span><span>点击或滚动可停留</span></>
                 : <span>已停留在本题，随时可点「下一题」继续</span>}
             </p>}
           </div>}

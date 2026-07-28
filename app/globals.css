@@ -1070,7 +1070,9 @@ button { color: inherit; }
 .practice-feedback { margin-top: 22px; padding: 19px 21px; border-left: 4px solid var(--red); background: #f2ead7; }
 .practice-feedback.correct { color: inherit; border-color: #347553; background: #e9f4ec; }
 .practice-feedback > div { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
-.practice-auto-advance { display: flex; align-items: center; gap: 10px; margin-top: 12px; font-size: 12px; color: var(--ink-soft); }
+/* flex-wrap 让两个短语整体换行；短语之间靠 gap 分隔，不用中点符号，免得换行后
+   符号孤零零挂在上一行末尾。 */
+.practice-auto-advance { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; margin-top: 12px; font-size: 12px; color: var(--ink-soft); }
 .practice-auto-advance-bar { flex: 0 0 56px; height: 3px; border-radius: 2px; background: #347553; transform-origin: left center; animation: practice-auto-advance-countdown 2600ms linear forwards; }
 .practice-auto-advance.is-paused { color: #347553; }
 @media (prefers-reduced-motion: reduce) { .practice-auto-advance-bar { animation: none; } }
@@ -1284,7 +1286,14 @@ button { color: inherit; }
 }
 
 @media (max-width: 640px) {
-  .theory-workspace { padding-bottom: 40px; }
+  /* 刷题页 780px 首屏里有 319px（41%）花在题目之前。面包屑和「理论刷题」大标题在这
+     一屏上是纯装饰：下面那条深色导航条已经写着「判断题 · 完整 300 题」，信息量比标题
+     大；回首页和回题库走吸顶页头的品牌区与☰菜单就够。h1 只做视觉隐藏留在 DOM 里，
+     SEO 和读屏不受影响。收回的高度直接让多选题的末选项和提交按钮进入首屏。 */
+  .theory-page-head { min-height: 0; padding: 0; border-bottom: 0; }
+  .theory-page-head .breadcrumbs { display: none; }
+  .theory-page-head h1 { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+  .theory-workspace { padding-top: 12px; padding-bottom: 40px; }
   .theory-study-layout .practice-question-card { min-height: calc(100dvh - 232px); padding: 20px 15px 0; }
   .theory-study-layout .practice-question-title { margin: 10px 0 18px; font-size: 19px; line-height: 1.58; }
   .theory-study-layout .practice-option { min-height: 54px; }
