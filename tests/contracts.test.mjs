@@ -1486,17 +1486,19 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
     // 内核请求下发，依赖清单只以元数据形式随题目走。
     assert.doesNotMatch(notebookSource, /JupyterLite 环境准备|piplite|pyfetch|环境已就绪/, `${task.code} 仍含环境准备代码`);
     assert.ok(Array.isArray(notebook.metadata.ai_trainer.pip_packages), `${task.code} 缺少 pip_packages 元数据`);
-    const visibleCells = notebook.cells.filter(cell => !cell.metadata?.tags?.includes("ai-trainer-onnx"));
-    assert.ok(visibleCells.every(cell => cell.cell_type === "code"));
-    assert.deepEqual(visibleCells.map(cell => cell.source.join("")), task.notebook.cells.map(cell => cell.source));
+    assert.ok(notebook.cells.every(cell => cell.cell_type === "code"));
+    assert.deepEqual(notebook.cells.map(cell => cell.source.join("")), task.notebook.cells.map(cell => cell.source));
     assert.doesNotMatch(notebookSource, /## 使用方法|## 评分点|ai-trainer-intro|ai-trainer-exercise-heading/);
-    const isOnnx = notebook.cells.some(cell => cell.metadata?.tags?.includes("ai-trainer-onnx"));
+    // ONNX 题改用元数据识别：浏览器运行时垫片已从 notebook 第 0 格移进扩展的准备阶段。
+    // 它原先是 9026 字的只读单元，压在官方考题代码上面（3.2.2 的正文才 705 字），
+    // 而进入实操题本来就有「下载依赖与素材」和「下载 ONNX 模型」两个准备阶段。
+    const isOnnx = typeof notebook.metadata.ai_trainer.onnx_runtime === "string"
+      && Boolean(notebook.metadata.ai_trainer.onnx_runtime);
     onnxNotebooks += Number(isOnnx);
-    if (isOnnx) {
-      assert.match(notebookSource, /\/labs\/runtime\/onnxruntime-web\/1\.27\.0\//);
-      assert.match(notebookSource, /ort\.wasm\.bundle\.min\.js/);
-      assert.doesNotMatch(notebookSource, /cdn\.jsdelivr\.net/);
-    }
+    // 可见的 notebook 里不许再出现环境代码，垫片一并纳入这条。只看单元格源码：
+    // 元数据里的 onnx_runtime: "onnxruntime-web@1.27.0" 是合法的，不该被这条挡下。
+    const cellSource = notebook.cells.map(cell => cell.source.join("")).join("\n");
+    assert.doesNotMatch(cellSource, /浏览器 ONNX Runtime|onnxruntime-web|ai-trainer-onnx/, `${task.code} 仍含运行时垫片`);
     const manifestTask = labManifest.tasks[task.code] ?? { assets: [] };
     for (const asset of manifestTask.assets ?? []) {
       const assetParts = asset.name.split("/");
@@ -1532,6 +1534,13 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
     }
   }
   assert.equal(onnxNotebooks, 5);
+
+  // 垫片搬家后，「运行时本地供给、不走 CDN」这条约束跟着搬到扩展里。
+  const onnxRuntimeModule = await readFile(new URL("../jupyterlite-extension/src/onnxRuntime.ts", import.meta.url), "utf8");
+  assert.match(onnxRuntimeModule, /\/labs\/runtime\/onnxruntime-web\/1\.27\.0\//);
+  assert.match(onnxRuntimeModule, /ort\.wasm\.bundle\.min\.js/);
+  assert.doesNotMatch(onnxRuntimeModule, /cdn\.jsdelivr\.net/);
+  assert.match(bridgeExtension, /onnxRuntimeSource/);
 
   const onnxRuntimeFiles = {
     "ort.wasm.bundle.min.js": "260f89cdf194fda484154d7a7ed3e3c88ee88dcf2ff4b0568085e5d2f72a1dd3",

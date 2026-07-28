@@ -3,6 +3,7 @@ import type {
   JupyterFrontEndPlugin
 } from "@jupyterlab/application";
 import { StateEffect, StateField, type Extension, type Range, type Text } from "@codemirror/state";
+import { onnxRuntimeSource } from "./onnxRuntime";
 import { Decoration, EditorView, WidgetType, type DecorationSet } from "@codemirror/view";
 import {
   INotebookTracker,
@@ -535,7 +536,7 @@ const WARNING_FILTERS = [
   "warnings.filterwarnings('ignore', category=DeprecationWarning)"
 ];
 
-function kernelEnvironmentSource(packages: string[], assets: TaskAsset[], preloadImports: string[], fontAliases: FontAlias[]): string {
+function kernelEnvironmentSource(packages: string[], assets: TaskAsset[], preloadImports: string[], fontAliases: FontAlias[], onnxTaskCode: string | null): string {
   const statements = [...WARNING_FILTERS];
   if (packages.length > 0) {
     // pyodide 自带的包（pandas、numpy、scikit-learn 等）在 import 时会自动加载，
@@ -615,6 +616,10 @@ function kernelEnvironmentSource(packages: string[], assets: TaskAsset[], preloa
       "del _assets",
     );
   }
+  if (onnxTaskCode !== null) {
+    // 垫片放在依赖与素材之后：它要 import numpy，也要素材已经就位。
+    statements.push(onnxRuntimeSource(onnxTaskCode));
+  }
   return statements.join("\n");
 }
 
@@ -624,6 +629,13 @@ type FontAlias = { path: string; url: string; sha256: string };
 
 function taskMetadata(panel: NotebookPanel): { pip_packages?: unknown; assets?: unknown; font_aliases?: unknown } {
   return (panel.content.model?.getMetadata("ai_trainer") as { pip_packages?: unknown; assets?: unknown; font_aliases?: unknown } | undefined) ?? {};
+}
+
+/** ONNX 题返回题号（垫片按题号参数化），非 ONNX 题返回 null。 */
+function taskOnnxRuntime(panel: NotebookPanel): string | null {
+  const meta = panel.content.model?.getMetadata("ai_trainer") as { onnx_runtime?: unknown; task_code?: unknown } | undefined;
+  if (typeof meta?.onnx_runtime !== "string" || !meta.onnx_runtime) return null;
+  return typeof meta.task_code === "string" ? meta.task_code : "";
 }
 
 function taskFontAliases(panel: NotebookPanel): FontAlias[] {
@@ -680,7 +692,7 @@ function taskPreloadImports(panel: NotebookPanel): string[] {
 async function applyKernelEnvironment(panel: NotebookPanel): Promise<void> {
   const kernel = panel.sessionContext.session?.kernel;
   if (!kernel) throw new Error("内核尚未就绪，无法准备题目环境");
-  const code = kernelEnvironmentSource(taskPipPackages(panel), taskAssets(panel), taskPreloadImports(panel), taskFontAliases(panel));
+  const code = kernelEnvironmentSource(taskPipPackages(panel), taskAssets(panel), taskPreloadImports(panel), taskFontAliases(panel), taskOnnxRuntime(panel));
   let lastFailure = "未知错误";
   for (let attempt = 1; attempt <= 3; attempt += 1) {
     const reply = await kernel.requestExecute({
