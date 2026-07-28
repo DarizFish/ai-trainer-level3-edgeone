@@ -9,6 +9,8 @@ CONFIG_UTILS = ROOT / "public" / "lite" / "config-utils.js"
 LAB_INDEX = ROOT / "public" / "lite" / "lab" / "index.html"
 JUPYTER_LITE_CONFIG = ROOT / "public" / "lite" / "jupyter-lite.json"
 RUNTIME_REVISION = "20260726-pyodide0277-runtime11"
+# all.json 里所有 .csv 的 mimetype 都是这个（构建机 Windows 的 mimetypes 映射）。
+CSV_BINARY_MIMETYPE = "application/vnd.ms-excel"
 PYODIDE_CONFIG_URL = "./static/pyodide/pyodide.js"
 CALL_ANCHOR = "  finalConfig = dedupFederatedExtensions(finalConfig);"
 PATCHED_CALL = "  finalConfig = applyQueryOverrides(finalConfig);"
@@ -73,6 +75,43 @@ def normalize_contents_models() -> int:
     return normalized_files
 
 
+def force_binary_csv_transfer() -> bool:
+    """把 CSV 从「文本」改判为「二进制」，否则非 UTF-8 的数据集会在传输中被销毁。
+
+    JupyterLite 的 DriveFS 按 PageConfig 里的 fileTypes 决定怎么读写一个文件：
+    命中 fileFormat="text" 就走 response.text()，即按 UTF-8 解码；否则走
+    arrayBuffer() + base64，字节精确。JupyterLab 默认把 .csv 登记为 text，于是
+    2.1.4 那份 GBK 数据集（全站唯一一个非 UTF-8 素材）在读和写两个方向都会被
+    UTF-8 解码，非法字节全部替换成 U+FFFD——678KB 膨胀成 1.19MB，中文内容不可
+    恢复，官方答案里的 encoding='gbk' 必然抛 UnicodeDecodeError。
+
+    图片、.docx、ONNX 模型之所以一直没事，正是因为它们没被登记成 text。
+
+    mimeTypes 一并改掉：新建文件那条分支用的是 getType() 里是否含 "text"，
+    只改 fileFormat 会让两条分支判断不一致。
+    """
+    config = json.loads(JUPYTER_LITE_CONFIG.read_text(encoding="utf-8"))
+    file_types = config.get("jupyter-config-data", {}).get("fileTypes")
+    if not isinstance(file_types, dict):
+        raise RuntimeError("JupyterLite fileTypes config is missing; CSV transfer patch was not applied")
+    changed = False
+    for name in ("csv", "tsv"):
+        entry = file_types.get(name)
+        if not isinstance(entry, dict):
+            continue
+        if entry.get("fileFormat") != "base64" or entry.get("mimeTypes") != [CSV_BINARY_MIMETYPE]:
+            entry["fileFormat"] = "base64"
+            entry["mimeTypes"] = [CSV_BINARY_MIMETYPE]
+            changed = True
+    if "csv" not in file_types:
+        raise RuntimeError("JupyterLite no longer registers a csv file type; CSV transfer patch was not applied")
+    if changed:
+        JUPYTER_LITE_CONFIG.write_text(
+            json.dumps(config, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n"
+        )
+    return changed
+
+
 def main() -> None:
     source = CONFIG_UTILS.read_text(encoding="utf-8")
     if CALL_ANCHOR not in source or FUNCTION_ANCHOR not in source:
@@ -111,10 +150,12 @@ def main() -> None:
     for legacy_pyodide_url in legacy_pyodide_urls:
         lite_config = lite_config.replace(legacy_pyodide_url, new_pyodide_url)
     JUPYTER_LITE_CONFIG.write_text(lite_config, encoding="utf-8", newline="\n")
+    csv_patched = force_binary_csv_transfer()
     normalized_indexes = normalize_contents_models()
     print(
         f"Applied JupyterLite workspace and runtime retry support ({RUNTIME_REVISION}); "
-        f"normalized {normalized_indexes} content indexes"
+        f"normalized {normalized_indexes} content indexes; "
+        f"csv binary transfer {'applied' if csv_patched else 'already in place'}"
     )
 
 

@@ -10,7 +10,7 @@
       "mimetype": null,
       "name": "2.1.3.ipynb",
       "path": "2-1-3/2.1.3.ipynb",
-      "size": 3535,
+      "size": 3559,
       "type": "notebook",
       "writable": true
     },
@@ -22,8 +22,8 @@
       "hash_algorithm": null,
       "last_modified": "2026-07-27T03:15:56.262781Z",
       "mimetype": "application/vnd.ms-excel",
-      "name": "finance\u6570\u636e\u96c6.csv",
-      "path": "2-1-3/finance\u6570\u636e\u96c6.csv",
+      "name": "finance数据集.csv",
+      "path": "2-1-3/finance数据集.csv",
       "size": 7127872,
       "type": "file",
       "writable": true

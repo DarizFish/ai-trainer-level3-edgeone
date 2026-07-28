@@ -1,6 +1,6 @@
 {
   "jupyter-config-data": {
-    "appName": "\u4eba\u5de5\u667a\u80fd\u8bad\u7ec3\u5e08\u4e09\u7ea7 Notebook \u5b9e\u9a8c\u5ba4",
+    "appName": "人工智能训练师三级 Notebook 实验室",
     "appUrl": "./lab",
     "appVersion": "0.6.4",
     "baseUrl": "./",
@@ -20,7 +20,7 @@
       },
       {
         "extension": "./extension",
-        "load": "static/remoteEntry.efa6faee14bc28d08f31.js",
+        "load": "static/remoteEntry.1387cebe2725a23c9a02.js",
         "name": "ai-trainer-jupyterlite"
       },
       {
@@ -50,9 +50,9 @@
         "extensions": [
           ".csv"
         ],
-        "fileFormat": "text",
+        "fileFormat": "base64",
         "mimeTypes": [
-          "text/csv"
+          "application/vnd.ms-excel"
         ],
         "name": "csv"
       },

@@ -535,7 +535,7 @@ const WARNING_FILTERS = [
   "warnings.filterwarnings('ignore', category=DeprecationWarning)"
 ];
 
-function kernelEnvironmentSource(packages: string[], assets: TaskAsset[], preloadImports: string[]): string {
+function kernelEnvironmentSource(packages: string[], assets: TaskAsset[], preloadImports: string[], fontAliases: FontAlias[]): string {
   const statements = [...WARNING_FILTERS];
   if (packages.length > 0) {
     // pyodide 自带的包（pandas、numpy、scikit-learn 等）在 import 时会自动加载，
@@ -557,6 +557,44 @@ function kernelEnvironmentSource(packages: string[], assets: TaskAsset[], preloa
     // 但 mountDrive 在内核创建那一刻就定死了：跨域隔离若未成立（例如页面被从 http
     // 打开，或用的是修复前的缓存版本），就没有 /drive，学员会在自己的代码里撞上
     // FileNotFoundError。这里按清单补齐，让题目文件本身仍然不含任何环境代码。
+  if (fontAliases.length > 0) {
+    // 官方答案里写死了考场 Windows 机器的字体路径（2.1.4 用了
+    // 'C:/Windows/Fonts/simhei.ttf'）。题目和答案是官方的，一个字都不能改，所以只能
+    // 让这个路径在浏览器里也能解析。
+    //
+    // 不能把字体写到那个路径上：POSIX 下它是相对路径，会落到 /drive/<题号>/C:/…，
+    // 而 DriveFS 支持建目录却不支持在其中建文件（实测 mkdir 成功、write_bytes 抛
+    // FileNotFoundError）。所以改为把字体放进内存文件系统，再把 FontProperties 的
+    // fname 按显式白名单改写过去——只改写清单里列出的那几个路径，其余一律原样传下去。
+    statements.push(
+      "import hashlib as _fh",
+      "from pathlib import Path as _FP",
+      "from pyodide.http import pyfetch as _fpyfetch",
+      `_fonts = ${JSON.stringify(fontAliases)}`,
+      "_font_map = {}",
+      "for _f in _fonts:",
+      "    _fp = _FP('/lab-fonts') / _fh.sha256(_f['path'].encode()).hexdigest()[:12]",
+      "    _fp.parent.mkdir(parents=True, exist_ok=True)",
+      "    if not (_fp.exists() and _fh.sha256(_fp.read_bytes()).hexdigest() == _f['sha256']):",
+      "        _fr = await _fpyfetch(_f['url'])",
+      "        if _fr.status >= 400:",
+      "            raise RuntimeError(f\"字体下载失败 HTTP {_fr.status}：{_f['url']}\")",
+      "        _fb = await _fr.bytes()",
+      "        if _fh.sha256(_fb).hexdigest() != _f['sha256']:",
+      "            raise RuntimeError(f\"字体校验失败：{_f['url']}\")",
+      "        _fp.write_bytes(_fb)",
+      "    _font_map[_f['path']] = str(_fp)",
+      "import matplotlib.font_manager as _fm",
+      "_orig_fp_init = _fm.FontProperties.__init__",
+      "def _aliased_fp_init(self, *_a, **_k):",
+      "    _name = _k.get('fname')",
+      "    if _name is not None and str(_name) in _font_map:",
+      "        _k['fname'] = _font_map[str(_name)]",
+      "    _orig_fp_init(self, *_a, **_k)",
+      "_fm.FontProperties.__init__ = _aliased_fp_init",
+      "del _fonts",
+    );
+  }
     statements.push(
       "import hashlib",
       "from pathlib import Path as _P",
@@ -581,9 +619,21 @@ function kernelEnvironmentSource(packages: string[], assets: TaskAsset[], preloa
 }
 
 type TaskAsset = { name: string; url: string; sha256: string };
+/** 题目源码里写死的平台相关字体路径 → 站点自带的等效字体。 */
+type FontAlias = { path: string; url: string; sha256: string };
 
-function taskMetadata(panel: NotebookPanel): { pip_packages?: unknown; assets?: unknown } {
-  return (panel.content.model?.getMetadata("ai_trainer") as { pip_packages?: unknown; assets?: unknown } | undefined) ?? {};
+function taskMetadata(panel: NotebookPanel): { pip_packages?: unknown; assets?: unknown; font_aliases?: unknown } {
+  return (panel.content.model?.getMetadata("ai_trainer") as { pip_packages?: unknown; assets?: unknown; font_aliases?: unknown } | undefined) ?? {};
+}
+
+function taskFontAliases(panel: NotebookPanel): FontAlias[] {
+  const aliases = taskMetadata(panel).font_aliases;
+  if (!Array.isArray(aliases)) return [];
+  return aliases.filter((alias): alias is FontAlias =>
+    Boolean(alias) && typeof alias === "object"
+      && typeof (alias as FontAlias).path === "string"
+      && typeof (alias as FontAlias).url === "string"
+      && typeof (alias as FontAlias).sha256 === "string");
 }
 
 function taskPipPackages(panel: NotebookPanel): string[] {
@@ -630,7 +680,7 @@ function taskPreloadImports(panel: NotebookPanel): string[] {
 async function applyKernelEnvironment(panel: NotebookPanel): Promise<void> {
   const kernel = panel.sessionContext.session?.kernel;
   if (!kernel) throw new Error("内核尚未就绪，无法准备题目环境");
-  const code = kernelEnvironmentSource(taskPipPackages(panel), taskAssets(panel), taskPreloadImports(panel));
+  const code = kernelEnvironmentSource(taskPipPackages(panel), taskAssets(panel), taskPreloadImports(panel), taskFontAliases(panel));
   let lastFailure = "未知错误";
   for (let attempt = 1; attempt <= 3; attempt += 1) {
     const reply = await kernel.requestExecute({

@@ -373,6 +373,25 @@ onnx_result
     return source.replace("__TASK_CODE__", code)
 
 
+# 官方答案里写死了考场 Windows 机器的字体路径（2.1.4 用了 'C:/Windows/Fonts/simhei.ttf'）。
+# 题目和答案不能改，所以把这些路径登记下来，由扩展在准备阶段映射到站点自带的中文字体。
+WINDOWS_FONT_PATTERN = re.compile(r"""['"]([A-Za-z]:[\/]{1,2}[^'"]*?\.(?:ttf|ttc|otf))['"]""", re.IGNORECASE)
+LAB_CJK_FONT_URL = "/labs/fonts/lab-cjk.ttf"
+
+
+def font_aliases_for(source: str) -> list[dict]:
+    paths = sorted({match.group(1) for match in WINDOWS_FONT_PATTERN.finditer(source)})
+    if not paths:
+        return []
+    font_file = PUBLIC / "labs" / "fonts" / "lab-cjk.ttf"
+    if not font_file.is_file():
+        raise RuntimeError(
+            f"题目引用了平台相关字体 {paths}，但 {font_file} 不存在；先运行 scripts/build-lab-cjk-font.py"
+        )
+    digest = hashlib.sha256(font_file.read_bytes()).hexdigest()
+    return [{"path": path, "url": LAB_CJK_FONT_URL, "sha256": digest} for path in paths]
+
+
 def notebook_for(task: dict, manifest_task: dict, version: str) -> dict:
     code = task["code"]
     template = task["notebook"]
@@ -437,6 +456,8 @@ def notebook_for(task: dict, manifest_task: dict, version: str) -> dict:
                     {"name": str(a["name"]), "url": str(a["url"]), "sha256": str(a["sha256"])}
                     for a in assets
                 ],
+                # 见 font_aliases_for：把官方答案里的 Windows 字体路径映射到站点自带字体。
+                "font_aliases": font_aliases_for(source),
             },
         },
         "nbformat": 4,
