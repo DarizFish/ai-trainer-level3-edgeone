@@ -1309,6 +1309,21 @@ button { color: inherit; }
   .theory-result-panel .hero-actions { width: 100%; display: grid; grid-template-columns: 1fr; }
 }
 
+/* 901px 往上三栏布局回归，内容列反而比手机竖屏更窄（操作栏只有 430–550px），四个按钮
+   挤不进桌面那套一行四列。primary 的 min-width:170px 大于它 150px 的轨道，justify-self:end
+   又把它往左推，直接压在「暂不作答」上——实测重叠 11px，920–960px 时按钮文案还会折成
+   三行、高到 108px。这一段沿用窄屏的两行布局。
+   落在这个区间的是大屏手机横屏（Pixel 915、iPhone Pro Max 932）和 1024×768 的笔记本。 */
+@media (min-width: 901px) and (max-width: 1080px) {
+  .theory-study-layout .practice-bottom-bar { grid-template-columns: 1fr 1fr; }
+  .theory-study-layout .practice-bottom-bar .button { min-width: 0; width: 100%; }
+  .theory-study-layout .practice-bottom-bar .skip-action { grid-column: 1; }
+  .theory-study-layout .practice-bottom-bar .primary-action { min-width: 0; grid-column: 1 / -1; justify-self: stretch; }
+  .theory-study-layout .practice-bottom-bar:has(.skip-action) .primary-action { grid-column: 2; }
+  /* 「选择答案后自动判分」九个字，默认字号在半栏宽里会把「分」挤到第二行。 */
+  .theory-study-layout .practice-bottom-bar .primary-action:disabled { font-size: 11px; }
+}
+
 /* Practical catalog navigation: sidebar on desktop, full-width panel on compact screens. */
 @media (max-width: 980px) {
   .practical-catalog { grid-template-columns: 1fr; }
