@@ -22,7 +22,7 @@
   ],
   "answerSource": "derived",
   "answerBasis": "official_template_completion",
-  "referenceAnswer": "官方 Word 模板填写示例（5 处空白）\n\n以下内容按模板中的空白顺序填写，取自官方参考答案中标黄的填空原文。评分口径为“回答内容与答案类似得 1 分，每题最多 5 分”，作答时无需标黄。\n\n1. 多传感器融合\n填写：使用摄像头、雷达、激光雷达等多模态传感器，确保数据的全面性和准确性\n\n2. 场景覆盖\n填写：在不同的天气条件、时间段、道路类型下采集数据，以增强模型的鲁棒性和泛化能力\n\n3. 数据质量控制\n填写：实施数据清洗流程，移除重复、低质量或不符合标准的样本，确保数据集的质量\n\n4. 数据标注方案｜第 3 处\n填写：培训标注团队\n\n5. 数据整合与存储\n填写：结构化的\n\n提交检查：\n填写 5 处空白后，逐项核对多传感器时间同步、场景多样性、标注规范、复查和版本追溯；不删除模板已有的数据加密要求。",
+  "referenceAnswer": "",
   "materials": [
     {
       "name": "4.2.4.docx",
@@ -93,5 +93,41 @@
     }
   ],
   "hasNotebook": false,
-  "notebook": null
+  "notebook": null,
+  "wordAnswer": {
+    "source": "official_reference_pdf_ocr",
+    "deliverables": [
+      {
+        "fileName": "4.2.4.docx",
+        "mode": "template_fills",
+        "fills": [
+          {
+            "order": 1,
+            "label": "多传感器融合",
+            "answer": "使用摄像头、雷达、激光雷达等多模态传感器，确保数据的全面性和准确性"
+          },
+          {
+            "order": 2,
+            "label": "场景覆盖",
+            "answer": "在不同的天气条件、时间段、道路类型下采集数据，以增强模型的鲁棒性和泛化能力"
+          },
+          {
+            "order": 3,
+            "label": "数据质量控制",
+            "answer": "实施数据清洗流程，移除重复、低质量或不符合标准的样本，确保数据集的质量"
+          },
+          {
+            "order": 4,
+            "label": "数据标注方案｜团队",
+            "answer": "培训标注团队"
+          },
+          {
+            "order": 5,
+            "label": "数据整合与存储",
+            "answer": "结构化的"
+          }
+        ]
+      }
+    ]
+  }
 }

@@ -1792,6 +1792,12 @@ button { color: inherit; }
 .business-sheet-review > header small { color: var(--ink-soft); font-size: 11px; text-align: right; }
 .business-sheet-review > p { margin: 16px 0 0; color: var(--ink); font-size: 14px; line-height: 1.85; white-space: pre-wrap; }
 .business-sheet-review .outcome-check { margin-top: 20px; }
+
+/* 官方参考答案的统一呈现：小节标题 + 条目。答题纸、模拟考复盘、题目详情页共用。 */
+.word-answer-blocks { display: flex; flex-direction: column; gap: 15px; margin-top: 16px; }
+.word-answer-block > b { display: block; margin-bottom: 6px; color: var(--ink); font-size: 14px; font-weight: 800; }
+.word-answer-block > ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+.word-answer-block > ul > li { color: var(--ink); font-size: 14px; line-height: 1.85; }
 .business-sheet-review-note { padding: 18px 52px 28px; border-top: 1px solid #c8d0d5; background: #fbf8ef; }
 .business-sheet-review-note .correct { margin: 9px 0 0; color: #397853; font-size: 13px; }
 

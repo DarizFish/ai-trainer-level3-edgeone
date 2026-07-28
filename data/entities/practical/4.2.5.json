@@ -22,7 +22,7 @@
   ],
   "answerSource": "derived",
   "answerBasis": "official_template_completion",
-  "referenceAnswer": "官方 Word 模板填写示例（5 处空白）\n\n以下内容按模板中的空白顺序填写，取自官方参考答案中标黄的填空原文。评分口径为“回答内容与答案类似得 1 分，每题最多 5 分”，作答时无需标黄。\n\n1. 图像标注工具\n填写：Labelbox、VGG Image Annotator（VIA）或 LabelImg\n\n2. 深度学习模型\n填写：基于卷积神经网络\n\n3. 跨学科团队协作\n填写：跨学科\n\n4. 数据安全与隐私保护\n填写：加密技术\n\n5. 用户体验与公众教育\n填写：AR/VR\n\n提交检查：\n将 5 项填入对应下划线，并保留三维模型、属性标签、模型迭代、权利合规和数字档案可信性内容；工具名称可用同类合规工具替换。",
+  "referenceAnswer": "",
   "materials": [
     {
       "name": "4.2.5.docx",
@@ -145,5 +145,41 @@
     }
   ],
   "hasNotebook": false,
-  "notebook": null
+  "notebook": null,
+  "wordAnswer": {
+    "source": "official_reference_pdf_ocr",
+    "deliverables": [
+      {
+        "fileName": "4.2.5.docx",
+        "mode": "template_fills",
+        "fills": [
+          {
+            "order": 1,
+            "label": "图像标注工具",
+            "answer": "Labelbox、VGG Image Annotator（VIA）或 LabelImg"
+          },
+          {
+            "order": 2,
+            "label": "深度学习模型",
+            "answer": "基于卷积神经网络"
+          },
+          {
+            "order": 3,
+            "label": "跨学科团队协作",
+            "answer": "跨学科"
+          },
+          {
+            "order": 4,
+            "label": "数据安全与隐私保护",
+            "answer": "加密技术"
+          },
+          {
+            "order": 5,
+            "label": "用户体验与公众教育",
+            "answer": "AR/VR"
+          }
+        ]
+      }
+    ]
+  }
 }

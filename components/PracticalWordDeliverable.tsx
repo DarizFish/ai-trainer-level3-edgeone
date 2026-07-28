@@ -2,12 +2,18 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type { PracticalTask } from "@/lib/content";
-import { getPracticalReferenceNarrative } from "@/lib/practical-reference";
+import { flattenDeliverable, getPracticalWordAnswer } from "@/lib/practical-word-answer";
 import { getPracticalWordDeliverable } from "@/lib/practical-word-deliverable";
 
 export function PracticalWordDeliverable({ task, userEmail }: { task: PracticalTask; userEmail: string | null }) {
   const deliverable = useMemo(() => getPracticalWordDeliverable(task), [task]);
-  const referenceNarrative = useMemo(() => getPracticalReferenceNarrative(task), [task]);
+  // 结构化读取，不再对 referenceAnswer 做字符串切分——措辞一改切分就错位，而错位
+  // 表现为「答案面板少了一段」，不报错。
+  const wordAnswer = useMemo(() => getPracticalWordAnswer(task), [task]);
+  const referenceBlocks = useMemo(
+    () => (wordAnswer?.deliverables ?? []).flatMap(item => flattenDeliverable(item)),
+    [wordAnswer],
+  );
   const [answer, setAnswer] = useState("");
   const [reviewing, setReviewing] = useState(false);
   const [restored, setRestored] = useState(false);
@@ -51,16 +57,19 @@ export function PracticalWordDeliverable({ task, userEmail }: { task: PracticalT
         <span className="sr-only">{deliverable.fileName} 作答草稿</span>
         <textarea value={answer} readOnly={!userEmail} onFocus={() => { if (!userEmail) requireSignIn(); }} onChange={(event) => changeAnswer(event.target.value)} placeholder={deliverable.placeholder} />
       </label>
-      {reviewing && referenceNarrative && <section className="business-sheet-review">
+      {reviewing && referenceBlocks.length > 0 && <section className="business-sheet-review">
         <header><span>学习复盘</span><small>完成作答后展示；非官方考场信息。</small></header>
-        <p>{referenceNarrative}</p>
+        {referenceBlocks.map(block => <div key={block.heading} className="word-answer-block">
+          <b>{block.heading}</b>
+          <ul>{block.lines.map((line, index) => <li key={index}>{line}</li>)}</ul>
+        </div>)}
       </section>}
     </section>
     <footer className="notebook-word-sheet-actions">
       <div>
         <b>{answer.trim() ? "答题卷已填写" : "答题卷待填写"}</b>
       </div>
-      {referenceNarrative && <button type="button" className={`button ${reviewing ? "button-quiet" : "button-primary"}`} onClick={() => setReviewing((value) => !value)}>{reviewing ? "返回作答" : "完成作答，进入复盘"}</button>}
+      {referenceBlocks.length > 0 && <button type="button" className={`button ${reviewing ? "button-quiet" : "button-primary"}`} onClick={() => setReviewing((value) => !value)}>{reviewing ? "返回作答" : "完成作答，进入复盘"}</button>}
     </footer>
   </section>;
 }

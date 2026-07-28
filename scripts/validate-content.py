@@ -21,7 +21,6 @@ from practical_spreadsheet_answers import (
 )
 from practical_template_answers import (
     DEFAULT_SNAPSHOT_PATH as DEFAULT_PRACTICAL_TEMPLATE_PATH,
-    format_reference_answer as format_practical_template_answer,
     load_snapshot as load_practical_template_snapshot,
     template_blank_slots,
 )
@@ -50,7 +49,7 @@ from content_entities import canonical_bytes, load_bank  # noqa: E402
 
 
 EXPECTED_OFFICIAL_ANSWER_HASH = "2e4bef5183e8fbf66f152006d70bb5843a60f5b519d321f3a54d06eab61e829f"
-EXPECTED_OFFICIAL_PRACTICAL_ANSWER_HASH = "51bae122558c5eab29dade3140d7423de02ced62faa603fcfd81a10ce2533a20"
+EXPECTED_OFFICIAL_PRACTICAL_ANSWER_HASH = "f1cb0e6fcabed8d6dab9eea5e760ab1782319db920ec6237b7bae07a088427aa"
 EXPECTED_REFERENCE_SOURCE_HASH = "4c0fa4ac6accc6ab335a54f3fe5a04c56485aeeae4dfd46761de960abd6512c8"
 
 
@@ -64,7 +63,7 @@ def file_sha256(path: Path) -> str:
 data = load_bank()
 theory = data["theory"]
 practical = data["practical"]
-assert data["version"] == "2026-07-26-v8"
+assert data["version"] == "2026-07-28-v9"
 assert len(theory) == 900
 assert Counter(q["type"] for q in theory) == {"judge": 300, "single": 300, "multi": 300}
 assert Counter(q["answerSource"] for q in theory) == {"official": 190, "derived": 710}
@@ -126,7 +125,7 @@ assert data["theoryReference"] == {
     "editorialReviewedAnswers": 23,
     "remainingHeuristicAnswers": 0,
     "reviewBatchId": "theory-900-review-2026-07-26-v1",
-    "reviewVersion": "2026-07-26-v8",
+    "reviewVersion": "2026-07-28-v9",
     "reviewedQuestions": 900,
     "independentExplanations": 900,
     "resolvedConflicts": 5,
@@ -155,7 +154,7 @@ review_audit = json.loads(review_audit_path.read_text(encoding="utf-8"))
 theory_review = data["theoryReview"]
 assert theory_review == {
     "batchId": "theory-900-review-2026-07-26-v1",
-    "version": "2026-07-26-v8",
+    "version": "2026-07-28-v9",
     "publishedAt": review_audit["generatedAt"],
     "reviewedQuestions": 900,
     "independentExplanations": 900,
@@ -219,12 +218,17 @@ assert Counter(t["answerBasis"] for t in practical) == {
     "official_task_rubric_example": 5,
 }
 official_practical_answers = [t for t in practical if t["answerSource"] == "official"]
-official_practical_payload = [[task["code"], task["referenceAnswer"]] for task in official_practical_answers]
+# 指纹要覆盖官方答案的全部落点。Word 正文自 2026-07-28-v9 起搬进结构化的 wordAnswer，
+# 只按 referenceAnswer 取指纹就等于放开了对正文的防篡改。
+official_practical_payload = [
+    [task["code"], task["referenceAnswer"], task.get("wordAnswer")] for task in official_practical_answers
+]
 assert hashlib.sha256(json.dumps(official_practical_payload, ensure_ascii=False, separators=(",", ":")).encode("utf-8")).hexdigest() == EXPECTED_OFFICIAL_PRACTICAL_ANSWER_HASH
 for task in official_practical_answers:
     assert task["answerBasis"] == "manual_official", task["code"]
     answer = task["referenceAnswer"]
-    assert answer.strip(), task["code"]
+    # 纯文档题（3.1.1/4.2.1）整段都是 Word 正文，referenceAnswer 因此为空。
+    assert answer.strip() or task.get("wordAnswer", {}).get("deliverables"), task["code"]
     assert not re.search(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]", answer), task["code"]
     assert "人工智能训练师（三级）操作技能考核" not in answer, task["code"]
     assert "试题单" not in answer and "试题代码：" not in answer and "试题名称：" not in answer, task["code"]
@@ -246,8 +250,10 @@ for code, entry in spreadsheet_entries.items():
     assert task["answerSource"] == "derived"
     assert task["answerBasis"] == "official_dataset_analysis"
     assert practical_task_fingerprint(task) == entry["taskSha256"], code
-    assert task["referenceAnswer"] == entry["referenceAnswer"].strip(), code
-    assert not task["referenceAnswer"].startswith("建议答案应完整覆盖以下评分点"), code
+    # 作答示例自 2026-07-28-v9 起改存结构化的 wordAnswer（scripts/practical_word_answers.py
+    # 按官方参考快照写入），referenceAnswer 因此清空。本快照继续为数据分析结论提供依据。
+    assert task["referenceAnswer"] == "", code
+    assert task["wordAnswer"]["deliverables"], code
     spreadsheet = next(material for material in task["materials"] if material["kind"] == "spreadsheet")
     assert spreadsheet["name"] == entry["material"]["name"], code
     assert spreadsheet["sha256"] == entry["material"]["sha256"], code
@@ -271,8 +277,10 @@ for code, entry in template_entries.items():
     assert task["answerSource"] == "derived"
     assert task["answerBasis"] == "official_template_completion"
     assert practical_task_fingerprint(task) == entry["taskSha256"], code
-    assert task["referenceAnswer"] == format_practical_template_answer(entry), code
-    assert not task["referenceAnswer"].startswith("建议答案应完整覆盖以下评分点"), code
+    assert task["referenceAnswer"] == "", code
+    fills = task["wordAnswer"]["deliverables"][0]["fills"]
+    assert [fill["order"] for fill in fills] == [1, 2, 3, 4, 5], code
+    assert all(fill["answer"].strip() and fill["label"].strip() for fill in fills), code
     template = next(material for material in task["materials"] if material["kind"] == "document")
     assert template["name"] == entry["template"]["name"], code
     assert template["sha256"] == entry["template"]["sha256"], code
@@ -294,11 +302,13 @@ for code, entry in rubric_entries.items():
     assert task["answerSource"] == "derived"
     assert task["answerBasis"] == "official_task_rubric_example"
     assert practical_task_fingerprint(task) == entry["taskSha256"], code
-    assert task["referenceAnswer"] == entry["referenceAnswer"].strip(), code
     assert set(entry["rubricCoverage"]) == {item["id"] for item in task["rubric"]}, code
-    assert all(item["id"] in task["referenceAnswer"] for item in task["rubric"]), code
     assert not task["materials"], code
-    assert not task["referenceAnswer"].startswith("建议答案应完整覆盖以下评分点"), code
+    assert task["referenceAnswer"] == "", code
+    # 1.2 是一份 .docx 答两问，每个小节都要标明归属，否则答题卷会漏掉一整问。
+    sections = task["wordAnswer"]["deliverables"][0]["sections"]
+    assert {section["part"] for section in sections} == {1, 2}, code
+    assert all(section["heading"].strip() and section["items"] for section in sections), code
 rubric_items = [item for task in practical for item in task["rubric"]]
 assert len(rubric_items) == 297
 assert sum(item["points"] > 1 for item in rubric_items) == 177

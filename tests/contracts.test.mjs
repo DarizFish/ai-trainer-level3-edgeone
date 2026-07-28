@@ -483,6 +483,12 @@ test("Word template practical tasks use five contextual answer fields instead of
     assert.equal(new Set(exercise.fields.map((field) => field.blockIndex)).size, 5, task.code);
     assert.ok(exercise.fields.every((field) => field.label && field.referenceAnswer), task.code);
     assert.deepEqual(task.rubric, [{ id: "M1", points: 5, description: task.rubric[0].description, mode: "self" }]);
+    // 参考填写来自实体层的结构化 fills，不再靠扫描 referenceAnswer 里的「填写：」行：
+    // 排版一变就什么都扫不到，而扫不到会让整道题的作答界面消失。
+    const fills = task.wordAnswer.deliverables[0].fills;
+    assert.deepEqual(fills.map((fill) => fill.order), [1, 2, 3, 4, 5], task.code);
+    assert.deepEqual(exercise.fields.map((field) => field.referenceAnswer), fills.map((fill) => fill.answer), task.code);
+    assert.deepEqual(exercise.fields.map((field) => field.label), fills.map((fill) => fill.label), task.code);
   }
   const officialRetail = helper.createPracticalWordExercise(tasks.find((task) => task.code === "4.2.1"));
   assert.equal(officialRetail.fields[0].referenceAnswer, "会员基本信息、消费记录和积分兑换");
@@ -518,9 +524,10 @@ test("Word template practical tasks use five contextual answer fields instead of
 });
 
 test("two-deliverable Word tasks share the 1.2 paper answer sheet and completion checks", async () => {
-  const [content, helper, component, workspace, styles] = await Promise.all([
+  const [content, helper, answers, component, workspace, styles] = await Promise.all([
     loadContentBank(),
     import(new URL("../lib/practical-response-exercise.ts", import.meta.url)),
+    import(new URL("../lib/practical-word-answer.ts", import.meta.url)),
     readFile(new URL("../components/BusinessAnalysisAnswerSheet.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/PracticalWorkspace.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
@@ -532,7 +539,14 @@ test("two-deliverable Word tasks share the 1.2 paper answer sheet and completion
     assert.ok(exercise, task.code);
     assert.equal(exercise.sections.length, 2, task.code);
     assert.deepEqual(exercise.sections.map((section) => section.id), ["deliverable-1", "deliverable-2"]);
-    assert.ok(exercise.sections.every((section) => section.prompt && section.referenceAnswer && section.outputLabel), task.code);
+    assert.ok(exercise.sections.every((section) => section.prompt && section.outputLabel), task.code);
+    // 两问的参考答案来自结构化交付物，不再在 referenceAnswer 里按标记现切。
+    for (const section of exercise.sections) {
+      assert.ok(section.reference.length, `${task.code} 第 ${section.number} 问没有参考答案`);
+      assert.ok(section.reference.every((block) => block.heading.trim() && block.lines.length && block.lines.every((line) => line.trim())), `${task.code} 第 ${section.number} 问的参考答案有空块`);
+    }
+    // 官方答案的每一块都必须落到某一问里——切分错位最典型的后果就是「少了一段」。
+    assert.equal(exercise.sections.flatMap((section) => section.reference).length, answers.practicalWordAnswerBlocks(task).length, task.code);
     assert.deepEqual(exercise.sections.flatMap((section) => section.rubric.map((item) => item.id)), task.rubric.map((item) => item.id), task.code);
     assert.equal(helper.createPracticalResponseExercise({ ...task, hasNotebook: true }), null);
   }
@@ -542,9 +556,10 @@ test("two-deliverable Word tasks share the 1.2 paper answer sheet and completion
   assert.match(component, /PracticalOutcomeCheck/);
   assert.match(component, /已完成本题全部复盘检查/);
   assert.match(component, /修改作答会撤销对应的旧自评分/);
-  assert.match(component, /ai-trainer-business-answer-sheet-v1/);
-  assert.match(component, /ai-trainer-practical-response-v3/);
-  assert.match(component, /legacyStorageKey/);
+  // 草稿键不再带参考答案指纹，旧键迁移也随之去掉：那些键的后缀里嵌着
+  // referenceAnswer.length，答案结构化后必然对不上，而权威副本本来就在账号里。
+  assert.doesNotMatch(component, /storageVersion|ai-trainer-business-answer-sheet-v1|ai-trainer-practical-response-v3/);
+  assert.match(component, /ai-trainer-business-answer-sheet-v2/);
   assert.match(component, /business-sheet-sidebar/);
   assert.match(component, /PracticalBrief task=\{task\} open=\{false\}/);
   // 原先这里连 fetch( 一起禁掉，等于把「答题纸只存本机」固化成契约；但界面承诺草稿会
@@ -563,7 +578,7 @@ test("Notebook Word answer sheets appear only where the official task requires a
   const [content, helper, references, component, styles] = await Promise.all([
     loadContentBank(),
     import(new URL("../lib/practical-word-deliverable.ts", import.meta.url)),
-    import(new URL("../lib/practical-reference.ts", import.meta.url)),
+    import(new URL("../lib/practical-word-answer.ts", import.meta.url)),
     readFile(new URL("../components/PracticalWordDeliverable.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
   ]);
@@ -578,7 +593,7 @@ test("Notebook Word answer sheets appear only where the official task requires a
     assert.ok(deliverable.requirement.includes(deliverable.fileName));
   }
   for (const task of notebookTasks.filter((task) => task.group === "1.1")) assert.equal(helper.getPracticalWordDeliverable(task), null, task.code);
-  const reportReference = references.getPracticalReferenceNarrative(content.practical.find((task) => task.code === "2.2.1"));
+  const reportReference = JSON.stringify(references.practicalWordAnswerBlocks(content.practical.find((task) => task.code === "2.2.1")));
   assert.match(reportReference, /模型性能/);
   assert.doesNotMatch(reportReference, /import pandas/);
   assert.doesNotMatch(component, /独立文字交付物，不写入 Notebook/);
@@ -586,7 +601,8 @@ test("Notebook Word answer sheets appear only where the official task requires a
   assert.match(component, /business-sheet-paper notebook-word-answer-sheet/);
   assert.match(component, /business-sheet-section notebook-word-sheet-section/);
   assert.match(component, /完成作答，进入复盘/);
-  assert.match(component, /getPracticalReferenceNarrative/);
+  assert.match(component, /practicalWordAnswerBlocks|getPracticalWordAnswer/);
+  assert.doesNotMatch(component, /referenceAnswer\.(indexOf|slice|match|split)/);
   assert.doesNotMatch(component, /type="file"|截图上传|HTML 上传/);
   assert.match(styles, /\.notebook-word-answer-sheet/);
 });
@@ -698,7 +714,7 @@ test("published theory review is complete, independently cross-reviewed, and aud
     readFile(new URL("../scripts/validate-content.py", import.meta.url), "utf8"),
   ]);
   const reviewManifest = JSON.parse(reviewManifestText);
-  assert.equal(content.version, "2026-07-26-v8");
+  assert.equal(content.version, "2026-07-28-v9");
   assert.deepEqual(content.theoryReview.basisCounts, {
     independent_review: 139,
     official_word: 190,
@@ -752,7 +768,6 @@ test("user-facing study surfaces omit answer provenance while audit metadata rem
     "../components/TheoryMock.tsx",
     "../components/PracticalCatalog.tsx",
     "../components/PracticalWorkspace.tsx",
-    "../components/PracticalResponseExercise.tsx",
     "../components/PracticalExamTaskWorkspace.tsx",
     "../components/PracticalWordDeliverable.tsx",
     "../components/WordTemplateExercise.tsx",
@@ -789,10 +804,14 @@ test("official Word templates expose hash-bound fill examples for every blank", 
     const task = byCode.get(entry.code);
     assert.equal(task.answerSource, "derived", entry.code);
     assert.equal(task.answerBasis, "official_template_completion", entry.code);
-    assert.match(task.referenceAnswer, /官方 Word 模板填写示例（5 处空白）/, entry.code);
-    assert.doesNotMatch(task.referenceAnswer, /建议答案应完整覆盖以下评分点/, entry.code);
     assert.equal(entry.fills.length, entry.template.blankCount, entry.code);
-    for (const fill of entry.fills) assert.match(task.referenceAnswer, new RegExp(fill.answer.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")), entry.code);
+    // 填写示例已从 referenceAnswer 搬进结构化的 wordAnswer.fills（2026-07-28 官方参考
+    // 快照），referenceAnswer 因此清空；这里守的是「每个空白都有示例、且与模板空位一一
+    // 对应」，而不是某一版把它们拼成什么样的字符串。
+    assert.equal(task.referenceAnswer, "", entry.code);
+    const fills = task.wordAnswer.deliverables[0].fills;
+    assert.equal(fills.length, entry.template.blankCount, entry.code);
+    assert.ok(fills.every((fill) => fill.answer.trim() && fill.label.trim()), entry.code);
     const material = task.materials.find((item) => item.name === entry.template.name);
     assert.equal(material.kind, "document", entry.code);
     assert.equal(material.sha256, entry.template.sha256, entry.code);
@@ -825,14 +844,15 @@ test("material-free business optimization tasks expose complete rubric-bound exa
     assert.equal(task.answerSource, "derived", entry.code);
     assert.equal(task.answerBasis, "official_task_rubric_example", entry.code);
     assert.equal(task.materials.length, 0, entry.code);
-    assert.ok(task.referenceAnswer.length > 600, entry.code);
-    assert.doesNotMatch(task.referenceAnswer, /建议答案应完整覆盖以下评分点/, entry.code);
     assert.deepEqual(new Set(Object.keys(entry.rubricCoverage)), new Set(task.rubric.map((item) => item.id)), entry.code);
-    for (const item of task.rubric) assert.match(task.referenceAnswer, new RegExp(item.id), entry.code);
+    // 这批 1.2 的作答示例已由 2026-07-28 官方参考快照取代，改存结构化的 wordAnswer，
+    // referenceAnswer 因此清空。评分点覆盖仍由上面的 rubricCoverage 守着；示例本身
+    // 守的是「两问都有内容、每条都不为空」。
+    assert.equal(task.referenceAnswer, "", entry.code);
+    const sections = task.wordAnswer.deliverables[0].sections;
+    assert.deepEqual([...new Set(sections.map((section) => section.part))].sort(), [1, 2], entry.code);
+    assert.ok(sections.every((section) => section.heading.trim() && section.items.every((item) => item.trim())), entry.code);
   }
-  assert.match(byCode.get("1.2.2").referenceAnswer, /不替代医疗诊断/);
-  assert.match(byCode.get("1.2.4").referenceAnswer, /不自动发布/);
-  assert.match(byCode.get("1.2.5").referenceAnswer, /用户授权/);
   assert.match(importer, /apply_rubric_answers/);
   assert.match(validator, /rubricCoverage/);
 });
@@ -847,7 +867,7 @@ test("all Python practical tasks expose audited completed-notebook reference cod
     readFile(new URL("../jupyterlite-extension/src/index.ts", import.meta.url), "utf8"),
   ]);
   const tasks = content.practical.filter(task => task.hasNotebook);
-  assert.equal(content.version, "2026-07-26-v8");
+  assert.equal(content.version, "2026-07-28-v9");
   assert.equal(tasks.length, 20);
   assert.equal(snapshot.solutions.length, 20);
   assert.deepEqual(audit.summary, {
@@ -912,31 +932,15 @@ test("每题素材有清单兜底，跨域隔离失效时也能读到数据文�
 });
 
 test("Word deliverable answers never expose Python code to learners", async () => {
-  const [content, narrative] = await Promise.all([
+  const [content, answers] = await Promise.all([
     loadContentBank(),
-    readFile(new URL("../lib/practical-reference.ts", import.meta.url), "utf8"),
+    import(new URL("../lib/practical-word-answer.ts", import.meta.url)),
   ]);
   // 学员在 Word 题点「查看答案」时，只该看到 Word 作答内容：不含 Python 代码，也不
-  // 该先糊一段评分点列表（那里绝大多数是代码得分点，由 Notebook 判分）。这里复刻
-  // getPracticalReferenceNarrative 的切分规则，直接校验真实数据的输出。
-  assert.match(narrative, /WORD_ANSWER_HEADING/);
-  assert.match(narrative, /\.docx/);
-  const toNarrative = (task) => {
-    const answer = task.referenceAnswer.trim();
-    if (!task.notebook?.solutionCells?.length) return answer;
-    const wordAnswer = answer.indexOf("Word 交付物作答示例");
-    if (wordAnswer >= 0) {
-      const tail = answer.slice(wordAnswer);
-      const codeTail = tail.indexOf("\nPython 参考代码：");
-      return (codeTail >= 0 ? tail.slice(0, codeTail) : tail).trim();
-    }
-    const deliverable = answer.match(/(?:^|\n)\s*\d+(?:\.\d+)*\.docx\s*(?:\n|$)/);
-    if (deliverable?.index !== undefined) return answer.slice(deliverable.index + deliverable[0].length).trim();
-    const report = answer.match(/(?:^|\n)（2）\s*/);
-    if (report?.index !== undefined) return answer.slice(report.index + report[0].length).trim();
-    const code = answer.indexOf("\nPython 参考代码：");
-    return code >= 0 ? answer.slice(0, code).trim() : answer;
-  };
+  // 该先糊一段评分点列表（那里绝大多数是代码得分点，由 Notebook 判分）。Word 答案现在
+  // 是独立字段而不是从 referenceAnswer 里切出来的一段，所以这条从「切得对不对」变成
+  // 「这个字段里本来就不该有代码」——同时守住反向的一条：Word 正文不能还留在
+  // referenceAnswer 里两头都有，否则页面上同一份答案会出现两遍。
   const codeMarkers = /(?:^|\n)\s*(?:import |from \w+ import |def |print\()/;
   const wordTasks = content.practical.filter(
     task => task.notebook?.solutionCells?.length
@@ -944,12 +948,21 @@ test("Word deliverable answers never expose Python code to learners", async () =
   );
   assert.equal(wordTasks.length, 15);
   for (const task of wordTasks) {
-    const text = toNarrative(task);
-    assert.ok(text.trim(), `${task.code} 的 Word 参考答案为空`);
+    const blocks = answers.practicalWordAnswerBlocks(task);
+    assert.ok(blocks.length, `${task.code} 的 Word 参考答案为空`);
+    const text = blocks.map((block) => [block.heading, ...block.lines].join("\n")).join("\n");
     assert.doesNotMatch(text, codeMarkers, `${task.code} 的 Word 参考答案仍含 Python 代码`);
     assert.doesNotMatch(text, /建议答案应完整覆盖以下评分点/, `${task.code} 的 Word 参考答案混入了评分点列表`);
     assert.doesNotMatch(text, /Python 参考代码：/, `${task.code} 的 Word 参考答案带上了代码说明尾巴`);
+    for (const line of text.split("\n")) {
+      if (line.trim().length < 12) continue;
+      assert.ok(!task.referenceAnswer.includes(line.trim()), `${task.code} 的 Word 正文同时留在 referenceAnswer 里`);
+    }
   }
+  // 纯文档题（1.2/3.1/4.x）整段都是 Word 答案，剥完应当为空。
+  const documentTasks = content.practical.filter((task) => !task.hasNotebook && task.wordAnswer);
+  assert.equal(documentTasks.length, 20);
+  for (const task of documentTasks) assert.equal(task.referenceAnswer, "", task.code);
 });
 
 test("official practical answers stop at their Word answer boundary", async () => {
@@ -960,7 +973,11 @@ test("official practical answers stop at their Word answer boundary", async () =
   const official = content.practical.filter(task => task.answerSource === "official");
   assert.equal(official.length, 6);
   for (const task of official) {
-    assert.ok(task.referenceAnswer.trim(), task.code);
+    // 官方答案现在分两处落地：Notebook 题的代码留在 referenceAnswer，Word 正文在
+    // wordAnswer。纯文档题（3.1.1/4.2.1）整段都是 Word 正文，referenceAnswer 因此为空
+    // ——这里守的是「两处合起来不为空」，而不是某一处必须有内容。
+    assert.ok(task.referenceAnswer.trim() || task.wordAnswer?.deliverables?.length, task.code);
+    assert.doesNotMatch(JSON.stringify(task.wordAnswer ?? null), /人工智能训练师（三级）操作技能考核|试题单|试题代码：|试题名称：/, task.code);
     assert.doesNotMatch(task.referenceAnswer, /[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/, task.code);
     assert.doesNotMatch(task.referenceAnswer, /人工智能训练师（三级）操作技能考核|试题单|试题代码：|试题名称：/, task.code);
   }

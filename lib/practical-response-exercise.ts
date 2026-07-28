@@ -1,4 +1,5 @@
 import type { PracticalTask, RubricItem } from "./content.ts";
+import { flattenDeliverable, getPracticalWordAnswer, type WordAnswerBlock } from "./practical-word-answer.ts";
 
 export type PracticalResponseSection = {
   id: "deliverable-1" | "deliverable-2";
@@ -6,20 +7,13 @@ export type PracticalResponseSection = {
   title: string;
   outputLabel: string;
   prompt: string;
-  referenceAnswer: string;
+  reference: WordAnswerBlock[];
   rubric: RubricItem[];
 };
 
 export type PracticalResponseExercise = {
   sections: [PracticalResponseSection, PracticalResponseSection];
-  storageVersion: string;
 };
-
-function splitAt(source: string, marker: string) {
-  const index = source.indexOf(marker);
-  if (index <= 0) return null;
-  return [source.slice(0, index).trim(), source.slice(index).trim()] as const;
-}
 
 function splitPrompts(task: PracticalTask) {
   const first = task.description.indexOf("（1）");
@@ -28,15 +22,26 @@ function splitPrompts(task: PracticalTask) {
   return [task.description.slice(first, second).trim(), task.description.slice(second).trim()] as const;
 }
 
-function splitReference(task: PracticalTask) {
-  const markers = task.group === "1.2"
-    ? [`\n二、${task.code}-2`]
-    : ["\n（2）", `\n二、${task.code}-2.docx`, `\n二、${task.code}-2`];
-  for (const marker of markers) {
-    const split = splitAt(task.referenceAnswer, marker);
-    if (split) return split;
+/**
+ * 两问的参考答案。此前是在 referenceAnswer 里找 `\n二、<题号>-2`、`\n（2）` 之类的
+ * 标记现切——官方口径换个措辞切分就错位，而错位表现为「第二问的参考答案不见了」，
+ * 不报错。现在直接读实体层的结构化答案：
+ *
+ *   3.1 天然是两份 .docx，一份一问；
+ *   1.2 是一份 .docx 答两问，归属写在每个小节的 part 上，构建期已判定并校验。
+ */
+function structuredReference(task: PracticalTask) {
+  const answer = getPracticalWordAnswer(task);
+  if (!answer) return null;
+
+  if (answer.deliverables.length >= 2) {
+    return [flattenDeliverable(answer.deliverables[0]), flattenDeliverable(answer.deliverables[1])] as const;
   }
-  return null;
+  const blocks = flattenDeliverable(answer.deliverables[0]);
+  const first = blocks.filter((block) => block.part === 1);
+  const second = blocks.filter((block) => block.part === 2);
+  if (!first.length || !second.length) return null;
+  return [first, second] as const;
 }
 
 function splitRubric(task: PracticalTask) {
@@ -59,10 +64,10 @@ function outputLabel(task: PracticalTask, prompt: string, number: 1 | 2) {
 export function createPracticalResponseExercise(task: PracticalTask): PracticalResponseExercise | null {
   if (task.hasNotebook || !["1.2", "3.1"].includes(task.group)) return null;
   const prompts = splitPrompts(task);
-  const references = splitReference(task);
+  const references = structuredReference(task);
   const rubric = splitRubric(task);
   if (!prompts || !references || !rubric) return null;
-  if ([...prompts, ...references].some((value) => !value.trim())) return null;
+  if (prompts.some((value) => !value.trim())) return null;
 
   const titles = task.group === "3.1"
     ? ["数据分析报告", "优化方向与解决方案"]
@@ -75,13 +80,10 @@ export function createPracticalResponseExercise(task: PracticalTask): PracticalR
       title: titles[index],
       outputLabel: outputLabel(task, prompts[index], number),
       prompt: prompts[index],
-      referenceAnswer: references[index],
+      reference: references[index],
       rubric: [...rubric[index]],
     };
   }) as [PracticalResponseSection, PracticalResponseSection];
 
-  return {
-    sections,
-    storageVersion: `${task.answerBasis}-${task.referenceAnswer.length}-${task.rubric.map((item) => `${item.id}:${item.points}`).join("-")}`,
-  };
+  return { sections };
 }

@@ -70,7 +70,7 @@
   ],
   "answerSource": "official",
   "answerBasis": "manual_official",
-  "referenceAnswer": "源代码（3.2.1.ipynb）：\nimport onnxruntime as ort\nimport numpy as np\nimport scipy.special\nfrom PIL import Image\n\n# 预处理图像\ndef preprocess_image(image, resize_size=256, crop_size=224, mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]):\n  image = image.resize((resize_size, resize_size), Image.BILINEAR)\n  w, h = image.size\n  left = (w - crop_size) / 2\n  top = (h - crop_size) / 2\n  image = image.crop((left, top, left + crop_size, top + crop_size))\n  image = np.array(image).astype(np.float32)\n  image = image / 255.0\n  image = (image - mean) / std\n  image = np.transpose(image, (2, 0, 1))\n  image = image.reshape((1,) + image.shape)\n  return image\n\n# 模型加载 2分\nsession = ort.InferenceSession('resnet.onnx')\n\n# 加载类别标签\nlabels_path = 'labels.txt'\nwith open(labels_path) as f:\n  labels = [line.strip() for line in f.readlines()]\n\n# 获取模型输入和输出的名称\ninput_name = session.get_inputs()[0].name\noutput_name = session.get_outputs()[0].name\n\n# 加载图片 2分\nimage = Image.open('img_test.jpg').convert('RGB')\n\n# 预处理图片 2分\nprocessed_image = preprocess_image(image)\n\n# 确保输入数据是 float32 类型\nprocessed_image = processed_image.astype(np.float32)\n\n# 进行图片识别 2分\noutput = session.run([output_name], {input_name: processed_image})[0]\n\n# 应用 softmax 函数获取概率 2分\nprobabilities = scipy.special.softmax(output, axis=-1)\n\n# 获取最高的5个概率和对应的类别索引 2分\ntop5_idx = np.argsort(probabilities[0])[-5:][::-1]\ntop5_prob = probabilities[0][top5_idx]\n\n# 打印结果\nprint(\"Top 5 predicted classes:\")\nfor i in range(5):\n  print(f\"{i+1}: {labels[top5_idx[i]]} - Probability: {top5_prob[i]}\")\n\n3.2.1.docx\n人机交互最优方式为：\n用户界面设计：提供一个简洁直观的用户界面，方便用户上传图片和查看识别结果。\n模型加载：系统启动时预加载模型和标签，减少用户等待时间。\n图像上传与预处理：允许用户上传图片，并自动进行必要的预处理。\n图像识别：后台使用“resnet.onnx”模型处理预处理后的图片。\n结果展示：清晰展示识别结果，包括最可能的类别和概率。\n交互反馈：提供用户反馈选项，以改进模型性能。\n帮助与支持：内置帮助文档和客服支持，提升用户体验。\n性能优化：优化系统响应速度和模型处理能力。\n安全性考虑：确保用户数据安全和隐私保护。\n多语言支持：界面支持多语言，满足全球用户需求。\n可访问性：确保UI无障碍，方便所有用户操作。",
+  "referenceAnswer": "源代码（3.2.1.ipynb）：\nimport onnxruntime as ort\nimport numpy as np\nimport scipy.special\nfrom PIL import Image\n\n# 预处理图像\ndef preprocess_image(image, resize_size=256, crop_size=224, mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]):\n  image = image.resize((resize_size, resize_size), Image.BILINEAR)\n  w, h = image.size\n  left = (w - crop_size) / 2\n  top = (h - crop_size) / 2\n  image = image.crop((left, top, left + crop_size, top + crop_size))\n  image = np.array(image).astype(np.float32)\n  image = image / 255.0\n  image = (image - mean) / std\n  image = np.transpose(image, (2, 0, 1))\n  image = image.reshape((1,) + image.shape)\n  return image\n\n# 模型加载 2分\nsession = ort.InferenceSession('resnet.onnx')\n\n# 加载类别标签\nlabels_path = 'labels.txt'\nwith open(labels_path) as f:\n  labels = [line.strip() for line in f.readlines()]\n\n# 获取模型输入和输出的名称\ninput_name = session.get_inputs()[0].name\noutput_name = session.get_outputs()[0].name\n\n# 加载图片 2分\nimage = Image.open('img_test.jpg').convert('RGB')\n\n# 预处理图片 2分\nprocessed_image = preprocess_image(image)\n\n# 确保输入数据是 float32 类型\nprocessed_image = processed_image.astype(np.float32)\n\n# 进行图片识别 2分\noutput = session.run([output_name], {input_name: processed_image})[0]\n\n# 应用 softmax 函数获取概率 2分\nprobabilities = scipy.special.softmax(output, axis=-1)\n\n# 获取最高的5个概率和对应的类别索引 2分\ntop5_idx = np.argsort(probabilities[0])[-5:][::-1]\ntop5_prob = probabilities[0][top5_idx]\n\n# 打印结果\nprint(\"Top 5 predicted classes:\")\nfor i in range(5):\n  print(f\"{i+1}: {labels[top5_idx[i]]} - Probability: {top5_prob[i]}\")",
   "materials": [
     {
       "name": "3.2.1.ipynb",
@@ -131,5 +131,24 @@
     ],
     "solutionSource": "completed_reference_notebook",
     "solutionSha256": "02c02f87629d22ee3fecffcfd813e47dda66c3854cd443e67c60cb16a838ea1e"
+  },
+  "wordAnswer": {
+    "source": "official_handbook",
+    "deliverables": [
+      {
+        "fileName": "3.2.1.docx",
+        "mode": "interaction_flow",
+        "items": [
+          "提供简洁直观的界面，支持点击或拖拽上传图片，并显示文件格式、大小和示例要求。",
+          "系统启动时预加载 resnet.onnx 模型和 labels.txt 标签，上传后自动完成尺寸调整、裁剪和归一化。",
+          "提交后显示“识别中”进度，后台完成模型推理，避免界面无响应。",
+          "按概率从高到低清晰展示 Top 5 类别及概率，并突出显示最高概率结果。",
+          "对图片格式错误、模型加载失败或置信度过低给出明确原因和重新操作建议。",
+          "允许用户确认或纠正识别结果，将经审核的反馈用于模型迭代。",
+          "上传前说明数据用途、保存期限和隐私策略，提供识别后删除原图的选项。",
+          "提供帮助、多语言和无障碍支持，保证不同用户都能完成操作。"
+        ]
+      }
+    ]
   }
 }

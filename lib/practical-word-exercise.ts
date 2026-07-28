@@ -1,4 +1,5 @@
 import type { PracticalMaterial, PracticalTask } from "./content.ts";
+import { getPracticalWordAnswer, type WordAnswerFill } from "./practical-word-answer.ts";
 
 const UNDERLINE_BLANK = /_{5,}/;
 
@@ -25,24 +26,18 @@ function previousHeading(blocks: NonNullable<PracticalMaterial["preview"]>, bloc
   return "官方模板";
 }
 
-function referenceEntries(task: PracticalTask) {
-  const lines = task.referenceAnswer.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
-  const entries: Array<{ label: string; answer: string }> = [];
-  for (const [index, line] of lines.entries()) {
-    if (!line.startsWith("填写：")) continue;
-    entries.push({
-      label: (lines[index - 1] ?? "").replace(/^\d+\.\s*/, "").replace(/｜学习目标$/, ""),
-      answer: line.slice("填写：".length).trim(),
-    });
-  }
-  return entries;
-}
-
-function extractOfficialFill(task: PracticalTask, before: string, after: string) {
-  const lines = task.referenceAnswer.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
-  const match = lines.find((line) => line.startsWith(before) && line.endsWith(after) && line.length > before.length + after.length);
-  if (!match) return "";
-  return match.slice(before.length, after ? -after.length : undefined).trim();
+/**
+ * 模板题的 5 处参考填写。此前是把 referenceAnswer 按行扫描，挑出以「填写：」开头的
+ * 行，再把上一行当标题，标题还要剥掉序号和「｜学习目标」后缀。官方口径的排版一变
+ * 就什么都扫不到，而扫不到的后果是整道题的作答界面直接消失（下面的 fields 校验
+ * 不过，返回 null），不报错。现在直接读实体层的 fills，order 即模板中空白的顺序。
+ */
+function referenceFills(task: PracticalTask): WordAnswerFill[] | null {
+  const deliverable = getPracticalWordAnswer(task)?.deliverables[0];
+  const fills = [...(deliverable?.fills ?? [])].sort((left, right) => left.order - right.order);
+  if (!fills.length) return null;
+  if (fills.some((fill, index) => fill.order !== index + 1 || !fill.answer.trim() || !fill.label.trim())) return null;
+  return fills;
 }
 
 function blankLabel(blocks: NonNullable<PracticalMaterial["preview"]>, blockIndex: number, before: string, fieldNumber: number) {
@@ -58,7 +53,8 @@ export function createPracticalWordExercise(task: PracticalTask): PracticalWordE
   if (!material?.preview) return null;
 
   const blocks = material.preview;
-  const preparedReferences = referenceEntries(task);
+  const preparedReferences = referenceFills(task);
+  if (!preparedReferences) return null;
   const fields: WordExerciseField[] = [];
   for (const [blockIndex, block] of blocks.entries()) {
     const isTrainingBlank = task.group === "4.1" && block.text === "学习目标：";
@@ -69,7 +65,7 @@ export function createPracticalWordExercise(task: PracticalTask): PracticalWordE
     const after = isTrainingBlank ? "" : block.text.slice(underline!.index + underline![0].length);
     const fieldNumber = fields.length + 1;
     const preparedReference = preparedReferences[fieldNumber - 1];
-    const referenceAnswer = preparedReference?.answer ?? extractOfficialFill(task, before, after);
+    const referenceAnswer = preparedReference?.answer ?? "";
     fields.push({
       id: `blank-${fieldNumber}`,
       blockIndex,

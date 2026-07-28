@@ -22,7 +22,7 @@
   ],
   "answerSource": "derived",
   "answerBasis": "official_template_completion",
-  "referenceAnswer": "官方 Word 模板填写示例（5 处空白）\n\n以下内容按模板中的空白顺序填写，取自官方参考答案中标黄的填空原文。评分口径为“回答内容与答案类似得 1 分，每题最多 5 分”，作答时无需标黄。\n\n1. 引言｜学习目标\n填写：了解数据清洗的重要性和应用场景。\n\n2. 数据清洗基础理论｜学习目标\n填写：掌握数据清洗的基本概念和流程。\n\n3. 常用数据清洗工具简介｜学习目标\n填写：了解常用数据清洗工具的功能和特点。\n\n4. 环境搭建与工具安装｜学习目标\n填写：掌握数据清洗工具的安装和环境配置。\n\n5. Pandas 实战｜学习目标\n填写：掌握 Pandas 在数据清洗中的应用。\n\n提交检查：\n只填写模板中 5 个空白学习目标；目标应与紧随其后的内容一一对应，并保留综合项目实践部分。",
+  "referenceAnswer": "",
   "materials": [
     {
       "name": "4.1.3.docx",
@@ -189,5 +189,41 @@
     }
   ],
   "hasNotebook": false,
-  "notebook": null
+  "notebook": null,
+  "wordAnswer": {
+    "source": "official_reference_pdf_ocr",
+    "deliverables": [
+      {
+        "fileName": "4.1.3.docx",
+        "mode": "template_fills",
+        "fills": [
+          {
+            "order": 1,
+            "label": "引言｜学习目标",
+            "answer": "了解数据清洗的重要性和应用场景。"
+          },
+          {
+            "order": 2,
+            "label": "数据清洗基础理论｜学习目标",
+            "answer": "掌握数据清洗的基本概念和流程。"
+          },
+          {
+            "order": 3,
+            "label": "常用数据清洗工具简介｜学习目标",
+            "answer": "了解常用数据清洗工具的功能和特点。"
+          },
+          {
+            "order": 4,
+            "label": "环境搭建与工具安装｜学习目标",
+            "answer": "掌握数据清洗工具的安装和环境配置。"
+          },
+          {
+            "order": 5,
+            "label": "Pandas 实战｜学习目标",
+            "answer": "掌握 Pandas 在数据清洗中的应用。"
+          }
+        ]
+      }
+    ]
+  }
 }

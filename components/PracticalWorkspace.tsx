@@ -4,7 +4,9 @@ import { useEffect, useMemo, useState } from "react";
 import type { PracticalTask } from "@/lib/content";
 import { examBlueprint } from "@/lib/exam-blueprint";
 import { createPracticalWordExercise } from "@/lib/practical-word-exercise";
+import { practicalWordAnswerBlocks } from "@/lib/practical-word-answer";
 import { PracticalMaterials } from "./PracticalMaterials";
+import { WordAnswerBlocks } from "./WordAnswerBlocks";
 import { BusinessAnalysisAnswerSheet } from "./BusinessAnalysisAnswerSheet";
 import { WordTemplateExercise } from "./WordTemplateExercise";
 
@@ -59,7 +61,8 @@ export default function PracticalWorkspace({ task, userEmail }: { task: Practica
       </details>
       <div id={`materials-${task.code}`}><PracticalMaterials materials={task.materials} showDocumentPreview /></div>
       <section id={`work-${task.code}`} className="answer-workspace"><div className="answer-workspace-heading"><div><p className="eyebrow">WORK NOTES</p><h2>作答记录</h2></div><span>{userEmail ? "草稿自动保存在当前浏览器" : "登录后可填写作答草稿"}</span></div><p className="small-copy">记录操作步骤、结果文件、截图说明和复盘要点；单题练习先聚焦完成任务，不再显示抽象评分面板。</p><textarea className="field" value={notes} readOnly={!userEmail} onChange={(event) => changeNotes(event.target.value)} onFocus={() => { if (!userEmail) requireSignIn(); }} placeholder="记录操作步骤、结果文件、截图说明或复盘要点…" /></section>
-      {revealed && <div className="answer-panel" id={`review-${task.code}`}><div className="answer-line"><b>参考答案</b></div><p style={{ whiteSpace: "pre-wrap" }}>{task.referenceAnswer}</p></div>}
+      {/* Word 正文在结构化字段里，referenceAnswer 只剩评分点与代码说明——两者都要给出。 */}
+      {revealed && <div className="answer-panel" id={`review-${task.code}`}><div className="answer-line"><b>参考答案</b></div><WordAnswerBlocks blocks={practicalWordAnswerBlocks(task)} /><p style={{ whiteSpace: "pre-wrap" }}>{task.referenceAnswer}</p></div>}
       <div className="question-actions"><button className="button button-quiet" onClick={() => setRevealed((value) => !value)}>{revealed ? "收起参考答案" : "完成后核对参考答案"}</button></div>
       </>}
     </article></>

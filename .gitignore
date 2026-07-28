@@ -56,3 +56,6 @@ next-env.d.ts
 *.tsbuildinfo
 __pycache__/
 *.py[cod]
+
+# 官方答案扫描件：仅本机参考，不入库（见 data/references/ 下的结构化快照）
+/reference/

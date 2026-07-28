@@ -20,6 +20,7 @@ from contextlib import nullcontext
 from pathlib import Path
 from typing import Any
 
+from content_entities import canonical_bytes, load_bank
 from theory_review_quality import build_report as build_quality_report
 from theory_review_state import (
     BATCH_ID,
@@ -38,7 +39,26 @@ from theory_review_state import (
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUTPUT_AUDIT_PATH = PROJECT_ROOT / "data" / "references" / "theory-review-audit.json"
-DEFAULT_VERSION = "2026-07-26-v8"
+DEFAULT_VERSION = "2026-07-28-v9"
+
+
+def content_bank(content_path: Path | None) -> dict[str, Any]:
+    """content_path 为 None 表示读实体资产层，这是仓库里的常态。
+
+    题库拆进 data/entities/ 之后已经没有 data/content.json 了；传路径的只剩测试夹具里
+    那种单文件 ContentBank。
+    """
+    return load_bank() if content_path is None else read_json(content_path)
+
+
+def content_source_bytes(content_path: Path | None) -> bytes:
+    """封条盖的那串字节。实体层用规范序列化复现，与单文件时逐字节一致。"""
+    return canonical_bytes(load_bank()) if content_path is None else content_path.read_bytes()
+
+
+def content_display(content_path: Path | None) -> str:
+    return "data/entities" if content_path is None else display_path(content_path)
+
 
 PUBLISHABLE_SOURCE_MAPPING = {
     "official_word": {
@@ -357,7 +377,7 @@ def publish_content_payload(
 
 def publication_audit_payload(
     *,
-    source_content_path: Path,
+    source_content_path: Path | None,
     reference_path: Path,
     reference_audit_path: Path,
     state_dir: Path,
@@ -376,12 +396,12 @@ def publication_audit_payload(
         "batchId": manifest["batchId"],
         "generatedAt": generated_at,
         "output": {
-            "contentPath": display_path(source_content_path),
+            "contentPath": content_display(source_content_path),
             "auditPath": display_path(output_audit_path),
             "publishedContentSha256": bytes_sha256(published_content_bytes),
         },
         "sourceHashes": {
-            "content": file_sha256(source_content_path),
+            "content": bytes_sha256(content_source_bytes(source_content_path)),
             "secondaryReferenceSnapshotFile": file_sha256(reference_path),
             "theoryReferenceAudit": file_sha256(reference_audit_path),
             "reviewManifest": file_sha256(manifest_path),
@@ -468,7 +488,7 @@ def write_publication_atomic(
 
 def build_publication(
     *,
-    content_path: Path,
+    content_path: Path | None,
     reference_path: Path,
     reference_audit_path: Path,
     state_dir: Path,
@@ -479,9 +499,9 @@ def build_publication(
 ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
     if output_audit_path.resolve() == reference_audit_path.resolve():
         raise ValueError("发布审计不得覆盖原 theory-reference-audit")
-    if output_audit_path.resolve() == content_path.resolve():
+    if content_path is not None and output_audit_path.resolve() == content_path.resolve():
         raise ValueError("发布审计不得与 content 使用同一路径")
-    existing_content = read_json(content_path)
+    existing_content = content_bank(content_path)
     existing_review = existing_content.get("theoryReview")
     if (
         require_unpublished
@@ -535,7 +555,7 @@ def build_publication(
 
 def publish(
     *,
-    content_path: Path = DEFAULT_CONTENT_PATH,
+    content_path: Path | None = None,
     reference_path: Path = DEFAULT_REFERENCE_PATH,
     reference_audit_path: Path = DEFAULT_REFERENCE_AUDIT_PATH,
     state_dir: Path = DEFAULT_STATE_DIR,
@@ -571,7 +591,7 @@ def publish(
         "answerChanges": len(facts["answerChanges"]),
         "officialAnswerChanges": 0,
         "resolvedConflicts": len(facts["resolvedConflicts"]),
-        "contentPath": display_path(content_path),
+        "contentPath": content_display(content_path),
         "auditPath": display_path(output_audit_path),
     }
 
@@ -609,7 +629,7 @@ def publication_drift(
 
 def restamp(
     *,
-    content_path: Path = DEFAULT_CONTENT_PATH,
+    content_path: Path | None = None,
     reference_path: Path = DEFAULT_REFERENCE_PATH,
     reference_audit_path: Path = DEFAULT_REFERENCE_AUDIT_PATH,
     state_dir: Path = DEFAULT_STATE_DIR,
@@ -640,7 +660,7 @@ def restamp(
             generated_at=audit["generatedAt"],
             require_unpublished=False,
         )
-        current_content = read_json(content_path)
+        current_content = content_bank(content_path)
         drifted = [
             field
             for key in THEORY_PUBLICATION_KEYS
@@ -653,7 +673,7 @@ def restamp(
             )
 
         previous = audit["output"].get("publishedContentSha256")
-        current = file_sha256(content_path)
+        current = bytes_sha256(content_source_bytes(content_path))
         if previous == current:
             raise ValueError("发布封条与当前 content 已经一致，无需重新盖章")
 
@@ -674,7 +694,8 @@ def restamp(
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--content", type=Path, default=DEFAULT_CONTENT_PATH)
+    # 不传 --content 就读实体资产层；DEFAULT_CONTENT_PATH 只留给测试夹具那种单文件库。
+    parser.add_argument("--content", type=Path, default=None)
     parser.add_argument("--reference", type=Path, default=DEFAULT_REFERENCE_PATH)
     parser.add_argument("--reference-audit", type=Path, default=DEFAULT_REFERENCE_AUDIT_PATH)
     parser.add_argument("--state-dir", type=Path, default=DEFAULT_STATE_DIR)

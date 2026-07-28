@@ -1,13 +1,13 @@
 {
-  "version": "2026-07-26-v8",
+  "version": "2026-07-28-v9",
   "batchId": "theory-900-review-2026-07-26-v1",
   "generatedAt": "2026-07-25T17:23:16Z",
   "output": {
     "contentPath": "data/content.json",
     "auditPath": "data/references/theory-review-audit.json",
-    "publishedContentSha256": "faa0b895c6ae851994c778e3194f6f273c4c3795e6a9f72ebe42db67c2188443",
-    "restampedAt": "2026-07-27T10:25:07Z",
-    "restampedFrom": "4bb0401208daff64b2d73c21d1cc8d6b3a0017cd65e7532e462b79d3392b76b4"
+    "publishedContentSha256": "0a6d70ba2928709ab1a6a4c8563a3b40a745bac6ca122e5d807136c7881eda64",
+    "restampedAt": "2026-07-28T15:06:01Z",
+    "restampedFrom": "faa0b895c6ae851994c778e3194f6f273c4c3795e6a9f72ebe42db67c2188443"
   },
   "sourceHashes": {
     "content": "839c142493e0882c53e52fc5824f5ad101d8601de68ba2f728a70a1916a40871",

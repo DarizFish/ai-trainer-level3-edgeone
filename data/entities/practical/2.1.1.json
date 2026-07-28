@@ -76,7 +76,7 @@
   ],
   "answerSource": "official",
   "answerBasis": "manual_official",
-  "referenceAnswer": "（1）2.1.1.ipynb：\nimport pandas as pd\n\n# 加载数据集并显示数据集的前五行 1分\ndata = pd.read_csv('auto-mpg.csv')\nprint(\"数据集的前五行:\")\nprint(data.head())\n\n# 显示每一列的数据类型\nprint(data.dtypes)\n\n# 检查缺失值并删除缺失值所在的行  2分\nprint(\"\\n检查缺失值:\")\nprint(data.isnull().sum())  #或者print(data.isna().sum())\ndata = data.dropna()\n\n# 将 'horsepower' 列转换为数值类型，并处理转换中的异常值 1分\ndata['horsepower'] = pd.to_numeric(data['horsepower'], errors='coerce')\ndata = data.dropna(subset=['horsepower'])\n\n# 显示每一列的数据类型\nprint(data.horsepower.dtypes)\n\n# 检查清洗后的缺失值\nprint(\"\\n检查清洗后的缺失值:\")\nprint(data.isnull().sum())\n\nfrom sklearn.preprocessing import StandardScaler\n# 对数值型数据进行标准化处理 1分\nnumerical_features = ['displacement', 'horsepower', 'weight', 'acceleration']\nscaler = StandardScaler()\ndata[numerical_features] = scaler.fit_transform(data[numerical_features])\n\nfrom sklearn.model_selection import train_test_split\n# 选择特征和目标变量 2分\nselected_features = ['cylinders', 'displacement', 'horsepower', 'weight', 'acceleration', 'model year', 'origin']\nX = data[selected_features]\ny = data['mpg']\n\n# 划分数据集为训练集和测试集 1分\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)\n\n# 将特征和目标变量合并到一个数据框中\ncleaned_data = X.copy()\ncleaned_data['mpg'] = y\n\n# 保存清洗和处理后的数据\ncleaned_data.to_csv('2.1.1_cleaned_data.csv', index=False)\n\n# 打印消息指示文件已保存\nprint(\"\\n清洗后的数据已保存到 2.1.1_cleaned_data.csv\")\n\n（2）数据清洗和标注规范\n数据清洗规范（答对2点即可）\n1. 数据加载：使用 pandas 库加载数据集，检查数据的基本结构和类型。\n2. 检查缺失值：统计每列的缺失值数量，并删除包含缺失值的行以确保数据完整性。\n3. 转换与处理异常值: 将数值列（如“horsepower”）转换为数值类型，并处理无法转换的值（例如，将其变为缺失值）。\n4. 数据标准化: 对数值型数据进行标准化，以消除量纲影响，使用标准化方法。\n5. 保存清洗后的数据: 将经过清洗和处理后的数据保存为新的 CSV 文件，以便后续使用。\n数据标注规范（答对3点即可）\n1. 数据来源：标注数据的来源，包括数据集的名称、获取日期和数据提供者。\n2. 数据描述：提供详细的数据描述，包括每列数据的含义、单位和可能的取值范围。\n3. 特征选择: 确定对目标变量预测最有用的特征。\n4. 目标变量设定: 将数据集中用于预测的目标变量定义为“mpg”（燃油效率）。\n5. 数据划分: 将数据分为训练集和测试集，通常采用 80/20 的比例，以便于模型的训练和评估。\n6. 保存处理后的数据：保存处理后的数据，并记录保存文件的路径和文件名。\n7. 数据清洗和标注规范文档",
+  "referenceAnswer": "（1）2.1.1.ipynb：\nimport pandas as pd\n\n# 加载数据集并显示数据集的前五行 1分\ndata = pd.read_csv('auto-mpg.csv')\nprint(\"数据集的前五行:\")\nprint(data.head())\n\n# 显示每一列的数据类型\nprint(data.dtypes)\n\n# 检查缺失值并删除缺失值所在的行  2分\nprint(\"\\n检查缺失值:\")\nprint(data.isnull().sum())  #或者print(data.isna().sum())\ndata = data.dropna()\n\n# 将 'horsepower' 列转换为数值类型，并处理转换中的异常值 1分\ndata['horsepower'] = pd.to_numeric(data['horsepower'], errors='coerce')\ndata = data.dropna(subset=['horsepower'])\n\n# 显示每一列的数据类型\nprint(data.horsepower.dtypes)\n\n# 检查清洗后的缺失值\nprint(\"\\n检查清洗后的缺失值:\")\nprint(data.isnull().sum())\n\nfrom sklearn.preprocessing import StandardScaler\n# 对数值型数据进行标准化处理 1分\nnumerical_features = ['displacement', 'horsepower', 'weight', 'acceleration']\nscaler = StandardScaler()\ndata[numerical_features] = scaler.fit_transform(data[numerical_features])\n\nfrom sklearn.model_selection import train_test_split\n# 选择特征和目标变量 2分\nselected_features = ['cylinders', 'displacement', 'horsepower', 'weight', 'acceleration', 'model year', 'origin']\nX = data[selected_features]\ny = data['mpg']\n\n# 划分数据集为训练集和测试集 1分\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)\n\n# 将特征和目标变量合并到一个数据框中\ncleaned_data = X.copy()\ncleaned_data['mpg'] = y\n\n# 保存清洗和处理后的数据\ncleaned_data.to_csv('2.1.1_cleaned_data.csv', index=False)\n\n# 打印消息指示文件已保存\nprint(\"\\n清洗后的数据已保存到 2.1.1_cleaned_data.csv\")",
   "materials": [
     {
       "name": "2.1.1.docx",
@@ -133,5 +133,31 @@
     ],
     "solutionSource": "completed_reference_notebook",
     "solutionSha256": "072a7ceaac1925a440c9da46f1eb7ccc74085402f5a4755c399564ec0ffa78d5"
+  },
+  "wordAnswer": {
+    "source": "official_handbook",
+    "deliverables": [
+      {
+        "fileName": "2.1.1.docx",
+        "mode": "numbered_response",
+        "sections": [
+          {
+            "heading": "数据清洗规范（填写 2 点）",
+            "items": [
+              "检查缺失值与类型：统计每列缺失值，将 horsepower 转为数值类型，无法转换的值记为缺失并删除对应行。",
+              "标准化与留痕：对 displacement、horsepower、weight、acceleration 等数值特征使用同一标准化方法，并记录处理规则和处理前后数据量。"
+            ]
+          },
+          {
+            "heading": "特征工程/数据标注规范（填写 3 点）",
+            "items": [
+              "特征选择：使用 cylinders、displacement、horsepower、weight、acceleration、model year、origin 作为预测特征，并记录字段含义、单位和取值范围。",
+              "目标变量设定：将 mpg 明确定义为燃油效率预测的目标变量，特征与目标字段不得混淆。",
+              "数据划分与保存：按 80%/20% 划分训练集和测试集，固定 random_state=42；保存处理后的数据并记录文件名 2.1.1_cleaned_data.csv。"
+            ]
+          }
+        ]
+      }
+    ]
   }
 }

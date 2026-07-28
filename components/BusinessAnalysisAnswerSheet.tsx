@@ -8,6 +8,7 @@ import { PracticalOutcomeCheck } from "./PracticalOutcomeCheck";
 import { PracticalTaskHeader } from "./PracticalTaskHeader";
 import { PracticalBrief } from "./PracticalBrief";
 import { PracticalMaterialsList } from "./PracticalMaterialsList";
+import { WordAnswerBlocks } from "./WordAnswerBlocks";
 
 type AnswerSheetDraft = {
   version: 1 | 3;
@@ -51,17 +52,12 @@ export function BusinessAnalysisAnswerSheet({ task, userEmail }: { task: Practic
   // 键里不再嵌评分表指纹。原先带 `${answerBasis}-${referenceAnswer.length}-M1:6-…`，
   // 只要参考答案或评分点分值一改，键就变了，用户此前写的内容会静默变成孤儿——补一句
   // 官方口径都会触发。restoreDraft 本来就按 sectionIds 与 scoreLimits 逐项校验，
-  // 题目结构变化会被安全丢弃，不需要靠换键来防御。旧键仍然读，用于迁移。
+  // 题目结构变化会被安全丢弃，不需要靠换键来防御。旧键的迁移读取已随参考答案结构化
+  // 一并去掉：那些键的后缀里就嵌着 referenceAnswer.length，本次答案结构化后必然对不
+  // 上；草稿的权威副本在账号里（下面的 /api/drafts），本机那份只是离线缓存。
   const storageKey = useMemo(() => exercise && userEmail
     ? `ai-trainer-business-answer-sheet-v2:${encodeURIComponent(userEmail)}:${task.code}`
     : null, [exercise, task.code, userEmail]);
-  const legacyStorageKeys = useMemo(() => {
-    if (!exercise || !userEmail) return [];
-    const owner = encodeURIComponent(userEmail);
-    const keys = [`ai-trainer-business-answer-sheet-v1:${owner}:${task.code}:${exercise.storageVersion}`];
-    if (task.group === "3.1") keys.push(`ai-trainer-practical-response-v3:${owner}:${task.code}:${exercise.storageVersion}`);
-    return keys;
-  }, [exercise, task.code, task.group, userEmail]);
 
   useEffect(() => {
     let cancelled = false;
@@ -69,11 +65,7 @@ export function BusinessAnalysisAnswerSheet({ task, userEmail }: { task: Practic
       if (cancelled) return;
       const sectionIds = new Set(exercise?.sections.map((section) => section.id) ?? []);
       const scoreLimits = new Map(exercise?.sections.flatMap((section) => section.rubric).map((item) => [item.id, item.points]) ?? []);
-      const serialized = storageKey
-        ? localStorage.getItem(storageKey)
-          ?? legacyStorageKeys.map((key) => localStorage.getItem(key)).find(Boolean)
-          ?? ""
-        : "";
+      const serialized = storageKey ? localStorage.getItem(storageKey) ?? "" : "";
       const local = storageKey ? restoreDraft(serialized, sectionIds, scoreLimits) : null;
       setAnswers(local?.answers ?? {});
       setScores(local?.scores ?? {});
@@ -97,7 +89,7 @@ export function BusinessAnalysisAnswerSheet({ task, userEmail }: { task: Practic
         .catch(() => undefined);
     });
     return () => { cancelled = true; };
-  }, [exercise, legacyStorageKeys, storageKey, task.code, userEmail]);
+  }, [exercise, storageKey, task.code, userEmail]);
 
   useEffect(() => {
     if (!restored || !storageKey) return;
@@ -173,7 +165,7 @@ export function BusinessAnalysisAnswerSheet({ task, userEmail }: { task: Practic
         <label><span className="sr-only">{task.code}-{section.number} 作答</span><textarea value={answers[section.id] ?? ""} readOnly={!userEmail} onFocus={() => { if (!userEmail) requireSignIn(); }} onChange={(event) => changeAnswer(section.id, event.target.value)} placeholder="请在此处作答…" /></label>
         {reviewing && <section className="business-sheet-review">
           <header><span>学习复盘</span><small>完成作答后展示；非官方考场信息。</small></header>
-          <p>{section.referenceAnswer}</p>
+          <WordAnswerBlocks blocks={section.reference} />
           <PracticalOutcomeCheck items={section.rubric} scores={scores} onChange={changeScore} title={`第 ${section.number} 问复盘检查`} eyebrow="学习复盘检查" description="逐项检查本次作答，仅用于练习自评，不属于考场提示。" />
         </section>}
       </section>)}

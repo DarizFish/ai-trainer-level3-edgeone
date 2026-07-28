@@ -5,9 +5,11 @@ import { useMemo } from "react";
 import type { PracticalTask } from "@/lib/content";
 import { createPracticalResponseExercise } from "@/lib/practical-response-exercise";
 import { createPracticalWordExercise } from "@/lib/practical-word-exercise";
+import { practicalWordAnswerBlocks } from "@/lib/practical-word-answer";
 import type { PracticalRubricScores } from "@/lib/scoring";
 import { PracticalMaterials } from "./PracticalMaterials";
 import { PracticalOutcomeCheck } from "./PracticalOutcomeCheck";
+import { WordAnswerBlocks } from "./WordAnswerBlocks";
 
 export function PracticalExamTaskWorkspace({ task, phase, answers, checks, scores, onAnswerChange, onCheckChange, onScoreChange }: {
   task: PracticalTask;
@@ -63,15 +65,17 @@ export function PracticalExamTaskWorkspace({ task, phase, answers, checks, score
         <header><span>{section.number}</span><div><small>第 {section.number} 份交付物</small><h3>{section.title}</h3></div><b>{section.outputLabel}</b></header>
         <div className="exam-response-prompt"><b>本份任务</b><p>{section.prompt}</p></div>
         {phase === "running" ? <label><span>你的作答</span><textarea aria-label={`${section.outputLabel}：考试作答`} value={answers[section.id] ?? ""} onChange={(event) => onAnswerChange(section.id, event.target.value)} placeholder={section.number === 1 ? "写出分析结论、数据依据与必要说明…" : "写出优化方向、实施步骤与预期效果…"} /></label> : <>
-          <div className="exam-response-comparison"><section><b>本次作答</b><p>{answers[section.id]?.trim() || "（未作答）"}</p></section><section><b>参考成果</b><p>{section.referenceAnswer}</p></section></div>
+          <div className="exam-response-comparison"><section><b>本次作答</b><p>{answers[section.id]?.trim() || "（未作答）"}</p></section><section><b>参考成果</b><WordAnswerBlocks blocks={section.reference} /></section></div>
           <PracticalOutcomeCheck items={section.rubric} scores={scores} onChange={onScoreChange} title={`核对第 ${section.number} 份交付物`} />
         </>}
       </article>)}</div>
     </section>}
 
+    {/* Notebook 题的 Word 正文已从 referenceAnswer 移进结构化字段，复盘要把两者都给出：
+        referenceAnswer 现在只剩评分点与代码说明。 */}
     {task.hasNotebook && phase === "review" && <section className="exam-notebook-review">
       <header><div><p className="eyebrow">NOTEBOOK OUTCOME</p><h2>复盘代码与运行成果</h2></div><Link className="button button-small" href={`/practical/${task.code}/lab`}>打开本题 Notebook ↗</Link></header>
-      <div className="exam-notebook-comparison"><section><b>本次运行说明</b><p>{answers.notes?.trim() || "未填写运行结果或生成文件说明；Notebook 草稿仍保存在当前浏览器与账号中。"}</p></section><section><div className="answer-line"><b>参考成果</b></div><p>{task.referenceAnswer}</p>{task.notebook?.solutionCells.map((cell, index) => <details key={cell.id} open={index === 0}><summary>参考代码单元 {index + 1}</summary><pre><code>{cell.source}</code></pre></details>)}</section></div>
+      <div className="exam-notebook-comparison"><section><b>本次运行说明</b><p>{answers.notes?.trim() || "未填写运行结果或生成文件说明；Notebook 草稿仍保存在当前浏览器与账号中。"}</p></section><section><div className="answer-line"><b>参考成果</b></div><WordAnswerBlocks blocks={practicalWordAnswerBlocks(task)} /><p>{task.referenceAnswer}</p>{task.notebook?.solutionCells.map((cell, index) => <details key={cell.id} open={index === 0}><summary>参考代码单元 {index + 1}</summary><pre><code>{cell.source}</code></pre></details>)}</section></div>
       <PracticalOutcomeCheck items={task.rubric} scores={scores} onChange={onScoreChange} />
     </section>}
   </div>;

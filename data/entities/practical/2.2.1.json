@@ -88,7 +88,7 @@
   ],
   "answerSource": "official",
   "answerBasis": "manual_official",
-  "referenceAnswer": "（1）2.2.1.ipynb代码\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LogisticRegression\nimport pickle\nfrom sklearn.metrics import classification_report\nfrom imblearn.over_sampling import SMOTE\n\n# 加载数据\ndata = pd.read_csv('finance数据集.csv')\n\n# 显示前五行的数据\nprint(data.head())\n\n# 选择自变量和因变量\nX = data.drop(['SeriousDlqin2yrs', 'Unnamed: 0'], axis=1)\ny = data['SeriousDlqin2yrs']\n\n# 分割训练集和测试集\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)\n\n# 训练Logistic回归模型\nmodel = LogisticRegression(max_iter=1000)\nmodel.fit(X_train, y_train)\n\n# 保存模型\nwith open('2.2.1_model.pkl', 'wb') as file:\n    pickle.dump(model, file)\n\n# 预测并保存结果\ny_pred = model.predict(X_test)\npd.DataFrame(y_pred, columns=['预测结果']).to_csv('2.2.1_results.txt', index=False)\n\n# 生成测试报告\nreport = classification_report(y_test, y_pred, zero_division=1)\nwith open('2.2.1_report.txt', 'w') as file:\n    file.write(report)\n\n# 分析测试结果\naccuracy = (y_test == y_pred).mean()\nprint(f\"模型准确率: {accuracy:.2f}\")\n\n# 处理数据不平衡\nsmote = SMOTE(random_state=42)\nX_resampled, y_resampled = smote.fit_resample(X_train, y_train)\n\n# 重新训练模型\nmodel.fit(X_resampled, y_resampled)\n# 重新预测\ny_pred_resampled = model.predict(X_test)\n\n# 保存新结果\npd.DataFrame(y_pred_resampled, columns=['预测结果']).to_csv('2.2.1_results_xg.txt', index=False)\n\n# 生成新的测试报告\nreport_resampled = classification_report(y_test, y_pred_resampled, zero_division=1)\nwith open('2.2.1_report_xg.txt', 'w') as file:\n    file.write(report_resampled)\n\n# 分析新的测试结果\naccuracy_resampled = (y_test == y_pred_resampled).mean()\nprint(f\"重新采样后的模型准确率: {accuracy_resampled:.2f}\")\n\n（2）\nLogistic模型（说明：只要小数点后第一位正确即可得满分）\n模型性能\n precision recall f1-score support\n0（没有严重逾期） 0.95 0.99 0.97 26779\n1（有严重逾期） 0.57 0.14 0.22 1737\n\n错误分析\n0（没有严重逾期）：\n准确率很高，召回率也很高，表明模型在这一类别上的性能非常好。\n可能的错误主要来自于少数漏报情况，即极少数实际没有严重逾期的样本被错误预测为有严重逾期。\n1（有严重逾期）：\n准确率较低，召回率也很低，F1-Score仅为0.22，表明模型在这一类别上的性能较差。\n主要问题在于大量的漏报（真正有严重逾期的样本被预测为没有）和一定的误报（将没有严重逾期的样本预测为有）。\n改进建议\n1. 数据处理策略调整\n重采样技术：由于数据集存在明显的不平衡，可以考虑使用过采样（如SMOTE）或欠采样技术来平衡两个类别的数量。\n2. 特征工程优化\n特征选择：仔细审查现有特征，去除冗余或不相关的特征，可能有助于提升模型性能。\n特征构造：尝试创建新的、更具区分力的特征，如基于现有特征的交互项或衍生指标。",
+  "referenceAnswer": "（1）2.2.1.ipynb代码\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LogisticRegression\nimport pickle\nfrom sklearn.metrics import classification_report\nfrom imblearn.over_sampling import SMOTE\n\n# 加载数据\ndata = pd.read_csv('finance数据集.csv')\n\n# 显示前五行的数据\nprint(data.head())\n\n# 选择自变量和因变量\nX = data.drop(['SeriousDlqin2yrs', 'Unnamed: 0'], axis=1)\ny = data['SeriousDlqin2yrs']\n\n# 分割训练集和测试集\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)\n\n# 训练Logistic回归模型\nmodel = LogisticRegression(max_iter=1000)\nmodel.fit(X_train, y_train)\n\n# 保存模型\nwith open('2.2.1_model.pkl', 'wb') as file:\n    pickle.dump(model, file)\n\n# 预测并保存结果\ny_pred = model.predict(X_test)\npd.DataFrame(y_pred, columns=['预测结果']).to_csv('2.2.1_results.txt', index=False)\n\n# 生成测试报告\nreport = classification_report(y_test, y_pred, zero_division=1)\nwith open('2.2.1_report.txt', 'w') as file:\n    file.write(report)\n\n# 分析测试结果\naccuracy = (y_test == y_pred).mean()\nprint(f\"模型准确率: {accuracy:.2f}\")\n\n# 处理数据不平衡\nsmote = SMOTE(random_state=42)\nX_resampled, y_resampled = smote.fit_resample(X_train, y_train)\n\n# 重新训练模型\nmodel.fit(X_resampled, y_resampled)\n# 重新预测\ny_pred_resampled = model.predict(X_test)\n\n# 保存新结果\npd.DataFrame(y_pred_resampled, columns=['预测结果']).to_csv('2.2.1_results_xg.txt', index=False)\n\n# 生成新的测试报告\nreport_resampled = classification_report(y_test, y_pred_resampled, zero_division=1)\nwith open('2.2.1_report_xg.txt', 'w') as file:\n    file.write(report_resampled)\n\n# 分析新的测试结果\naccuracy_resampled = (y_test == y_pred_resampled).mean()\nprint(f\"重新采样后的模型准确率: {accuracy_resampled:.2f}\")",
   "materials": [
     {
       "name": "2.2.1.docx",
@@ -143,5 +143,53 @@
     ],
     "solutionSource": "completed_reference_notebook",
     "solutionSha256": "3e16debb2496f51a006fbca2ee13b53c09ea66a0e8ac9c85b8368b0ff627916a"
+  },
+  "wordAnswer": {
+    "source": "official_handbook",
+    "deliverables": [
+      {
+        "fileName": "2.2.1.docx",
+        "mode": "test_report",
+        "model": "Logistic 回归",
+        "metrics": [
+          {
+            "class": "0（没有严重逾期）",
+            "precision": 0.95,
+            "recall": 0.99,
+            "f1Score": 0.97,
+            "support": 26779
+          },
+          {
+            "class": "1（有严重逾期）",
+            "precision": 0.57,
+            "recall": 0.14,
+            "f1Score": 0.22,
+            "support": 1737
+          }
+        ],
+        "sections": [
+          {
+            "heading": "模型性能评估",
+            "paragraphs": [
+              "模型对无严重逾期类别的识别效果很好，precision 为 0.95、recall 为 0.99、F1 为 0.97；对有严重逾期类别的识别较弱，precision 为 0.57、recall 仅 0.14、F1 为 0.22。整体准确率较高主要来自多数类，不能代表风险客户识别能力良好。"
+            ]
+          },
+          {
+            "heading": "错误分析",
+            "paragraphs": [
+              "0 类只有少量样本被误报为严重逾期。1 类存在大量漏报，即实际有严重逾期的客户被预测为无严重逾期；根本原因是类别严重不平衡，模型决策边界偏向多数类，同时现有特征对少数类区分力不足。"
+            ]
+          },
+          {
+            "heading": "改进建议",
+            "items": [
+              "在训练集上使用 SMOTE 过采样、欠采样或类别权重，平衡两类样本。",
+              "优化特征选择，构造逾期次数、负债与收入交互项等更有区分力的特征。",
+              "以少数类 recall、F1、PR-AUC 为主要指标，通过交叉验证选择阈值，避免只看准确率。"
+            ]
+          }
+        ]
+      }
+    ]
   }
 }

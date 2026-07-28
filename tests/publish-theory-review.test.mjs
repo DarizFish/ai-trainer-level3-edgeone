@@ -325,10 +325,10 @@ test("theory review publisher gates completeness and publishes only to temporary
 
     const publishedResult = assertSuccess(runPython(publishScript, publisherArgs(fixture)));
     assert.equal(publishedResult.published, true);
-    assert.equal(publishedResult.version, "2026-07-26-v8");
+    assert.equal(publishedResult.version, "2026-07-28-v9");
     const publishedContent = await readJson(fixture.content);
     const audit = await readJson(fixture.audit);
-    assert.equal(publishedContent.version, "2026-07-26-v8");
+    assert.equal(publishedContent.version, "2026-07-28-v9");
     assert.equal(publishedContent.theoryReview.batchId, "theory-900-review-2026-07-26-v1");
     assert.equal(publishedContent.theoryReview.reviewedQuestions, 900);
     assert.equal(publishedContent.theoryReview.independentExplanations, 900);

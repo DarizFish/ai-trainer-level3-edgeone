@@ -22,7 +22,7 @@
   ],
   "answerSource": "derived",
   "answerBasis": "official_template_completion",
-  "referenceAnswer": "官方 Word 模板填写示例（5 处空白）\n\n以下内容按模板中的空白顺序填写，取自官方参考答案中标黄的填空原文。评分口径为“回答内容与答案类似得 1 分，每题最多 5 分”，作答时无需标黄。\n\n1. 数据可视化基础理论｜学习目标\n填写：掌握数据可视化的基本概念和原则。\n\n2. Matplotlib 简介与安装｜学习目标\n填写：了解 Matplotlib 库的基本功能和安装方法。\n\n3. Matplotlib 基本绘图｜学习目标\n填写：掌握 Matplotlib 基本绘图方法。\n\n4. Plotly 简介与安装｜学习目标\n填写：了解 Plotly 库的基本功能和安装方法。\n\n5. Plotly 交互式绘图｜学习目标\n填写：掌握 Plotly 交互式绘图方法。\n\n提交检查：\n填满 5 个空白学习目标，分别对应基础理论、Matplotlib 和 Plotly 内容；保留项目实战、答疑和评估测试结构。",
+  "referenceAnswer": "",
   "materials": [
     {
       "name": "4.1.5.docx",
@@ -225,5 +225,41 @@
     }
   ],
   "hasNotebook": false,
-  "notebook": null
+  "notebook": null,
+  "wordAnswer": {
+    "source": "official_reference_pdf_ocr",
+    "deliverables": [
+      {
+        "fileName": "4.1.5.docx",
+        "mode": "template_fills",
+        "fills": [
+          {
+            "order": 1,
+            "label": "数据可视化基础理论｜学习目标",
+            "answer": "掌握数据可视化的基本概念和原则。"
+          },
+          {
+            "order": 2,
+            "label": "Matplotlib 简介与安装｜学习目标",
+            "answer": "了解 Matplotlib 库的基本功能和安装方法。"
+          },
+          {
+            "order": 3,
+            "label": "Matplotlib 基本绘图｜学习目标",
+            "answer": "掌握 Matplotlib 基本绘图方法。"
+          },
+          {
+            "order": 4,
+            "label": "Plotly 简介与安装｜学习目标",
+            "answer": "了解 Plotly 库的基本功能和安装方法。"
+          },
+          {
+            "order": 5,
+            "label": "Plotly 交互式绘图｜学习目标",
+            "answer": "掌握 Plotly 交互式绘图方法。"
+          }
+        ]
+      }
+    ]
+  }
 }

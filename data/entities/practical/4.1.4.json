@@ -22,7 +22,7 @@
   ],
   "answerSource": "derived",
   "answerBasis": "official_template_completion",
-  "referenceAnswer": "官方 Word 模板填写示例（5 处空白）\n\n以下内容按模板中的空白顺序填写，取自官方参考答案中标黄的填空原文。评分口径为“回答内容与答案类似得 1 分，每题最多 5 分”，作答时无需标黄。\n\n1. Pandas 简介与安装｜学习目标\n填写：掌握使用 Pandas 进行数据导入与导出的方法。\n\n2. 数据筛选与过滤｜学习目标\n填写：掌握使用 Pandas 进行数据筛选与过滤的方法。\n\n3. 数据转换｜学习目标\n填写：掌握使用 Pandas 进行数据转换的方法。\n\n4. 数据合并与重塑｜学习目标\n填写：掌握使用 Pandas 进行数据合并与重塑的方法。\n\n5. 数据分组与聚合｜学习目标\n填写：掌握使用 Pandas 进行数据分组与聚合的方法。\n\n提交检查：\n按模板中的 5 个空白顺序填写，确保每个学习目标覆盖该节列出的 Pandas 操作，并保留原有综合项目实践内容。",
+  "referenceAnswer": "",
   "materials": [
     {
       "name": "4.1.4.docx",
@@ -225,5 +225,41 @@
     }
   ],
   "hasNotebook": false,
-  "notebook": null
+  "notebook": null,
+  "wordAnswer": {
+    "source": "official_reference_pdf_ocr",
+    "deliverables": [
+      {
+        "fileName": "4.1.4.docx",
+        "mode": "template_fills",
+        "fills": [
+          {
+            "order": 1,
+            "label": "Pandas 简介与安装｜学习目标",
+            "answer": "掌握使用 Pandas 进行数据导入与导出的方法。"
+          },
+          {
+            "order": 2,
+            "label": "数据筛选与过滤｜学习目标",
+            "answer": "掌握使用 Pandas 进行数据筛选与过滤的方法。"
+          },
+          {
+            "order": 3,
+            "label": "数据转换｜学习目标",
+            "answer": "掌握使用 Pandas 进行数据转换的方法。"
+          },
+          {
+            "order": 4,
+            "label": "数据合并与重塑｜学习目标",
+            "answer": "掌握使用 Pandas 进行数据合并与重塑的方法。"
+          },
+          {
+            "order": 5,
+            "label": "数据分组与聚合｜学习目标",
+            "answer": "掌握使用 Pandas 进行数据分组与聚合的方法。"
+          }
+        ]
+      }
+    ]
+  }
 }

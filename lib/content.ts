@@ -76,6 +76,21 @@ export type PracticalTask = {
   answerSource: AnswerSource;
   answerBasis: PracticalAnswerBasis;
   referenceAnswer: string;
+  /** Word 交付物答案的结构化形式，由 scripts/practical_word_answers.py 从官方参考快照写入。
+      1.1 组没有 Word 交付物，因此没有这个字段。详见 lib/practical-word-answer.ts。 */
+  wordAnswer?: {
+    source: string;
+    deliverables: {
+      fileName: string;
+      mode: string;
+      sections?: { heading: string; items?: string[]; paragraphs?: string[] }[];
+      items?: { direction: string; solution: string }[];
+      fills?: { order: number; label: string; answer: string }[];
+      model?: string;
+      metrics?: { name: string; value: number }[];
+      comparison?: { model: string; trainR2: number; testR2: number; mse: number };
+    }[];
+  };
   materials: PracticalMaterial[];
   hasNotebook: boolean;
   notebook: NotebookTemplate | null;

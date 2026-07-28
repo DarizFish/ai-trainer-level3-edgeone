@@ -22,7 +22,7 @@
   ],
   "answerSource": "derived",
   "answerBasis": "official_template_completion",
-  "referenceAnswer": "官方 Word 模板填写示例（5 处空白）\n\n以下内容按模板中的空白顺序填写，取自官方参考答案中标黄的填空原文。评分口径为“回答内容与答案类似得 1 分，每题最多 5 分”，作答时无需标黄。\n\n1. 多角度覆盖\n填写：关键区域\n\n2. 数据传输与存储\n填写：数据存储系统\n\n3. 视频流预处理\n填写：对视频流进行实时压缩和格式转换，减少带宽消耗，同时进行初步的图像增强，如亮度调整、色彩校正\n\n4. 行为分析与异常检测\n填写：利用深度学习模型，进行目标检测和行为识别，标记出异常行为\n\n5. 算法优化\n填写：识别精度和响应速度\n\n提交检查：\n按官方模板顺序填写 5 处空白，同时保留隐私模糊、数据融合、合规和安全防护要求；告警结果应由安保人员复核。",
+  "referenceAnswer": "",
   "materials": [
     {
       "name": "4.2.3.docx",
@@ -97,5 +97,41 @@
     }
   ],
   "hasNotebook": false,
-  "notebook": null
+  "notebook": null,
+  "wordAnswer": {
+    "source": "official_reference_pdf_ocr",
+    "deliverables": [
+      {
+        "fileName": "4.2.3.docx",
+        "mode": "template_fills",
+        "fills": [
+          {
+            "order": 1,
+            "label": "多角度覆盖",
+            "answer": "关键区域"
+          },
+          {
+            "order": 2,
+            "label": "数据传输与存储",
+            "answer": "数据存储系统"
+          },
+          {
+            "order": 3,
+            "label": "视频流预处理",
+            "answer": "对视频流进行实时压缩和格式转换，减少带宽消耗，同时进行初步的图像增强，如亮度调整、色彩校正"
+          },
+          {
+            "order": 4,
+            "label": "行为分析与异常检测",
+            "answer": "利用深度学习模型，进行目标检测和行为识别，标记出异常行为"
+          },
+          {
+            "order": 5,
+            "label": "算法优化",
+            "answer": "识别精度和响应速度"
+          }
+        ]
+      }
+    ]
+  }
 }
