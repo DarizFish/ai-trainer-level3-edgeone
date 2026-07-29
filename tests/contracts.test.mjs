@@ -329,6 +329,10 @@ test("theory sidebar tracks each question type and omits redundant navigation gr
   assert.match(theory, /正在自动进入下一题/);
   assert.match(theory, /点击或滚动可停留/);
   assert.match(theory, /已停留在本题/);
+  // Windows 关闭系统动画时会命中 reduced-motion。倒计时可以改成分段更新，但不能
+  // 完全禁用，否则自动跳题仍会发生，桌面端用户却只能看到一条静止的“进度条”。
+  assert.match(styles, /prefers-reduced-motion:\s*reduce[\s\S]*animation-timing-function:\s*steps/);
+  assert.doesNotMatch(styles, /prefers-reduced-motion:\s*reduce[^}]*practice-auto-advance-bar[^}]*animation:\s*none/);
   assert.match(theory, /if \(correct\) \{/);
   assert.match(theory, /goToQuestion\(currentIndex \+ 1\)/);
   assert.match(theory, /if \(currentIndex === sessionQuestions\.length - 1\) completePractice\(\)/);
