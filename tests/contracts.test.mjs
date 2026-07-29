@@ -1697,13 +1697,12 @@ test("robots and sitemap keep crawlers on content and off the runtime", async ()
 });
 
 test("legal pages exist, are linked from every page, and describe what is actually collected", async () => {
-  const [layout, privacy, terms, disclaimer, site, schema] = await Promise.all([
+  const [layout, privacy, terms, disclaimer, site] = await Promise.all([
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/privacy/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/terms/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/disclaimer/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../lib/site.ts", import.meta.url), "utf8"),
-    readFile(new URL("../db/schema.ts", import.meta.url), "utf8"),
   ]);
 
   // 页尾三条链接出现在 layout 里，等于每一页都能到达。
@@ -1713,13 +1712,17 @@ test("legal pages exist, are linked from every page, and describe what is actual
   assert.match(layout, /无隶属或授权关系/);
   assert.match(disclaimer, /不是官方标准答案/);
 
-  // 隐私政策必须覆盖真实存在的数据项。限流表存 IP，漏写就是隐私政策与实现不符。
-  // 断言约束的是「有没有把这件事告诉用户」，不是用了哪个算法或哪个存储 API——
-  // 后者属于实现细节，正文里刻意不写。
-  assert.match(schema, /auth_throttle/);
-  assert.match(privacy, /IP 地址/);
+  // 隐私政策必须覆盖真实存在的数据项。断言约束的是「有没有把这件事告诉用户」，
+  // 不是用了哪个算法或哪个存储 API——后者属于实现细节，正文里刻意不写。
   assert.match(privacy, /不保存明文/);
   assert.match(privacy, /Cookie/);
+
+  // 反过来，账号安全的防护手段不能出现在这一页：它是公开的，写明「按 IP 限制注册与
+  // 登录频率」等于把挡什么、从哪个方向绕一并告诉攻击者。这条断言守的是这个决定，
+  // 免得日后有人「补全隐私披露」时又把它写回去。只看会渲染出去的部分，源码注释里
+  // 解释这个决定本身要用到这些词。
+  const privacyText = privacy.replace(/^\s*\/\/.*$/gm, "");
+  for (const leak of [/IP/, /撞库/, /频率/, /限流/]) assert.doesNotMatch(privacyText, leak);
   // 数据存在东京、站点在境外，这两点决定了用户数据受哪边管辖，必须写明。
   assert.match(privacy, /东京/);
   assert.match(privacy, /中国大陆境外/);
