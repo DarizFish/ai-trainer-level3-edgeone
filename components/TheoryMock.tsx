@@ -175,13 +175,12 @@ export default function TheoryMock({ allQuestions, officialQuestions, contentVer
   const question = questions[current];
   const visibleNavigatorIndexes = useMemo(() => questions.map((_, index) => index).filter((index) => navigatorFilter === "all" || (navigatorFilter === "answered" ? Boolean(answers[questions[index].id]?.length) : !answers[questions[index].id]?.length)), [answers, navigatorFilter, questions]);
 
-  function begin(force = false) {
+  function begin() {
     if (accountStatus === "loading") {
       setSubmitError("正在确认账号状态，请稍候。");
       return;
     }
     if (!signedIn) { window.location.assign("/account?mode=login&return_to=%2Ftheory%2Fmock"); return; }
-    if (force && !window.confirm("重新开始会清除当前浏览器中保存的本次理论考试进度，确定继续吗？")) return;
     const nextQuestions = mode === "official" ? officialQuestions : pickRandom(allQuestions);
     const nextDeadline = Date.now() + examBlueprint.theory.durationMinutes * 60 * 1000;
     questionsRef.current = nextQuestions;
@@ -203,6 +202,26 @@ export default function TheoryMock({ allQuestions, officialQuestions, contentVer
     setReviewFilter("all");
     setReviewPage(0);
     setShowNavigator(false);
+    setSubmitError("");
+  }
+
+  function returnToExamSelection() {
+    if (submittingRef.current) return;
+    if (!finished && !window.confirm("重新选卷会清除当前浏览器中保存的本次理论考试进度，确定继续吗？")) return;
+    localStorage.removeItem(THEORY_MOCK_STORAGE_KEY);
+    finishedRef.current = false;
+    autoSubmitAttemptedRef.current = false;
+    setStarted(false);
+    setFinished(false);
+    setAnswers({});
+    setCurrent(0);
+    setDeadlineAt(0);
+    setSeconds(examBlueprint.theory.durationMinutes * 60);
+    setResult(null);
+    setReviewFilter("all");
+    setReviewPage(0);
+    setShowNavigator(false);
+    setNavigatorFilter("all");
     setSubmitError("");
   }
 
@@ -236,8 +255,8 @@ export default function TheoryMock({ allQuestions, officialQuestions, contentVer
     return <div className="container workspace mock-result-page">
       <div className="mock-score"><p>本次理论模拟成绩</p><strong>{result.score}</strong><span>/ {result.maxScore} 分</span><h2>{result.passed ? "理论科目合格" : "理论科目暂未合格"}</h2><p>理论与实操分别达到 {examBlueprint.passingScore} 分才合格。</p></div>
       <div className="mock-breakdown">{result.byType.map((item) => <div key={item.type}><span>{examBlueprint.theory.types[item.type].label}</span><strong>{item.score} / {item.maxScore}</strong><small>答对 {item.correct} / {item.total}</small></div>)}<div><span>未作答</span><strong>{result.unansweredQuestionIds.length}</strong><small>错题 {result.wrongQuestionIds.length}</small></div></div>
-      <div className="hero-actions"><button className="button button-primary" onClick={() => begin(true)}>重新开始</button>{result.wrongQuestionIds[0] && <Link className="button button-quiet" href={`/theory?question=${encodeURIComponent(result.wrongQuestionIds[0])}`}>去错题模式订正</Link>}</div>
-      <p className="mock-result-retention">本次交卷结果保存在当前浏览器，刷新后仍可继续复盘；开始新考试时会清除。</p>
+      <div className="hero-actions"><button className="button button-primary" onClick={returnToExamSelection}>重新选卷</button>{result.wrongQuestionIds[0] && <Link className="button button-quiet" href={`/theory?question=${encodeURIComponent(result.wrongQuestionIds[0])}`}>去错题模式订正</Link>}</div>
+      <p className="mock-result-retention">本次交卷结果保存在当前浏览器，刷新后仍可继续复盘；重新选卷时会清除。</p>
       <section className="mock-review">
         <div className="panel-heading"><div><p className="eyebrow">交卷后复盘</p><h2>错题与未答题</h2></div><span>{reviewIds.length} 题</span></div>
         {reviewIds.length === 0 ? <div className="empty-state compact">全部作答正确，表现很稳。</div> : <>
@@ -262,7 +281,7 @@ export default function TheoryMock({ allQuestions, officialQuestions, contentVer
   const navGroups = (["judge", "single", "multi"] as const).map((type) => ({ key: type, label: examBlueprint.theory.types[type].label, indexes: visibleNavigatorIndexes.filter((index) => questions[index].type === type) }));
 
   return <div>
-    <div className="mock-dock"><div className="container mock-dock-row"><div><b>{mode === "official" ? "标准模拟卷" : "随机模拟卷"}</b>　<span>第 {current + 1} / {questions.length} 题　·　已答 {answered}</span></div><div className="mock-dock-actions"><button className="button button-small mock-answer-sheet-trigger" aria-controls="theory-mock-answer-sheet" aria-expanded={showNavigator} onClick={() => setShowNavigator((value) => !value)}>答题卡</button><span className={`timer ${seconds <= 300 ? "timer-warning" : ""}`}>{formatTime(seconds)}</span><button className="button button-small" onClick={() => begin(true)}>重新开始</button><button className="button button-small button-danger" disabled={submitting} onClick={() => void confirmSubmit()}>{submitting ? "正在交卷…" : "交卷"}</button></div></div><div className="mock-progress-track"><span style={{ width: `${(answered / questions.length) * 100}%` }} /></div></div>
+    <div className="mock-dock"><div className="container mock-dock-row"><div><b>{mode === "official" ? "标准模拟卷" : "随机模拟卷"}</b>　<span>第 {current + 1} / {questions.length} 题　·　已答 {answered}</span></div><div className="mock-dock-actions"><button className="button button-small mock-answer-sheet-trigger" aria-controls="theory-mock-answer-sheet" aria-expanded={showNavigator} onClick={() => setShowNavigator((value) => !value)}>答题卡</button><span className={`timer ${seconds <= 300 ? "timer-warning" : ""}`}>{formatTime(seconds)}</span><button className="button button-small" disabled={submitting} onClick={returnToExamSelection}>重新选卷</button><button className="button button-small button-danger" disabled={submitting} onClick={() => void confirmSubmit()}>{submitting ? "正在交卷…" : "交卷"}</button></div></div><div className="mock-progress-track"><span style={{ width: `${(answered / questions.length) * 100}%` }} /></div></div>
     <div className="container workspace theory-mock-layout">
       <main className="theory-mock-question-column">
         {submitError && <div className="account-error" role="alert">{submitError} <button type="button" onClick={() => void submitExam()}>重试交卷</button></div>}
