@@ -95,6 +95,7 @@ export const codeDrafts = pgTable("code_drafts", {
   cellsJson: text("cells_json").notNull(),
   revision: integer("revision").notNull().default(1),
   contentVersion: text("content_version").notNull(),
+  ip: text("ip"),
   updatedAt: updatedAt(),
 }, (table) => [
   primaryKey({ columns: [table.email, table.taskCode] }),

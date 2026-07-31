@@ -331,7 +331,7 @@ test("theory sidebar tracks each question type and omits redundant navigation gr
   assert.match(theory, /已停留在本题/);
   // Windows 关闭系统动画时会命中 reduced-motion。倒计时可以改成分段更新，但不能
   // 完全禁用，否则自动跳题仍会发生，桌面端用户却只能看到一条静止的“进度条”。
-  assert.match(styles, /prefers-reduced-motion:\s*reduce[\s\S]*animation-timing-function:\s*steps/);
+  assert.match(styles, /practice-auto-advance-bar\s*\{[^}]*animation-duration:\s*2600ms\s*!important[^}]*animation-timing-function:\s*steps/);
   assert.doesNotMatch(styles, /prefers-reduced-motion:\s*reduce[^}]*practice-auto-advance-bar[^}]*animation:\s*none/);
   assert.match(theory, /if \(correct\) \{/);
   assert.match(theory, /goToQuestion\(currentIndex \+ 1\)/);
@@ -372,6 +372,27 @@ test("theory types and practical chapters can reset their own progress", async (
   assert.match(lab, /章节进度已重置，已恢复原始 Notebook/);
   assert.match(styles, /\.practical-progress-reset-row/);
   assert.deepEqual([...new Set(content.practical.map((task) => task.group))], ["1.1", "1.2", "2.1", "2.2", "3.1", "3.2", "4.1", "4.2"]);
+});
+
+test("code drafts retain the last writer IP without exposing it to the browser", async () => {
+  const [schema, route, migrationNames] = await Promise.all([
+    readFile(new URL("../db/schema.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/drafts/[code]/route.ts", import.meta.url), "utf8"),
+    readdir(new URL("../drizzle/", import.meta.url)),
+  ]);
+  const migrations = (await Promise.all(migrationNames
+    .filter((name) => name.endsWith(".sql"))
+    .sort()
+    .map((name) => readFile(new URL(`../drizzle/${name}`, import.meta.url), "utf8"))))
+    .join("\n");
+
+  assert.match(schema, /ip: text\("ip"\)/);
+  assert.match(migrations, /ALTER TABLE "code_drafts" ADD COLUMN "ip" text/);
+  assert.match(route, /clientAddress\(request\)/);
+  assert.match(route, /values\(\{[\s\S]*ip,[\s\S]*\}\)\.onConflictDoUpdate/);
+  assert.match(route, /set: \{[^}]*ip,/);
+  assert.match(route, /select\(draftResponseColumns\)/);
+  assert.doesNotMatch(route, /ip: codeDrafts\.ip/);
 });
 
 test("content and lab manifests contain the complete versioned bank", async () => {

@@ -1078,7 +1078,12 @@ button { color: inherit; }
 /* 这条横线是自动跳题倒计时的状态反馈，不是装饰动画。Windows 关闭“动画效果”时
    prefers-reduced-motion 会命中；原先直接 animation:none，导致桌面端横线完全不动，
    但 2.6 秒计时器仍在运行。改成分段倒计时，既减少连续运动，也保留必要的进度反馈。 */
-@media (prefers-reduced-motion: reduce) { .practice-auto-advance-bar { animation-timing-function: steps(13, end); } }
+@media (prefers-reduced-motion: reduce) {
+  .practice-auto-advance-bar {
+    animation-duration: 2600ms !important;
+    animation-timing-function: steps(13, end);
+  }
+}
 @keyframes practice-auto-advance-countdown { from { transform: scaleX(1); } to { transform: scaleX(0); } }
 .practice-feedback strong { color: var(--red); font-size: 17px; }
 .practice-feedback.correct strong { color: #24704a; }

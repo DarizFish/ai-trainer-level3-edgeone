@@ -1,14 +1,25 @@
 import { and, eq } from "drizzle-orm";
 import { getDb } from "@/db";
 import { codeDrafts } from "@/db/schema";
+import { clientAddress } from "@/lib/auth-throttle";
 import { content, practicalByCode } from "@/lib/content";
 import { requireApiUser, unauthorized } from "@/lib/server-user";
+
+// IP 只用于服务端后续识别异常请求，不随草稿内容返回给浏览器。
+const draftResponseColumns = {
+  email: codeDrafts.email,
+  taskCode: codeDrafts.taskCode,
+  cellsJson: codeDrafts.cellsJson,
+  revision: codeDrafts.revision,
+  contentVersion: codeDrafts.contentVersion,
+  updatedAt: codeDrafts.updatedAt,
+};
 
 export async function GET(_: Request, { params }: { params: Promise<{ code: string }> }) {
   const user = await requireApiUser();
   if (!user) return unauthorized();
   const { code } = await params;
-  const [draft] = await getDb().select().from(codeDrafts).where(and(eq(codeDrafts.email, user.email), eq(codeDrafts.taskCode, code))).limit(1);
+  const [draft] = await getDb().select(draftResponseColumns).from(codeDrafts).where(and(eq(codeDrafts.email, user.email), eq(codeDrafts.taskCode, code))).limit(1);
   return Response.json({ draft: draft ?? null });
 }
 
@@ -55,21 +66,23 @@ export async function PUT(request: Request, { params }: { params: Promise<{ code
   }
 
   const db = getDb();
-  const [current] = await db.select().from(codeDrafts).where(and(eq(codeDrafts.email, user.email), eq(codeDrafts.taskCode, code))).limit(1);
+  const [current] = await db.select({ cellsJson: codeDrafts.cellsJson, revision: codeDrafts.revision }).from(codeDrafts).where(and(eq(codeDrafts.email, user.email), eq(codeDrafts.taskCode, code))).limit(1);
   if (current && current.revision !== payload.revision) {
     return Response.json({ conflict: true, local: draft, cloud: JSON.parse(current.cellsJson), revision: current.revision }, { status: 409 });
   }
 
   const revision = (current?.revision ?? 0) + 1;
+  const ip = clientAddress(request);
   await db.insert(codeDrafts).values({
     email: user.email,
     taskCode: code,
     cellsJson: serialized,
     revision,
     contentVersion: content.version,
+    ip,
   }).onConflictDoUpdate({
     target: [codeDrafts.email, codeDrafts.taskCode],
-    set: { cellsJson: serialized, revision, contentVersion: content.version, updatedAt: new Date().toISOString() },
+    set: { cellsJson: serialized, revision, contentVersion: content.version, ip, updatedAt: new Date().toISOString() },
   });
   return Response.json({ revision });
 }

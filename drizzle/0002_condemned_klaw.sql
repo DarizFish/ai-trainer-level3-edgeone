@@ -1,0 +1,1 @@
+ALTER TABLE "code_drafts" ADD COLUMN "ip" text;
