@@ -27,7 +27,6 @@ PrivateDevices=true
 PrivateTmp=true
 ProtectControlGroups=true
 ProtectHome=true
-ProtectKernelLogs=true
 ProtectKernelModules=true
 ProtectKernelTunables=true
 ProtectSystem=full
