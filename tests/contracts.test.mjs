@@ -1733,12 +1733,14 @@ test("self-hosted releases preserve proxy trust, runtime health, and cache seman
   assert.match(ready, /Cache-Control["']:\s*["']no-store/);
 
   assert.match(nginx, /client_max_body_size 8m/);
+  assert.match(nginx, /application\/javascript mjs/);
   assert.match(nginx, /proxy_set_header X-Real-IP \$remote_addr/);
   assert.match(nginx, /proxy_set_header EO-Connecting-IP ["']["']/);
   assert.match(nginx, /pyodide-lock\\\.json[\s\S]*must-revalidate/);
   assert.match(nginx, /labs\/models\/[\s\S]*max-age=31536000/);
   assert.match(systemd, /User=aitrainer/);
   assert.match(systemd, /HOSTNAME=127\.0\.0\.1/);
+  assert.match(systemd, /SuccessExitStatus=143/);
   assert.match(systemd, /TRUSTED_CLIENT_IP_HEADER=x-real-ip/);
   assert.match(guide, /http:\/\/localhost:8080/);
 });

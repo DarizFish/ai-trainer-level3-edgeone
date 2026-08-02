@@ -19,6 +19,7 @@ Restart=on-failure
 RestartSec=5s
 TimeoutStopSec=30s
 KillSignal=SIGTERM
+SuccessExitStatus=143
 UMask=0027
 LimitNOFILE=65535
 
