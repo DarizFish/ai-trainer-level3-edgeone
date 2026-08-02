@@ -58,7 +58,7 @@ jobs:
 
   production-smoke:
     name: Production deployment smoke
-    if: github.event_name != 'pull_request'
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/codex/edgeone-migration'
     needs: quality
     runs-on: ubuntu-latest
     timeout-minutes: 10

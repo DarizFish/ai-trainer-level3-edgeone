@@ -1702,7 +1702,7 @@ test("credential endpoints spend rate-limit quota before doing password work", a
 });
 
 test("self-hosted releases preserve proxy trust, runtime health, and cache semantics", async () => {
-  const [nextConfig, packageJson, database, throttle, live, ready, nginx, systemd, envExample, packaging, guide] = await Promise.all([
+  const [nextConfig, packageJson, database, throttle, live, ready, nginx, systemd, envExample, packaging, guide, deployWorkflow, deployScript, deployBootstrap, knownHosts] = await Promise.all([
     readFile(new URL("../next.config.ts", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8"),
     readFile(new URL("../db/index.ts", import.meta.url), "utf8"),
@@ -1714,12 +1714,17 @@ test("self-hosted releases preserve proxy trust, runtime health, and cache seman
     readFile(new URL("../.env.example", import.meta.url), "utf8"),
     readFile(new URL("../scripts/package-self-hosted.mjs", import.meta.url), "utf8"),
     readFile(new URL("../docs/SELF-HOSTING.md", import.meta.url), "utf8"),
+    readFile(new URL("../.github/workflows/deploy-self-hosted.yml", import.meta.url), "utf8"),
+    readFile(new URL("../deploy/scripts/deploy-release.sh", import.meta.url), "utf8"),
+    readFile(new URL("../deploy/scripts/bootstrap-deploy-user.sh", import.meta.url), "utf8"),
+    readFile(new URL("../deploy/ssh/known_hosts", import.meta.url), "utf8"),
   ]);
 
   assert.match(nextConfig, /output:\s*["']standalone["']/);
   assert.equal(JSON.parse(packageJson).scripts["package:self-hosted"], "node scripts/package-self-hosted.mjs");
   assert.match(packaging, /\.next["'], ["']static/);
   assert.match(packaging, /["']public["']/);
+  assert.match(packaging, /SOURCE_REVISION/);
 
   assert.match(database, /DATABASE_POOL_MAX/);
   assert.match(database, /MAX_DATABASE_POOL_MAX/);
@@ -1743,6 +1748,23 @@ test("self-hosted releases preserve proxy trust, runtime health, and cache seman
   assert.match(systemd, /SuccessExitStatus=143/);
   assert.match(systemd, /TRUSTED_CLIENT_IP_HEADER=x-real-ip/);
   assert.match(guide, /http:\/\/localhost:8080/);
+
+  assert.match(deployWorkflow, /workflow_dispatch/);
+  assert.match(deployWorkflow, /codex\/self-hosted-server-migration/);
+  assert.match(deployWorkflow, /npm run test:ci/);
+  assert.match(deployWorkflow, /DEPLOY_SSH_PRIVATE_KEY/);
+  assert.match(deployWorkflow, /StrictHostKeyChecking=yes/);
+  assert.match(deployWorkflow, /sudo \/usr\/local\/sbin\/deploy-aitrainer/);
+  assert.doesNotMatch(deployWorkflow, /root@|home\.pem/);
+  assert.match(deployScript, /\^\[0-9a-f\]\{40\}\$/);
+  assert.match(deployScript, /flock -n/);
+  assert.match(deployScript, /sha256sum/);
+  assert.match(deployScript, /rolling back/);
+  assert.match(deployScript, /api\/health\/ready/);
+  assert.match(deployBootstrap, /restrict %s/);
+  assert.match(deployBootstrap, /NOPASSWD: \/usr\/local\/sbin\/deploy-aitrainer/);
+  assert.match(deployBootstrap, /passwd --lock deploy/);
+  assert.match(knownHosts, /^39\.96\.7\.2 ssh-ed25519 /);
 });
 
 test("robots and sitemap keep crawlers on content and off the runtime", async () => {
