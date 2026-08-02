@@ -1701,6 +1701,48 @@ test("credential endpoints spend rate-limit quota before doing password work", a
   assert.ok(login.indexOf("consumeThrottle(failureBucket") > login.indexOf("verifyPassword("), "邮箱额度应当只在校验失败后累加");
 });
 
+test("self-hosted releases preserve proxy trust, runtime health, and cache semantics", async () => {
+  const [nextConfig, packageJson, database, throttle, live, ready, nginx, systemd, envExample, packaging, guide] = await Promise.all([
+    readFile(new URL("../next.config.ts", import.meta.url), "utf8"),
+    readFile(new URL("../package.json", import.meta.url), "utf8"),
+    readFile(new URL("../db/index.ts", import.meta.url), "utf8"),
+    readFile(new URL("../lib/auth-throttle.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/health/live/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/health/ready/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../deploy/nginx/aitrainer.conf", import.meta.url), "utf8"),
+    readFile(new URL("../deploy/systemd/aitrainer.service", import.meta.url), "utf8"),
+    readFile(new URL("../.env.example", import.meta.url), "utf8"),
+    readFile(new URL("../scripts/package-self-hosted.mjs", import.meta.url), "utf8"),
+    readFile(new URL("../docs/SELF-HOSTING.md", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(nextConfig, /output:\s*["']standalone["']/);
+  assert.equal(JSON.parse(packageJson).scripts["package:self-hosted"], "node scripts/package-self-hosted.mjs");
+  assert.match(packaging, /\.next["'], ["']static/);
+  assert.match(packaging, /["']public["']/);
+
+  assert.match(database, /DATABASE_POOL_MAX/);
+  assert.match(database, /MAX_DATABASE_POOL_MAX/);
+  assert.match(throttle, /TRUSTED_CLIENT_IP_HEADER/);
+  assert.match(throttle, /SUPPORTED_TRUSTED_ADDRESS_HEADERS/);
+  assert.match(envExample, /TRUSTED_CLIENT_IP_HEADER=eo-connecting-ip/);
+
+  assert.match(live, /status:\s*["']ok["']/);
+  assert.match(ready, /select 1/);
+  assert.match(ready, /status:\s*503/);
+  assert.match(ready, /Cache-Control["']:\s*["']no-store/);
+
+  assert.match(nginx, /client_max_body_size 8m/);
+  assert.match(nginx, /proxy_set_header X-Real-IP \$remote_addr/);
+  assert.match(nginx, /proxy_set_header EO-Connecting-IP ["']["']/);
+  assert.match(nginx, /pyodide-lock\\\.json[\s\S]*must-revalidate/);
+  assert.match(nginx, /labs\/models\/[\s\S]*max-age=31536000/);
+  assert.match(systemd, /User=aitrainer/);
+  assert.match(systemd, /HOSTNAME=127\.0\.0\.1/);
+  assert.match(systemd, /TRUSTED_CLIENT_IP_HEADER=x-real-ip/);
+  assert.match(guide, /http:\/\/localhost:8080/);
+});
+
 test("robots and sitemap keep crawlers on content and off the runtime", async () => {
   const [robots, sitemap] = await Promise.all([
     readFile(new URL("../app/robots.ts", import.meta.url), "utf8"),

@@ -10,6 +10,8 @@
     "dev": "next dev",
     "prebuild": "node scripts/generate-public-content.mjs",
     "build": "next build --webpack",
+    "package:self-hosted": "node scripts/package-self-hosted.mjs",
+    "build:self-hosted": "npm run build && npm run package:self-hosted",
     "start": "next start",
     "test": "npm run test:quick",
     "test:contracts": "node --test tests/contracts.test.mjs tests/practical-requirements.test.mjs tests/publish-theory-review.test.mjs tests/theory-review-state.test.mjs",

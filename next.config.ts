@@ -18,6 +18,11 @@ const embedderPolicy = [{ key: "Cross-Origin-Embedder-Policy", value: "require-c
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // Produce a Linux-deployable runtime bundle that contains only the files
+  // traced by Next.js. `public/` and `.next/static/` are added by the
+  // package:self-hosted script because Next intentionally leaves them out of
+  // the standalone directory.
+  output: "standalone",
   async headers() {
     return [
       // COOP/COEP 是文档级策略：外层页面必须自身跨域隔离，内嵌的 JupyterLite
