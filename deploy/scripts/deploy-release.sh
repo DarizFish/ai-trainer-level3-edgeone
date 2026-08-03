@@ -73,7 +73,13 @@ else
 
   staging="$(mktemp -d "${release_root}/.${revision}.XXXXXX")"
   chown aitrainer:aitrainer "${staging}"
-  runuser -u aitrainer -- tar -xzf "${archive}" -C "${staging}" --no-same-owner --no-same-permissions
+  # /home/deploy is intentionally not traversable by the service account.
+  # Copy the verified archive into its private staging directory, then keep
+  # extraction unprivileged so a malicious tar member cannot write as root.
+  staging_archive="${staging}/.release.tar.gz"
+  install -o aitrainer -g aitrainer -m 0400 "${archive}" "${staging_archive}"
+  runuser -u aitrainer -- tar -xzf "${staging_archive}" -C "${staging}" --no-same-owner --no-same-permissions
+  rm -f -- "${staging_archive}"
 
   if find "${staging}" -type l -print -quit | grep -q .; then
     echo "release archive must not contain symbolic links" >&2

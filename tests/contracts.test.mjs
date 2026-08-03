@@ -1762,6 +1762,8 @@ test("self-hosted releases preserve proxy trust, runtime health, and cache seman
   assert.match(deployScript, /\^\[0-9a-f\]\{40\}\$/);
   assert.match(deployScript, /flock -n/);
   assert.match(deployScript, /sha256sum/);
+  assert.match(deployScript, /install -o aitrainer -g aitrainer -m 0400/);
+  assert.match(deployScript, /runuser -u aitrainer -- tar -xzf "\$\{staging_archive\}"/);
   assert.match(deployScript, /rolling back/);
   assert.match(deployScript, /api\/health\/ready/);
   assert.match(deployBootstrap, /restrict %s/);
