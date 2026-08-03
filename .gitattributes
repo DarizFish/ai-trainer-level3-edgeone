@@ -1,3 +1,4 @@
 public/labs/**/*.csv text eol=lf
 public/labs/**/*.txt text eol=lf
 public/labs/**/*.py text eol=lf
+data/references/theory-review-state/manifest.json text eol=crlf
