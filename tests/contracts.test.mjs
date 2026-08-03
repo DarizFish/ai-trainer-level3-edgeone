@@ -1331,6 +1331,9 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
   assert.match(configUtils, /pyodideUrl\.searchParams\.set\('attempt', attempt\)/);
   assert.match(labShell, /config-utils\.js\?_=20260726-pyodide0277-runtime11/);
   assert.match(bridgeExtension, /kernelStarts/);
+  assert.match(bridgeExtension, /KERNEL_ATTACH_GRACE_MS/);
+  assert.match(bridgeExtension, /attachDeadline/);
+  assert.match(bridgeExtension, /activeKernel/);
   assert.match(bridgeExtension, /kernel\.info|existing\.info/);
   assert.match(bridgeExtension, /preparationRuns/);
   assert.match(bridgeExtension, /preparationFailure/);
