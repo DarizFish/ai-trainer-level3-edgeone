@@ -118,8 +118,7 @@ test("public route shells are static while answer scoring is immediate and persi
   assert.match(theoryAnswer, /Array\.isArray\(payload\.attempts\)/);
   assert.match(theoryAnswer, /excluded\.attempts/);
   assert.match(theoryAnswer, /withDbDeadline\("theory\.answer\.upsert"/);
-  assert.match(theoryAnswer, /status: 503/);
-  assert.match(theoryAnswer, /"Retry-After": "2"/);
+  assert.match(theoryAnswer, /databaseUnavailable\("theory\.answer\.upsert"/);
   assert.match(progressPage, /initialData=\{progress\}/);
   assert.doesNotMatch(dashboard, /fetch\("\/api\/progress"/);
 });
@@ -137,6 +136,55 @@ test("database deadlines retire a poisoned singleton connection before EdgeOne t
   assert.match(database, /aiTrainerPostgres = undefined/);
   assert.match(database, /databaseGlobal\.aiTrainerPostgres !== client/);
   assert.match(accountAuth, /withDbDeadline\("account\.session\.lookup"/);
+});
+
+// 连接池是 max: 1。一条没有 deadline 的语句卡住，就会把该函数实例后续所有请求一起
+// 堵到 EdgeOne 的 30 秒上限——0232686 修的正是这个，只是当时只堵住了两个入口。
+// 与其逐个文件写正则（漏一个就是一次线上事故），不如钉住那条不变量本身：
+// 请求路径上不许再出现裸 getDb()。
+test("every request-facing database call is bounded by a deadline", async () => {
+  const apiDirectory = new URL("../app/api/", import.meta.url);
+  const routes = [];
+  const collect = async (directory) => {
+    for (const entry of await readdir(directory, { withFileTypes: true })) {
+      const child = new URL(`${entry.name}${entry.isDirectory() ? "/" : ""}`, directory);
+      if (entry.isDirectory()) await collect(child);
+      else if (entry.name === "route.ts") routes.push(child);
+    }
+  };
+  await collect(apiDirectory);
+  assert.ok(routes.length >= 13, `expected the full API surface, found ${routes.length} routes`);
+
+  // getDb() 本身没有超时保护，只有 withDbDeadline 会在超时后退掉那条连接。
+  // 这两个 lib 也在请求路径上，一并覆盖。
+  const guarded = [
+    ...routes,
+    new URL("../lib/progress-data.ts", import.meta.url),
+    new URL("../lib/account-auth.ts", import.meta.url),
+  ];
+  for (const file of guarded) {
+    const source = await readFile(file, "utf8");
+    const name = file.pathname.split("/api/")[1] ?? file.pathname.split("/").pop();
+    assert.doesNotMatch(source, /\bgetDb\(\)/, `${name} 走了没有 deadline 的 getDb()`);
+  }
+
+  // 限流是登录注册的第一条语句，它卡住等于账号体系整体卡住；显式传执行器的那条
+  // 分支是给事务用的，不能因此把默认路径也退回裸 getDb()。
+  const throttle = await readFile(new URL("../lib/auth-throttle.ts", import.meta.url), "utf8");
+  assert.match(throttle, /withDbDeadline\(operation, \(client\) => client\.execute/);
+  assert.match(throttle, /withDbDeadline\("auth\.throttle\.sweep"/);
+
+  // 超时要转成可重试的 503，而不是 500——客户端只对 503 + Retry-After 退避重试。
+  const apiDb = await readFile(new URL("../lib/api-db.ts", import.meta.url), "utf8");
+  assert.match(apiDb, /status: 503/);
+  assert.match(apiDb, /"Retry-After": "2"/);
+  assert.match(apiDb, /if \(!isDatabaseUnavailable\(cause\)\) throw cause;/);
+
+  // 登录/注册有自己的 stage 式错误映射，正则匹配的是连接类字样，对不上超时文案。
+  for (const route of ["login", "register"]) {
+    const source = await readFile(new URL(`../app/api/auth/${route}/route.ts`, import.meta.url), "utf8");
+    assert.match(source, /isDatabaseUnavailable\(cause\) \|\|/, `${route} 会把数据库超时错报成 500`);
+  }
 });
 
 test("versioned public content banks exactly match the source content", async () => {
@@ -1270,11 +1318,13 @@ test("practical mock snapshots and batch submission enforce the six-module bluep
   assert.equal((mock.match(/fetch\("\/api\/practical\/attempt"/g) ?? []).length, 1);
   assert.doesNotMatch(mock, /Promise\.all\(tasks\.map/);
   assert.match(practicalApi, /validatePracticalExamTasks/);
-  assert.match(practicalApi, /await db\.transaction/);
+  // 六个模块要么全写要么全不写。断言用的是事务本身，不绑定它外面套了什么——
+  // 现在外面套着 withDbDeadline，超时会退掉连接、未提交的事务随之回滚。
+  assert.match(practicalApi, /db\.transaction\(/);
   assert.match(practicalApi, /await transaction\.insert/);
   assert.match(practicalApi, /Object\.fromEntries/);
   assert.match(practicalApi, /scorePractical/);
-  assert.match(practicalApi, /await db\.insert/);
+  assert.match(practicalApi, /db\.insert\(practicalAttempts\)/);
   assert.match(page, /contentVersion=\{content\.version\}/);
 });
 
@@ -1701,9 +1751,10 @@ test("credential endpoints spend rate-limit quota before doing password work", a
   ]);
 
   // 计数必须落库。放进程内存的话，EdgeOne 多实例各数各的，并发就能把每个实例的额度
-  // 分别用满，等于没限。
+  // 分别用满，等于没限。断言的是「计数写进了表」，不是某个具体的取库写法。
   assert.match(schema, /auth_throttle/);
-  assert.match(throttle, /getDb\(\)/);
+  assert.match(throttle, /INSERT INTO auth_throttle/);
+  assert.doesNotMatch(throttle, /new Map\(|new Set\(|globalThis\./, "限流计数不能落在进程内存里");
 
   // 这是整条防线的关键顺序：verifyPassword / createPasswordRecord 每次要跑 10 万轮
   // PBKDF2，额度必须先扣。顺序反了就还是能被 CPU 放大打满。

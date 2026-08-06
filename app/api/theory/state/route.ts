@@ -1,15 +1,17 @@
 import { and, eq } from "drizzle-orm";
-import { getDb } from "@/db";
+import { withDbDeadline } from "@/db";
 import { favorites, theoryProgress } from "@/db/schema";
+import { withDatabaseErrors } from "@/lib/api-db";
 import { requireApiUser, unauthorized } from "@/lib/server-user";
 
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+export const GET = withDatabaseErrors("theory.state", async () => {
   const user = await requireApiUser();
   if (!user) return unauthorized();
-  const db = getDb();
-  const [favoriteRows, progressRows] = await Promise.all([
+  // 连接池是 max: 1，这两条查询无论如何都会排队执行，所以共用一个 deadline，
+  // 而不是各自计时——分开计时会让两条各拿满 8 秒，合计逼近 EdgeOne 的 30 秒上限。
+  const [favoriteRows, progressRows] = await withDbDeadline("theory.state.load", (db) => Promise.all([
     db
       .select({ id: favorites.itemId })
       .from(favorites)
@@ -26,7 +28,7 @@ export async function GET() {
       })
       .from(theoryProgress)
       .where(eq(theoryProgress.email, user.email)),
-  ]);
+  ]));
 
   return Response.json({
     favoriteIds: favoriteRows.map(({ id }) => id),
@@ -38,4 +40,4 @@ export async function GET() {
       correct,
     })),
   });
-}
+});

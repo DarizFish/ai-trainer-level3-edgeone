@@ -103,15 +103,56 @@ function retireDatabaseClient(
   });
 }
 
-function isConnectionFailure(cause: unknown): boolean {
-  if (cause instanceof DatabaseDeadlineError) return true;
-  const error = errorSummary(cause);
-  return /CONNECT_TIMEOUT|CONNECTION_(?:CLOSED|DESTROYED)|ECONNRESET|ECONNREFUSED|EPIPE|ETIMEDOUT|ENETUNREACH|ENOTFOUND|57P0[123]/i
-    .test(`${error.code} ${error.message}`);
+/**
+ * 这次失败是「数据库暂时够不着」还是「这条语句本身有问题」。前者应答 503 让客户端
+ * 重试，后者是缺陷，必须原样抛出去暴露成 500——把两者混为一谈会让约束冲突、语法
+ * 错误这类问题伪装成网络抖动，线上再也查不出来。
+ */
+export function isDatabaseUnavailable(cause: unknown): boolean {
+  return isConnectionFailure(cause);
 }
 
+const CONNECTION_FAILURE =
+  /CONNECT_TIMEOUT|CONNECTION_(?:CLOSED|DESTROYED)|ECONNRESET|ECONNREFUSED|EPIPE|ETIMEDOUT|ENETUNREACH|ENOTFOUND|57P0[123]/i;
+
+/**
+ * 必须顺着 `cause` 链找，不能只看最外层。Drizzle 把驱动错误重新包过一层，抛出来的是
+ * `Error: Failed query: INSERT INTO ...`，既没有 `code`，消息里也只有 SQL；真正的
+ * `CONNECT_TIMEOUT` 挂在它的 `cause` 上。只看外层的话每一次连接故障都会被当成普通
+ * 语句错误——那条已经坏掉的连接不会被退掉，客户端也拿不到可重试的 503。
+ */
+function isConnectionFailure(cause: unknown): boolean {
+  if (cause instanceof DatabaseDeadlineError) return true;
+  return walkCauses(cause).some((error) => CONNECTION_FAILURE.test(`${error.code} ${error.message}`));
+}
+
+/** 最外层的 name/message 最好读，但 `code` 往往只在链底，取第一个拿得到的。 */
 export function errorSummary(cause: unknown): { name: string; code: string; message: string } {
-  if (!(cause instanceof Error)) return { name: "Error", code: "UNKNOWN", message: String(cause) };
-  const code = "code" in cause ? String((cause as Error & { code?: unknown }).code ?? "UNKNOWN") : "UNKNOWN";
-  return { name: cause.name, code, message: cause.message };
+  const chain = walkCauses(cause);
+  const outermost = chain[0];
+  return {
+    ...outermost,
+    code: chain.find((error) => error.code !== "UNKNOWN")?.code ?? "UNKNOWN",
+  };
+}
+
+function walkCauses(cause: unknown): { name: string; code: string; message: string }[] {
+  const chain: { name: string; code: string; message: string }[] = [];
+  const seen = new Set<unknown>();
+  let current: unknown = cause;
+
+  // 深度设上限并去重：`cause` 允许成环，走进环里就再也出不来了。
+  for (let depth = 0; current && depth < 8 && !seen.has(current); depth += 1) {
+    seen.add(current);
+    if (current instanceof Error) {
+      const code = "code" in current ? String((current as Error & { code?: unknown }).code ?? "UNKNOWN") : "UNKNOWN";
+      chain.push({ name: current.name, code, message: current.message });
+      current = current.cause;
+    } else {
+      chain.push({ name: "Error", code: "UNKNOWN", message: String(current) });
+      current = null;
+    }
+  }
+
+  return chain.length ? chain : [{ name: "Error", code: "UNKNOWN", message: String(cause) }];
 }

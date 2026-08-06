@@ -1,16 +1,19 @@
 import { content, theoryById } from "@/lib/content";
 import { isCorrect } from "@/lib/scoring";
 import { requireApiUser, unauthorized } from "@/lib/server-user";
-import { errorSummary, withDbDeadline } from "@/db";
+import { withDbDeadline } from "@/db";
 import { theoryProgress } from "@/db/schema";
+import { databaseUnavailable } from "@/lib/api-db";
 import { sql } from "drizzle-orm";
+
+const SYNC_UNAVAILABLE = "学习记录暂时无法同步，请稍后重试";
 
 export async function POST(request: Request) {
   let user;
   try {
     user = await requireApiUser();
   } catch (cause) {
-    return databaseUnavailable("auth", cause);
+    return databaseUnavailable("theory.answer.auth", cause, SYNC_UNAVAILABLE);
   }
   if (!user) return unauthorized();
   const payload = await request.json() as {
@@ -72,7 +75,7 @@ export async function POST(request: Request) {
         },
       }));
   } catch (cause) {
-    return databaseUnavailable("upsert", cause);
+    return databaseUnavailable("theory.answer.upsert", cause, SYNC_UNAVAILABLE);
   }
 
   if (!Array.isArray(payload.attempts) && payload.questionId) {
@@ -86,12 +89,4 @@ export async function POST(request: Request) {
     });
   }
   return Response.json({ saved: rows.length });
-}
-
-function databaseUnavailable(stage: "auth" | "upsert", cause: unknown): Response {
-  console.error("Theory answer database unavailable", { stage, ...errorSummary(cause) });
-  return Response.json(
-    { error: "学习记录暂时无法同步，请稍后重试", code: `THEORY_ANSWER_${stage.toUpperCase()}` },
-    { status: 503, headers: { "Cache-Control": "no-store", "Retry-After": "2" } },
-  );
 }

@@ -1,7 +1,7 @@
 import { and, eq, gt } from "drizzle-orm";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { getDb, withDbDeadline } from "@/db";
+import { withDbDeadline } from "@/db";
 import { sessions, users } from "@/db/schema";
 import { ensureAccountSchema } from "@/lib/account-schema";
 
@@ -98,7 +98,7 @@ export async function createSession(email: string): Promise<{ token: string }> {
   const token = encodeBase64Url(crypto.getRandomValues(new Uint8Array(32)));
   const tokenHash = await sha256(token);
   const expiresAt = new Date(Date.now() + SESSION_MAX_AGE_SECONDS * 1000).toISOString();
-  await getDb().insert(sessions).values({ tokenHash, email, expiresAt });
+  await withDbDeadline("account.session.create", (db) => db.insert(sessions).values({ tokenHash, email, expiresAt }));
   return { token };
 }
 
@@ -106,7 +106,8 @@ export async function deleteSession(cookieHeader: string | null): Promise<void> 
   const token = readSessionToken(cookieHeader);
   if (!token) return;
   await ensureAccountSchema();
-  await getDb().delete(sessions).where(eq(sessions.tokenHash, await sha256(token)));
+  const tokenHash = await sha256(token);
+  await withDbDeadline("account.session.delete", (db) => db.delete(sessions).where(eq(sessions.tokenHash, tokenHash)));
 }
 
 export function serializeSessionCookie(token: string, secure: boolean): string {

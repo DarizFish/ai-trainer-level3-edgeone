@@ -1,7 +1,8 @@
 import { content, practicalByCode } from "@/lib/content";
 import { requireApiUser, unauthorized } from "@/lib/server-user";
-import { getDb } from "@/db";
+import { withDbDeadline } from "@/db";
 import { practicalAttempts } from "@/db/schema";
+import { withDatabaseErrors } from "@/lib/api-db";
 import { validatePracticalExamTasks, type PracticalExamResult } from "@/lib/practical-exam-storage";
 import { scorePractical } from "@/lib/scoring";
 import { practicalMockEnabled } from "@/lib/features";
@@ -33,7 +34,7 @@ function scoreAttempt(input: AttemptInput) {
   };
 }
 
-export async function POST(request: Request) {
+export const POST = withDatabaseErrors("practical.attempt", async (request: Request) => {
   if (!practicalMockEnabled) {
     return Response.json({ error: "实操组卷暂未开放" }, { status: 404 });
   }
@@ -50,8 +51,6 @@ export async function POST(request: Request) {
   if (!isRecord(parsed)) return Response.json({ error: "请求数据无效" }, { status: 400 });
   const payload = parsed as AttemptInput & { attempts?: unknown };
 
-  const db = getDb();
-
   if (Array.isArray(payload.attempts)) {
     const inputs = payload.attempts as AttemptInput[];
     const tasks = validatePracticalExamTasks(inputs.map((attempt) => attempt?.taskCode), content.practical);
@@ -60,7 +59,9 @@ export async function POST(request: Request) {
     const attempts = inputs.map(scoreAttempt);
     if (attempts.some((attempt) => !attempt)) return Response.json({ error: "实操题或评分数据无效" }, { status: 400 });
     const verifiedAttempts = attempts as NonNullable<ReturnType<typeof scoreAttempt>>[];
-    await db.transaction(async (transaction) => {
+    // deadline 包住整个事务：超时会退掉那条连接，未提交的事务随之回滚，不会留下
+    // 只写进去一半的成绩。
+    await withDbDeadline("practical.attempt.batch", (db) => db.transaction(async (transaction) => {
       for (const { task, scored, notes } of verifiedAttempts) {
         await transaction.insert(practicalAttempts).values({
           email: user.email,
@@ -72,7 +73,7 @@ export async function POST(request: Request) {
           contentVersion: content.version,
         });
       }
-    });
+    }));
     return Response.json({
       results: Object.fromEntries(verifiedAttempts.map(({ task, result }) => [task.code, result])),
     });
@@ -80,7 +81,7 @@ export async function POST(request: Request) {
 
   const attempt = scoreAttempt(payload);
   if (!attempt) return Response.json({ error: "实操题或评分数据无效" }, { status: 400 });
-  await db.insert(practicalAttempts).values({
+  await withDbDeadline("practical.attempt.insert", (db) => db.insert(practicalAttempts).values({
     email: user.email,
     taskCode: attempt.task.code,
     score: attempt.scored.score,
@@ -88,6 +89,6 @@ export async function POST(request: Request) {
     rubricJson: JSON.stringify(attempt.scored.rubric),
     notes: attempt.notes,
     contentVersion: content.version,
-  });
+  }));
   return Response.json(attempt.result);
-}
+}, "成绩暂时无法保存，请稍后重试");

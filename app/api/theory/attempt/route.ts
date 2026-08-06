@@ -1,11 +1,12 @@
 import { content, theoryById } from "@/lib/content";
 import { scoreTheory } from "@/lib/scoring";
 import { requireApiUser, unauthorized } from "@/lib/server-user";
-import { getDb } from "@/db";
+import { withDbDeadline } from "@/db";
 import { theoryAttempts } from "@/db/schema";
+import { withDatabaseErrors } from "@/lib/api-db";
 import { examBlueprint } from "@/lib/exam-blueprint";
 
-export async function POST(request: Request) {
+export const POST = withDatabaseErrors("theory.attempt", async (request: Request) => {
   const user = await requireApiUser(); if (!user) return unauthorized();
   const payload = await request.json() as { mode?: string; questionIds?: string[]; answers?: Record<string, string[]> };
   if (!Array.isArray(payload.questionIds) || payload.questionIds.length !== examBlueprint.theory.totalQuestions || new Set(payload.questionIds).size !== examBlueprint.theory.totalQuestions || !payload.answers) return Response.json({ error: "试卷结构无效" }, { status: 400 });
@@ -14,7 +15,8 @@ export async function POST(request: Request) {
   const typed = questions as NonNullable<(typeof questions)[number]>[];
   const distribution = { judge: typed.filter((q) => q.type === "judge").length, single: typed.filter((q) => q.type === "single").length, multi: typed.filter((q) => q.type === "multi").length };
   if (distribution.judge !== examBlueprint.theory.types.judge.count || distribution.single !== examBlueprint.theory.types.single.count || distribution.multi !== examBlueprint.theory.types.multi.count) return Response.json({ error: "试卷题型配比无效" }, { status: 400 });
-  const result = scoreTheory(typed, payload.answers); const db = getDb();
-  await db.insert(theoryAttempts).values({ email: user.email, mode: payload.mode === "official" ? "official" : "random", score: result.score, maxScore: result.maxScore, passed: result.passed, answersJson: JSON.stringify(payload.answers), contentVersion: content.version });
+  const result = scoreTheory(typed, payload.answers);
+  const row = { email: user.email, mode: payload.mode === "official" ? "official" : "random", score: result.score, maxScore: result.maxScore, passed: result.passed, answersJson: JSON.stringify(payload.answers), contentVersion: content.version };
+  await withDbDeadline("theory.attempt.insert", (db) => db.insert(theoryAttempts).values(row));
   return Response.json(result);
-}
+}, "成绩暂时无法保存，请稍后重试");

@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm";
-import { getDb } from "@/db";
+import { isDatabaseUnavailable, withDbDeadline } from "@/db";
 import { users } from "@/db/schema";
 import { describeErrorChain, ensureAccountSchema } from "@/lib/account-schema";
 import {
@@ -32,7 +32,6 @@ export async function POST(request: Request) {
   let stage: "schema" | "throttle" | "lookup" | "password" | "user-write" | "session-write" = "schema";
   try {
     await ensureAccountSchema();
-    const db = getDb();
 
     // 额度要在 createPasswordRecord 之前扣：那一步是 10 万轮 PBKDF2，先扣额度才能
     // 给单个来源能引发的哈希计算量封顶。
@@ -42,20 +41,20 @@ export async function POST(request: Request) {
     sweepThrottle();
 
     stage = "lookup";
-    const [existing] = await db.select({ email: users.email }).from(users).where(eq(users.email, email)).limit(1);
+    const [existing] = await withDbDeadline("account.register.lookup", (db) => db.select({ email: users.email }).from(users).where(eq(users.email, email)).limit(1));
     if (existing) return Response.json({ error: "该邮箱已注册，或属于尚未迁移的旧账号" }, { status: 409 });
 
     stage = "password";
     const passwordRecord = await createPasswordRecord(password);
     const displayName = requestedName || email.split("@")[0];
     stage = "user-write";
-    await db.insert(users).values({
+    await withDbDeadline("account.register.insert", (db) => db.insert(users).values({
       email,
       displayName,
       passwordHash: passwordRecord.hash,
       passwordSalt: passwordRecord.salt,
       passwordIterations: passwordRecord.iterations,
-    });
+    }));
 
     try {
       stage = "session-write";
@@ -65,14 +64,18 @@ export async function POST(request: Request) {
       return response;
     } catch (cause) {
       // Avoid leaving an unusable account behind if session creation fails.
-      try { await db.delete(users).where(eq(users.email, email)); } catch { /* Preserve the original session error. */ }
+      try {
+        await withDbDeadline("account.register.rollback", (db) => db.delete(users).where(eq(users.email, email)));
+      } catch { /* Preserve the original session error. */ }
       throw cause;
     }
   } catch (cause) {
     const message = describeErrorChain(cause);
     console.error("Account registration failed", cause);
     if (/unique constraint|already exists/i.test(message)) return Response.json({ error: "该邮箱已注册" }, { status: 409 });
-    if (/relation .* does not exist|postgres|database|DATABASE_URL|ECONN|ENOTFOUND|connect|SSL|TLS|password authentication failed/i.test(message)) {
+    // 超时错误的文案对不上下面那条正则（它匹配的是连接类字样），单独判一次，
+    // 否则 deadline 触发时会掉进末尾的 500，客户端不会重试。
+    if (isDatabaseUnavailable(cause) || /relation .* does not exist|postgres|database|DATABASE_URL|ECONN|ENOTFOUND|connect|SSL|TLS|password authentication failed/i.test(message)) {
       return Response.json({ error: "账号数据库暂时不可用，请稍后重试", code: `REGISTER_${stage.toUpperCase()}` }, { status: 503 });
     }
     if (stage === "password") {

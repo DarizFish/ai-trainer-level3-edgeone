@@ -1,5 +1,5 @@
-import { sql } from "drizzle-orm";
-import { getDb } from "@/db";
+import { sql, type SQL } from "drizzle-orm";
+import { getDb, withDbDeadline } from "@/db";
 
 /**
  * 注册与登录的限流。挡的是两件事：
@@ -19,11 +19,22 @@ export type ThrottleVerdict = { allowed: true } | { allowed: false; retryAfterSe
 export type ThrottlePolicy = { limit: number; windowSeconds: number };
 
 /**
- * 默认就是 `getDb()`。留这个参数是为了能把调用放进事务里跑——下面两条语句用了
- * `make_interval` 和 `ON CONFLICT ... CASE`，本地没有 Postgres 可验，只能开事务
- * 打到真库上跑完再回滚。
+ * 不传就用带 deadline 的默认执行器。留这个参数是为了能把调用放进事务里跑——下面
+ * 两条语句用了 `make_interval` 和 `ON CONFLICT ... CASE`，本地没有 Postgres 可验，
+ * 只能开事务打到真库上跑完再回滚。
  */
 export type ThrottleExecutor = Pick<ReturnType<typeof getDb>, "execute">;
+
+type ThrottleRow = { count: number; retry_after: number };
+
+/**
+ * 显式传了执行器（事务/测试）就照用，否则套上 deadline。限流是登录注册的第一道
+ * 语句，它卡住就等于整个账号体系卡住，比业务查询更需要这层保护。
+ */
+function executeThrottle(operation: string, statement: SQL, db?: ThrottleExecutor): Promise<ThrottleRow[]> {
+  if (db) return db.execute<ThrottleRow>(statement);
+  return withDbDeadline(operation, (client) => client.execute<ThrottleRow>(statement));
+}
 
 /** 同一 IP 每小时最多注册 5 个账号。够覆盖公司/学校 NAT 出口后面的正常同学。 */
 export const REGISTER_PER_ADDRESS: ThrottlePolicy = { limit: 5, windowSeconds: 3600 };
@@ -58,16 +69,16 @@ export function clientAddress(request: Request): string {
  * 扣一次额度并返回是否放行。整个「读旧值 / 判断窗口是否过期 / 累加或重置」在单条
  * 语句里完成，并发下不会互相覆盖。窗口过期是写入时原地重置的，不需要定时任务。
  */
-export async function consumeThrottle(bucket: string, policy: ThrottlePolicy, db: ThrottleExecutor = getDb()): Promise<ThrottleVerdict> {
+export async function consumeThrottle(bucket: string, policy: ThrottlePolicy, db?: ThrottleExecutor): Promise<ThrottleVerdict> {
   const window = sql`make_interval(secs => ${policy.windowSeconds}::float8)`;
-  const rows = await db.execute<{ count: number; retry_after: number }>(sql`
+  const rows = await executeThrottle("auth.throttle.consume", sql`
     INSERT INTO auth_throttle (bucket, count, window_start)
     VALUES (${bucket}, 1, now())
     ON CONFLICT (bucket) DO UPDATE SET
       count = CASE WHEN auth_throttle.window_start > now() - ${window} THEN auth_throttle.count + 1 ELSE 1 END,
       window_start = CASE WHEN auth_throttle.window_start > now() - ${window} THEN auth_throttle.window_start ELSE now() END
     RETURNING count, ceil(extract(epoch from (window_start + ${window} - now())))::int AS retry_after
-  `);
+  `, db);
   return verdict(rows[0]?.count ?? 1, rows[0]?.retry_after ?? policy.windowSeconds, policy);
 }
 
@@ -75,13 +86,13 @@ export async function consumeThrottle(bucket: string, policy: ThrottlePolicy, db
  * 只读地看一眼额度，不扣。用于「失败才计数」的邮箱额度：进门时先看是否已经超限，
  * 超了就挡住。挡住的这次不计数，否则攻击者可以靠持续敲门把受害者的锁定无限续期。
  */
-export async function peekThrottle(bucket: string, policy: ThrottlePolicy, db: ThrottleExecutor = getDb()): Promise<ThrottleVerdict> {
+export async function peekThrottle(bucket: string, policy: ThrottlePolicy, db?: ThrottleExecutor): Promise<ThrottleVerdict> {
   const window = sql`make_interval(secs => ${policy.windowSeconds}::float8)`;
-  const rows = await db.execute<{ count: number; retry_after: number }>(sql`
+  const rows = await executeThrottle("auth.throttle.peek", sql`
     SELECT count, ceil(extract(epoch from (window_start + ${window} - now())))::int AS retry_after
     FROM auth_throttle
     WHERE bucket = ${bucket} AND window_start > now() - ${window}
-  `);
+  `, db);
   if (!rows[0]) return { allowed: true };
   return verdict(rows[0].count, rows[0].retry_after, policy);
 }
@@ -97,8 +108,10 @@ function verdict(count: number, retryAfter: number, policy: ThrottlePolicy): Thr
  */
 export function sweepThrottle(): void {
   if (Math.random() >= 0.02) return;
-  void getDb()
-    .execute(sql`DELETE FROM auth_throttle WHERE window_start < now() - interval '1 day'`)
+  // 清理没人等它，但它和登录共用那唯一一条连接，卡住照样堵后面的请求，所以同样要
+  // 有 deadline。
+  void withDbDeadline("auth.throttle.sweep", (db) => db
+    .execute(sql`DELETE FROM auth_throttle WHERE window_start < now() - interval '1 day'`))
     .catch(() => { /* 清理是尽力而为，失败不该影响登录。 */ });
 }
 

@@ -2,6 +2,57 @@
 
 本文件记录可验证的产品改进，不以“代码有变化”作为完成标准。视口指标均来自本地 `1280 × 720` 浏览器。条目按日期倒序排列，最新在最前。
 
+## 2026-08-06（二）：数据库容量核查，并给所有请求路径补上超时保护
+
+### 用户输入
+
+「数据库表设计问题，尤其理论题进度表，一个人就有 900 条记录，是否会造成瓶颈」。核查后按性价比排序给出四项，用户选了先做第一项。
+
+### 核查结论：900 行不是瓶颈
+
+`theory_progress` 主键是 `(email, question_id)`、写入走 upsert，`question_id` 来自固定的 900 道题库——**900 是每人的硬上限，不是增长曲线上的一个点**。生产库实测（35 用户 / 2943 行）每行连索引约 193 字节，单人查询计划是主键 `Index Scan`；外推每人答满约 174 kB，一万用户 1.7 GB。要盯的是 Supabase 存储配额，不是查询性能。
+
+真正无上限增长的是 `theory_attempts`（每次模拟考约 3 kB，无清理）、`practical_attempts` 和 `sessions`（35 用户对应 46 行，只增不减）。完整分析与另外三项待办见 `STATUS.md` 第 8 节。
+
+### 本轮实现：请求路径上不再有裸 `getDb()`
+
+`0232686` 修连接超时雪崩时只覆盖了两个入口（`account.session.lookup`、`theory.answer.upsert`），其余 11 条路由全是裸 `getDb()`。连接池是 `max: 1`，一条卡住的语句会把该函数实例后续所有请求一起堵到 EdgeOne 的 30 秒上限——同一个故障模式，换个入口而已。
+
+现在每一条 request-facing 的语句都过 `withDbDeadline`，并由 `lib/api-db.ts` 的 `withDatabaseErrors` 把「数据库够不着」统一转成 503 + `Retry-After`。**包的是整个处理函数而不是单条查询**：`requireApiUser()` 自己也要查库，只包业务查询的话会话查询超时仍会漏成 500，而客户端只对 503 退避重试。非连接类错误（约束冲突、语法错误）原样抛出暴露成 500——混为一谈会让缺陷伪装成网络抖动。
+
+三处例外是刻意的：草稿写入最大 4 MB，deadline 单独放宽到 20 秒；实操批量提交把 deadline 包在事务外层，超时退连接会让未提交的事务一并回滚，不会留下写一半的成绩；登出改成即使删不掉会话也照样清 Cookie 跳首页，否则数据库抖一下用户就退不出去。
+
+### 实测中发现：`0232686` 有一个分支从来没生效过
+
+用一台黑洞地址的数据库跑真实请求时，包好的路由**仍然返回 500**。原因是 Drizzle 把驱动错误重新包了一层：抛出来的是 `Error: Failed query: INSERT INTO auth_throttle ...`，既没有 `code`、消息里也只有 SQL，真正的 `CONNECT_TIMEOUT` 挂在它的 `cause` 上。而 `isConnectionFailure` 只看最外层——**也就是说除了 8 秒 deadline 那条路径，任何真实的连接故障都没能触发「退掉这条已经坏掉的连接」**。
+
+登录/注册之所以一直能正确返回 503，是因为它们用的是 `describeErrorChain`，那个函数本来就会走 `cause` 链。
+
+改为顺着 `cause` 链判断（深度上限 8 并去重，`cause` 允许成环），`errorSummary` 也一并取链上第一个拿得到的 `code`，否则日志里永远是 `UNKNOWN`。这条只有把真实错误对象打出来才看得见，光读代码看不出来。
+
+### 验证
+
+对着一台不可达的数据库（`10.255.255.1:5432`）跑生产构建，逐条打真实请求：
+
+| 路由 | 修前 | 修后 |
+| --- | --- | --- |
+| `theory/state`、`progress`、`favorites`、`drafts`、`auth/me` | 500 | 503 + `Retry-After: 2` |
+| `theory/attempt`、`progress/reset` | 500 | 503 |
+| `theory/answer`、`auth/login`、`auth/register` | 503（本就正确） | 503 |
+| `auth/logout` | — | 303 + 清除 Cookie |
+
+全部在约 5.1 秒内返回；连续三次请求各自独立计时，没有排队叠加。日志里 `Database client retired` 从**一次都不出现**变成每次连接故障都出现——这正是上面那个分支修好的证据。
+
+只读语句用生产库真跑过一遍（不存在的邮箱，零写入）：`theory.state` 与 `progress.summary` 的 SQL 包上 deadline 后依然正常解析执行、返回预期形状。
+
+`npm run typecheck`、`npm run lint`、`npm run test:contracts` **49/49**、`npm run test:build`（13 条 API 路由全部保留）通过。
+
+契约测试新增一条钉不变量的用例：`app/api/**/route.ts` 与 `lib/progress-data.ts`、`lib/account-auth.ts` 里不许再出现裸 `getDb()`。逐个文件写正则漏一个就是一次线上事故。顺带把两条钉实现形状的旧断言改成钉意图——`assert.match(throttle, /getDb\(\)/)` 本意是「计数必须落库」，改成断言 `INSERT INTO auth_throttle` 且模块内没有进程内计数。
+
+### 未闭环
+
+`STATUS.md` 第 8 节记的另外三项：`/api/theory/state` 去冗余字段并加 ETag（同一份数据现在发了三遍）、`sessions` 照抄 `sweepThrottle` 加过期清理、`theory_attempts` 只保留每人最近 N 次。第四项（email 换 `user_id`）判断为暂不做——要改 7 张表的外键，收益只是存储。
+
 ## 2026-08-06：修复 CSV 预览显示为 Base64，以及 `/drive` 挂载失败导致学员产物丢失
 
 对应提交 `6e3dc3d`（PR #1）、`74bac6c`、`cc2ffef`（PR #2）。

@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { getDb } from "@/db";
+import { withDbDeadline } from "@/db";
 import { practicalByCode, theoryById } from "@/lib/content";
 
 export type ProgressData = Awaited<ReturnType<typeof getProgressData>>;
@@ -22,8 +22,7 @@ type ProgressSummary = {
 };
 
 export async function getProgressData(email: string) {
-  const db = getDb();
-  const rows = await db.execute(sql`
+  const rows = await withDbDeadline("progress.summary", (db) => db.execute(sql`
     with
       theory_progress_rows as materialized (
         select question_id, answer_json, correct, attempts, updated_at
@@ -69,7 +68,7 @@ export async function getProgressData(email: string) {
           limit 50
         ) item
       ), '[]'::jsonb) as "favoriteRows"
-  `);
+  `));
   const summary = rows[0] as unknown as ProgressSummary;
   const allTheoryQuestions = [...theoryById.values()];
   const answeredQuestionIds = new Set(summary.answeredRows.map((row) => row.questionId));
