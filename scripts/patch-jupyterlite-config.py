@@ -89,6 +89,10 @@ def force_binary_csv_transfer() -> bool:
 
     mimeTypes 一并改掉：新建文件那条分支用的是 getType() 里是否含 "text"，
     只改 fileFormat 会让两条分支判断不一致。
+
+    代价是官方 CSV 查看器请求 text 却拿到一整串 Base64（drive 的 get() 不理会
+    options.format，格式只由这张表决定），双击预览会显示成乱码。显示端的解码放在
+    jupyterlite-extension/src/csvViewer.ts 里，所以这里可以放心保持二进制。
     """
     config = json.loads(JUPYTER_LITE_CONFIG.read_text(encoding="utf-8"))
     file_types = config.get("jupyter-config-data", {}).get("fileTypes")

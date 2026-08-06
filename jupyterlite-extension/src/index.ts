@@ -3,6 +3,7 @@ import type {
   JupyterFrontEndPlugin
 } from "@jupyterlab/application";
 import { StateEffect, StateField, type Extension, type Range, type Text } from "@codemirror/state";
+import csvViewerPlugin from "./csvViewer";
 import { onnxRuntimeSource } from "./onnxRuntime";
 import { Decoration, EditorView, WidgetType, type DecorationSet } from "@codemirror/view";
 import {
@@ -1058,6 +1059,6 @@ const plugin: JupyterFrontEndPlugin<void> = {
   }
 };
 
-const plugins = [plugin];
+const plugins = [plugin, csvViewerPlugin];
 
 export default plugins;
