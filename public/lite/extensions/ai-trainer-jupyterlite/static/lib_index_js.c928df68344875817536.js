@@ -740,6 +740,7 @@ const plugin = {
         const kernelStarts = new WeakMap();
         const preparedPanels = new WeakSet();
         const preparationRuns = new WeakMap();
+        const pendingRepreparation = new WeakSet();
         const examMode = new URLSearchParams(window.location.search).get("exam") === "1";
         const panelFillReferences = new WeakMap();
         const panelFillVisible = new WeakMap();
@@ -756,6 +757,60 @@ const plugin = {
                 }
             }
             return null;
+        };
+        const cellsTagged = (panel, tag) => panel.content.widgets.filter(cell => {
+            const tags = cell.model.getMetadata("tags");
+            return Array.isArray(tags) && tags.includes(tag);
+        });
+        const exerciseIndexOf = (panel) => panel.content.widgets.findIndex(cell => {
+            const tags = cell.model.getMetadata("tags");
+            return Array.isArray(tags) && tags.includes("ai-trainer-exercise");
+        });
+        // 依赖安装、告警屏蔽、素材恢复和 ONNX 运行时全都活在内核进程里，所以这一段既要
+        // 在首次进入时跑，也要在每次内核重启后重跑——见下面 statusChanged 里的处理。
+        const prepareEnvironment = async (panel) => {
+            if (preparedPanels.has(panel))
+                return;
+            let preparation = preparationRuns.get(panel);
+            if (!preparation) {
+                // 只有 5 道 ONNX 题带运行时单元，其余题目文件里全是习题代码。
+                const runtimeCells = cellsTagged(panel, "ai-trainer-onnx");
+                preparation = (async () => {
+                    notifyParent("AI_TRAINER_EXERCISE_PREPARING", { path: panel.context.path });
+                    notifyParent("AI_TRAINER_EXERCISE_STAGE", { path: panel.context.path, stage: "packages" });
+                    await withTimeout(applyKernelEnvironment(panel), "题目依赖准备", ENVIRONMENT_TIMEOUT_MS);
+                    if (runtimeCells.length === 0) {
+                        preparedPanels.add(panel);
+                        return;
+                    }
+                    notifyParent("AI_TRAINER_EXERCISE_STAGE", { path: panel.context.path, stage: "runtime" });
+                    let lastFailure = null;
+                    for (let attempt = 1; attempt <= 2; attempt += 1) {
+                        const succeeded = await withTimeout(_jupyterlab_notebook__WEBPACK_IMPORTED_MODULE_4__.NotebookActions.runCells(panel.content, runtimeCells, panel.sessionContext), "浏览器运行时准备", 180000);
+                        if (succeeded) {
+                            preparedPanels.add(panel);
+                            return;
+                        }
+                        lastFailure = preparationFailure(runtimeCells);
+                        if (attempt < 2)
+                            await new Promise(resolve => window.setTimeout(resolve, 1200));
+                    }
+                    throw new Error(lastFailure ?? "环境准备单元未能成功执行");
+                })();
+                preparationRuns.set(panel, preparation);
+            }
+            try {
+                await preparation;
+            }
+            catch (error) {
+                const message = error instanceof Error ? error.message : String(error);
+                notifyParent("AI_TRAINER_EXERCISE_ERROR", { path: panel.context.path, message });
+                throw error;
+            }
+            finally {
+                if (preparationRuns.get(panel) === preparation)
+                    preparationRuns.delete(panel);
+            }
         };
         const applyFillReferences = async (panel, visible) => {
             const references = panelFillReferences.get(panel) ?? [];
@@ -923,53 +978,8 @@ const plugin = {
                 await withTimeout(panel.context.ready, "Notebook 准备", 15000);
                 await app.commands.execute("ai-trainer:ensure-kernel", { path: panel.context.path });
                 const cells = panel.content.widgets;
-                const hasTag = (index, tag) => {
-                    const tags = cells[index]?.model.getMetadata("tags");
-                    return Array.isArray(tags) && tags.includes(tag);
-                };
-                // 只有 5 道 ONNX 题带运行时单元，其余题目文件里全是习题代码。
-                const runtimeCells = cells.filter((_cell, index) => hasTag(index, "ai-trainer-onnx"));
-                const exerciseIndex = cells.findIndex((_cell, index) => hasTag(index, "ai-trainer-exercise"));
-                if (!preparedPanels.has(panel)) {
-                    let preparation = preparationRuns.get(panel);
-                    if (!preparation) {
-                        preparation = (async () => {
-                            notifyParent("AI_TRAINER_EXERCISE_PREPARING", { path: panel.context.path });
-                            notifyParent("AI_TRAINER_EXERCISE_STAGE", { path: panel.context.path, stage: "packages" });
-                            await withTimeout(applyKernelEnvironment(panel), "题目依赖准备", ENVIRONMENT_TIMEOUT_MS);
-                            if (runtimeCells.length === 0) {
-                                preparedPanels.add(panel);
-                                return;
-                            }
-                            notifyParent("AI_TRAINER_EXERCISE_STAGE", { path: panel.context.path, stage: "runtime" });
-                            let lastFailure = null;
-                            for (let attempt = 1; attempt <= 2; attempt += 1) {
-                                const succeeded = await withTimeout(_jupyterlab_notebook__WEBPACK_IMPORTED_MODULE_4__.NotebookActions.runCells(panel.content, runtimeCells, panel.sessionContext), "浏览器运行时准备", 180000);
-                                if (succeeded) {
-                                    preparedPanels.add(panel);
-                                    return;
-                                }
-                                lastFailure = preparationFailure(runtimeCells);
-                                if (attempt < 2)
-                                    await new Promise(resolve => window.setTimeout(resolve, 1200));
-                            }
-                            throw new Error(lastFailure ?? "环境准备单元未能成功执行");
-                        })();
-                        preparationRuns.set(panel, preparation);
-                    }
-                    try {
-                        await preparation;
-                    }
-                    catch (error) {
-                        const message = error instanceof Error ? error.message : String(error);
-                        notifyParent("AI_TRAINER_EXERCISE_ERROR", { path: panel.context.path, message });
-                        throw error;
-                    }
-                    finally {
-                        if (preparationRuns.get(panel) === preparation)
-                            preparationRuns.delete(panel);
-                    }
-                }
+                const exerciseIndex = exerciseIndexOf(panel);
+                await prepareEnvironment(panel);
                 if (exerciseIndex >= 0) {
                     const shell = app.shell;
                     shell.collapseLeft?.();
@@ -1051,6 +1061,26 @@ const plugin = {
             });
             panel.sessionContext.statusChanged.connect((_context, status) => {
                 notifyParent("AI_TRAINER_KERNEL_STATUS", { path: panel.context.path, status });
+                // 准备阶段装的东西全在内核进程里：piplite 的纯 Python wheel（2.1.2、2.1.3、
+                // 2.2.1、2.2.4）、FutureWarning 屏蔽、预热 import、ONNX 运行时。重启内核会把
+                // 它们一并带走，而 preparedPanels 记在面板上，重启后不会重跑——实测重启后
+                // openpyxl 变成 ModuleNotFoundError、告警屏蔽失效，官方答案直接跑不动。
+                // 这里在重启时清账，等内核回到 idle 再补一次准备。
+                if (status === "restarting" || status === "autorestarting") {
+                    preparedPanels.delete(panel);
+                    preparationRuns.delete(panel);
+                    pendingRepreparation.add(panel);
+                    return;
+                }
+                if (status === "idle" && pendingRepreparation.has(panel)) {
+                    pendingRepreparation.delete(panel);
+                    void prepareEnvironment(panel)
+                        .then(() => notifyParent("AI_TRAINER_EXERCISE_READY", {
+                        path: panel.context.path,
+                        exerciseIndex: exerciseIndexOf(panel)
+                    }))
+                        .catch(() => undefined);
+                }
             });
             panel.context.ready.then(async () => {
                 hideInfrastructureCells(panel);

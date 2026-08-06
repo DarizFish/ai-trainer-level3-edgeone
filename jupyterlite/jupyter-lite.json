@@ -7,8 +7,7 @@
     "faviconUrl": "./lab/favicon.ico",
     "disabledExtensions": [
       "@jupyterlab/apputils-extension:announcements",
-      "@jupyterlab/help-extension:about",
-      "@jupyterlite/application-extension:service-worker-manager"
+      "@jupyterlab/help-extension:about"
     ]
   }
 }

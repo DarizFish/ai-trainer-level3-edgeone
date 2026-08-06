@@ -8,8 +8,7 @@
     "defaultKernelName": "python",
     "disabledExtensions": [
       "@jupyterlab/apputils-extension:announcements",
-      "@jupyterlab/help-extension:about",
-      "@jupyterlite/application-extension:service-worker-manager"
+      "@jupyterlab/help-extension:about"
     ],
     "faviconUrl": "./lab/favicon.ico",
     "federated_extensions": [
@@ -20,7 +19,7 @@
       },
       {
         "extension": "./extension",
-        "load": "static/remoteEntry.4fff39daa374a67e597f.js",
+        "load": "static/remoteEntry.b87d7e54b2e20340d8e4.js",
         "name": "ai-trainer-jupyterlite"
       },
       {
