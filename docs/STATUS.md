@@ -1,6 +1,6 @@
 # 项目当前状态
 
-更新时间：2026-07-28。本文取代原 `SESSION-HANDOFF.md`，用于把项目移交给其他会话或协作者。只记录**当前**事实与待办；历史改进见 `IMPROVEMENTS.md`。
+更新时间：2026-08-06。本文取代原 `SESSION-HANDOFF.md`，用于把项目移交给其他会话或协作者。只记录**当前**事实与待办；历史改进见 `IMPROVEMENTS.md`。
 
 ## 1. 坐标
 
@@ -9,7 +9,7 @@
 | 正式站 | https://www.aitrainer3.xyz/ |
 | 本地目录 | `C:\Users\zd\Documents\aitrainer3\edgeone-site` |
 | 当前分支 | `codex/edgeone-migration`（与 `origin` 同步，无未推送提交） |
-| 当前 HEAD | `8ddc777` 首次进入实操 lab 给出环境准备浮层 |
+| 当前 HEAD | `c3148e4` Merge pull request #2 from DarizFish/fix/drive-mount-and-restart |
 | GitHub | `ssh://git@ssh.github.com:443/DarizFish/ai-trainer-level3-edgeone.git` |
 | EdgeOne 项目 | `makers-xyzgssb9k7as` |
 | Supabase | 项目 `sqenbhewvjnmatgkkbqy`，东京区 `aws-0-ap-northeast-1.pooler.supabase.com` |
@@ -30,7 +30,7 @@ npm.cmd run dev -- --webpack -p 3200 -H 127.0.0.1
 
 ## 3. 未提交的改动
 
-无。工作区干净，全部改动已推送到 `origin/codex/edgeone-migration`。
+站点代码无未提交改动，全部已推送到 `origin/codex/edgeone-migration`。工作区里另有两项与站点无关的本地内容未入库：`.gitignore` 中 `output/xiaohongshu/*` 一批条目，以及未跟踪的 `scripts/make_xiaohongshu_assets.py`（小红书发布素材生成脚本）。
 
 ### 已回退：JupyterLite 翻译接口无扩展名别名
 
@@ -135,6 +135,10 @@ Pyodide 0.27.7 读到旧 lock 文件后 `initializePackageIndex` 抛出 `Lock fi
 
 `tests/production-smoke.test.mjs` 按 4 并发校验 24 份实操素材，单请求超时 30 秒。2026-07-26 实测 24 份素材字节全部一致（size + SHA-256 全对），但 `/labs/2.2.1/finance数据集.csv`（7.78 MB）单独下载耗时 25.6 秒、`/labs/2.1.3/finance数据集.csv`（7.13 MB）16.0 秒，四并发下必然触发超时。失败原因是带宽而非内容。修复方向：对大文件降低并发或提高单请求超时。
 
+### 4.8 `runtime.spec.mjs` 的依赖安装用例在本机必然超时
+
+「task dependencies install without an environment cell in the official notebook」这条用例打开 `/practical/2.1.2/lab` 等「代码区已就绪」，断言给了 240 秒，但**用例自身的超时是 playwright 配置里的 120 秒**，两者矛盾，慢一点就必然死在 120 秒。2026-08-06 核实：对未改动的产物同样失败，与当轮改动无关；同一台机器上用独立探针跑同一道题，环境准备约 40 秒完成，说明失败在页面就绪链路而非依赖安装本身。修复方向：给该用例加 `test.setTimeout()`，或把断言超时降到 120 秒以内。
+
 ## 5. 2026-07-26 全量自检结果
 
 | 检查 | 结果 |
@@ -165,7 +169,8 @@ Pyodide 0.27.7 读到旧 lock 文件后 `initializePackageIndex` 抛出 `Lock fi
 1. ~~确认 4.3 的规则顺序修正是否生效~~ **已闭环**（2026-07-28 线上实测）。`pyodide-lock.json`、`jupyter-lite.json`、`config-utils.js`、`service-worker.js` 四个文件均返回 `public, max-age=0, must-revalidate`。EdgeOne 的「靠后规则生效」结论成立，缓存毒化的根因已消除。
 2. 视情况调整 4.7 的冒烟并发与超时。修好之前 `npm run test:smoke` 会一直停在 2/4，没法当上线后的健康检查用。
 3. 按 `TESTING.md` 执行正式站验收；重点人工确认任意 CSV Lab 显示「环境已就绪」、`1.1.2` 的 `sensor_data.csv` 不再校验失败、3.2.x 的 ONNX 题可下载模型并推理。**3.2.x 这条路径至今完全未在生产环境验证过**，是 20 个 lab 里最重的一条链路。
-4. 老用户仍需按 4.3 清一次全局 HTTP 缓存；这是一次性的，之后新响应头会自动接管。
+4. 老用户仍需按 4.3 清一次全局 HTTP 缓存；这是一次性的，之后新响应头会自动接管。**2026-08-06 补充**：这条对 `/drive` 挂载已不再必要——恢复 service worker 后，挂载不再依赖跨源隔离，缓存里存着旧响应头的设备也能正常保存文件（已由一台原本受影响的设备确认）。对 4.1 那批按 `immutable` 缓存的文件仍然适用。
+5. 给 `/drive` 挂载失败加上运行时自检与用户可见提示。目前失败是静默的：`mountDrive` 为假时只有控制台一行 `console.warn`，而素材兜底会让题目照常能跑，学员直到刷新才发现产物没了。没有这个信号，下一次故障仍然只能靠投诉发现。详见 `IMPROVEMENTS.md` 2026-08-06 条的「未闭环」。
 
 ## 6.1 正式发布前仍未处理
 
@@ -182,3 +187,15 @@ Pyodide 0.27.7 读到旧 lock 文件后 `initializePackageIndex` 抛出 `Lock fi
 ## 7. ONNX 模型
 
 量化模型已生效：`public/labs/manifest.json` 中 `sourceVariant` 为 `browser-quantized`，五个模型以内容哈希分片形式存放在 `public/labs/models/<hash>/part-NNN.bin`，合计 46 MB（`resnet` 25 MB、`emotion-ferplus` 21 MB、`version-RFB-320` 488 KB、`mnist` 20 KB）。这些路径带内容哈希，适用 `edgeone.json` 中的一年 immutable 缓存。量化源文件保留在被 Git 忽略的 `work/browser-models/quantized`，原始大模型拆分产物不提交。
+
+## 8. JupyterLite 的几条硬约束（改动前必读）
+
+这几条都是踩过坑换来的，破坏其中任何一条都会造成静默的数据丢失或全站级故障。
+
+**不要再把 `@jupyterlite/application-extension:service-worker-manager` 加进 `disabledExtensions`。** 上游判定是 `mountDrive = serviceWorkerManager?.enabled || crossOriginIsolated`（`@jupyterlite/pyodide-kernel-extension` 0.6.1，与上游 wheel 逐字节一致，改不了）。禁用它等于把这个 OR 砍成只剩跨源隔离一项，而跨源隔离由 COOP/COEP 响应头承载、随响应进浏览器缓存，**部署到不了已经缓存旧头的设备**。挂载失败时学员的 `to_csv` 产物会落进内存文件系统：文件浏览器看不到、刷新即失，而题目因为有素材兜底仍然照常能跑，所以完全没有外部信号。该 SW 的 HTTP 缓存默认是关的（注册 URL 带 `?enableCache=false`），不会造成 4.1 那类缓存毒化。
+
+**`.csv` 在 `fileTypes` 里是 `fileFormat: "base64"`，这是刻意的。** drive 的 `get()` 忽略 `options.format`，只能按扩展名定格式；改回 `text` 会让 2.1.4 那份 GBK 数据集在读写两个方向都被 UTF-8 解码销毁。显示端的解码在 `jupyterlite-extension/src/csvViewer.ts`，**只改 `fromString`，不要动 `toString`**——`CSVViewer._updateGrid` 正是从 `toString()` 取数据喂 DataGrid，在那里还原成字节会让表格重新变回乱码。
+
+**准备阶段的产物活在内核进程里，不在面板上。** piplite 装的纯 Python wheel、`FutureWarning` 屏蔽、预热 import、ONNX 运行时单元都随内核重启消失，因此 `prepareEnvironment` 必须在 `sessionContext.statusChanged` 的 `restarting`/`autorestarting` 上清账并重跑。`tests/e2e/kernel-restart.spec.mjs` 钉住了这个行为。
+
+**扩展改动的发布流程**：`npm run jupyterlite:extension` 构建 → 把 `jupyterlite-extension/labextension/` 同步到 `public/lite/extensions/ai-trainer-jupyterlite/` → 更新 `public/lite/jupyter-lite.json` 里 `federated_extensions` 的 `remoteEntry.*.js` 哈希。每次构建哈希都会变，漏掉最后一步等于没发布。

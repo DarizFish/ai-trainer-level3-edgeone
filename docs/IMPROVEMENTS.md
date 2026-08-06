@@ -2,6 +2,80 @@
 
 本文件记录可验证的产品改进，不以“代码有变化”作为完成标准。视口指标均来自本地 `1280 × 720` 浏览器。条目按日期倒序排列，最新在最前。
 
+## 2026-08-06：修复 CSV 预览显示为 Base64，以及 `/drive` 挂载失败导致学员产物丢失
+
+对应提交 `6e3dc3d`（PR #1）、`74bac6c`、`cc2ffef`（PR #2）。
+
+### 用户输入
+
+线上双击 `patient_data.csv` 显示一串乱码。随后反馈学员 `to_csv` 保存的文件在左侧工作区看不到（如 2.1.1），并明确了一条原则：**跟账号走同步的只应该是代码，产物必须在文件浏览器可见，但不进账号同步路线**。
+
+### 本轮实现
+
+**CSV 预览显示的是 Base64，不是编码问题**
+
+JupyterLite 的 drive 只能按扩展名决定传输格式——`BrowserStorageDrive.get()` 完全忽略 `options.format`。为保住 2.1.4 那份 GBK 数据集（全站唯一非 UTF-8 素材，逐个校验过 16 份 csv/tsv/txt），`scripts/patch-jupyterlite-config.py` 把 `.csv` 登记成 `fileFormat="base64"`；于是官方 CSV 查看器请求 `text` 却拿到整串 Base64 并原样渲染，全站 13 个数据集的双击预览都是乱码。
+
+解码放在显示端，传输层不动：`jupyterlite-extension/src/csvViewer.ts` 接住官方 `CSVTable`/`TSVTable` 工厂的 `widgetCreated`，给该文档模型的 `fromString` 套一层解码（严格 Base64 判定 → UTF-8 `fatal` 模式 → 失败退回 `gb18030`）。`DocumentManager` 先同步建窗口、再异步取内容（`manager.ts` 里 `context.initialize` 挂在 promise 上、`createWidget` 在其后同步执行），所以钩子必定赶在内容到位之前，不会先渲染乱码再刷新。
+
+两个反直觉之处，都是实测撞出来的：
+
+- **不能在 `toString` 里把内容还原成原始字节**。`CSVViewer._updateGrid` 正是从 `context.model.toString()` 取数据喂 DataGrid（`widget.js:295`），第一版为了保证字节级往返在这里还原成 Base64，结果表格照样是乱码。现在只改入口，出口不动；查看器是只读的、模型不会变脏，自动保存只在 `dirty` 时触发（`savehandler.js`），预览本身不会改动素材。
+- **不宜自己注册查看器工厂**。原计划替换官方工厂并禁用 `@jupyterlab/csvviewer-extension`，但 JupyterLite 核心的 `singletonPackages`（69 项）里**没有** `@jupyterlab/docregistry` 和 `@jupyterlab/csvviewer`，构建会把这两个包各打一份副本进扩展（+174 KB，且与核心的 4.4.5 并存）。改用接管官方工厂的写法后，bundle 只增加 4.6 KB，官方的搜索、Go-to-Line、分隔符工具栏、主题配色、布局恢复全部原样保留。
+
+顺带收益：2.1.4 的 GBK 数据集第一次能正常预览出中文列名。
+
+**`/drive` 挂载只吊在跨源隔离上，是产物丢失的根因**
+
+学员诊断输出 `os.getcwd()` 为 `/home/pyodide`、`os.path.exists('/drive')` 为 `False`。上游 `@jupyterlite/pyodide-kernel-extension` 0.6.1 的判定是：
+
+```js
+mountDrive = serviceWorkerManager?.enabled || crossOriginIsolated
+```
+
+该文件与 `.jupyterlite-venv` 里的上游 wheel **逐字节一致**（SHA256 `CE42F401…`），不是本项目代码，条件本身改不了。而 `822b40b` 把 `@jupyterlite/application-extension:service-worker-manager` 加进 `disabledExtensions`，这个 OR 只剩一项。`mountDrive` 为假时内核既不挂 `/drive` 也不 `chdir` 进去（`620.*.js`：`mountDrive && this._localPath && os.chdir(...)`），产物落进 Pyodide 的内存文件系统——文件浏览器（走 Contents API）一个都看不到，刷新即失。
+
+**结构性问题在于**：`crossOriginIsolated` 由 COOP/COEP 响应头决定，而响应头随响应一起进浏览器缓存，**部署改不到已经缓存了旧头的设备**。这正是同类故障反复出现、每次收尾都是“用户侧仍需手动清一次”的原因——修的是服务端，坏的东西在客户端缓存里。
+
+把 service worker 恢复回来，OR 重新成立。用一台不发 COOP/COEP 的本地服务器复现并验证：
+
+| 环境 | SW | `crossOriginIsolated` | `cwd` | `/drive` | 产物在文件浏览器 |
+| --- | --- | --- | --- | --- | --- |
+| 无 COOP/COEP | 禁用（原状） | false | `/home/pyodide` | False | 否 |
+| 无 COOP/COEP | 启用 | false | `/drive/1-1-1` | True | 是 |
+| 有 COOP/COEP | 启用 | true | `/drive/1-1-1` | True | 是 |
+
+两处查证消除了顾虑：`ServiceWorkerContentsAPI` 的端点是 `${baseUrl}api/drive` → `/lite/api/drive`，落在 SW 的 `/lite/` 作用域内，子路径部署不构成障碍（4.5 那个心跳问题是另一回事，路径写死在站点根，已由 `app/api/service-worker-heartbeat/route.ts` 解决）；注册 URL 实测为 `service-worker.js?enableCache=false`，而 SW 源码里该值为假时 `maybeFromCache` 直接透传 `fetch`，**不碰 Cache Storage**，因此不会带回 4.1 的缓存毒化。内核在完全没有 `SharedArrayBuffer` 的情况下同样正常启动。
+
+**重启内核不会重跑环境准备**
+
+查上一条时发现的独立缺陷。准备阶段装的东西全都活在内核进程里：piplite 的纯 Python wheel、`FutureWarning` 屏蔽、预热 import、ONNX 运行时单元。而 `preparedPanels` 记在**面板**上，重启内核不换面板，于是第二次直接跳过。实测（2.1.2）：
+
+```text
+重启前: openpyxl OK                  | FutureWarning已屏蔽=True
+重启后: openpyxl ModuleNotFoundError | FutureWarning已屏蔽=False
+```
+
+也就是说学员点一下「重启内核」，2.1.2 / 2.1.3 / 2.2.1 / 2.2.4 的官方答案立刻跑不动，其余题目重新冒出版本迁移告警——而屏蔽它本来就是为了不让考生把告警误当成自己代码错了。
+
+准备逻辑从 `prepare-exercise` 抽成 `prepareEnvironment`，并在 `sessionContext.statusChanged` 上接管：`restarting`/`autorestarting` 时清账，等内核回到 `idle` 再补跑一次，完成后补发 `EXERCISE_READY`。UI 副作用（收起文件浏览器、滚动到作答单元）仍只在 `prepare-exercise` 里做，重启不会打断学员视图。
+
+**另外**：`edgeone.json` 中 `/lite/lab/index.html*` 原先只有 COOP/COEP、没有 `Cache-Control`，是整条加载链上唯一没有强制回源的一环，已补 `max-age=0, must-revalidate`（含 CDN 两个同名头）。
+
+### 验证
+
+- 解码逻辑对 `public/lite/files` 下全部 16 个 csv/tsv/txt 逐个验证：Base64 输入解成正确文本、纯文本输入原样返回，**16/16**。
+- `npm run test:contracts` **48/48**；`npm run lint`、`npm run typecheck` 通过。
+- 新增 `tests/e2e/csv-viewer.spec.mjs`（UTF-8 与 GBK 各一条）与 `tests/e2e/kernel-restart.spec.mjs`。后者验证过有鉴别力：对修复前的产物运行会在「重启内核后」那条断言上失败，对修复后的产物通过。
+- 预览版（EdgeOne）真实学员路径实测：SW 已注册（`?enableCache=false`）、`/drive/2-1-2 True`、`openpyxl=True warn=True`、`to_csv` 产物出现在文件浏览器、重启内核后环境自动重建。
+- 最终由原本出问题的那台设备确认恢复：能正常存文件并显示。
+
+### 未闭环
+
+- **挂载失败仍是静默降级**。`mountDrive` 为假时唯一的痕迹是控制台一行 `console.warn`，学员和运维都看不到；素材兜底（`kernelEnvironmentSource` 里的 pyfetch，20/20 题覆盖完整）会让题目照常能跑，反而掩盖了信号。下次以别的形式坏掉，仍然只能靠投诉发现。方向：扩展里断言 `/drive` 存在，失败就 postMessage 给父页面并上报。
+- **`822b40b` 当初禁用 service worker 的原因无记录**，提交信息只提 Pyodide 0.27.7 切换。若起因是 4.5 的心跳 404，该问题已解决。
+- **非隔离路径未能在 EdgeOne 上端到端跑通**：预览链接对 Playwright 重放请求和本地反向代理都返回 401，无法在其上制造「跨源隔离不成立」的条件。该路径是在本地对同一份产物（同 bundle 哈希、同配置）验证的，而 SW 拦截完全发生在客户端。
+
 ## 2026-07-27：慢网访问优化，并修复只有一个习题单元的三道题打不开
 
 对应提交 `14e5f54`、`5df34ba`。
@@ -130,7 +204,7 @@
 
 - 本机 npm 默认指向内网镜像，安装时用 `npm install --registry=https://registry.npmjs.org` 覆盖。
 - JupyterLite 扩展构建产物需同步到 `public/lite/extensions/ai-trainer-jupyterlite/`，并更新 `public/lite/jupyter-lite.json` 中的 `remoteEntry.*.js` hash 引用——每次构建 hash 都会变。
-- `public/lite` 有 service worker 缓存，验证扩展改动需无痕窗口或硬刷新。
+- `public/lite` 有 service worker 缓存，验证扩展改动需无痕窗口或硬刷新。（2026-08-06 更正：JupyterLite 的 service worker 注册 URL 带 `?enableCache=false`，`enableCache` 为假时它直接透传 `fetch`、不写 Cache Storage，所以这条不成立；真正需要清缓存的是 4.1 那批被按 `immutable` 缓存的文件。）
 - 当轮验证：`npx tsc --noEmit` 无错误；浏览器实测四类侧栏宽度 300、页头内边距 19、背景 `.94` 一致，官方要求三段四类均在，跨题导航边界正确，参考框不再造成选择漂移。
 
 ## 2026-07-24：EdgeOne 实操运行时模块兼容
