@@ -110,11 +110,33 @@ test("public route shells are static while answer scoring is immediate and persi
   assert.match(publicContent, /practical-catalog-\$\{content\.version\}\.json/);
   assert.match(theoryPractice, /const correct = isCorrect\(question, answer\)/);
   assert.match(theoryPractice, /pendingAnswersRef/);
-  assert.match(theoryPractice, /setTimeout\(\(\) => flushProgress\(\), 900\)/);
+  assert.match(theoryPractice, /progressInFlightRef\.current/);
+  assert.match(theoryPractice, /slice\(0, PROGRESS_BATCH_SIZE\)/);
+  assert.match(theoryPractice, /AbortSignal\.timeout\(PROGRESS_REQUEST_TIMEOUT_MS\)/);
+  assert.match(theoryPractice, /PROGRESS_RETRY_BASE_MS \* 2 \*\*/);
+  assert.match(theoryPractice, /progressTimerRef\.current = null;\s+flushProgress\(\);\s+}, 900\)/);
   assert.match(theoryAnswer, /Array\.isArray\(payload\.attempts\)/);
   assert.match(theoryAnswer, /excluded\.attempts/);
+  assert.match(theoryAnswer, /withDbDeadline\("theory\.answer\.upsert"/);
+  assert.match(theoryAnswer, /status: 503/);
+  assert.match(theoryAnswer, /"Retry-After": "2"/);
   assert.match(progressPage, /initialData=\{progress\}/);
   assert.doesNotMatch(dashboard, /fetch\("\/api\/progress"/);
+});
+
+test("database deadlines retire a poisoned singleton connection before EdgeOne times out", async () => {
+  const [database, accountAuth] = await Promise.all([
+    readFile(new URL("../db/index.ts", import.meta.url), "utf8"),
+    readFile(new URL("../lib/account-auth.ts", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(database, /DATABASE_OPERATION_TIMEOUT_MS = 8_000/);
+  assert.match(database, /connect_timeout: 5/);
+  assert.match(database, /client\.end\(\{ timeout: 0 \}\)/);
+  assert.match(database, /aiTrainerDatabase = undefined/);
+  assert.match(database, /aiTrainerPostgres = undefined/);
+  assert.match(database, /databaseGlobal\.aiTrainerPostgres !== client/);
+  assert.match(accountAuth, /withDbDeadline\("account\.session\.lookup"/);
 });
 
 test("versioned public content banks exactly match the source content", async () => {

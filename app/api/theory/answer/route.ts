@@ -1,12 +1,18 @@
 import { content, theoryById } from "@/lib/content";
 import { isCorrect } from "@/lib/scoring";
 import { requireApiUser, unauthorized } from "@/lib/server-user";
-import { getDb } from "@/db";
+import { errorSummary, withDbDeadline } from "@/db";
 import { theoryProgress } from "@/db/schema";
 import { sql } from "drizzle-orm";
 
 export async function POST(request: Request) {
-  const user = await requireApiUser(); if (!user) return unauthorized();
+  let user;
+  try {
+    user = await requireApiUser();
+  } catch (cause) {
+    return databaseUnavailable("auth", cause);
+  }
+  if (!user) return unauthorized();
   const payload = await request.json() as {
     questionId?: string;
     answer?: string[];
@@ -51,20 +57,23 @@ export async function POST(request: Request) {
     attempts: value.attempts,
     contentVersion: content.version,
   }));
-  const db = getDb();
-  await db
-    .insert(theoryProgress)
-    .values(rows)
-    .onConflictDoUpdate({
-      target: [theoryProgress.email, theoryProgress.questionId],
-      set: {
-        answerJson: sql`excluded.answer_json`,
-        correct: sql`excluded.correct`,
-        attempts: sql`${theoryProgress.attempts} + excluded.attempts`,
-        contentVersion: sql`excluded.content_version`,
-        updatedAt: new Date().toISOString(),
-      },
-    });
+  try {
+    await withDbDeadline("theory.answer.upsert", (db) => db
+      .insert(theoryProgress)
+      .values(rows)
+      .onConflictDoUpdate({
+        target: [theoryProgress.email, theoryProgress.questionId],
+        set: {
+          answerJson: sql`excluded.answer_json`,
+          correct: sql`excluded.correct`,
+          attempts: sql`${theoryProgress.attempts} + excluded.attempts`,
+          contentVersion: sql`excluded.content_version`,
+          updatedAt: new Date().toISOString(),
+        },
+      }));
+  } catch (cause) {
+    return databaseUnavailable("upsert", cause);
+  }
 
   if (!Array.isArray(payload.attempts) && payload.questionId) {
     const question = theoryById.get(payload.questionId)!;
@@ -77,4 +86,12 @@ export async function POST(request: Request) {
     });
   }
   return Response.json({ saved: rows.length });
+}
+
+function databaseUnavailable(stage: "auth" | "upsert", cause: unknown): Response {
+  console.error("Theory answer database unavailable", { stage, ...errorSummary(cause) });
+  return Response.json(
+    { error: "学习记录暂时无法同步，请稍后重试", code: `THEORY_ANSWER_${stage.toUpperCase()}` },
+    { status: 503, headers: { "Cache-Control": "no-store", "Retry-After": "2" } },
+  );
 }

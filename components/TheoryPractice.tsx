@@ -12,6 +12,10 @@ const QUESTION_MAP_PAGE_SIZE = 50;
 // 与首页「即时判分…把注意力留给知识点本身」的说法相悖。放宽到能读完一句解析，并且
 // 用户一有动作就取消跳转，想停下看就停得下来。
 const CORRECT_AUTO_ADVANCE_MS = 2600;
+const PROGRESS_BATCH_SIZE = 100;
+const PROGRESS_REQUEST_TIMEOUT_MS = 15_000;
+const PROGRESS_RETRY_BASE_MS = 1_000;
+const PROGRESS_RETRY_MAX_MS = 30_000;
 
 type Screen = "practice" | "result";
 type ResumeState = {
@@ -60,6 +64,9 @@ export default function TheoryPractice({ questions, contentVersion }: { question
   const questionGridRef = useRef<HTMLDivElement>(null);
   const pendingAnswersRef = useRef(new Map<string, { answer: string[]; attempts: number }>());
   const progressTimerRef = useRef<number | null>(null);
+  const progressInFlightRef = useRef(false);
+  const progressRetryCountRef = useRef(0);
+  const progressStoppedRef = useRef(false);
   const autoAdvanceTimerRef = useRef<number | null>(null);
 
   const questionById = useMemo(() => new Map(questions.map((question) => [question.id, question])), [questions]);
@@ -221,7 +228,12 @@ export default function TheoryPractice({ questions, contentVersion }: { question
       window.clearTimeout(progressTimerRef.current);
       progressTimerRef.current = null;
     }
-    const attempts = [...pendingAnswersRef.current].map(([questionId, value]) => ({
+    // One slow request must not produce overlapping retries containing the same
+    // unanswered batch. The active request schedules the next batch when it
+    // settles; new answers only remain in the map in the meantime.
+    if (progressInFlightRef.current) return;
+
+    const attempts = [...pendingAnswersRef.current].slice(0, PROGRESS_BATCH_SIZE).map(([questionId, value]) => ({
       questionId,
       answer: value.answer,
       attempts: value.attempts,
@@ -235,27 +247,49 @@ export default function TheoryPractice({ questions, contentVersion }: { question
       if (queued) { for (const item of attempts) pendingAnswersRef.current.delete(item.questionId); return; }
     }
 
-    // 关键：请求成功之前不出队。原先在发出前就 clear()，一旦用户在请求在途时切页，
-    // fetch 会被 ERR_ABORTED，而卸载时的兜底 flush 看到的是空队列，什么也发不出去；
-    // 随后 .catch 把条目写回一个已卸载组件的 ref，等于静默丢答。
+    progressInFlightRef.current = true;
+    let retryAfterMs = 0;
     void fetch("/api/theory/answer", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body,
       keepalive: true,
+      signal: AbortSignal.timeout(PROGRESS_REQUEST_TIMEOUT_MS),
     }).then((response) => {
-      if (!response.ok) throw new Error("progress sync failed");
+      if (!response.ok) {
+        const retryAfterSeconds = Number(response.headers.get("retry-after"));
+        if (Number.isFinite(retryAfterSeconds) && retryAfterSeconds > 0) retryAfterMs = retryAfterSeconds * 1_000;
+        throw new Error(`progress sync failed: ${response.status}`);
+      }
       for (const item of attempts) {
         const current = pendingAnswersRef.current.get(item.questionId);
         // 期间又答了同一题就保留新值，不要把新答案一起删掉。
         if (current && current.attempts <= item.attempts) pendingAnswersRef.current.delete(item.questionId);
       }
+      progressRetryCountRef.current = 0;
+      if (!progressStoppedRef.current) setActionError("");
     }).catch(() => {
-      setActionError("答案已在本机判分，学习记录暂未同步；继续练习时会再次保存。");
+      progressRetryCountRef.current = Math.min(progressRetryCountRef.current + 1, 10);
+      const exponentialDelay = Math.min(
+        PROGRESS_RETRY_MAX_MS,
+        PROGRESS_RETRY_BASE_MS * 2 ** (progressRetryCountRef.current - 1),
+      );
+      retryAfterMs = Math.max(retryAfterMs, exponentialDelay + Math.floor(Math.random() * 250));
+      if (!progressStoppedRef.current) {
+        setActionError("答案已在本机判分，学习记录暂未同步；继续练习时会再次保存。");
+      }
+    }).finally(() => {
+      progressInFlightRef.current = false;
+      if (progressStoppedRef.current || !pendingAnswersRef.current.size || progressTimerRef.current !== null) return;
+      progressTimerRef.current = window.setTimeout(() => {
+        progressTimerRef.current = null;
+        flushProgress();
+      }, retryAfterMs);
     });
   }, []);
 
   useEffect(() => {
+    progressStoppedRef.current = false;
     const flushWhenHidden = () => {
       if (document.visibilityState === "hidden") flushProgress(true);
     };
@@ -263,6 +297,7 @@ export default function TheoryPractice({ questions, contentVersion }: { question
     document.addEventListener("visibilitychange", flushWhenHidden);
     window.addEventListener("pagehide", flushOnPageHide);
     return () => {
+      progressStoppedRef.current = true;
       document.removeEventListener("visibilitychange", flushWhenHidden);
       window.removeEventListener("pagehide", flushOnPageHide);
       flushProgress(true);
@@ -279,8 +314,11 @@ export default function TheoryPractice({ questions, contentVersion }: { question
       answer,
       attempts: (pending?.attempts ?? 0) + 1,
     });
-    if (progressTimerRef.current === null) {
-      progressTimerRef.current = window.setTimeout(() => flushProgress(), 900);
+    if (!progressInFlightRef.current && progressTimerRef.current === null) {
+      progressTimerRef.current = window.setTimeout(() => {
+        progressTimerRef.current = null;
+        flushProgress();
+      }, 900);
     }
   }
 

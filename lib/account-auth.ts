@@ -1,7 +1,7 @@
 import { and, eq, gt } from "drizzle-orm";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { getDb } from "@/db";
+import { getDb, withDbDeadline } from "@/db";
 import { sessions, users } from "@/db/schema";
 import { ensureAccountSchema } from "@/lib/account-schema";
 
@@ -35,12 +35,12 @@ export async function getAccountUserFromCookie(cookieHeader: string | null): Pro
 
   await ensureAccountSchema();
   const tokenHash = await sha256(token);
-  const [user] = await getDb()
+  const [user] = await withDbDeadline("account.session.lookup", (db) => db
     .select({ email: users.email, displayName: users.displayName })
     .from(sessions)
     .innerJoin(users, eq(sessions.email, users.email))
     .where(and(eq(sessions.tokenHash, tokenHash), gt(sessions.expiresAt, new Date().toISOString())))
-    .limit(1);
+    .limit(1));
 
   if (!user) return null;
   return { email: user.email, displayName: user.displayName?.trim() || user.email };
