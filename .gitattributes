@@ -1,3 +1,13 @@
 public/labs/**/*.csv text eol=lf
 public/labs/**/*.txt text eol=lf
 public/labs/**/*.py text eol=lf
+public/labs/runtime/**/*.js text eol=lf
+jupyterlite/content/**/*.csv text eol=lf
+jupyterlite/content/**/*.txt text eol=lf
+jupyterlite/content/**/*.py text eol=lf
+public/lite/files/**/*.csv text eol=lf
+public/lite/files/**/*.txt text eol=lf
+public/lite/files/**/*.py text eol=lf
+public/lite/**/*.js text eol=lf
+public/lite/**/*.mjs text eol=lf
+data/references/theory-review-state/manifest.json text eol=crlf

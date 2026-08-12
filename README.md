@@ -1,6 +1,6 @@
-# 人工智能训练师三级题库备考站（EdgeOne 版）
+# 人工智能训练师三级题库备考站
 
-这是“人工智能训练师三级题库备考站”的 EdgeOne Makers 部署版本。它保留现有题库、模拟考试、实操材料、JupyterLite、浏览器内模型和自建邮箱密码账号，并把运行平台从 OpenAI Sites / Cloudflare Worker + D1 迁移为标准 Next.js + EdgeOne Cloud Functions + Supabase PostgreSQL。
+这是“人工智能训练师三级题库备考站”的统一源码仓库。同一个 `main` 分支同时支持 EdgeOne Makers 和阿里云自托管服务器：EdgeOne 直接构建标准 Next.js 应用；GitHub Actions 使用 `SELF_HOSTED_BUILD=1` 构建 Next.js standalone 发布包。两端继续共用 Supabase PostgreSQL。
 
 原 Sites 项目是回退版本；本目录是独立部署副本。未正式发布前不迁移旧用户、会话或学习记录，Supabase 使用全新表结构。
 
@@ -22,7 +22,7 @@
 DATABASE_URL=postgresql://...
 ```
 
-线上只在 EdgeOne 控制台配置 `DATABASE_URL` 密钥。不要把数据库密码、连接串、访问令牌或 `.env.local` 提交到 GitHub。
+EdgeOne 在控制台配置 `DATABASE_URL` 密钥；阿里云在服务器 `/etc/aitrainer/aitrainer.env` 配置。不要把数据库密码、连接串、访问令牌或 `.env.local` 提交到 GitHub。
 
 EdgeOne Cloud Functions 建议使用 Supabase 的 IPv4 兼容连接池地址，端口通常为 `6543`。运行时代码已经关闭 prepared statements，并限制每个函数实例的连接数，以适配事务连接池。
 
@@ -78,6 +78,8 @@ npm run test:smoke
 6. 验收通过后，再单独配置自定义域名、DNS 与 HTTPS。
 
 `edgeone.json` 保存可提交的缓存和安全响应头设置，不包含密钥。
+
+EdgeOne 项目与阿里云 GitHub Actions 都监控 `main`。日常业务修改只提交到 `main`：EdgeOne 不设置 `SELF_HOSTED_BUILD`，阿里云工作流会设置它并生成 standalone 包。阿里云的具体发布与回滚见 `docs/SELF-HOSTING.md`。
 
 ## 主要页面
 

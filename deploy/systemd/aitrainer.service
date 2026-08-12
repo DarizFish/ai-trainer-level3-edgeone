@@ -1,0 +1,36 @@
+[Unit]
+Description=AI Trainer Level 3 Next.js application
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=aitrainer
+Group=aitrainer
+WorkingDirectory=/srv/aitrainer/current
+EnvironmentFile=/etc/aitrainer/aitrainer.env
+Environment=NODE_ENV=production
+Environment=HOSTNAME=127.0.0.1
+Environment=PORT=3000
+Environment=DATABASE_POOL_MAX=3
+Environment=TRUSTED_CLIENT_IP_HEADER=x-real-ip
+ExecStart=/opt/node/bin/node server.js
+Restart=on-failure
+RestartSec=5s
+TimeoutStopSec=30s
+KillSignal=SIGTERM
+SuccessExitStatus=143
+UMask=0027
+LimitNOFILE=65535
+
+NoNewPrivileges=true
+PrivateDevices=true
+PrivateTmp=true
+ProtectControlGroups=true
+ProtectHome=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target

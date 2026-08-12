@@ -49,15 +49,24 @@ export const LOGIN_PER_ADDRESS: ThrottlePolicy = { limit: 20, windowSeconds: 900
 export const LOGIN_FAILURES_PER_EMAIL: ThrottlePolicy = { limit: 10, windowSeconds: 900 };
 
 /**
- * 只有 EdgeOne 边缘节点写入的 `EO-Connecting-IP` 是不可伪造的。`X-Forwarded-For`
- * 会把客户端自带的值一并透传，最左位由攻击者控制，用它限流等于让对方自己发号，
- * 所以它只作为本地开发和非 EdgeOne 环境的兜底。
+ * EdgeOne 部署只信任边缘节点写入的 `EO-Connecting-IP`；自托管部署只信任 Nginx
+ * 覆盖写入的 `X-Real-IP`。部署环境必须显式选择其中一个，避免离开 EdgeOne 后仍
+ * 信任客户端可以自行构造的 EO 请求头。`X-Forwarded-For` 只作为无代理本地开发的
+ * 兜底，因为它的最左位可能由客户端控制。
  * 参见 https://cloud.tencent.com/document/product/1552/87654
  */
-const TRUSTED_ADDRESS_HEADERS = ["eo-connecting-ip", "x-real-ip"];
+const SUPPORTED_TRUSTED_ADDRESS_HEADERS = ["eo-connecting-ip", "x-real-ip"] as const;
+
+function trustedAddressHeaders(): readonly string[] {
+  const configured = process.env.TRUSTED_CLIENT_IP_HEADER?.trim().toLowerCase();
+  if (configured && SUPPORTED_TRUSTED_ADDRESS_HEADERS.includes(configured as typeof SUPPORTED_TRUSTED_ADDRESS_HEADERS[number])) {
+    return [configured];
+  }
+  return SUPPORTED_TRUSTED_ADDRESS_HEADERS;
+}
 
 export function clientAddress(request: Request): string {
-  for (const name of TRUSTED_ADDRESS_HEADERS) {
+  for (const name of trustedAddressHeaders()) {
     const value = request.headers.get(name)?.trim();
     if (value) return value;
   }

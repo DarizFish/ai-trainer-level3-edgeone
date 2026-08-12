@@ -1,7 +1,7 @@
 import { getDb } from "@/db";
 
 export function ensureAccountSchema(): Promise<void> {
-  // The EdgeOne deployment applies versioned PostgreSQL migrations before
+  // The deployment pipeline applies versioned PostgreSQL migrations before
   // serving traffic. Initializing the database client here keeps configuration
   // failures close to the account request without issuing runtime DDL.
   getDb();

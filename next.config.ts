@@ -15,9 +15,15 @@ const crossOriginIsolation = [
 // 内核正是 new Worker(<lite/extensions 下的分片>) 起来的，缺这个头会被 Chrome 以
 // coep-frame-resource-needs-coep-header 拦掉，内核永远停在启动中。
 const embedderPolicy = [{ key: "Cross-Origin-Embedder-Policy", value: "require-corp" }];
+const selfHostedBuild = process.env.SELF_HOSTED_BUILD === "1";
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // Produce a Linux-deployable runtime bundle that contains only the files
+  // traced by Next.js. `public/` and `.next/static/` are added by the
+  // package:self-hosted script because Next intentionally leaves them out of
+  // the standalone directory.
+  ...(selfHostedBuild ? { output: "standalone" as const } : {}),
   async headers() {
     return [
       // COOP/COEP 是文档级策略：外层页面必须自身跨域隔离，内嵌的 JupyterLite

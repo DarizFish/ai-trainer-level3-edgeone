@@ -147,6 +147,11 @@ const PYODIDE_KERNEL_PLUGIN_ID = "@jupyterlite/pyodide-kernel-extension:kernel";
 // wheel。同一条网络上实测就绪耗时在 30 秒到 56.5 秒之间浮动，原先的 60 秒上限
 // 只剩几秒余量，网络稍差就会误报“握手超时”，而内核其实仍在正常加载。
 const KERNEL_BOOT_TIMEOUT_MS = 180000;
+// Opening a notebook may start its metadata-selected kernel at the same time as
+// our bridge command. Give that built-in start a brief chance to attach before
+// calling changeKernel ourselves, otherwise two Pyodide workers can race and
+// leave the environment-preparation request connected to the discarded one.
+const KERNEL_ATTACH_GRACE_MS = 1500;
 // 依赖准备阶段现在要把本题的科学计算 wheel 一并下完（2.1.3 是 42.6MB），慢网下轻易
 // 超过原来的 180 秒。超时判早的代价是给一个仍在正常下载的环境报错，比等久了更糟，
 // 何况前端有分阶段进度卡片和「重试准备」按钮兜着。
@@ -929,7 +934,12 @@ const plugin = {
                     return inFlight;
                 const start = (async () => {
                     const preferred = await preferredKernel();
-                    const afterRegistration = panel.sessionContext.session?.kernel;
+                    const attachDeadline = Date.now() + KERNEL_ATTACH_GRACE_MS;
+                    let afterRegistration = panel.sessionContext.session?.kernel;
+                    while (!afterRegistration && Date.now() < attachDeadline) {
+                        await new Promise(resolve => window.setTimeout(resolve, 50));
+                        afterRegistration = panel.sessionContext.session?.kernel;
+                    }
                     if (afterRegistration)
                         return { status: afterRegistration.status, name: afterRegistration.name };
                     notifyParent("AI_TRAINER_KERNEL_STATUS", { path: panel.context.path, status: "starting" });
@@ -937,10 +947,14 @@ const plugin = {
                         const kernel = await withTimeout(panel.sessionContext.changeKernel({ name: preferred }), "Python 内核启动", KERNEL_BOOT_TIMEOUT_MS);
                         if (!kernel)
                             throw new Error("Python 内核启动后未返回连接");
-                        await withTimeout(kernel.info, "Python 内核握手", KERNEL_BOOT_TIMEOUT_MS);
-                        const status = kernel?.status ?? "starting";
+                        // SessionContext is authoritative if another caller completed in
+                        // the same turn; do not keep preparing against a superseded worker.
+                        await new Promise(resolve => window.setTimeout(resolve, 50));
+                        const activeKernel = panel.sessionContext.session?.kernel ?? kernel;
+                        await withTimeout(activeKernel.info, "Python 内核握手", KERNEL_BOOT_TIMEOUT_MS);
+                        const status = activeKernel.status ?? "starting";
                         notifyParent("AI_TRAINER_KERNEL_STATUS", { path: panel.context.path, status });
-                        return { status, name: preferred };
+                        return { status, name: activeKernel.name || preferred };
                     }
                     catch (error) {
                         notifyParent("AI_TRAINER_KERNEL_ERROR", {
