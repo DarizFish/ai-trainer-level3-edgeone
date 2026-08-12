@@ -88,6 +88,8 @@ else
   [[ -f "${staging}/server.js" ]] || { echo "server.js is missing" >&2; exit 10; }
   [[ -d "${staging}/.next/static" ]] || { echo ".next/static is missing" >&2; exit 10; }
   [[ -d "${staging}/public" ]] || { echo "public directory is missing" >&2; exit 10; }
+  [[ -f "${staging}/scripts/manage-database.mjs" ]] || { echo "database manager is missing" >&2; exit 10; }
+  [[ -f "${staging}/drizzle/meta/_journal.json" ]] || { echo "migration journal is missing" >&2; exit 10; }
   grep -Fqx "Source revision: ${revision}" "${staging}/DEPLOYMENT.txt" || {
     echo "release metadata does not match ${revision}" >&2
     exit 11
@@ -99,6 +101,19 @@ else
   mv -- "${staging}" "${target}"
   staging=""
 fi
+
+# The database is shared by EdgeOne and this service. The migration command
+# serializes every deployment target with the same PostgreSQL advisory lock,
+# then validates the resulting schema before any release becomes active.
+set -a
+# shellcheck disable=SC1091
+source /etc/aitrainer/aitrainer.env
+set +a
+(
+  cd "${target}"
+  node scripts/manage-database.mjs migrate
+  node scripts/manage-database.mjs check
+)
 
 ln -s "releases/${revision}" "${next_link}"
 mv -Tf -- "${next_link}" "${app_root}/current"

@@ -25,7 +25,9 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern tmp --ignore-pattern public/lite --ignore-pattern public/labs/runtime --ignore-pattern .jupyterlite-venv --ignore-pattern jupyterlite/.cache --ignore-pattern jupyterlite-extension/.core --ignore-pattern jupyterlite-extension/lib --ignore-pattern jupyterlite-extension/labextension",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
+    "db:baseline": "node scripts/manage-database.mjs baseline",
+    "db:check": "node scripts/manage-database.mjs check",
+    "db:migrate": "node scripts/manage-database.mjs migrate",
     "content:import": "python scripts/import-reference.py",
     "content:reference:snapshot": "python scripts/theory_reference.py snapshot",
     "content:reference:apply": "python scripts/theory_reference.py apply",
@@ -48,11 +50,11 @@
   "dependencies": {
     "drizzle-orm": "0.45.2",
     "jupyter-iframe-commands-host": "0.3.0",
-    "next": "16.2.6",
+    "next": "16.3.0",
     "onnxruntime-web": "1.27.0",
     "postgres": "3.4.7",
-    "react": "19.2.6",
-    "react-dom": "19.2.6"
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
   },
   "devDependencies": {
     "@playwright/test": "1.55.1",
@@ -62,10 +64,13 @@
     "@types/react-dom": "19.2.3",
     "drizzle-kit": "0.31.10",
     "eslint": "9.39.4",
-    "eslint-config-next": "16.2.6",
-    "react-server-dom-webpack": "19.2.6",
+    "eslint-config-next": "16.3.0",
+    "react-server-dom-webpack": "19.2.8",
     "tailwindcss": "4.2.1",
     "typescript": "5.9.3"
+  },
+  "overrides": {
+    "sanitize-html": "2.17.6"
   },
   "type": "module"
 }

@@ -20,6 +20,7 @@
 
 ```bash
 DATABASE_URL=postgresql://...
+DIRECT_URL=postgresql://...
 ```
 
 EdgeOne 在控制台配置 `DATABASE_URL` 密钥；阿里云在服务器 `/etc/aitrainer/aitrainer.env` 配置。不要把数据库密码、连接串、访问令牌或 `.env.local` 提交到 GitHub。
@@ -28,16 +29,14 @@ EdgeOne Cloud Functions 建议使用 Supabase 的 IPv4 兼容连接池地址，�
 
 ## 初始化数据库
 
-数据库结构由 `db/schema.ts` 与 `drizzle/` 下的版本化 PostgreSQL migration 管理。新 Supabase 项目可任选一种方式初始化：
-
-1. 在 Supabase SQL Editor 中执行 `drizzle/` 下的首个 SQL migration；或
-2. 临时设置本机 `DATABASE_URL` 后运行：
+数据库结构由 `db/schema.ts` 与 `drizzle/` 下的版本化 PostgreSQL migration 管理。新数据库设置 `DIRECT_URL` 后运行：
 
 ```bash
 npm run db:migrate
+npm run db:check
 ```
 
-应用运行时不会自动执行 DDL。部署前必须先完成 migration。
+应用运行时不会执行 DDL。管理命令使用 PostgreSQL advisory lock 防止 EdgeOne、自托管和人工操作并发迁移，readiness 会校验当前发布所需的 migration hash。生产基线与 expand/contract 规则见 `docs/DATABASE-MIGRATIONS.md`。
 
 ## 本地开发
 
@@ -64,9 +63,9 @@ npm run test:full
 npm run test:smoke
 ```
 
-`npm test` 是日常快速门禁，执行 ESLint、TypeScript、内容完整性和 28 项合同测试。`npm run test:full` 额外执行生产构建与真实 Chromium 回归，包括 Pyodide 内核启动、ONNX 动态导入和移动端横向溢出检查。`npm run test:smoke` 只读验证已上线正式站的路由、EdgeOne MIME、安全头和运行时文件哈希。
+`npm test` 是日常快速门禁，执行 ESLint、TypeScript、内容完整性和合同测试。`npm run test:full` 额外执行生产构建与真实 Chromium 回归，包括 Pyodide 内核启动、ONNX 动态导入和移动端横向溢出检查。`npm run test:smoke` 只读验证已上线正式站的路由、EdgeOne MIME、安全头和运行时文件哈希。
 
-首次运行浏览器测试前执行 `npm run test:install-browser`。完整分层、CI 行为和失败定位见 `docs/TESTING.md`。所有检查通过后再推送到 GitHub 和触发 EdgeOne 部署。
+首次运行浏览器测试前执行 `npm run test:install-browser`。完整分层、CI 行为和失败定位见 `docs/TESTING.md`。所有检查通过后再发起 PR。`main` 必须要求 `Quality gate / Full build and browser regression`，禁止直接推送；EdgeOne 与自托管只部署已通过门禁并合并的提交。
 
 ## EdgeOne Makers 部署
 
@@ -79,7 +78,7 @@ npm run test:smoke
 
 `edgeone.json` 保存可提交的缓存和安全响应头设置，不包含密钥。
 
-EdgeOne 项目与阿里云 GitHub Actions 都监控 `main`。日常业务修改只提交到 `main`：EdgeOne 不设置 `SELF_HOSTED_BUILD`，阿里云工作流会设置它并生成 standalone 包。阿里云的具体发布与回滚见 `docs/SELF-HOSTING.md`。
+EdgeOne 项目监控受保护的 `main`。自托管发布不再自行重建源码，而是下载 `Quality gate` 为该提交生成的 standalone artifact。EdgeOne 不设置 `SELF_HOSTED_BUILD`；阿里云发布物在门禁中设置它。具体发布与回滚见 `docs/SELF-HOSTING.md`。
 
 ## 主要页面
 
@@ -112,5 +111,6 @@ EdgeOne 项目与阿里云 GitHub Actions 都监控 `main`。日常业务修改�
 | --- | --- |
 | `docs/STATUS.md` | 当前状态、未提交改动、已知问题和下一步；接手项目先读这份 |
 | `docs/TESTING.md` | 五层质量门禁、CI 行为和失败定位顺序 |
+| `docs/DATABASE-MIGRATIONS.md` | 生产基线、迁移锁、schema 门禁和 expand/contract 发布规则 |
 | `docs/USER_INPUT.md` | 产品负责人可直接编辑的需求入口与状态 |
 | `docs/IMPROVEMENTS.md` | 可验证的产品改进记录，按日期倒序 |

@@ -1,6 +1,6 @@
 # 项目当前状态
 
-更新时间：2026-08-06。本文取代原 `SESSION-HANDOFF.md`，用于把项目移交给其他会话或协作者。只记录**当前**事实与待办；历史改进见 `IMPROVEMENTS.md`。
+更新时间：2026-08-12。本文取代原 `SESSION-HANDOFF.md`，用于把项目移交给其他会话或协作者。只记录**当前**事实与待办；历史改进见 `IMPROVEMENTS.md`。
 
 ## 1. 坐标
 
@@ -8,13 +8,13 @@
 | --- | --- |
 | 正式站 | https://www.aitrainer3.xyz/ |
 | 本地目录 | `C:\Users\zd\Documents\aitrainer3\edgeone-site` |
-| 当前分支 | `fix/db-request-deadlines`（基于 `codex/edgeone-migration` 的 `e67c7a8`，待合并） |
-| 当前 HEAD | 分支尖端「给所有请求路径的数据库操作补上超时保护」；合并基点 `e67c7a8` |
+| 当前分支 | `main` |
+| 当前 HEAD | `e739c16`，工作区包含 Next/CI/数据库迁移加固，待提交 |
 | GitHub | `ssh://git@ssh.github.com:443/DarizFish/ai-trainer-level3-edgeone.git` |
 | EdgeOne 项目 | `makers-xyzgssb9k7as` |
 | Supabase | 项目 `sqenbhewvjnmatgkkbqy`，东京区 `aws-0-ap-northeast-1.pooler.supabase.com` |
 
-数据库连接：`DATABASE_URL` 走 6543 事务连接池，网站运行时只读取这一个变量；`DIRECT_URL` 走 5432 会话连接池，目前仅备迁移与管理操作使用，`drizzle.config.ts` 尚未接入。真实连接串只存在于本地 `.env.local` 和 EdgeOne 控制台密钥中，不要输出或提交。数据库密码曾出现在历史会话记录里，建议上线稳定后旋转。
+数据库连接：`DATABASE_URL` 走 6543 事务连接池，网站运行时只读取这一个变量；`DIRECT_URL` 走 5432 会话连接池，Drizzle 配置与数据库管理命令优先使用它。2026-08-12 已验证生产库 8 张业务表与 `0002_snapshot.json` 一致，并建立完整 migration baseline。真实连接串只存在于本地 `.env.local` 和部署密钥中，不要输出或提交。数据库密码曾出现在历史会话记录里，建议上线稳定后旋转。
 
 本地开发并非所有页面都需要数据库：公开题库、静态页面和 JupyterLite 无数据库可加载；注册、登录、收藏、错题、学习进度、成绩和云端草稿需要数据库。
 
@@ -30,7 +30,11 @@ npm.cmd run dev -- --webpack -p 3200 -H 127.0.0.1
 
 ## 3. 未提交的改动
 
-站点代码无未提交改动。`fix/db-request-deadlines`（第 8.5 节）尚未合回 `codex/edgeone-migration`。工作区里另有两项与站点无关的本地内容未入库：`.gitignore` 中 `output/xiaohongshu/*` 一批条目，以及未跟踪的 `scripts/make_xiaohongshu_assets.py`（小红书发布素材生成脚本）。
+当前未提交改动为 Next.js 16.3.0、React 19.2.8、安全依赖更新、PR 质量门禁、verified-artifact 自托管发布和数据库 migration 加固。
+
+2026-08-12 已验证：`npm ci` 可重建依赖；生产依赖审计 0 项；快速门禁 50/50、Next.js 生产构建、Chromium 24/24、JupyterLite 全量重建、自托管 standalone 打包和 EdgeOne 正式站 4/4 冒烟均通过。Next 16.3 新增 9 条内部导航 lint warning，未作为本次安全升级的阻塞项。
+
+GitHub 远端当前仍显示 `main` 未配置 branch protection。`.github/workflows/quality.yml` 需要先进入远端并至少运行一次，才能把 `Quality gate / Full build and browser regression` 选为 required check；在该规则落地前不要把“PR 门禁”视为完全闭环。
 
 ### 已回退：JupyterLite 翻译接口无扩展名别名
 
@@ -156,13 +160,11 @@ Pyodide 0.27.7 读到旧 lock 文件后 `initializePackageIndex` 抛出 `Lock fi
 
 `npm run test:browser` 的 15/15 需要先设置 `NO_PROXY`，原因见 4.6。
 
-## 5.1 部署前置条件：先跑 migration，再发代码
+## 5.1 部署前置条件：迁移门禁已自动化
 
 `auth_throttle` 表是注册与登录限流的存储。应用运行时**不执行 DDL**，表不存在时两个接口都会直接返回 503——也就是说，代码先于 migration 上线会让账号体系整体不可用。顺序必须是：先建表，再部署。
 
-生产库里**没有** `__drizzle_migrations` 记录表，说明 `0000` 当初是在 Supabase SQL Editor 里手工执行的，因此 `npm run db:migrate` 会试图重跑 `0000` 而失败。后续 migration 同样手工执行。
-
-`drizzle/0001_gigantic_cardiac.sql` 已于 2026-07-28 手工应用到生产库，验证通过后测试行已清空（`auth_throttle` 现为 0 行）。**下一次新增表时记得沿用同样的手工流程。**
+2026-08-12 已逐项验证生产 schema 并在 `drizzle.__drizzle_migrations` 建立 `0000`—`0002` 基线。自托管发布会在切换应用版本前持 PostgreSQL advisory lock 执行 `db:migrate` 与 `db:check`；应用 readiness 同时验证所需 migration hash。新增结构必须遵守 `DATABASE-MIGRATIONS.md` 的 expand/contract 流程，不再手工执行未登记 SQL。
 
 ## 6. 下一步
 
