@@ -147,11 +147,6 @@ const PYODIDE_KERNEL_PLUGIN_ID = "@jupyterlite/pyodide-kernel-extension:kernel";
 // wheel。同一条网络上实测就绪耗时在 30 秒到 56.5 秒之间浮动，原先的 60 秒上限
 // 只剩几秒余量，网络稍差就会误报“握手超时”，而内核其实仍在正常加载。
 const KERNEL_BOOT_TIMEOUT_MS = 180000;
-// Opening a notebook may start its metadata-selected kernel at the same time as
-// our bridge command. Give that built-in start a brief chance to attach before
-// calling changeKernel ourselves, otherwise two Pyodide workers can race and
-// leave the environment-preparation request connected to the discarded one.
-const KERNEL_ATTACH_GRACE_MS = 1500;
 // 依赖准备阶段现在要把本题的科学计算 wheel 一并下完（2.1.3 是 42.6MB），慢网下轻易
 // 超过原来的 180 秒。超时判早的代价是给一个仍在正常下载的环境报错，比等久了更糟，
 // 何况前端有分阶段进度卡片和「重试准备」按钮兜着。
@@ -573,7 +568,8 @@ function activePanel(tracker, path) {
                 panel = candidate;
         });
     }
-    panel ??= tracker.currentWidget;
+    if (!panel && !path)
+        panel = tracker.currentWidget;
     if (!panel?.content.model) {
         throw new Error(path ? `尚未打开本题 Notebook：${path}` : "当前没有可操作的 Notebook");
     }
@@ -743,9 +739,11 @@ const plugin = {
     description: "Connects JupyterLite notebooks with the preparation site's cloud draft service.",
     activate: (app, tracker, kernelSpecs) => {
         const kernelStarts = new WeakMap();
-        const preparedPanels = new WeakSet();
+        const preparedGenerations = new WeakMap();
         const preparationRuns = new WeakMap();
-        const pendingRepreparation = new WeakSet();
+        const pendingRepreparation = new WeakMap();
+        const restartRuns = new WeakMap();
+        const runtimeStates = new WeakMap();
         const examMode = new URLSearchParams(window.location.search).get("exam") === "1";
         const panelFillReferences = new WeakMap();
         const panelFillVisible = new WeakMap();
@@ -771,29 +769,111 @@ const plugin = {
             const tags = cell.model.getMetadata("tags");
             return Array.isArray(tags) && tags.includes("ai-trainer-exercise");
         });
+        const runtimeState = (panel) => {
+            const existing = runtimeStates.get(panel);
+            if (existing)
+                return existing;
+            const kernel = panel.sessionContext.session?.kernel;
+            const initial = {
+                path: panel.context.path,
+                phase: kernel ? "kernel_connected" : "not_started",
+                generation: kernel ? 1 : 0,
+                kernelId: kernel?.id ?? null,
+                kernelStatus: kernel?.status ?? "unknown",
+                connectionStatus: kernel?.connectionStatus ?? "disconnected",
+                lastError: null,
+                updatedAt: Date.now()
+            };
+            runtimeStates.set(panel, initial);
+            return initial;
+        };
+        const publishRuntimeState = (panel, patch) => {
+            const next = {
+                ...runtimeState(panel),
+                ...patch,
+                path: panel.context.path,
+                updatedAt: Date.now()
+            };
+            runtimeStates.set(panel, next);
+            console.info("[ai-trainer-runtime]", next);
+            notifyParent("AI_TRAINER_RUNTIME_STATE", next);
+            return next;
+        };
+        const synchronizeKernel = (panel, phase) => {
+            const previous = runtimeState(panel);
+            const kernel = panel.sessionContext.session?.kernel;
+            const identityChanged = Boolean(kernel?.id && kernel.id !== previous.kernelId);
+            // A restart already creates the next generation before the worker changes.
+            // Do not count the subsequent kernelChanged signal as another generation.
+            const restartGenerationPending = pendingRepreparation.get(panel) === previous.generation;
+            const nextPhase = phase ?? (identityChanged || ["not_started", "starting_kernel", "error"].includes(previous.phase)
+                ? "kernel_connected"
+                : previous.phase);
+            return publishRuntimeState(panel, {
+                phase: nextPhase,
+                generation: previous.generation + (identityChanged && !restartGenerationPending ? 1 : 0),
+                kernelId: kernel?.id ?? null,
+                kernelStatus: kernel?.status ?? "unknown",
+                connectionStatus: kernel?.connectionStatus ?? "disconnected",
+                lastError: null
+            });
+        };
+        const beginRestartGeneration = (panel, status = "restarting") => {
+            const previous = runtimeState(panel);
+            const generation = previous.generation + 1;
+            preparedGenerations.delete(panel);
+            pendingRepreparation.set(panel, generation);
+            return publishRuntimeState(panel, {
+                phase: "starting_kernel",
+                generation,
+                kernelId: panel.sessionContext.session?.kernel?.id ?? previous.kernelId,
+                kernelStatus: status,
+                connectionStatus: panel.sessionContext.session?.kernel?.connectionStatus ?? previous.connectionStatus,
+                lastError: null
+            });
+        };
+        const assertCurrentGeneration = (panel, generation, kernelId) => {
+            const current = runtimeState(panel);
+            const activeKernelId = panel.sessionContext.session?.kernel?.id;
+            if (current.generation !== generation || activeKernelId !== kernelId) {
+                throw new Error(`内核已更替，丢弃第 ${generation} 代环境准备结果`);
+            }
+        };
         // 依赖安装、告警屏蔽、素材恢复和 ONNX 运行时全都活在内核进程里，所以这一段既要
         // 在首次进入时跑，也要在每次内核重启后重跑——见下面 statusChanged 里的处理。
         const prepareEnvironment = async (panel) => {
-            if (preparedPanels.has(panel))
+            const kernel = panel.sessionContext.session?.kernel;
+            if (!kernel)
+                throw new Error("内核尚未连接，无法准备题目环境");
+            const observed = runtimeState(panel);
+            const state = observed.kernelId === kernel.id ? observed : synchronizeKernel(panel);
+            const generation = state.generation;
+            const kernelId = kernel.id;
+            if (preparedGenerations.get(panel) === generation && state.phase === "ready")
                 return;
-            let preparation = preparationRuns.get(panel);
-            if (!preparation) {
+            let run = preparationRuns.get(panel);
+            if (!run || run.generation !== generation) {
                 // 只有 5 道 ONNX 题带运行时单元，其余题目文件里全是习题代码。
                 const runtimeCells = cellsTagged(panel, "ai-trainer-onnx");
-                preparation = (async () => {
+                const promise = (async () => {
+                    publishRuntimeState(panel, { phase: "preparing_environment", lastError: null });
                     notifyParent("AI_TRAINER_EXERCISE_PREPARING", { path: panel.context.path });
                     notifyParent("AI_TRAINER_EXERCISE_STAGE", { path: panel.context.path, stage: "packages" });
                     await withTimeout(applyKernelEnvironment(panel), "题目依赖准备", ENVIRONMENT_TIMEOUT_MS);
+                    assertCurrentGeneration(panel, generation, kernelId);
                     if (runtimeCells.length === 0) {
-                        preparedPanels.add(panel);
+                        preparedGenerations.set(panel, generation);
+                        publishRuntimeState(panel, { phase: "ready", lastError: null });
                         return;
                     }
                     notifyParent("AI_TRAINER_EXERCISE_STAGE", { path: panel.context.path, stage: "runtime" });
                     let lastFailure = null;
                     for (let attempt = 1; attempt <= 2; attempt += 1) {
                         const succeeded = await withTimeout(_jupyterlab_notebook__WEBPACK_IMPORTED_MODULE_4__.NotebookActions.runCells(panel.content, runtimeCells, panel.sessionContext), "浏览器运行时准备", 180000);
+                        assertCurrentGeneration(panel, generation, kernelId);
                         if (succeeded) {
-                            preparedPanels.add(panel);
+                            preparedGenerations.set(panel, generation);
+                            publishRuntimeState(panel, { phase: "ready", lastError: null });
                             return;
                         }
                         lastFailure = preparationFailure(runtimeCells);
@@ -802,18 +882,22 @@ const plugin = {
                     }
                     throw new Error(lastFailure ?? "环境准备单元未能成功执行");
                 })();
-                preparationRuns.set(panel, preparation);
+                run = { generation, promise };
+                preparationRuns.set(panel, run);
             }
             try {
-                await preparation;
+                await run.promise;
             }
             catch (error) {
                 const message = error instanceof Error ? error.message : String(error);
-                notifyParent("AI_TRAINER_EXERCISE_ERROR", { path: panel.context.path, message });
+                if (runtimeState(panel).generation === generation) {
+                    publishRuntimeState(panel, { phase: "error", lastError: message });
+                    notifyParent("AI_TRAINER_EXERCISE_ERROR", { path: panel.context.path, message });
+                }
                 throw error;
             }
             finally {
-                if (preparationRuns.get(panel) === preparation)
+                if (preparationRuns.get(panel) === run)
                     preparationRuns.delete(panel);
             }
         };
@@ -920,58 +1004,65 @@ const plugin = {
             execute: async (args) => {
                 const path = targetPath(args);
                 const panel = activePanel(tracker, path);
-                app.shell.activateById(panel.id);
-                await withTimeout(panel.context.ready, "Notebook 准备", 15000);
-                const existing = panel.sessionContext.session?.kernel;
-                if (existing) {
-                    if (existing.status === "dead")
-                        throw new Error("Python 内核已停止，请重新加载环境");
-                    await withTimeout(existing.info, "Python 内核握手", KERNEL_BOOT_TIMEOUT_MS);
-                    return { status: existing.status, name: existing.name };
-                }
-                const inFlight = kernelStarts.get(panel);
-                if (inFlight)
-                    return inFlight;
-                const start = (async () => {
-                    const preferred = await preferredKernel();
-                    const attachDeadline = Date.now() + KERNEL_ATTACH_GRACE_MS;
-                    let afterRegistration = panel.sessionContext.session?.kernel;
-                    while (!afterRegistration && Date.now() < attachDeadline) {
-                        await new Promise(resolve => window.setTimeout(resolve, 50));
-                        afterRegistration = panel.sessionContext.session?.kernel;
+                try {
+                    app.shell.activateById(panel.id);
+                    await withTimeout(panel.context.ready, "Notebook 准备", 15000);
+                    // SessionContext.initialize() is the one authoritative owner of the
+                    // metadata-selected cold start. Waiting for it here serializes our
+                    // fallback changeKernel() behind JupyterLab instead of guessing with a
+                    // fixed grace period and occasionally creating two Pyodide workers.
+                    publishRuntimeState(panel, { phase: "starting_kernel", lastError: null });
+                    await withTimeout(panel.sessionContext.initialize(), "内核会话初始化", KERNEL_BOOT_TIMEOUT_MS);
+                    const existing = panel.sessionContext.session?.kernel;
+                    if (existing) {
+                        if (existing.status === "dead")
+                            throw new Error("Python 内核已停止，请重新加载环境");
+                        await withTimeout(existing.info, "Python 内核握手", KERNEL_BOOT_TIMEOUT_MS);
+                        synchronizeKernel(panel);
+                        return { status: existing.status, name: existing.name };
                     }
-                    if (afterRegistration)
-                        return { status: afterRegistration.status, name: afterRegistration.name };
-                    notifyParent("AI_TRAINER_KERNEL_STATUS", { path: panel.context.path, status: "starting" });
-                    try {
+                    const inFlight = kernelStarts.get(panel);
+                    if (inFlight)
+                        return await inFlight;
+                    const start = (async () => {
+                        const preferred = await preferredKernel();
+                        notifyParent("AI_TRAINER_KERNEL_STATUS", { path: panel.context.path, status: "starting" });
                         const kernel = await withTimeout(panel.sessionContext.changeKernel({ name: preferred }), "Python 内核启动", KERNEL_BOOT_TIMEOUT_MS);
                         if (!kernel)
                             throw new Error("Python 内核启动后未返回连接");
-                        // SessionContext is authoritative if another caller completed in
-                        // the same turn; do not keep preparing against a superseded worker.
-                        await new Promise(resolve => window.setTimeout(resolve, 50));
                         const activeKernel = panel.sessionContext.session?.kernel ?? kernel;
                         await withTimeout(activeKernel.info, "Python 内核握手", KERNEL_BOOT_TIMEOUT_MS);
                         const status = activeKernel.status ?? "starting";
+                        synchronizeKernel(panel);
                         notifyParent("AI_TRAINER_KERNEL_STATUS", { path: panel.context.path, status });
                         return { status, name: activeKernel.name || preferred };
+                    })();
+                    kernelStarts.set(panel, start);
+                    try {
+                        return await start;
                     }
-                    catch (error) {
-                        notifyParent("AI_TRAINER_KERNEL_ERROR", {
-                            path: panel.context.path,
-                            message: error instanceof Error ? error.message : String(error)
-                        });
-                        throw error;
+                    finally {
+                        if (kernelStarts.get(panel) === start)
+                            kernelStarts.delete(panel);
                     }
-                })();
-                kernelStarts.set(panel, start);
-                try {
-                    return await start;
                 }
-                finally {
-                    if (kernelStarts.get(panel) === start)
-                        kernelStarts.delete(panel);
+                catch (error) {
+                    const message = error instanceof Error ? error.message : String(error);
+                    pendingRepreparation.delete(panel);
+                    publishRuntimeState(panel, { phase: "error", lastError: message });
+                    notifyParent("AI_TRAINER_KERNEL_ERROR", {
+                        path: panel.context.path,
+                        message
+                    });
+                    throw error;
                 }
+            }
+        });
+        app.commands.addCommand("ai-trainer:get-runtime-state", {
+            label: "读取题目运行环境状态",
+            execute: args => {
+                const panel = activePanel(tracker, targetPath(args));
+                return { ...runtimeState(panel) };
             }
         });
         app.commands.addCommand("ai-trainer:get-notebook", {
@@ -1004,6 +1095,48 @@ const plugin = {
                 return { ok: true, path: panel.context.path, exerciseIndex };
             }
         });
+        app.commands.addCommand("ai-trainer:restart-and-prepare", {
+            label: "重启 Python 内核并重新准备题目环境",
+            execute: async (args) => {
+                const panel = activePanel(tracker, targetPath(args));
+                const active = restartRuns.get(panel);
+                if (active)
+                    return active;
+                const restart = (async () => {
+                    try {
+                        await app.commands.execute("ai-trainer:ensure-kernel", { path: panel.context.path });
+                        if (!pendingRepreparation.has(panel))
+                            beginRestartGeneration(panel);
+                        await withTimeout(panel.sessionContext.restartKernel(), "Python 内核重启", KERNEL_BOOT_TIMEOUT_MS);
+                        synchronizeKernel(panel, "kernel_connected");
+                        await prepareEnvironment(panel);
+                        pendingRepreparation.delete(panel);
+                        const state = runtimeState(panel);
+                        notifyParent("AI_TRAINER_EXERCISE_READY", {
+                            path: panel.context.path,
+                            exerciseIndex: exerciseIndexOf(panel),
+                            generation: state.generation
+                        });
+                        return { ...state };
+                    }
+                    catch (error) {
+                        const message = error instanceof Error ? error.message : String(error);
+                        pendingRepreparation.delete(panel);
+                        publishRuntimeState(panel, { phase: "error", lastError: message });
+                        notifyParent("AI_TRAINER_EXERCISE_ERROR", { path: panel.context.path, message });
+                        throw error;
+                    }
+                })();
+                restartRuns.set(panel, restart);
+                try {
+                    return await restart;
+                }
+                finally {
+                    if (restartRuns.get(panel) === restart)
+                        restartRuns.delete(panel);
+                }
+            }
+        });
         app.commands.addCommand("ai-trainer:set-notebook", {
             label: "载入云端 Notebook",
             execute: async (args) => {
@@ -1033,7 +1166,8 @@ const plugin = {
                 return {
                     path: panel.context.path,
                     dirty: panel.context.model.dirty,
-                    kernel: panel.sessionContext.session?.kernel?.status ?? "unknown"
+                    kernel: panel.sessionContext.session?.kernel?.status ?? "unknown",
+                    runtime: { ...runtimeState(panel) }
                 };
             }
         });
@@ -1077,24 +1211,38 @@ const plugin = {
                 notifyParent("AI_TRAINER_KERNEL_STATUS", { path: panel.context.path, status });
                 // 准备阶段装的东西全在内核进程里：piplite 的纯 Python wheel（2.1.2、2.1.3、
                 // 2.2.1、2.2.4）、FutureWarning 屏蔽、预热 import、ONNX 运行时。重启内核会把
-                // 它们一并带走，而 preparedPanels 记在面板上，重启后不会重跑——实测重启后
+                // 它们一并带走，而准备状态记在面板上，重启后不会自动重跑——实测重启后
                 // openpyxl 变成 ModuleNotFoundError、告警屏蔽失效，官方答案直接跑不动。
-                // 这里在重启时清账，等内核回到 idle 再补一次准备。
+                // 这里进入新一代状态，等内核回到 idle 再补一次准备。
                 if (status === "restarting" || status === "autorestarting") {
-                    preparedPanels.delete(panel);
-                    preparationRuns.delete(panel);
-                    pendingRepreparation.add(panel);
+                    if (!pendingRepreparation.has(panel))
+                        beginRestartGeneration(panel, status);
+                    else
+                        publishRuntimeState(panel, { phase: "starting_kernel", kernelStatus: status });
                     return;
                 }
+                publishRuntimeState(panel, {
+                    kernelStatus: status,
+                    connectionStatus: panel.sessionContext.session?.kernel?.connectionStatus ?? "disconnected"
+                });
                 if (status === "idle" && pendingRepreparation.has(panel)) {
-                    pendingRepreparation.delete(panel);
                     void prepareEnvironment(panel)
-                        .then(() => notifyParent("AI_TRAINER_EXERCISE_READY", {
-                        path: panel.context.path,
-                        exerciseIndex: exerciseIndexOf(panel)
-                    }))
+                        .then(() => {
+                        pendingRepreparation.delete(panel);
+                        notifyParent("AI_TRAINER_EXERCISE_READY", {
+                            path: panel.context.path,
+                            exerciseIndex: exerciseIndexOf(panel),
+                            generation: runtimeState(panel).generation
+                        });
+                    })
                         .catch(() => undefined);
                 }
+            });
+            panel.sessionContext.kernelChanged.connect(() => {
+                synchronizeKernel(panel, "kernel_connected");
+            });
+            panel.sessionContext.connectionStatusChanged.connect((_context, status) => {
+                publishRuntimeState(panel, { connectionStatus: status });
             });
             panel.context.ready.then(async () => {
                 hideInfrastructureCells(panel);

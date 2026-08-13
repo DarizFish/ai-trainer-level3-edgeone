@@ -15,7 +15,7 @@
     "start": "next start",
     "test": "npm run test:quick",
     "test:contracts": "node --test tests/contracts.test.mjs tests/practical-requirements.test.mjs tests/publish-theory-review.test.mjs tests/theory-review-state.test.mjs",
-    "test:quick": "npm run lint && npm run typecheck && npm run content:validate && npm run test:contracts",
+    "test:quick": "node scripts/run-quick-tests.mjs",
     "test:build": "npm run build",
     "test:browser": "playwright test",
     "test:full": "npm run test:quick && npm run test:build && npm run test:browser",

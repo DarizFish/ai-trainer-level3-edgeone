@@ -1386,7 +1386,10 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
     lite["jupyter-config-data"].litePluginSettings["@jupyterlite/pyodide-kernel-extension:kernel"].pyodideUrl,
     "./static/pyodide/pyodide.js",
   );
-  assert.equal(notebookOverrides.autoStartDefaultKernel, false);
+  // JupyterLab owns the metadata-selected cold start. The bridge waits for
+  // SessionContext.initialize() and only falls back when no kernel exists, so
+  // disabling this would reintroduce both the selection dialog and dual owners.
+  assert.equal(notebookOverrides.autoStartDefaultKernel, true);
   assert.equal(Object.hasOwn(notebookOverrides, "autoStartDefault"), false);
   assert.match(labShell, /build\/lab\/bundle\.js/);
   assert.match(labShell, /data-notebook="lab"/);
@@ -1403,15 +1406,18 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
   assert.match(configUtils, /pyodideUrl\.searchParams\.set\('attempt', attempt\)/);
   assert.match(labShell, /config-utils\.js\?_=20260726-pyodide0277-runtime11/);
   assert.match(bridgeExtension, /kernelStarts/);
-  assert.match(bridgeExtension, /KERNEL_ATTACH_GRACE_MS/);
-  assert.match(bridgeExtension, /attachDeadline/);
-  assert.match(bridgeExtension, /activeKernel/);
+  assert.doesNotMatch(bridgeExtension, /KERNEL_ATTACH_GRACE_MS|attachDeadline/);
+  assert.match(bridgeExtension, /sessionContext\.initialize\(\)/);
+  assert.match(bridgeExtension, /RuntimePhase/);
+  assert.match(bridgeExtension, /runtimeStates/);
+  assert.match(bridgeExtension, /generation/);
+  assert.match(bridgeExtension, /ai-trainer:get-runtime-state/);
+  assert.match(bridgeExtension, /ai-trainer:restart-and-prepare/);
   assert.match(bridgeExtension, /kernel\.info|existing\.info/);
   assert.match(bridgeExtension, /preparationRuns/);
   assert.match(bridgeExtension, /preparationFailure/);
   assert.match(bridgeExtension, /IKernelSpecs/);
   assert.match(bridgeExtension, /kernelSpecs\.specs/);
-  assert.doesNotMatch(bridgeExtension, /sessionContext\.ready/);
   assert.match(bridgeExtension, /ai-trainer:prepare-exercise/);
   assert.match(bridgeExtension, /NotebookActions\.runCells/);
   assert.match(bridgeExtension, /ai-trainer-onnx/);
