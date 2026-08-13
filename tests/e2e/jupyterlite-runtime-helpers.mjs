@@ -69,7 +69,7 @@ export async function probePreparedEnvironment(page) {
       code: [
         "import warnings",
         "try:",
-        "    import openpyxl; _pkg = True",
+        "    __import__('openpyxl'); _pkg = True",
         "except Exception:",
         "    _pkg = False",
         "print(_pkg, any(f[2] is FutureWarning for f in warnings.filters))",

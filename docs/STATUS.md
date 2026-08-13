@@ -1,6 +1,6 @@
 # 项目当前状态
 
-更新时间：2026-08-12。本文取代原 `SESSION-HANDOFF.md`，用于把项目移交给其他会话或协作者。只记录**当前**事实与待办；历史改进见 `IMPROVEMENTS.md`。
+更新时间：2026-08-13。本文取代原 `SESSION-HANDOFF.md`，用于把项目移交给其他会话或协作者。只记录**当前**事实与待办；历史改进见 `IMPROVEMENTS.md`。
 
 ## 1. 坐标
 
@@ -8,8 +8,9 @@
 | --- | --- |
 | 正式站 | https://www.aitrainer3.xyz/ |
 | 本地目录 | `C:\Users\zd\Documents\aitrainer3\edgeone-site` |
-| 当前分支 | `main` |
-| 当前 HEAD | `e739c16`，工作区包含 Next/CI/数据库迁移加固，待提交 |
+| 当前工作分支 | `codex/fix-main-quality-gate` |
+| 已验证代码基线 | 基于 `main` 合并提交 `cd15cc8` 的当前修复工作树；验证证据见第 3 节 |
+| PR 状态 | PR #4 已合并；当前分支用于提交 main Quality Gate 修复 |
 | GitHub | `ssh://git@ssh.github.com:443/DarizFish/ai-trainer-level3-edgeone.git` |
 | EdgeOne 项目 | `makers-xyzgssb9k7as` |
 | Supabase | 项目 `sqenbhewvjnmatgkkbqy`，东京区 `aws-0-ap-northeast-1.pooler.supabase.com` |
@@ -28,13 +29,20 @@ npm.cmd run dev -- --webpack -p 3200 -H 127.0.0.1
 
 生产构建同样固定为 `next build --webpack`（已写入 `package.json`）。
 
-## 3. 未提交的改动
+## 3. 当前质量门禁
 
-当前未提交改动为 Next.js 16.3.0、React 19.2.8、安全依赖更新、PR 质量门禁、verified-artifact 自托管发布和数据库 migration 加固。
+安全依赖升级、PR Quality Gate、verified-artifact 自托管发布和数据库 migration 加固已随 PR #3 进入远端 `main`。PR #4 的 JupyterLite 门禁稳定性与耗时改动也已合并；PR Quality Gate 只验证提交，不部署生产环境。
 
-2026-08-12 已验证：`npm ci` 可重建依赖；生产依赖审计 0 项；快速门禁 50/50、Next.js 生产构建、Chromium 24/24、JupyterLite 全量重建、自托管 standalone 打包和 EdgeOne 正式站 4/4 冒烟均通过。Next 16.3 新增 9 条内部导航 lint warning，未作为本次安全升级的阻塞项。
+**已验证（2026-08-13）**：
 
-GitHub 远端当前仍显示 `main` 未配置 branch protection。`.github/workflows/quality.yml` 需要先进入远端并至少运行一次，才能把 `Quality gate / Full build and browser regression` 选为 required check；在该规则落地前不要把“PR 门禁”视为完全闭环。
+- PR #4 的提交 `143497f` 已通过 GitHub Actions `Quality gate` run #45（run `31686669348`）：job 总耗时 6 分 20 秒，其中完整门禁 5 分 20 秒。PR 事件中的自托管打包、release archive 和 artifact 上传均按条件跳过，因此这次成功**不代表已经部署**。
+- PR #4 合并后的 `main` 提交 `cd15cc8` 在 run #46（run `31701288960`）失败：24/25 通过，`kernel-restart.spec.mjs` 两次都在真正执行 restart 前卡住。首次执行时扩展已为 `ready`、内核为 `busy/connected`，但 30 秒内没有 execute reply；retry 一直停在 `preparing_environment`，240 秒超时。自托管打包和 artifact 上传因此跳过，部署工作流未被触发。
+- `143497f` 与合并提交 `cd15cc8` 的代码树相同，排除 merge 过程改变文件内容。
+- 当前修复工作树已完成 JupyterLite 扩展和完整站点构建；合同测试 50/50；生命周期用例连续 10/10 首次通过；`CI=true npm run test:ci` 中快速门禁 50/50、生产构建和 Playwright 24/24 首次通过，无 retry、无 flaky，总耗时约 97.5 秒；按 main 工作流设置 `SELF_HOSTED_BUILD=1` 后，standalone 构建和 `package:self-hosted` 也已通过。
+
+**强推断，仍待 GitHub CI 验证**：`pyodide_kernel 0.6.1` 会在执行前扫描静态 import，而原环境准备代码在同一请求中既调用 `piplite.install("openpyxl")`，又静态 `import openpyxl`；完整套件还连续启动两个内容相同的重型 Pyodide worker。两者耦合后，在受限 runner 上更容易表现为内核命令通道不返回。当前修复将 piplite 管理的包改为安装完成后动态导入，并把冷启动与重启合并为同一 worker 的生命周期测试，避免无额外覆盖价值的重复 WASM 与科学计算包加载。GitHub 修复 PR 的门禁结果是最终判据；在此之前不把该推断写成已确认根因。
+
+**当前决策**：暂不增加 `main` 的硬分支保护。Quality Gate 已能在 PR 合并前运行，但在 required check 落地前仍依赖人工保证只合并门禁已通过且 head SHA 未变化的 PR。EdgeOne 继续独立监听 `main`。
 
 ### 已回退：JupyterLite 翻译接口无扩展名别名
 
@@ -168,12 +176,13 @@ Pyodide 0.27.7 读到旧 lock 文件后 `initializePackageIndex` 抛出 `Lock fi
 
 ## 6. 下一步
 
-1. ~~确认 4.3 的规则顺序修正是否生效~~ **已闭环**（2026-07-28 线上实测）。`pyodide-lock.json`、`jupyter-lite.json`、`config-utils.js`、`service-worker.js` 四个文件均返回 `public, max-age=0, must-revalidate`。EdgeOne 的「靠后规则生效」结论成立，缓存毒化的根因已消除。
-2. 视情况调整 4.7 的冒烟并发与超时。修好之前 `npm run test:smoke` 会一直停在 2/4，没法当上线后的健康检查用。
-3. 按 `TESTING.md` 执行正式站验收；重点人工确认任意 CSV Lab 显示「环境已就绪」、`1.1.2` 的 `sensor_data.csv` 不再校验失败、3.2.x 的 ONNX 题可下载模型并推理。**3.2.x 这条路径至今完全未在生产环境验证过**，是 20 个 lab 里最重的一条链路。
-4. 老用户仍需按 4.3 清一次全局 HTTP 缓存；这是一次性的，之后新响应头会自动接管。**2026-08-06 补充**：这条对 `/drive` 挂载已不再必要——恢复 service worker 后，挂载不再依赖跨源隔离，缓存里存着旧响应头的设备也能正常保存文件（已由一台原本受影响的设备确认）。对 4.1 那批按 `immutable` 缓存的文件仍然适用。
-5. 给 `/drive` 挂载失败加上运行时自检与用户可见提示。目前失败是静默的：`mountDrive` 为假时只有控制台一行 `console.warn`，而素材兜底会让题目照常能跑，学员直到刷新才发现产物没了。没有这个信号，下一次故障仍然只能靠投诉发现。详见 `IMPROVEMENTS.md` 2026-08-06 条的「未闭环」。
-6. 数据库三项待办，按性价比排序，详见第 8 节：`/api/theory/state` 去冗余字段并加 ETag（8.3）；`sessions` 照抄 `sweepThrottle` 加过期清理（8.2）；`theory_attempts` 只保留每人最近 N 次（8.2）。第四项（email 换 `user_id`，8.4）判断为暂不做。
+1. 为 `codex/fix-main-quality-gate` 创建修复 PR（若尚未创建），等待该 PR 的 GitHub Quality Gate 验证上述根因推断。不要直接推送 `main`，也不要把 PR run 当作部署信号。
+2. ~~确认 4.3 的规则顺序修正是否生效~~ **已闭环**（2026-07-28 线上实测）。`pyodide-lock.json`、`jupyter-lite.json`、`config-utils.js`、`service-worker.js` 四个文件均返回 `public, max-age=0, must-revalidate`。EdgeOne 的「靠后规则生效」结论成立，缓存毒化的根因已消除。
+3. 视情况调整 4.7 的冒烟并发与超时。修好之前 `npm run test:smoke` 会一直停在 2/4，没法当上线后的健康检查用。
+4. 按 `TESTING.md` 执行正式站验收；重点人工确认任意 CSV Lab 显示「环境已就绪」、`1.1.2` 的 `sensor_data.csv` 不再校验失败、3.2.x 的 ONNX 题可下载模型并推理。**3.2.x 这条路径至今完全未在生产环境验证过**，是 20 个 lab 里最重的一条链路。
+5. 老用户仍需按 4.3 清一次全局 HTTP 缓存；这是一次性的，之后新响应头会自动接管。**2026-08-06 补充**：这条对 `/drive` 挂载已不再必要——恢复 service worker 后，挂载不再依赖跨源隔离，缓存里存着旧响应头的设备也能正常保存文件（已由一台原本受影响的设备确认）。对 4.1 那批按 `immutable` 缓存的文件仍然适用。
+6. 给 `/drive` 挂载失败加上运行时自检与用户可见提示。目前失败是静默的：`mountDrive` 为假时只有控制台一行 `console.warn`，而素材兜底会让题目照常能跑，学员直到刷新才发现产物没了。没有这个信号，下一次故障仍然只能靠投诉发现。详见 `IMPROVEMENTS.md` 2026-08-06 条的「未闭环」。
+7. 数据库三项待办，按性价比排序，详见第 8 节：`/api/theory/state` 去冗余字段并加 ETag（8.3）；`sessions` 照抄 `sweepThrottle` 加过期清理（8.2）；`theory_attempts` 只保留每人最近 N 次（8.2）。第四项（email 换 `user_id`，8.4）判断为暂不做。
 
 ## 6.1 正式发布前仍未处理
 
@@ -252,5 +261,7 @@ Pyodide 0.27.7 读到旧 lock 文件后 `initializePackageIndex` 抛出 `Lock fi
 **`.csv` 在 `fileTypes` 里是 `fileFormat: "base64"`，这是刻意的。** drive 的 `get()` 忽略 `options.format`，只能按扩展名定格式；改回 `text` 会让 2.1.4 那份 GBK 数据集在读写两个方向都被 UTF-8 解码销毁。显示端的解码在 `jupyterlite-extension/src/csvViewer.ts`，**只改 `fromString`，不要动 `toString`**——`CSVViewer._updateGrid` 正是从 `toString()` 取数据喂 DataGrid，在那里还原成字节会让表格重新变回乱码。
 
 **准备阶段的产物活在内核进程里，不在面板上。** piplite 装的纯 Python wheel、`FutureWarning` 屏蔽、预热 import、ONNX 运行时单元都随内核重启消失，因此 `prepareEnvironment` 必须在 `sessionContext.statusChanged` 的 `restarting`/`autorestarting` 上清账并重跑。`tests/e2e/kernel-restart.spec.mjs` 钉住了这个行为。
+
+**`ready` 必须代表同一代内核真正可接受下一条命令。** 环境准备单元收到 `execute_reply` 时，内核最后一条 `idle` 状态消息可能尚未到达；此时过早发布 `ready`，紧跟的探针会与 worker 竞态并永久挂起。只有当前 `generation` 和 `kernelId` 未变化、环境准备完成，且内核同时为 `status=idle`、`connectionStatus=connected` 时才能发布 `ready`。冷启动只由 `SessionContext.initialize()` 负责，不要恢复固定 grace period 或第二个启动者；所有 `future.done` 探针必须设置独立截止时间并在失败时输出内核与运行时状态。
 
 **扩展改动的发布流程**：`npm run jupyterlite:extension` 构建 → 把 `jupyterlite-extension/labextension/` 同步到 `public/lite/extensions/ai-trainer-jupyterlite/` → 更新 `public/lite/jupyter-lite.json` 里 `federated_extensions` 的 `remoteEntry.*.js` 哈希。每次构建哈希都会变，漏掉最后一步等于没发布。

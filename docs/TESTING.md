@@ -46,6 +46,28 @@ npm.cmd test
 npm.cmd run test:full
 ```
 
+准备**推送 PR**时应在与 GitHub Actions 同构的 CI 模式下运行：
+
+```powershell
+$env:CI = "true"
+npm.cmd run test:ci
+Remove-Item Env:CI
+```
+
+`test:ci` 当前与 `test:full` 覆盖相同，但 `CI=true` 会改变 Playwright 的关键行为：禁止复用端口上已有的旧服务、允许一次重试以采集 trace，同时通过 `failOnFlakyTests` 让“重试后才通过”仍然阻断门禁。因此，本地普通模式通过不能替代这一步。
+
+修改 JupyterLite 内核启动、重启、环境准备或等待条件时，还要对最容易受时序影响的用例做压力回归：
+
+```powershell
+$env:CI = "true"
+npm.cmd run test:browser -- tests/e2e/kernel-restart.spec.mjs --repeat-each=3
+Remove-Item Env:CI
+```
+
+不得用增加全局超时或重试次数作为 flaky 的默认修复。内核命令可能永久不返回，每个探针都应有自己的截止时间；超时时至少输出 `kernel.status`、`kernel.connectionStatus` 和扩展运行时状态，确保失败可定位。
+
+生命周期用例在同一个 Pyodide worker 中依次验证冷启动和重启。不要再拆出一个使用相同重型 Notebook 的独立冷启动用例：它会重复加载 WebAssembly、科学计算包和 openpyxl，却没有增加不同的断言，并可能让受限 CI runner 在下一个 worker 启动时发生内存饥饿。
+
 只验证已经上线的正式站：
 
 ```powershell
@@ -65,7 +87,9 @@ npm.cmd run test:smoke
 
 `.github/workflows/quality.yml` 在推送和拉取请求时执行生产依赖 high 级审计、完整构建与浏览器/JupyterLite 门禁。`main` 的成功 run 额外生成以 commit SHA 命名的自托管 artifact；部署工作流只能消费该 run 的 artifact。浏览器失败会保留七天的 trace、截图、视频和 HTML 报告。
 
-GitHub 的 `main` 分支规则必须要求 `Quality gate / Full build and browser regression`、至少一个 PR 审批、解决所有 review conversation、合并前保持分支最新，并禁止绕过规则直接推送。EdgeOne 仍会独立监听 `main`，因此分支保护是它只接收已验证提交的边界。
+PR 上的 Quality Gate **不负责部署**：打包和 artifact 上传步骤只在 `push main` 时执行，部署工作流再消费已经验证的 artifact。EdgeOne 仍会独立监听 `main`。
+
+**当前决策（2026-08-13）**：暂不增加 `main` 的硬分支保护。现阶段必须依靠合并纪律，只合并 Quality Gate 已通过且 head SHA 未变化的 PR；若以后启用硬保护，再把 `Quality gate / Full build and browser regression` 设为 required check。
 
 失败定位顺序：
 

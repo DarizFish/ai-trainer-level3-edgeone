@@ -612,22 +612,37 @@ const WARNING_FILTERS = [
     "warnings.filterwarnings('ignore', category=FutureWarning)",
     "warnings.filterwarnings('ignore', category=DeprecationWarning)"
 ];
+// Distribution names and Python import names are not always the same. Keep
+// piplite-owned imports out of the static preload statement: pyodide-kernel
+// calls loadPackagesFromImports() before executing every request, so listing a
+// package there while the same request installs it with piplite couples two
+// package managers and can leave a slow worker permanently busy.
+const PIPLITE_IMPORT_NAMES = {
+    "imbalanced-learn": "imblearn",
+    "openpyxl": "openpyxl",
+    "seaborn": "seaborn"
+};
+function pipliteImportName(distribution) {
+    return PIPLITE_IMPORT_NAMES[distribution] ?? distribution.replaceAll("-", "_");
+}
 function kernelEnvironmentSource(packages, assets, preloadImports, fontAliases, onnxTaskCode) {
     const statements = [...WARNING_FILTERS];
+    const pipliteImports = packages.map(pipliteImportName);
     if (packages.length > 0) {
         // pyodide 自带的包（pandas、numpy、scikit-learn 等）在 import 时会自动加载，
         // 但 jupyterlite/pypi 里的纯 Python wheel（openpyxl、seaborn、
         // imbalanced-learn）不在 pyodide-lock 内，只能靠 piplite 装。
-        statements.push("import piplite", `await piplite.install(${JSON.stringify(packages)})`);
+        statements.push("import piplite", `await piplite.install(${JSON.stringify(packages)})`, "from importlib import import_module as _import_module", `_piplite_imports = ${JSON.stringify(pipliteImports)}`, "for _module in _piplite_imports:", "    _import_module(_module)", "del _module, _piplite_imports, _import_module");
     }
-    if (preloadImports.length > 0) {
+    const pyodideImports = preloadImports.filter(name => !pipliteImports.includes(name));
+    if (pyodideImports.length > 0) {
         // pyodide_kernel 在每个执行请求前都会跑 loadPackagesFromImports 扫描源码，所以
         // 这一行会把本题要用的 pandas / scikit-learn 等科学计算 wheel 就地下完。不写这
         // 一行也能跑——学员第一次 import 时同样会自动加载——但那时准备阶段早已结束、
         // 进度提示已经收起，2.1.3 的 42.6MB 会变成点「运行全部」后毫无反馈的一分钟。
         // 必须排在 piplite.install 之后：seaborn 之类不在 pyodide-lock 里，先 import 会
         // 直接 ModuleNotFoundError。
-        statements.push(`import ${preloadImports.join(", ")}`);
+        statements.push(`import ${pyodideImports.join(", ")}`);
     }
     if (assets.length > 0) {
         // 正常情况下素材由 mountDrive 挂进工作目录，下面的哈希校验直接命中、不发请求。

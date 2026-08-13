@@ -1412,6 +1412,9 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
   assert.match(bridgeExtension, /runtimeStates/);
   assert.match(bridgeExtension, /generation/);
   assert.match(bridgeExtension, /waitForKernelUsable/);
+  assert.match(bridgeExtension, /PIPLITE_IMPORT_NAMES/);
+  assert.match(bridgeExtension, /_import_module\(_module\)/);
+  assert.doesNotMatch(bridgeExtension, /await piplite\.install\([^\n]+\)[\s\S]{0,300}import openpyxl/);
   assert.match(bridgeExtension, /ai-trainer:get-runtime-state/);
   assert.match(bridgeExtension, /ai-trainer:restart-and-prepare/);
   assert.match(bridgeExtension, /kernel\.info|existing\.info/);
