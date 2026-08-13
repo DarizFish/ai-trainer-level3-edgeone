@@ -94,17 +94,62 @@ test("task dependencies install without an environment cell in the official note
   // 2.1.2 读 .xlsx，需要 openpyxl —— 它是 jupyterlite/pypi 里的纯 Python wheel，
   // 不在 pyodide-lock 内，import 时不会自动加载。题目文件已经没有环境准备单元，
   // 所以这个 import 能成功，只可能是扩展的静默内核请求装上了它。
+  await page.route("**/lite/jupyter-lite.json*", async route => {
+    const response = await route.fetch();
+    const config = JSON.parse(await response.text());
+    config["jupyter-config-data"].exposeAppInBrowser = "true";
+    await route.fulfill({ response, body: JSON.stringify(config) });
+  });
   await page.goto("/practical/2.1.2/lab", { waitUntil: "domcontentloaded" });
   await expect(page.getByText("代码区已就绪", { exact: false })).toBeVisible({ timeout: 240_000 });
 
-  const frame = page.frameLocator("iframe.jupyter-frame");
-  await frame.locator(".jp-Notebook .jp-CodeCell .cm-content").last().click();
-  await page.keyboard.press("Escape");
-  await page.keyboard.press("b");
-  await page.keyboard.press("Enter");
-  await page.keyboard.type("import openpyxl; print('env-ok', openpyxl.__version__)");
-  await page.keyboard.press("Shift+Enter");
+  // Query the exact notebook through the bridge instead of clicking whichever
+  // editor happens to be current. This tests the business contract (the
+  // embedded exercise is ready and can import its dependency) without letting
+  // a transient JupyterLab dialog or focus change turn into a 120-second click.
+  const observed = await page.locator("iframe.jupyter-frame").evaluate(async (iframe, path) => {
+    const app = iframe.contentWindow?.jupyterapp;
+    if (!app) throw new Error("JupyterLite app is not exposed to the embedded exercise test");
+    const runtime = await app.commands.execute("ai-trainer:get-runtime-state", { path });
+    let panel = null;
+    for (const widget of app.shell.widgets("main")) {
+      if (widget?.context?.path === path) {
+        panel = widget;
+        break;
+      }
+    }
+    const kernel = panel?.sessionContext?.session?.kernel;
+    if (!kernel) throw new Error(`No kernel attached to ${path}`);
+    const lines = [];
+    const future = kernel.requestExecute({
+      code: "import openpyxl; print('env-ok', openpyxl.__version__)",
+      store_history: false,
+    });
+    future.onIOPub = message => {
+      if (message.header.msg_type === "stream") lines.push(message.content.text);
+    };
+    let timer;
+    try {
+      const reply = await Promise.race([
+        future.done,
+        new Promise((_resolve, reject) => {
+          timer = window.setTimeout(() => reject(new Error("embedded dependency probe timed out after 30s")), 30_000);
+        }),
+      ]);
+      if (reply.content.status !== "ok") {
+        throw new Error(`embedded dependency probe returned ${reply.content.status}`);
+      }
+      return { runtime, output: lines.join("").trim() };
+    } catch (error) {
+      future.dispose?.();
+      const latestRuntime = await app.commands.execute("ai-trainer:get-runtime-state", { path });
+      const message = error instanceof Error ? error.message : String(error);
+      throw new Error(`${message}; kernel=${kernel.status}/${kernel.connectionStatus}; runtime=${JSON.stringify(latestRuntime)}`);
+    } finally {
+      if (timer !== undefined) window.clearTimeout(timer);
+    }
+  }, "2-1-2/2.1.2.ipynb");
 
-  await expect(frame.locator(".jp-OutputArea-output").filter({ hasText: "env-ok" }))
-    .toBeVisible({ timeout: 180_000 });
+  expect(observed.runtime).toMatchObject({ phase: "ready", lastError: null });
+  expect(observed.output).toMatch(/^env-ok\s+3\.1\.5$/);
 });

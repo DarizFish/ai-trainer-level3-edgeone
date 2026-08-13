@@ -584,7 +584,19 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
   async function execute(command: string) {
     if (!bridgeRef.current) return;
     setError(null);
-    try { await bridgeRef.current.execute(command, {}); }
+    try {
+      if (command === "ai-trainer:restart-and-prepare") {
+        setWarmupStage("kernel");
+        setStartupSlow(true);
+        setSaveState("正在重启 Python 内核并重新准备题目环境…");
+      }
+      await bridgeRef.current.execute(command, { path: notebookPath });
+      if (command === "ai-trainer:restart-and-prepare") {
+        setStartupSlow(false);
+        finishWarmup();
+        setSaveState(signedIn ? "代码区已就绪；修改会自动同步" : "代码区已就绪；登录后可云端同步");
+      }
+    }
     catch (cause) { setError(cause instanceof Error ? cause.message : String(cause)); }
   }
 
@@ -625,7 +637,7 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
           <button className="button button-small" disabled={!ready} onClick={() => void saveDraft()}>{signedIn ? "云端保存" : "登录并保存"}</button>
           {!examMode && fillReferences.length > 0 && <button className={`button button-small ${fillReview?.visible ? "is-active" : ""}`} disabled={!ready} aria-pressed={Boolean(fillReview?.visible)} onClick={() => void toggleFillReview()}>{fillReview?.visible ? "隐藏答案" : "查看答案"}</button>}
           <span className="lab-toolbar-divider" aria-hidden="true"></span>
-          <button className="button button-small" disabled={!kernelUsable} onClick={() => void execute("notebook:restart-kernel")}>重启内核</button>
+          <button className="button button-small" disabled={!kernelUsable} onClick={() => void execute("ai-trainer:restart-and-prepare")}>重启内核</button>
           <button className="button button-small" disabled={!ready} onClick={() => void downloadNotebook()}>导出 .ipynb</button>
           <button className="button button-small" onClick={reloadEnvironment}>重新加载环境</button>
           <button className="button button-small" disabled={!ready} onClick={() => setConfirmRestore(true)}>恢复原始模板</button>

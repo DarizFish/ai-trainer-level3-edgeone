@@ -19,7 +19,7 @@
       },
       {
         "extension": "./extension",
-        "load": "static/remoteEntry.ac9bcf596196efd28070.js",
+        "load": "static/remoteEntry.d721be99431d9bc16dfc.js",
         "name": "ai-trainer-jupyterlite"
       },
       {
@@ -324,7 +324,7 @@
         "theme": "JupyterLab Light"
       },
       "@jupyterlab/notebook-extension:tracker": {
-        "autoStartDefaultKernel": false,
+        "autoStartDefaultKernel": true,
         "recordTiming": true,
         "scrollPastEnd": true
       }

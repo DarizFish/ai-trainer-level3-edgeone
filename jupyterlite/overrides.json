@@ -3,7 +3,7 @@
     "theme": "JupyterLab Light"
   },
   "@jupyterlab/notebook-extension:tracker": {
-    "autoStartDefaultKernel": false,
+    "autoStartDefaultKernel": true,
     "scrollPastEnd": true,
     "recordTiming": true
   }
