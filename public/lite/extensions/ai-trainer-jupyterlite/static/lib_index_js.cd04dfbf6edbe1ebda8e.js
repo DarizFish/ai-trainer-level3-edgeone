@@ -839,6 +839,23 @@ const plugin = {
                 throw new Error(`内核已更替，丢弃第 ${generation} 代环境准备结果`);
             }
         };
+        const waitForKernelUsable = async (panel, generation, kernelId, timeoutMs = 15000) => {
+            const deadline = Date.now() + timeoutMs;
+            let lastStatus = "unknown";
+            let lastConnection = "disconnected";
+            while (Date.now() < deadline) {
+                assertCurrentGeneration(panel, generation, kernelId);
+                const kernel = panel.sessionContext.session?.kernel;
+                lastStatus = kernel?.status ?? "missing";
+                lastConnection = kernel?.connectionStatus ?? "disconnected";
+                if (lastStatus === "dead")
+                    throw new Error("Python 内核在环境准备后停止");
+                if (lastStatus === "idle" && lastConnection === "connected")
+                    return;
+                await new Promise(resolve => window.setTimeout(resolve, 50));
+            }
+            throw new Error(`环境准备完成但内核未恢复可用状态（status=${lastStatus}, connection=${lastConnection}）`);
+        };
         // 依赖安装、告警屏蔽、素材恢复和 ONNX 运行时全都活在内核进程里，所以这一段既要
         // 在首次进入时跑，也要在每次内核重启后重跑——见下面 statusChanged 里的处理。
         const prepareEnvironment = async (panel) => {
@@ -862,6 +879,10 @@ const plugin = {
                     await withTimeout(applyKernelEnvironment(panel), "题目依赖准备", ENVIRONMENT_TIMEOUT_MS);
                     assertCurrentGeneration(panel, generation, kernelId);
                     if (runtimeCells.length === 0) {
+                        // execute_reply can arrive just before the kernel's final idle
+                        // status message. Publishing ready in that gap lets a follow-up
+                        // request race the worker and occasionally disappear on slow CI.
+                        await waitForKernelUsable(panel, generation, kernelId);
                         preparedGenerations.set(panel, generation);
                         publishRuntimeState(panel, { phase: "ready", lastError: null });
                         return;
@@ -872,6 +893,7 @@ const plugin = {
                         const succeeded = await withTimeout(_jupyterlab_notebook__WEBPACK_IMPORTED_MODULE_4__.NotebookActions.runCells(panel.content, runtimeCells, panel.sessionContext), "浏览器运行时准备", 180000);
                         assertCurrentGeneration(panel, generation, kernelId);
                         if (succeeded) {
+                            await waitForKernelUsable(panel, generation, kernelId);
                             preparedGenerations.set(panel, generation);
                             publishRuntimeState(panel, { phase: "ready", lastError: null });
                             return;

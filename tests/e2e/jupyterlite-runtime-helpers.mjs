@@ -79,7 +79,25 @@ export async function probePreparedEnvironment(page) {
     future.onIOPub = message => {
       if (message.header.msg_type === "stream") lines.push(message.content.text);
     };
-    await future.done;
-    return lines.join("").trim();
+    let timer;
+    try {
+      const reply = await Promise.race([
+        future.done,
+        new Promise((_resolve, reject) => {
+          timer = window.setTimeout(() => reject(new Error("kernel probe timed out after 30s")), 30_000);
+        }),
+      ]);
+      if (reply.content.status !== "ok") {
+        throw new Error(`kernel probe returned ${reply.content.status}`);
+      }
+      return lines.join("").trim();
+    } catch (error) {
+      future.dispose?.();
+      const runtime = await app.commands.execute("ai-trainer:get-runtime-state", { path });
+      const message = error instanceof Error ? error.message : String(error);
+      throw new Error(`${message}; kernel=${kernel.status}/${kernel.connectionStatus}; runtime=${JSON.stringify(runtime)}`);
+    } finally {
+      if (timer !== undefined) window.clearTimeout(timer);
+    }
   }, notebookPath);
 }

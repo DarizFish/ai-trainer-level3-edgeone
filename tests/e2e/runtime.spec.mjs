@@ -128,8 +128,26 @@ test("task dependencies install without an environment cell in the official note
     future.onIOPub = message => {
       if (message.header.msg_type === "stream") lines.push(message.content.text);
     };
-    await future.done;
-    return { runtime, output: lines.join("").trim() };
+    let timer;
+    try {
+      const reply = await Promise.race([
+        future.done,
+        new Promise((_resolve, reject) => {
+          timer = window.setTimeout(() => reject(new Error("embedded dependency probe timed out after 30s")), 30_000);
+        }),
+      ]);
+      if (reply.content.status !== "ok") {
+        throw new Error(`embedded dependency probe returned ${reply.content.status}`);
+      }
+      return { runtime, output: lines.join("").trim() };
+    } catch (error) {
+      future.dispose?.();
+      const latestRuntime = await app.commands.execute("ai-trainer:get-runtime-state", { path });
+      const message = error instanceof Error ? error.message : String(error);
+      throw new Error(`${message}; kernel=${kernel.status}/${kernel.connectionStatus}; runtime=${JSON.stringify(latestRuntime)}`);
+    } finally {
+      if (timer !== undefined) window.clearTimeout(timer);
+    }
   }, "2-1-2/2.1.2.ipynb");
 
   expect(observed.runtime).toMatchObject({ phase: "ready", lastError: null });

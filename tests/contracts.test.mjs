@@ -1411,6 +1411,7 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
   assert.match(bridgeExtension, /RuntimePhase/);
   assert.match(bridgeExtension, /runtimeStates/);
   assert.match(bridgeExtension, /generation/);
+  assert.match(bridgeExtension, /waitForKernelUsable/);
   assert.match(bridgeExtension, /ai-trainer:get-runtime-state/);
   assert.match(bridgeExtension, /ai-trainer:restart-and-prepare/);
   assert.match(bridgeExtension, /kernel\.info|existing\.info/);
