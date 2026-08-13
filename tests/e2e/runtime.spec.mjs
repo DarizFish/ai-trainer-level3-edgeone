@@ -122,7 +122,7 @@ test("task dependencies install without an environment cell in the official note
     if (!kernel) throw new Error(`No kernel attached to ${path}`);
     const lines = [];
     const future = kernel.requestExecute({
-      code: "import openpyxl; print('env-ok', openpyxl.__version__)",
+      code: "_openpyxl = __import__('openpyxl'); print('env-ok', _openpyxl.__version__)",
       store_history: false,
     });
     future.onIOPub = message => {

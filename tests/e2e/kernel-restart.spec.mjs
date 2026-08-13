@@ -6,10 +6,11 @@ import {
   waitForRuntimeReady,
 } from "./jupyterlite-runtime-helpers.mjs";
 
-// Dependencies and warning filters live inside the Pyodide worker. Restarting
-// the kernel must therefore create a new runtime generation and prepare it
-// before the UI reports that the exercise is ready again.
-test("kernel restart prepares a new runtime generation", async ({ page }) => {
+// Exercise cold start and restart in the same worker. A separate heavy cold-
+// start test duplicated the Pyodide/openpyxl setup immediately before this
+// scenario, which retained enough WebAssembly memory to starve slow CI runners
+// while adding no distinct assertion.
+test("kernel lifecycle prepares cold start and a new restart generation", async ({ page }) => {
   test.setTimeout(420_000);
   await openNotebook(page, `kernel-restart-${Date.now()}`);
 
