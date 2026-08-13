@@ -55,49 +55,7 @@ export async function waitForRuntimeReady(page, minimumGeneration = 1) {
 export async function probePreparedEnvironment(page) {
   return page.evaluate(async path => {
     const app = window.jupyterapp;
-    let panel = null;
-    for (const widget of app.shell.widgets("main")) {
-      if (widget?.context?.path === path) {
-        panel = widget;
-        break;
-      }
-    }
-    const kernel = panel?.sessionContext?.session?.kernel;
-    if (!kernel) throw new Error(`No kernel attached to ${path}`);
-    const lines = [];
-    const future = kernel.requestExecute({
-      code: [
-        "import warnings",
-        "try:",
-        "    __import__('openpyxl'); _pkg = True",
-        "except Exception:",
-        "    _pkg = False",
-        "print(_pkg, any(f[2] is FutureWarning for f in warnings.filters))",
-      ].join("\n"),
-      store_history: false,
-    });
-    future.onIOPub = message => {
-      if (message.header.msg_type === "stream") lines.push(message.content.text);
-    };
-    let timer;
-    try {
-      const reply = await Promise.race([
-        future.done,
-        new Promise((_resolve, reject) => {
-          timer = window.setTimeout(() => reject(new Error("kernel probe timed out after 30s")), 30_000);
-        }),
-      ]);
-      if (reply.content.status !== "ok") {
-        throw new Error(`kernel probe returned ${reply.content.status}`);
-      }
-      return lines.join("").trim();
-    } catch (error) {
-      future.dispose?.();
-      const runtime = await app.commands.execute("ai-trainer:get-runtime-state", { path });
-      const message = error instanceof Error ? error.message : String(error);
-      throw new Error(`${message}; kernel=${kernel.status}/${kernel.connectionStatus}; runtime=${JSON.stringify(runtime)}`);
-    } finally {
-      if (timer !== undefined) window.clearTimeout(timer);
-    }
+    const result = await app.commands.execute("ai-trainer:probe-environment", { path });
+    return result.output;
   }, notebookPath);
 }

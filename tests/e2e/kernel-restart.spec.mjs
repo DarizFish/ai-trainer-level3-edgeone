@@ -15,7 +15,7 @@ test("kernel lifecycle prepares cold start and a new restart generation", async 
   await openNotebook(page, `kernel-restart-${Date.now()}`);
 
   const before = await waitForRuntimeReady(page);
-  expect(await probePreparedEnvironment(page)).toBe("True True");
+  expect(await probePreparedEnvironment(page)).toBe("env-ok True True True");
 
   const after = await page.evaluate(
     path => window.jupyterapp.commands.execute("ai-trainer:restart-and-prepare", { path }),
@@ -24,5 +24,5 @@ test("kernel lifecycle prepares cold start and a new restart generation", async 
 
   expect(after).toMatchObject({ phase: "ready", lastError: null });
   expect(after.generation).toBeGreaterThan(before.generation);
-  expect(await probePreparedEnvironment(page)).toBe("True True");
+  expect(await probePreparedEnvironment(page)).toBe("env-ok True True True");
 });

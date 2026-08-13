@@ -21,10 +21,14 @@
       "@jupyterlite/kernel": {
         "bundled": false,
         "singleton": true
+      },
+      "@jupyterlite/server": {
+        "bundled": false,
+        "singleton": true
       }
     },
     "_build": {
-      "load": "static/remoteEntry.ba424967424b9bb8d8a4.js",
+      "load": "static/remoteEntry.db78a7b1ef624cbc35d1.js",
       "extension": "./extension"
     }
   },
@@ -34,7 +38,8 @@
     "@jupyterlab/application": "~4.4.5",
     "@jupyterlab/apputils": "~4.5.5",
     "@jupyterlab/notebook": "~4.4.5",
-    "@jupyterlite/kernel": "~0.6.4"
+    "@jupyterlite/kernel": "~0.6.4",
+    "@jupyterlite/server": "~0.6.4"
   },
   "devDependencies": {
     "@jupyterlab/builder": "4.4.5",

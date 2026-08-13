@@ -27,7 +27,7 @@ export default defineConfig({
   webServer: process.env.TEST_BASE_URL
     ? undefined
     : {
-        command: `npm run start -- -H 127.0.0.1 -p ${port}`,
+        command: `node scripts/start-built-server.mjs ${port}`,
         url: `${localBaseUrl}/`,
         reuseExistingServer: !process.env.CI,
         timeout: 120_000,

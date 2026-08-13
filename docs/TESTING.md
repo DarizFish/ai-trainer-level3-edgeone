@@ -56,17 +56,22 @@ Remove-Item Env:CI
 
 `test:ci` 当前与 `test:full` 覆盖相同，但 `CI=true` 会改变 Playwright 的关键行为：禁止复用端口上已有的旧服务、允许一次重试以采集 trace，同时通过 `failOnFlakyTests` 让“重试后才通过”仍然阻断门禁。因此，本地普通模式通过不能替代这一步。
 
-修改 JupyterLite 内核启动、重启、环境准备或等待条件时，还要对最容易受时序影响的用例做压力回归：
+修改 JupyterLite 内核启动、重启、Service Worker、环境准备或等待条件时，还要对冷启动、依赖探针和重启做压力回归：
 
 ```powershell
 $env:CI = "true"
-npm.cmd run test:browser -- tests/e2e/kernel-restart.spec.mjs --repeat-each=3
+$env:SELF_HOSTED_BUILD = "1"
+npm.cmd run build
+npm.cmd run test:browser -- tests/e2e/runtime.spec.mjs tests/e2e/kernel-restart.spec.mjs --repeat-each=3
 Remove-Item Env:CI
+Remove-Item Env:SELF_HOSTED_BUILD
 ```
 
-不得用增加全局超时或重试次数作为 flaky 的默认修复。内核命令可能永久不返回，每个探针都应有自己的截止时间；超时时至少输出 `kernel.status`、`kernel.connectionStatus` 和扩展运行时状态，确保失败可定位。
+`SELF_HOSTED_BUILD=1` 会让浏览器测试通过 `scripts/start-built-server.mjs` 直接运行 `.next/standalone/server.js`，并补齐 standalone 运行所需的 `.next/static` 与 `public`，与阿里云发布产物保持一致。
 
-生命周期用例在同一个 Pyodide worker 中依次验证冷启动和重启。不要再拆出一个使用相同重型 Notebook 的独立冷启动用例：它会重复加载 WebAssembly、科学计算包和 openpyxl，却没有增加不同的断言，并可能让受限 CI runner 在下一个 worker 启动时发生内存饥饿。
+不得用增加全局超时或重试次数作为 flaky 的默认修复。内核命令可能永久不返回，每个程序化请求都应经过扩展的有界执行入口；超时后该内核代次会被标记为不可复用，恢复必须先受控重启，不能向同一 worker 继续盲目发命令。`idle/connected` 也不是就绪证明，扩展必须在环境准备后成功执行一条新的 follow-up 命令才发布 `ready`。
+
+生命周期用例在同一个 Pyodide worker 中依次验证冷启动和重启。环境探针必须走 `ai-trainer:probe-environment`，由扩展作为程序化内核请求的唯一所有者；测试不得直接调用底层 `kernel.requestExecute`。探针同时验证依赖、`/drive`、工作目录和 warning filter。
 
 只验证已经上线的正式站：
 

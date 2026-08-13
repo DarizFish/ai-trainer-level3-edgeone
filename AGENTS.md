@@ -17,6 +17,7 @@
 
 - `jupyterlite-extension/` 的源码改动必须执行 `npm.cmd run jupyterlite:extension`，并提交同步生成的 `public/lite/extensions/ai-trainer-jupyterlite/` 与 `public/lite/jupyter-lite.json` 哈希变更。
 - 不要手工复用旧的 `remoteEntry.*.js`。完整构建和合同测试必须能证明配置引用的 hashed bundle 实际存在。
+- 不得为 Lab 恢复 COOP/COEP 或 iframe 的 `cross-origin-isolated` 权限；当前 Pyodide Kernel 会因此切换到存在同步 `/drive` 永久等待风险的 SharedArrayBuffer/Atomics worker。`/drive` 只通过 JupyterLite Service Worker 挂载，创建内核前必须等待 `IServiceWorkerManager.ready/enabled`。
 
 ## 发布与数据库安全
 

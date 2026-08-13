@@ -136,6 +136,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _jupyterlab_notebook__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_jupyterlab_notebook__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _jupyterlite_kernel__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @jupyterlite/kernel */ "webpack/sharing/consume/default/@jupyterlite/kernel");
 /* harmony import */ var _jupyterlite_kernel__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_jupyterlite_kernel__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _jupyterlite_server__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @jupyterlite/server */ "webpack/sharing/consume/default/@jupyterlite/server");
+/* harmony import */ var _jupyterlite_server__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_jupyterlite_server__WEBPACK_IMPORTED_MODULE_6__);
+
 
 
 
@@ -625,8 +628,49 @@ const PIPLITE_IMPORT_NAMES = {
 function pipliteImportName(distribution) {
     return PIPLITE_IMPORT_NAMES[distribution] ?? distribution.replaceAll("-", "_");
 }
+async function executeKernelCode(panel, code, label, timeoutMs, silent = true) {
+    const kernel = panel.sessionContext.session?.kernel;
+    if (!kernel)
+        throw new Error(`${label}失败：内核尚未连接`);
+    const output = [];
+    const future = kernel.requestExecute({
+        code,
+        silent,
+        store_history: false,
+        stop_on_error: true
+    });
+    future.onIOPub = message => {
+        if (message.header.msg_type !== "stream")
+            return;
+        const content = message.content;
+        if (typeof content.text === "string")
+            output.push(content.text);
+    };
+    try {
+        const reply = await withTimeout(future.done, label, timeoutMs);
+        if (reply.content.status === "ok")
+            return output.join("").trim();
+        const detail = reply.content.status === "error"
+            ? `${reply.content.ename}：${reply.content.evalue}`
+            : reply.content.status;
+        throw new Error(`${label}失败：${detail}`);
+    }
+    finally {
+        future.dispose?.();
+    }
+}
 function kernelEnvironmentSource(packages, assets, preloadImports, fontAliases, onnxTaskCode) {
-    const statements = [...WARNING_FILTERS];
+    // The service-worker contents bridge is the durable filesystem owner. Do
+    // not silently continue with Pyodide's ephemeral /home filesystem: a task
+    // can appear to work while every generated file disappears on refresh.
+    const statements = [
+        "from pathlib import Path as _DrivePath",
+        "_drive_root = _DrivePath('/drive')",
+        "if not _drive_root.is_dir() or not _DrivePath.cwd().is_relative_to(_drive_root):",
+        "    raise RuntimeError('JupyterLite 持久化目录 /drive 未挂载')",
+        "del _DrivePath, _drive_root",
+        ...WARNING_FILTERS
+    ];
     const pipliteImports = packages.map(pipliteImportName);
     if (packages.length > 0) {
         // pyodide 自带的包（pandas、numpy、scikit-learn 等）在 import 时会自动加载，
@@ -722,26 +766,23 @@ function taskPreloadImports(panel) {
     return [...found].sort();
 }
 // 告警屏蔽、依赖安装与科学计算包预热走静默内核请求，而不是题目文件里的准备单元，
-// 官方题目文件因此只剩考试本身的代码。素材无需下载：COOP/COEP 让 mountDrive 成立
-// 后，随站发布的工作区文件本来就在内核的工作目录里。
+// 官方题目文件因此只剩考试本身的代码。素材无需下载：JupyterLite Service Worker
+// 让 mountDrive 成立后，随站发布的工作区文件本来就在内核的工作目录里。
 async function applyKernelEnvironment(panel) {
-    const kernel = panel.sessionContext.session?.kernel;
-    if (!kernel)
-        throw new Error("内核尚未就绪，无法准备题目环境");
     const code = kernelEnvironmentSource(taskPipPackages(panel), taskAssets(panel), taskPreloadImports(panel), taskFontAliases(panel), taskOnnxRuntime(panel));
     let lastFailure = "未知错误";
     for (let attempt = 1; attempt <= 3; attempt += 1) {
-        const reply = await kernel.requestExecute({
-            code,
-            silent: true,
-            store_history: false,
-            stop_on_error: true
-        }).done;
-        if (reply.content.status === "ok")
+        try {
+            await executeKernelCode(panel, code, "题目依赖准备", ENVIRONMENT_TIMEOUT_MS);
             return;
-        lastFailure = reply.content.status === "error"
-            ? `${reply.content.ename}：${reply.content.evalue}`
-            : reply.content.status;
+        }
+        catch (error) {
+            lastFailure = error instanceof Error ? error.message : String(error);
+            // A timed-out command may still own the single-threaded worker. Sending
+            // more requests cannot repair it and only makes ownership ambiguous.
+            if (/超时/.test(lastFailure))
+                throw error;
+        }
         if (attempt < 3)
             await new Promise(resolve => window.setTimeout(resolve, 800 * attempt));
     }
@@ -750,12 +791,13 @@ async function applyKernelEnvironment(panel) {
 const plugin = {
     id: "ai-trainer-jupyterlite:bridge",
     autoStart: true,
-    requires: [_jupyterlab_notebook__WEBPACK_IMPORTED_MODULE_4__.INotebookTracker, _jupyterlite_kernel__WEBPACK_IMPORTED_MODULE_5__.IKernelSpecs],
+    requires: [_jupyterlab_notebook__WEBPACK_IMPORTED_MODULE_4__.INotebookTracker, _jupyterlite_kernel__WEBPACK_IMPORTED_MODULE_5__.IKernelSpecs, _jupyterlite_server__WEBPACK_IMPORTED_MODULE_6__.IServiceWorkerManager],
     description: "Connects JupyterLite notebooks with the preparation site's cloud draft service.",
-    activate: (app, tracker, kernelSpecs) => {
+    activate: (app, tracker, kernelSpecs, serviceWorkerManager) => {
         const kernelStarts = new WeakMap();
         const preparedGenerations = new WeakMap();
         const preparationRuns = new WeakMap();
+        const poisonedGenerations = new WeakMap();
         const pendingRepreparation = new WeakMap();
         const restartRuns = new WeakMap();
         const runtimeStates = new WeakMap();
@@ -871,6 +913,31 @@ const plugin = {
             }
             throw new Error(`环境准备完成但内核未恢复可用状态（status=${lastStatus}, connection=${lastConnection}）`);
         };
+        const ensureServiceWorkerControl = async () => {
+            if (!("serviceWorker" in navigator)) {
+                throw new Error("当前浏览器不支持 Service Worker，无法挂载持久化文件系统");
+            }
+            // Pyodide samples IServiceWorkerManager.enabled exactly once when the
+            // kernel is created. Await that same service object instead of inferring
+            // readiness from navigator.serviceWorker, whose controller can change
+            // before JupyterLite has published its registration.
+            await withTimeout(serviceWorkerManager.ready, "JupyterLite Service Worker 注册", 30000);
+            if (!serviceWorkerManager.enabled || !serviceWorkerManager.browsingContextId) {
+                throw new Error("JupyterLite Service Worker 管理器尚未就绪");
+            }
+            const registration = await withTimeout(navigator.serviceWorker.ready, "浏览器 Service Worker 激活", 15000);
+            if (!registration.active?.scriptURL.includes("/lite/service-worker.js")) {
+                throw new Error(`JupyterLite Service Worker 路径异常：${registration.active?.scriptURL ?? "未激活"}`);
+            }
+            if (!navigator.serviceWorker.controller) {
+                await withTimeout(new Promise(resolve => {
+                    navigator.serviceWorker.addEventListener("controllerchange", () => resolve(), { once: true });
+                }), "JupyterLite Service Worker 接管页面", 15000);
+            }
+            if (!navigator.serviceWorker.controller?.scriptURL.includes("/lite/service-worker.js")) {
+                throw new Error("JupyterLite Service Worker 未接管当前页面");
+            }
+        };
         // 依赖安装、告警屏蔽、素材恢复和 ONNX 运行时全都活在内核进程里，所以这一段既要
         // 在首次进入时跑，也要在每次内核重启后重跑——见下面 statusChanged 里的处理。
         const prepareEnvironment = async (panel) => {
@@ -881,6 +948,9 @@ const plugin = {
             const state = observed.kernelId === kernel.id ? observed : synchronizeKernel(panel);
             const generation = state.generation;
             const kernelId = kernel.id;
+            if (poisonedGenerations.get(panel) === generation) {
+                throw new Error("当前内核命令通道曾超时，必须重启内核后再准备环境");
+            }
             if (preparedGenerations.get(panel) === generation && state.phase === "ready")
                 return;
             let run = preparationRuns.get(panel);
@@ -894,9 +964,11 @@ const plugin = {
                     await withTimeout(applyKernelEnvironment(panel), "题目依赖准备", ENVIRONMENT_TIMEOUT_MS);
                     assertCurrentGeneration(panel, generation, kernelId);
                     if (runtimeCells.length === 0) {
-                        // execute_reply can arrive just before the kernel's final idle
-                        // status message. Publishing ready in that gap lets a follow-up
-                        // request race the worker and occasionally disappear on slow CI.
+                        await waitForKernelUsable(panel, generation, kernelId);
+                        // `idle` only describes the previous request. Prove that this same
+                        // generation can complete a new bounded request before promising
+                        // callers that the command channel is ready.
+                        await executeKernelCode(panel, "__ai_trainer_channel_ready__ = True", "内核命令通道验证", 30000);
                         await waitForKernelUsable(panel, generation, kernelId);
                         preparedGenerations.set(panel, generation);
                         publishRuntimeState(panel, { phase: "ready", lastError: null });
@@ -908,6 +980,8 @@ const plugin = {
                         const succeeded = await withTimeout(_jupyterlab_notebook__WEBPACK_IMPORTED_MODULE_4__.NotebookActions.runCells(panel.content, runtimeCells, panel.sessionContext), "浏览器运行时准备", 180000);
                         assertCurrentGeneration(panel, generation, kernelId);
                         if (succeeded) {
+                            await waitForKernelUsable(panel, generation, kernelId);
+                            await executeKernelCode(panel, "__ai_trainer_channel_ready__ = True", "内核命令通道验证", 30000);
                             await waitForKernelUsable(panel, generation, kernelId);
                             preparedGenerations.set(panel, generation);
                             publishRuntimeState(panel, { phase: "ready", lastError: null });
@@ -926,12 +1000,17 @@ const plugin = {
                 await run.promise;
             }
             catch (error) {
-                const message = error instanceof Error ? error.message : String(error);
+                let message = error instanceof Error ? error.message : String(error);
+                if (/超时/.test(message)) {
+                    poisonedGenerations.set(panel, generation);
+                    preparedGenerations.delete(panel);
+                    message = `${message}；当前内核命令通道已隔离，请重启内核后重试`;
+                }
                 if (runtimeState(panel).generation === generation) {
                     publishRuntimeState(panel, { phase: "error", lastError: message });
                     notifyParent("AI_TRAINER_EXERCISE_ERROR", { path: panel.context.path, message });
                 }
-                throw error;
+                throw new Error(message, { cause: error });
             }
             finally {
                 if (preparationRuns.get(panel) === run)
@@ -1044,6 +1123,12 @@ const plugin = {
                 try {
                     app.shell.activateById(panel.id);
                     await withTimeout(panel.context.ready, "Notebook 准备", 15000);
+                    // With autoStartDefaultKernel=false this command is the only cold-
+                    // start owner. The service-worker bridge must control the document
+                    // before Pyodide samples serviceWorkerManager.enabled to decide
+                    // whether /drive is mounted.
+                    if (!panel.sessionContext.session?.kernel)
+                        await ensureServiceWorkerControl();
                     // SessionContext.initialize() is the one authoritative owner of the
                     // metadata-selected cold start. Waiting for it here serializes our
                     // fallback changeKernel() behind JupyterLab instead of guessing with a
@@ -1100,6 +1185,40 @@ const plugin = {
             execute: args => {
                 const panel = activePanel(tracker, targetPath(args));
                 return { ...runtimeState(panel) };
+            }
+        });
+        app.commands.addCommand("ai-trainer:probe-environment", {
+            label: "验证题目运行环境",
+            execute: async (args) => {
+                const panel = activePanel(tracker, targetPath(args));
+                const state = runtimeState(panel);
+                if (state.phase !== "ready")
+                    throw new Error(`题目运行环境尚未就绪（${state.phase}）`);
+                const modules = taskPipPackages(panel).map(pipliteImportName);
+                const code = [
+                    "import warnings as _probe_warnings",
+                    "from pathlib import Path as _ProbePath",
+                    `_probe_modules = ${JSON.stringify(modules)}`,
+                    "for _probe_module in _probe_modules:",
+                    "    __import__(_probe_module)",
+                    "print('env-ok', _ProbePath('/drive').is_dir(), _ProbePath.cwd().is_relative_to(_ProbePath('/drive')), any(f[2] is FutureWarning for f in _probe_warnings.filters))",
+                    "del _probe_modules, _ProbePath, _probe_warnings"
+                ].join("\n");
+                try {
+                    const output = await executeKernelCode(panel, code, "题目环境探针", 30000, false);
+                    return { output, runtime: { ...runtimeState(panel) } };
+                }
+                catch (error) {
+                    let message = error instanceof Error ? error.message : String(error);
+                    if (/超时/.test(message)) {
+                        poisonedGenerations.set(panel, state.generation);
+                        preparedGenerations.delete(panel);
+                        message = `${message}；当前内核命令通道已隔离，请重启内核后重试`;
+                        publishRuntimeState(panel, { phase: "error", lastError: message });
+                        notifyParent("AI_TRAINER_EXERCISE_ERROR", { path: panel.context.path, message });
+                    }
+                    throw new Error(message, { cause: error });
+                }
             }
         });
         app.commands.addCommand("ai-trainer:get-notebook", {

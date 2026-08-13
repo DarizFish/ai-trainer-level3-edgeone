@@ -1359,7 +1359,7 @@ test("starter preview is fully removed and social metadata asset exists", async 
 });
 
 test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes, and both site bridge extensions", async () => {
-  const [content, lite, host, labShell, configUtils, bridgeExtension, bridgePackage, pyodideKernelPackage, buildScript, patchScript, extensionBuildScript, runtimeCopyScript, packageJson, edgeOneConfig, labManifest, nextConfig, notebookGenerator] = await Promise.all([
+  const [content, lite, host, labShell, configUtils, bridgeExtension, bridgePackage, pyodideKernelPackage, buildScript, patchScript, extensionBuildScript, runtimeCopyScript, packageJson, edgeOneConfig, labManifest, nextConfig, notebookGenerator, playwrightConfig, builtServer] = await Promise.all([
     loadContentBank(),
     readFile(new URL("../public/lite/jupyter-lite.json", import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL("../components/JupyterLiteLab.tsx", import.meta.url), "utf8"),
@@ -1377,6 +1377,8 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
     readFile(new URL("../public/labs/manifest.json", import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL("../next.config.ts", import.meta.url), "utf8"),
     readFile(new URL("../scripts/generate-jupyterlite-notebooks.py", import.meta.url), "utf8"),
+    readFile(new URL("../playwright.config.mjs", import.meta.url), "utf8"),
+    readFile(new URL("../scripts/start-built-server.mjs", import.meta.url), "utf8"),
   ]);
   const extensions = lite["jupyter-config-data"].federated_extensions;
   const notebookOverrides = lite["jupyter-config-data"].settingsOverrides["@jupyterlab/notebook-extension:tracker"];
@@ -1386,10 +1388,10 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
     lite["jupyter-config-data"].litePluginSettings["@jupyterlite/pyodide-kernel-extension:kernel"].pyodideUrl,
     "./static/pyodide/pyodide.js",
   );
-  // JupyterLab owns the metadata-selected cold start. The bridge waits for
-  // SessionContext.initialize() and only falls back when no kernel exists, so
-  // disabling this would reintroduce both the selection dialog and dual owners.
-  assert.equal(notebookOverrides.autoStartDefaultKernel, true);
+  // The bridge owns cold start so it can wait for Service Worker control before
+  // Pyodide samples serviceWorkerManager.enabled and decides whether to mount
+  // /drive. JupyterLab must not race it with an automatic second owner.
+  assert.equal(notebookOverrides.autoStartDefaultKernel, false);
   assert.equal(Object.hasOwn(notebookOverrides, "autoStartDefault"), false);
   assert.match(labShell, /build\/lab\/bundle\.js/);
   assert.match(labShell, /data-notebook="lab"/);
@@ -1412,6 +1414,17 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
   assert.match(bridgeExtension, /runtimeStates/);
   assert.match(bridgeExtension, /generation/);
   assert.match(bridgeExtension, /waitForKernelUsable/);
+  assert.match(bridgeExtension, /ensureServiceWorkerControl/);
+  assert.match(bridgeExtension, /IServiceWorkerManager/);
+  assert.match(bridgeExtension, /serviceWorkerManager\.ready/);
+  assert.match(bridgeExtension, /serviceWorkerManager\.enabled/);
+  assert.match(bridgeExtension, /navigator\.serviceWorker\.controller/);
+  assert.match(bridgeExtension, /ai-trainer:probe-environment/);
+  assert.match(bridgeExtension, /poisonedGenerations/);
+  assert.match(bridgeExtension, /必须重启内核后再准备环境/);
+  assert.match(host, /restart-and-prepare/);
+  assert.match(host, /重启并重试/);
+  assert.match(bridgeExtension, /JupyterLite 持久化目录 \/drive 未挂载/);
   assert.match(bridgeExtension, /PIPLITE_IMPORT_NAMES/);
   assert.match(bridgeExtension, /_import_module\(_module\)/);
   assert.doesNotMatch(bridgeExtension, /await piplite\.install\([^\n]+\)[\s\S]{0,300}import openpyxl/);
@@ -1518,23 +1531,25 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
     );
   }
 
-  // The Pyodide kernel only mounts Python's filesystem onto Jupyter Contents
-  // when mountDrive is true, which needs serviceWorkerManager.enabled or
-  // crossOriginIsolated. Without it, files written by to_csv never appear in
-  // the file browser. Both documents involved must therefore stay isolated.
+  // Service Worker is now the sole durable filesystem bridge. COOP/COEP would
+  // select pyodide-kernel's SharedArrayBuffer/Atomics coincident worker, whose
+  // synchronous drive calls can deadlock while the kernel still says connected.
   const headerValueFor = (path, key) => headerValuesFor(path, key).at(-1);
   for (const path of ["/practical/1.1.2/lab", "/lite/lab/index.html"]) {
-    assert.equal(headerValueFor(path, "Cross-Origin-Opener-Policy"), "same-origin", path);
-    assert.equal(headerValueFor(path, "Cross-Origin-Embedder-Policy"), "require-corp", path);
+    assert.equal(headerValueFor(path, "Cross-Origin-Opener-Policy"), undefined, path);
+    assert.equal(headerValueFor(path, "Cross-Origin-Embedder-Policy"), undefined, path);
   }
-  assert.match(nextConfig, /Cross-Origin-Opener-Policy/);
-  assert.match(nextConfig, /Cross-Origin-Embedder-Policy/);
-  assert.match(host, /allow="[^"]*cross-origin-isolated/);
+  assert.doesNotMatch(nextConfig, /Cross-Origin-Opener-Policy|Cross-Origin-Embedder-Policy/);
+  assert.doesNotMatch(host, /cross-origin-isolated/);
+  assert.match(playwrightConfig, /start-built-server\.mjs/);
+  assert.match(builtServer, /\.next["'], ["']standalone/);
+  assert.match(builtServer, /server\.js/);
   // 告警屏蔽与 piplite 安装由扩展通过静默内核请求下发，官方题目文件里不含任何
   // 环境准备代码；每题的依赖清单只以 ai_trainer.pip_packages 元数据形式随行。
   assert.match(bridgeExtension, /filterwarnings\('ignore', category=FutureWarning\)/);
   assert.match(bridgeExtension, /piplite\.install/);
-  assert.match(bridgeExtension, /silent: true/);
+  assert.match(bridgeExtension, /silent = true/);
+  assert.match(bridgeExtension, /requestExecute\(\{[\s\S]*?silent,/);
   // piplite 只该出现在 pyodide 装不了的纯 Python wheel 上；自带包 import 时会由
   // loadPackagesFromImports 自动加载，装它们是空转。生成器的清单必须与构建脚本
   // 真正下载的纯 Python wheel 一致。
@@ -1687,7 +1702,7 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
   assert.match(host, /ai-trainer:get-notebook/);
   assert.match(host, /ai-trainer:set-notebook/);
   assert.match(host, /notebook:run-all-cells/);
-  assert.match(host, /重试准备/);
+  assert.match(host, /重启并重试/);
   assert.match(host, /\/lite\/lab\/index\.html/);
   for (const task of Object.values(labManifest.tasks)) {
     for (const asset of task.assets ?? []) {
