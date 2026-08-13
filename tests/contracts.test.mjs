@@ -1810,7 +1810,8 @@ test("self-hosted releases preserve proxy trust, runtime health, and cache seman
   assert.match(envExample, /TRUSTED_CLIENT_IP_HEADER=eo-connecting-ip/);
 
   assert.match(live, /status:\s*["']ok["']/);
-  assert.match(ready, /select 1/);
+  assert.match(ready, /drizzle\.__drizzle_migrations/);
+  assert.match(ready, /DATABASE_SCHEMA_VERSION/);
   assert.match(ready, /status:\s*503/);
   assert.match(ready, /Cache-Control["']:\s*["']no-store/);
 
@@ -1826,10 +1827,18 @@ test("self-hosted releases preserve proxy trust, runtime health, and cache seman
   assert.match(systemd, /TRUSTED_CLIENT_IP_HEADER=x-real-ip/);
   assert.match(guide, /http:\/\/localhost:8080/);
 
-  assert.match(deployWorkflow, /workflow_dispatch/);
-  assert.match(deployWorkflow, /branches:[\s\S]*- main/);
-  assert.match(deployWorkflow, /SELF_HOSTED_BUILD:\s*["']1["']/);
-  assert.match(deployWorkflow, /npm run test:ci/);
+  const qualityWorkflow = await readFile(new URL("../.github/workflows/quality.yml", import.meta.url), "utf8");
+  const databaseManager = await readFile(new URL("../scripts/manage-database.mjs", import.meta.url), "utf8");
+  assert.match(qualityWorkflow, /pull_request:/);
+  assert.match(qualityWorkflow, /push:[\s\S]*branches:[\s\S]*- main/);
+  assert.match(qualityWorkflow, /npm audit --omit=dev --audit-level=high/);
+  assert.match(qualityWorkflow, /npm run test:ci/);
+  assert.match(qualityWorkflow, /aitrainer-\$\{\{ github\.sha \}\}/);
+  assert.match(deployWorkflow, /workflow_run:/);
+  assert.match(deployWorkflow, /workflows:[\s\S]*- Quality gate/);
+  assert.match(deployWorkflow, /conclusion == 'success'/);
+  assert.match(deployWorkflow, /workflow_run\.head_sha/);
+  assert.match(deployWorkflow, /run-id:\s*\$\{\{ github\.event\.workflow_run\.id \}\}/);
   assert.match(deployWorkflow, /DEPLOY_SSH_PRIVATE_KEY/);
   assert.match(deployWorkflow, /StrictHostKeyChecking=yes/);
   assert.match(deployWorkflow, /sudo \/usr\/local\/sbin\/deploy-aitrainer/);
@@ -1841,6 +1850,13 @@ test("self-hosted releases preserve proxy trust, runtime health, and cache seman
   assert.match(deployScript, /runuser -u aitrainer -- tar -xzf "\$\{staging_archive\}"/);
   assert.match(deployScript, /rolling back/);
   assert.match(deployScript, /api\/health\/ready/);
+  assert.match(deployScript, /manage-database\.mjs migrate/);
+  assert.match(deployScript, /manage-database\.mjs check/);
+  assert.match(databaseManager, /pg_advisory_xact_lock/);
+  assert.match(databaseManager, /Migration baseline is missing/);
+  assert.match(databaseManager, /verifySchema/);
+  assert.match(packaging, /manage-database\.mjs/);
+  assert.equal(JSON.parse(packageJson).overrides["sanitize-html"], "2.17.6");
   assert.match(deployBootstrap, /restrict %s/);
   assert.match(deployBootstrap, /NOPASSWD: \/usr\/local\/sbin\/deploy-aitrainer/);
   assert.match(deployBootstrap, /passwd --lock deploy/);

@@ -31,7 +31,7 @@ npm.cmd run build:self-hosted
 Remove-Item Env:SELF_HOSTED_BUILD
 ```
 
-`dist/self-hosted` 包含 `server.js`、Next.js 文件追踪依赖、`.next/static` 和 `public`。
+`dist/self-hosted` 包含 `server.js`、Next.js 文件追踪依赖、`.next/static`、`public`，以及发布前使用的 migration journal 和数据库管理脚本。
 不要从 Windows 直接复制 `.next/standalone` 到 Linux，因为其中可能带有平台相关依赖。
 
 发布目录使用不可变版本并由软链接切换：
@@ -49,16 +49,14 @@ Remove-Item Env:SELF_HOSTED_BUILD
 
 ```dotenv
 DATABASE_URL=postgresql://...
+DIRECT_URL=postgresql://...
 ```
 
-数据库 migration 必须先于依赖新表或新列的代码部署。现有 Supabase 库没有完整的
-`__drizzle_migrations` 基线，不能直接对生产库盲目运行 `npm run db:migrate`。
+生产 Supabase 已在 2026-08-12 建立到 `0002_condemned_klaw` 的完整 Drizzle 基线。发布脚本在切换版本前执行带 advisory lock 的 `db:migrate` 与 `db:check`；任一步失败都不会切换服务。迁移流程见 `DATABASE-MIGRATIONS.md`。
 
 ## GitHub Actions 发布
 
-`.github/workflows/deploy-self-hosted.yml` 在 push 到 `main` 时自动运行，也支持手动触发。它在 GitHub 的
-Ubuntu Runner 上执行完整质量门禁，打包已经通过测试的 Next.js standalone，然后通过
-专用 `deploy` 用户上传到服务器。服务器会校验 Git SHA、SHA-256、归档路径和发布物结构，
+`.github/workflows/quality.yml` 在 PR 与 `main` push 上执行完整质量门禁；只有 `main` 的成功 run 才会生成以 commit SHA 命名的 Next.js standalone artifact。`.github/workflows/deploy-self-hosted.yml` 由成功的 `workflow_run` 触发，只下载该 run 的 artifact，不重新构建未验证源码，然后通过专用 `deploy` 用户上传到服务器。服务器会校验 Git SHA、SHA-256、归档路径和发布物结构，
 再原子切换 `/srv/aitrainer/current`；readiness 未在 60 秒内通过时自动指回上一版本。
 
 仓库或 `self-hosted-production` Environment 需要配置一个 Secret：
@@ -71,10 +69,7 @@ DEPLOY_SSH_PRIVATE_KEY=<专用 Ed25519 私钥全文>
 仅能通过 sudo 调用 `/usr/local/sbin/deploy-aitrainer`。服务器 SSH 主机公钥固定记录在
 `deploy/ssh/known_hosts`，Actions 禁止在首次连接时动态信任未知主机。
 
-`main` 是 EdgeOne 与阿里云共用的生产源码分支。push 到 `main` 后，GitHub Actions 会设置
-`SELF_HOSTED_BUILD=1`，通过完整质量门禁后自动发布阿里云；EdgeOne 则用同一提交执行标准
-Next.js 构建。也可以在 GitHub Actions 页面选择 **Deploy self-hosted server**，点击
-**Run workflow** 手动重发指定提交。建议为 `self-hosted-production` Environment 配置人工审批。
+`main` 是 EdgeOne 与阿里云共用的受保护生产分支。变更必须通过 PR 和 `Quality gate / Full build and browser regression` 后才能合并。EdgeOne 用合并提交执行标准 Next.js 构建；自托管只消费同一提交的已验证 artifact。建议为 `self-hosted-production` Environment 配置人工审批。
 
 ## IP 测试限制
 

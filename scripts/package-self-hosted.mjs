@@ -22,6 +22,12 @@ await mkdir(outputRoot, { recursive: true });
 await cp(standaloneRoot, outputRoot, { recursive: true });
 await cp(resolve(projectRoot, ".next", "static"), resolve(outputRoot, ".next", "static"), { recursive: true });
 await cp(resolve(projectRoot, "public"), resolve(outputRoot, "public"), { recursive: true });
+await cp(resolve(projectRoot, "drizzle"), resolve(outputRoot, "drizzle"), { recursive: true });
+await mkdir(resolve(outputRoot, "scripts"), { recursive: true });
+await cp(
+  resolve(projectRoot, "scripts", "manage-database.mjs"),
+  resolve(outputRoot, "scripts", "manage-database.mjs"),
+);
 await writeFile(resolve(outputRoot, "DEPLOYMENT.txt"), [
   "AI Trainer self-hosted release",
   ...(sourceRevision ? [`Source revision: ${sourceRevision}`] : []),

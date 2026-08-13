@@ -52,7 +52,7 @@ npm.cmd run test:full
 npm.cmd run test:smoke
 ```
 
-可用 `SMOKE_BASE_URL` 指向 EdgeOne 预览域名。CI 还会设置 `SMOKE_WAIT_MS=300000`，在推送后等待 EdgeOne 最多五分钟，直到线上 Pyodide 文件哈希与当前提交一致，再执行正式站检查。
+可用 `SMOKE_BASE_URL` 指向 EdgeOne 预览域名。正式站大文件经跨境 CDN 时可能超过 30 秒，冒烟单请求允许 90 秒并对瞬时网络失败重试；仍会逐字节核对本地 hash，不因放宽超时降低一致性要求。
 
 ## 浏览器测试边界
 
@@ -63,7 +63,9 @@ npm.cmd run test:smoke
 
 ## CI
 
-`.github/workflows/quality.yml` 在推送和拉取请求时执行完整门禁。推送通过后，第二个任务等待 EdgeOne 部署并检查正式域名。浏览器失败会保留七天的 trace、截图、视频和 HTML 报告。
+`.github/workflows/quality.yml` 在推送和拉取请求时执行生产依赖 high 级审计、完整构建与浏览器/JupyterLite 门禁。`main` 的成功 run 额外生成以 commit SHA 命名的自托管 artifact；部署工作流只能消费该 run 的 artifact。浏览器失败会保留七天的 trace、截图、视频和 HTML 报告。
+
+GitHub 的 `main` 分支规则必须要求 `Quality gate / Full build and browser regression`、至少一个 PR 审批、解决所有 review conversation、合并前保持分支最新，并禁止绕过规则直接推送。EdgeOne 仍会独立监听 `main`，因此分支保护是它只接收已验证提交的边界。
 
 失败定位顺序：
 

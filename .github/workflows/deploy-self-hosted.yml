@@ -1,12 +1,16 @@
-name: Deploy self-hosted server
+name: Deploy verified self-hosted release
 
 on:
-  push:
+  workflow_run:
+    workflows:
+      - Quality gate
+    types:
+      - completed
     branches:
       - main
-  workflow_dispatch:
 
 permissions:
+  actions: read
   contents: read
 
 concurrency:
@@ -18,86 +22,32 @@ env:
   DEPLOY_USER: deploy
 
 jobs:
-  build:
-    name: Test and build Linux release
-    runs-on: ubuntu-latest
-    timeout-minutes: 35
-    env:
-      CI: "true"
-      SELF_HOSTED_BUILD: "1"
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-          cache: npm
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Install Chromium
-        run: npx playwright install --with-deps --no-shell chromium
-
-      - name: Run the full quality gate
-        run: npm run test:ci
-
-      - name: Package the tested standalone build
-        env:
-          SOURCE_REVISION: ${{ github.sha }}
-        run: npm run package:self-hosted
-
-      - name: Create release archive
-        shell: bash
-        run: |
-          archive="${RUNNER_TEMP}/aitrainer-${GITHUB_SHA}.tar.gz"
-          tar --create --gzip --file "${archive}" --directory dist/self-hosted .
-          sha256sum "${archive}"
-
-      - name: Upload release artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: aitrainer-${{ github.sha }}
-          path: ${{ runner.temp }}/aitrainer-${{ github.sha }}.tar.gz
-          if-no-files-found: error
-          compression-level: 0
-          retention-days: 7
-
-      - name: Upload browser failure artifacts
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: deploy-playwright-report-${{ github.run_id }}
-          path: |
-            playwright-report/
-            test-results/
-          if-no-files-found: ignore
-          retention-days: 7
-
   deploy:
-    name: Deploy and verify
-    needs: build
+    name: Deploy and verify tested artifact
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_branch == 'main'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     environment:
       name: self-hosted-production
       url: http://39.96.7.2
+    env:
+      VERIFIED_SHA: ${{ github.event.workflow_run.head_sha }}
     steps:
-      - name: Check out deployment metadata
+      - name: Check out deployment metadata from the verified revision
         uses: actions/checkout@v4
+        with:
+          ref: ${{ env.VERIFIED_SHA }}
 
-      - name: Download release artifact
+      - name: Download artifact from the successful quality run
         uses: actions/download-artifact@v4
         with:
-          name: aitrainer-${{ github.sha }}
+          name: aitrainer-${{ env.VERIFIED_SHA }}
           path: release
+          github-token: ${{ github.token }}
+          run-id: ${{ github.event.workflow_run.id }}
 
       - name: Configure pinned SSH identity
         shell: bash
@@ -114,10 +64,10 @@ jobs:
           install -m 0644 deploy/ssh/known_hosts "${HOME}/.ssh/known_hosts"
           ssh-keygen -y -f "${HOME}/.ssh/aitrainer_deploy" >/dev/null
 
-      - name: Upload and activate release
+      - name: Upload and activate verified release
         shell: bash
         run: |
-          archive="release/aitrainer-${GITHUB_SHA}.tar.gz"
+          archive="release/aitrainer-${VERIFIED_SHA}.tar.gz"
           archive_sha="$(sha256sum "${archive}" | cut -d ' ' -f 1)"
           ssh_options=(
             -i "${HOME}/.ssh/aitrainer_deploy"
@@ -128,11 +78,11 @@ jobs:
             -o ServerAliveInterval=30
             -o ServerAliveCountMax=10
           )
-          remote_temp="uploads/.aitrainer-${GITHUB_SHA}.tar.gz.upload"
-          remote_archive="uploads/aitrainer-${GITHUB_SHA}.tar.gz"
+          remote_temp="uploads/.aitrainer-${VERIFIED_SHA}.tar.gz.upload"
+          remote_archive="uploads/aitrainer-${VERIFIED_SHA}.tar.gz"
           scp "${ssh_options[@]}" "${archive}" "${DEPLOY_USER}@${DEPLOY_HOST}:${remote_temp}"
           ssh "${ssh_options[@]}" "${DEPLOY_USER}@${DEPLOY_HOST}" \
-            "mv -- '${remote_temp}' '${remote_archive}' && sudo /usr/local/sbin/deploy-aitrainer '${GITHUB_SHA}' '${archive_sha}'"
+            "mv -- '${remote_temp}' '${remote_archive}' && sudo /usr/local/sbin/deploy-aitrainer '${VERIFIED_SHA}' '${archive_sha}'"
 
       - name: Verify public readiness
         shell: bash

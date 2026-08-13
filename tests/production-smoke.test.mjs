@@ -9,7 +9,7 @@ const configuredWaitMs = Number.parseInt(process.env.SMOKE_WAIT_MS ?? "0", 10);
 const deploymentWaitMs = Number.isFinite(configuredWaitMs)
   ? Math.min(Math.max(configuredWaitMs, 0), 600_000)
   : 0;
-const requestTimeoutMs = 30_000;
+const requestTimeoutMs = 90_000;
 const manifestPath = "/labs/manifest.json";
 const manifestLocal = "../public/labs/manifest.json";
 
@@ -57,6 +57,23 @@ async function fetchRemote(path, cacheKey = "") {
     headers: { "user-agent": "ai-trainer-production-smoke/1.0" },
     signal: AbortSignal.timeout(requestTimeoutMs),
   });
+}
+
+async function fetchRemoteWithRetry(path, cacheKey = "", attempts = 3) {
+  let lastError;
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    try {
+      const response = await fetchRemote(path, cacheKey);
+      if (response.status < 500 || attempt === attempts) return response;
+      await response.arrayBuffer();
+      lastError = new Error(`${path} returned transient HTTP ${response.status}`);
+    } catch (error) {
+      lastError = error;
+      if (attempt === attempts) throw error;
+    }
+    await delay(attempt * 1_500);
+  }
+  throw lastError ?? new Error(`${path} failed without a response`);
 }
 
 async function fetchWithTransientRetry(path, options = {}) {
@@ -136,7 +153,7 @@ test("production serves the checked-out runtime bytes with executable MIME types
   for (const asset of assets) {
     const localPayload = await readFile(new URL(asset.local, import.meta.url));
     const expectedHash = sha256(localPayload);
-    const response = await fetchRemote(asset.path, expectedHash.slice(0, 12));
+    const response = await fetchRemoteWithRetry(asset.path, expectedHash.slice(0, 12));
     const remotePayload = Buffer.from(await response.arrayBuffer());
 
     assert.equal(response.status, 200, `${asset.path} must return 200`);

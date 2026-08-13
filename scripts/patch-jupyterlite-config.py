@@ -116,6 +116,21 @@ def force_binary_csv_transfer() -> bool:
     return changed
 
 
+def deduplicate_disabled_extensions() -> bool:
+    config = json.loads(JUPYTER_LITE_CONFIG.read_text(encoding="utf-8"))
+    disabled = config.get("jupyter-config-data", {}).get("disabledExtensions")
+    if not isinstance(disabled, list):
+        raise RuntimeError("JupyterLite disabledExtensions config is missing")
+    unique = list(dict.fromkeys(disabled))
+    if unique == disabled:
+        return False
+    config["jupyter-config-data"]["disabledExtensions"] = unique
+    JUPYTER_LITE_CONFIG.write_text(
+        json.dumps(config, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n"
+    )
+    return True
+
+
 def main() -> None:
     source = CONFIG_UTILS.read_text(encoding="utf-8")
     if CALL_ANCHOR not in source or FUNCTION_ANCHOR not in source:
@@ -154,11 +169,13 @@ def main() -> None:
     for legacy_pyodide_url in legacy_pyodide_urls:
         lite_config = lite_config.replace(legacy_pyodide_url, new_pyodide_url)
     JUPYTER_LITE_CONFIG.write_text(lite_config, encoding="utf-8", newline="\n")
+    extensions_deduplicated = deduplicate_disabled_extensions()
     csv_patched = force_binary_csv_transfer()
     normalized_indexes = normalize_contents_models()
     print(
         f"Applied JupyterLite workspace and runtime retry support ({RUNTIME_REVISION}); "
         f"normalized {normalized_indexes} content indexes; "
+        f"disabled extensions {'deduplicated' if extensions_deduplicated else 'already unique'}; "
         f"csv binary transfer {'applied' if csv_patched else 'already in place'}"
     )
 
