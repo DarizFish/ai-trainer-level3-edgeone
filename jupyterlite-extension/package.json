@@ -21,6 +21,10 @@
       "@jupyterlite/kernel": {
         "bundled": false,
         "singleton": true
+      },
+      "@jupyterlite/server": {
+        "bundled": false,
+        "singleton": true
       }
     }
   },
@@ -30,7 +34,8 @@
     "@jupyterlab/application": "~4.4.5",
     "@jupyterlab/apputils": "~4.5.5",
     "@jupyterlab/notebook": "~4.4.5",
-    "@jupyterlite/kernel": "~0.6.4"
+    "@jupyterlite/kernel": "~0.6.4",
+    "@jupyterlite/server": "~0.6.4"
   },
   "devDependencies": {
     "@jupyterlab/builder": "4.4.5",

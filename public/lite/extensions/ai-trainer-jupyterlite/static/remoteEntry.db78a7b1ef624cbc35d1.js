@@ -142,7 +142,7 @@ __webpack_require__.d(exports, {
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames based on template
-/******/ 			return "" + chunkId + "." + "67bd7a26f329f5ba32c0" + ".js";
+/******/ 			return "" + chunkId + "." + "0c343d6377b08a854615" + ".js";
 /******/ 		};
 /******/ 	})();
 /******/ 	
@@ -420,7 +420,8 @@ __webpack_require__.d(exports, {
 /******/ 			"webpack/sharing/consume/default/@codemirror/state": () => (loadSingletonVersion("default", "@codemirror/state", false, [1,6,5,2])),
 /******/ 			"webpack/sharing/consume/default/@codemirror/view": () => (loadSingletonVersion("default", "@codemirror/view", false, [1,6,38,1])),
 /******/ 			"webpack/sharing/consume/default/@jupyterlab/notebook": () => (loadSingletonVersion("default", "@jupyterlab/notebook", false, [1,4,4,5])),
-/******/ 			"webpack/sharing/consume/default/@jupyterlite/kernel": () => (loadSingletonVersion("default", "@jupyterlite/kernel", false, [2,0,6,4]))
+/******/ 			"webpack/sharing/consume/default/@jupyterlite/kernel": () => (loadSingletonVersion("default", "@jupyterlite/kernel", false, [2,0,6,4])),
+/******/ 			"webpack/sharing/consume/default/@jupyterlite/server": () => (loadSingletonVersion("default", "@jupyterlite/server", false, [2,0,6,4]))
 /******/ 		};
 /******/ 		// no consumes in initial chunks
 /******/ 		const chunkMapping = {
@@ -428,7 +429,8 @@ __webpack_require__.d(exports, {
 /******/ 				"webpack/sharing/consume/default/@codemirror/state",
 /******/ 				"webpack/sharing/consume/default/@codemirror/view",
 /******/ 				"webpack/sharing/consume/default/@jupyterlab/notebook",
-/******/ 				"webpack/sharing/consume/default/@jupyterlite/kernel"
+/******/ 				"webpack/sharing/consume/default/@jupyterlite/kernel",
+/******/ 				"webpack/sharing/consume/default/@jupyterlite/server"
 /******/ 			]
 /******/ 		};
 /******/ 		const startedInstallModules = {};

@@ -335,7 +335,8 @@
             },
             "@jupyterlite/server": {
               "requiredVersion": "^0.6.4",
-              "import": false
+              "import": false,
+              "singleton": true
             },
             "@jupyterlite/services-extension": {
               "requiredVersion": "^0.6.4",

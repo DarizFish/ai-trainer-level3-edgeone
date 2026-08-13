@@ -570,9 +570,9 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
     if (!bridgeRef.current) return;
     setError(null);
     setStartupSlow(true);
-    setSaveState("正在重试题目依赖与素材准备…");
+    setSaveState("正在重启 Python 内核并重新准备题目环境…");
     try {
-      await bridgeRef.current.execute("ai-trainer:prepare-exercise", { path: notebookPath });
+      await bridgeRef.current.execute("ai-trainer:restart-and-prepare", { path: notebookPath });
       setStartupSlow(false);
       setSaveState(signedIn ? "代码区已就绪；修改会自动同步" : "代码区已就绪；登录后可云端同步");
     } catch (cause) {
@@ -644,7 +644,7 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
           <a className="button button-small" href={fullNotebookUrl} target="_blank" rel="noreferrer">全屏打开 ↗</a>
         </div>
       </div>
-      {error && <div className="jupyter-error" role="alert"><span>{error}</span>{error.startsWith("题目环境准备失败") && <button type="button" className="button button-small" onClick={() => void retryPreparation()}>重试准备</button>}</div>}
+      {error && <div className="jupyter-error" role="alert"><span>{error}</span>{error.startsWith("题目环境准备失败") && <button type="button" className="button button-small" onClick={() => void retryPreparation()}>重启并重试</button>}</div>}
       {startupSlow && !error && !cold && <div className="jupyter-warning" role="status">Python 内核仍在准备。页面会保留当前环境，不再自动重载；若长时间没有响应，可手动点击“重新加载环境”。</div>}
       {fillReview?.visible && fillReview.summary.total > 0 && <div className="jupyter-fill-summary" role="status">
         <b>核对填空自查</b>
@@ -656,7 +656,7 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
       <div className="mobile-lab-hint">手机端适合查看和轻量编辑；长时间编码建议横屏或使用“全屏打开”。</div>
       <div className="jupyter-frame-wrap">
         {cold && !error && <LabWarmupNotice stage={warmupStage} hasModel={hasModel} />}
-        <iframe key={iframeGeneration} id={iframeId} className="jupyter-frame" src={`${notebookUrl}&attempt=${iframeGeneration}`} title={`${task.code} JupyterLite JupyterLab`} allow="clipboard-read; clipboard-write; fullscreen; cross-origin-isolated" />
+        <iframe key={iframeGeneration} id={iframeId} className="jupyter-frame" src={`${notebookUrl}&attempt=${iframeGeneration}`} title={`${task.code} JupyterLite JupyterLab`} allow="clipboard-read; clipboard-write; fullscreen" />
       </div>
     </section>
     {!examMode && wordDeliverable && <section className={`lab-document-surface ${activeSurface === "document" ? "is-active" : "is-inactive"}`} role="tabpanel" aria-label={`${wordDeliverable.fileName} 作答区`}>
