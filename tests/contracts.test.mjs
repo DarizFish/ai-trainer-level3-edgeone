@@ -1880,7 +1880,7 @@ test("credential endpoints spend rate-limit quota before doing password work", a
 });
 
 test("self-hosted releases preserve proxy trust, runtime health, and cache semantics", async () => {
-  const [nextConfig, packageJson, database, throttle, live, ready, nginx, systemd, envExample, packaging, guide, deployWorkflow, deployScript, deployBootstrap, knownHosts] = await Promise.all([
+  const [nextConfig, packageJson, database, throttle, live, ready, nginx, edgeOneOrigins, systemd, envExample, packaging, guide, deployWorkflow, deployScript, deployBootstrap, knownHosts] = await Promise.all([
     readFile(new URL("../next.config.ts", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8"),
     readFile(new URL("../db/index.ts", import.meta.url), "utf8"),
@@ -1888,6 +1888,7 @@ test("self-hosted releases preserve proxy trust, runtime health, and cache seman
     readFile(new URL("../app/api/health/live/route.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/api/health/ready/route.ts", import.meta.url), "utf8"),
     readFile(new URL("../deploy/nginx/aitrainer.conf", import.meta.url), "utf8"),
+    readFile(new URL("../deploy/nginx/aitrainer-edgeone-origin.conf", import.meta.url), "utf8"),
     readFile(new URL("../deploy/systemd/aitrainer.service", import.meta.url), "utf8"),
     readFile(new URL("../.env.example", import.meta.url), "utf8"),
     readFile(new URL("../scripts/package-self-hosted.mjs", import.meta.url), "utf8"),
@@ -1929,6 +1930,35 @@ test("self-hosted releases preserve proxy trust, runtime health, and cache seman
   assert.match(nginx, /default "public, max-age=0, must-revalidate"/);
   assert.match(nginx, /~\^\/api\/ "no-store"/);
   assert.match(nginx, /proxy_hide_header Cache-Control;/);
+
+  // CDN 挡在前面后 $remote_addr 是边缘节点，而应用只信 X-Real-IP。不还原就等于把同一
+  // 节点后面的所有用户压进一个限流桶（login:ip 20 次/15 分钟）。realip 只在对端可信时
+  // 才改写，所以原始头必须继续清空，否则直连的人能绕过这层判定自造身份。
+  assert.match(nginx, /real_ip_header EO-Connecting-IP;/);
+  assert.match(nginx, /real_ip_recursive off;/);
+  // 刻意放在 conf.d 之外：conf.d/*.conf 会被主配置通配包含，放里面等于加载两次。
+  assert.match(nginx, /include \/etc\/nginx\/aitrainer-edgeone-origin\.conf;/);
+  assert.match(nginx, /proxy_set_header EO-Connecting-IP ["']["'];/);
+  assert.match(nginx, /\$realip_remote_addr/, "日志要能区分「节点不可信」和「没发这个头」");
+  // 已下线的 api.edgeone.ai/ips 现在返回 0.0.0.0/0，照抄等于信任所有人、彻底关掉判定。
+  assert.match(edgeOneOrigins, /^set_real_ip_from \S+;$/m);
+  assert.doesNotMatch(edgeOneOrigins, /set_real_ip_from\s+(?:0\.0\.0\.0\/0|::\/0)/);
+
+  // 基础设施配置必须跟应用代码走同一条已验证路径。手工同步一定会漂：2026-08-14 实测
+  // 服务器上的 deploy-aitrainer 是旧版，整段迁移门禁不存在，而文档一直声称它在。
+  assert.match(packaging, /["']deploy["']/);
+  assert.match(deployScript, /manage-database\.mjs migrate/);
+  assert.match(deployScript, /manage-database\.mjs check/);
+  assert.match(deployScript, /install_if_changed/);
+  assert.match(deployScript, /nginx -t/);
+  assert.match(deployScript, /systemctl reload nginx/);
+  assert.match(deployScript, /systemctl daemon-reload/);
+  // 自更新是闭环的关键：少了它，这个脚本本身就是唯一永远无法通过流水线更新的文件。
+  assert.match(deployScript, /install -o root -g root -m 0755 "\$\{infra_root\}\/scripts\/deploy-release\.sh" "\$\{self_path\}"/);
+  // 旧发布物里没有 deploy/，回滚到它们时必须跳过而不是失败——回滚正是出事时唯一的
+  // 退路，把 deploy/ 设成硬性要求等于连退路一起堵死。所以只校验「有就必须完整」。
+  assert.match(deployScript, /has_infra/);
+  assert.match(deployScript, /if \[\[ -d "\$\{staging\}\/deploy" \]\]; then[\s\S]*?nginx config is missing/);
   assert.match(systemd, /User=aitrainer/);
   assert.match(systemd, /HOSTNAME=127\.0\.0\.1/);
   assert.match(systemd, /SuccessExitStatus=143/);

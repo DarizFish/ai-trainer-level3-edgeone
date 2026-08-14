@@ -40,9 +40,60 @@ CDN 挡在前面之后，**响应头就是缓存策略本身**，没有别的开
 一个逗号列表，而共享缓存仍然认 `s-maxage`。Next 对预渲染页面发 ETag，重校验返回 304，
 代价只是一次条件请求。contracts 里有一条守住这三点。
 
-**这份配置不在发布流水线里**：`deploy-self-hosted.yml` 只投递 Next.js standalone 发布物。
-改了 `deploy/nginx/aitrainer.conf` 必须手工同步到服务器的 `/etc/nginx/conf.d/`，再执行
-`nginx -t && systemctl reload nginx`。
+### 用户真实 IP 必须在 Nginx 还原
+
+EdgeOne 挡在前面之后，`$remote_addr` 是边缘节点而不是用户。实测（2026-08-14）：用户
+真实地址 `183.195.11.71` 经 CDN 到达时 `$remote_addr` 是 `223.109.1.187`，真实地址在
+`EO-Connecting-IP` 里。而 `proxy_set_header X-Real-IP $remote_addr` 又是应用唯一信任的
+来源（`TRUSTED_CLIENT_IP_HEADER=x-real-ip`），不还原就等于**把同一节点后面的所有用户
+当成同一个人**：`lib/auth-throttle.ts` 的 `login:ip` 是 20 次/15 分钟、`register:ip` 是
+5 次/小时，全站会被压进这一个桶，正常用户互相锁死。
+
+也不能无条件相信这个头——实测直连源站伪造 `EO-Connecting-IP: 9.9.9.9` 是能成功的，那
+等于把限流整个绕开。所以用 Nginx 的 `realip` 模块：**只有对端本身落在
+`deploy/nginx/aitrainer-edgeone-origin.conf` 的可信集合里时才改写 `$remote_addr`**。
+两个方向的代价不对称：
+
+- 漏列一个节点 → 该节点后面的用户共用一个桶（等于修复前的行为，不是安全漏洞）
+- 多列一个非 EdgeOne 地址 → 那个地址可以随意伪造用户 IP、彻底绕开限流
+
+所以宁可漏、不可多，增量补网段永远是安全的。**绝不能写 `0.0.0.0/0`**：已下线的
+`https://api.edgeone.ai/ips` 现在正好返回这一行，照抄等于关掉整个判定。权威来源是
+EdgeOne 控制台的「源站防护 / 回源 IP 网段」。
+
+自查方法：日志格式是 `$remote_addr via=$realip_remote_addr`，两者不同说明还原成功。
+
+```bash
+awk '$2 ~ /^via=/ && $1 == substr($2,5)' /var/log/nginx/aitrainer.access.log
+```
+
+列出的是**没能还原**的请求，其 `via=` 值即候选的漏列节点地址。
+
+## 基础设施配置随 artifact 下发
+
+`deploy/` 下的 Nginx 配置、systemd unit 和发布脚本本身，**和应用代码走同一条已验证路径**：
+`package-self-hosted.mjs` 把 `deploy/` 打进 artifact，`deploy-release.sh` 在发布过程中按需应用。
+
+顺序是有讲究的：
+
+| 时机 | 动作 | 为什么在这一步 |
+| --- | --- | --- |
+| 重启之前 | systemd unit | 它决定进程怎么起，晚了这次重启就用不上；备份留着，健康检查失败要跟着回滚 |
+| 健康检查之后 | Nginx 配置 | 它只描述边缘行为，坏配置不该把已经健康的应用拖下水。`nginx -t` 不过就还原并 `exit 13` |
+| 最后 | 发布脚本自更新 | 本次发布自始至终用启动时那一份，新逻辑从下一次生效 |
+
+自更新这一步是闭环的关键。没有它，这个脚本就是唯一永远无法通过流水线更新的文件——
+2026-08-14 实测服务器上的 `/usr/local/sbin/deploy-aitrainer` 正是这样漂成了旧版，**整段
+数据库迁移门禁不存在**，而本文当时还在声称它生效。手工同步的东西一定会漂，只是时间问题。
+
+早于这次改动的发布物里没有 `deploy/`，回滚到它们时会跳过全部基础设施步骤并在日志里说明，
+服务器保持现有配置——降级，而不是部署不了。
+
+首次启用需要手工装一次（之后靠自更新）：
+
+```bash
+install -o root -g root -m 0755 deploy/scripts/deploy-release.sh /usr/local/sbin/deploy-aitrainer
+```
 
 ## 构建与发布物
 

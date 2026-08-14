@@ -176,6 +176,26 @@ Pyodide 0.27.7 读到旧 lock 文件后 `initializePackageIndex` 抛出 `Lock fi
 
 因此按字体路径映射的同一套办法处理：题目一个字不改，`kernelEnvironmentSource` 在题目 import 了 `PIL` 时于准备阶段补回 `Image.ANTIALIAS = Image.Resampling.LANCZOS`。`ANTIALIAS` 本来就只是 `LANCZOS` 的兼容别名，重采样结果不变。`tests/e2e/pillow-antialias.spec.mjs` 在真实内核里跑那一行官方代码，contracts 另有一条守住「题目源码没有被改写」。
 
+### 4.12 已修：CDN 挡在前面后，全站限流塌缩成「一个节点一个桶」
+
+2026-08-14 实测：真实出口 `183.195.11.71` 经 CDN 到达时，Nginx 记录的 `$remote_addr` 是 `223.109.0.243`（EdgeOne 节点），真实地址在 `EO-Connecting-IP` 里。而 `proxy_set_header X-Real-IP $remote_addr` 是应用唯一信任的来源（systemd 里 `TRUSTED_CLIENT_IP_HEADER=x-real-ip`），于是同一节点后面的所有用户被当成同一个人。按 `lib/auth-throttle.ts` 的策略，`login:ip` 是 20 次/15 分钟、`register:ip` 是 5 次/小时——正式放量当天，正常用户会互相把对方锁死，不需要有人攻击。
+
+`lib/auth-throttle.ts:50` 的注释假设「EdgeOne 部署」和「自托管部署」二选一，而新架构是两者同时成立，这个组合不在原设计里。
+
+也不能无条件相信那个头：实测直连源站伪造 `EO-Connecting-IP: 9.9.9.9` 能成功，那等于把限流整个绕开。改用 Nginx `realip` 模块——只有对端本身落在 `deploy/nginx/aitrainer-edgeone-origin.conf` 里时才改写 `$remote_addr`。**漏列一个节点只会退化成修复前的行为，多列一个非 EdgeOne 地址才是安全漏洞**，所以宁可漏不可多，增量补网段永远安全。已下线的 `api.edgeone.ai/ips` 现在返回 `0.0.0.0/0`，照抄等于关掉判定。
+
+线上实测三种情况：经 CDN → `183.195.11.71 via=223.109.0.243`（还原成功）；直连伪造 `9.9.9.9` → `183.195.11.71 via=183.195.11.71`（伪造被丢弃）；应用侧只看得到 Nginx 判定过的 `X-Real-IP`，原始头继续清空。
+
+### 4.13 已修：基础设施配置靠手工同步，已经漂了一份
+
+2026-08-14 逐字节比对服务器与仓库：`nginx/aitrainer.conf` 一致、`systemd/aitrainer.service` 一致，但 `/usr/local/sbin/deploy-aitrainer` 是旧版，**缺了发布物结构校验和整段数据库迁移门禁**（`db:migrate` + `db:check`）。而 `SELF-HOSTING.md` 一直声称「发布脚本在切换版本前执行带 advisory lock 的迁移与校验」——文档描述的安全网并不存在。
+
+失败模式是响的不是哑的：`/api/health/ready` 在 schema 不匹配时返回 503，发布脚本探测 60 秒后自动回滚。所以真实后果是「等你加了 `0003` 迁移，发布开始莫名失败并回滚，现场没有线索指向迁移没跑」。当前 schema `0002_condemned_klaw` 正确，是 8-12 手工 baseline 的结果，不是流水线保证的。
+
+根因是 `deploy/` 不在 artifact 里：`package-self-hosted.mjs` 只打包应用代码，`deploy-self-hosted.yml` 虽然 checkout 了仓库但只取 `deploy/ssh/known_hosts`。手工同步的东西一定会漂，只是时间问题。已把 `deploy/` 打进 artifact，由 `deploy-release.sh` 在发布过程中按需应用：unit 在重启前（失败随发布一起回滚）、Nginx 在健康检查后（`nginx -t` 不过就还原并 `exit 13`）、脚本自更新放最后（本次仍用启动时那一份）。早于这次改动的发布物没有 `deploy/`，回滚到它们时跳过并记日志，不会失败。
+
+首次启用需手工装一次 `deploy-aitrainer`（已完成，2026-08-14），之后靠自更新维持。
+
 ## 5. 2026-07-26 全量自检结果
 
 | 检查 | 结果 |
@@ -220,6 +240,11 @@ Pyodide 0.27.7 读到旧 lock 文件后 `initializePackageIndex` 抛出 `Lock fi
 | 题库来源与二次发布授权 | 法律面问题，需自行确认 |
 | 错误监控 / 分析 | 无。线上出问题时没有任何服务端信号 |
 | `app/blueprint/` 空目录 | 删除还是补全，未决定 |
+| **EdgeOne 回源 IP 网段只填了 2 个实测节点** | `deploy/nginx/aitrainer-edgeone-origin.conf` 需要从 EdgeOne 控制台「源站防护 / 回源 IP 网段」补全。漏列只会让该节点后的用户共用限流桶（等于修复前），不是安全漏洞，但正式放量前必须补齐。见 4.12 |
+| **源站可直连、可绕过 CDN** | `curl http://39.96.7.2/` 直接返回完整站点；`firewalld` inactive、iptables 全 ACCEPT。绕过 CDN 的人反而拿到独立限流桶。且回源全程明文 HTTP（Nginx 只 `listen 80`）。修法：安全组只放行 EdgeOne 回源网段 + 管理 IP，回源改 HTTPS |
+| **宝塔面板监听 `0.0.0.0:8888`** | root 权限的 Python 面板，外网可达，仓库与文档零提及。它抵消了这套部署链路全部的最小权限设计（deploy 用户不能登 shell、sudo 只有一条命令、非特权解包）|
+| `releases/` 无清理 | 9 份 × 约 280MB = 2.5G，`deploy-release.sh` 从不删旧版本。40G 磁盘用了 27%，按当前节奏还能撑约 100 次发布。另有 `releases/1aee62c/`（8-02 手工造的孤儿，目录名不是 40 位 SHA、`DEPLOYMENT.txt` 无 `Source revision` 行）|
+| 迁移命令以 root 运行发布物里的 JS | `deploy-release.sh` 的 `node scripts/manage-database.mjs` 在 root 下执行 release 自带代码。解包已经降权到 `aitrainer`，这一步没有 |
 
 ## 7. ONNX 模型
 
