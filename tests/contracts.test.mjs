@@ -1359,7 +1359,7 @@ test("starter preview is fully removed and social metadata asset exists", async 
 });
 
 test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes, and both site bridge extensions", async () => {
-  const [content, lite, host, labShell, configUtils, bridgeExtension, bridgePackage, pyodideKernelPackage, buildScript, patchScript, extensionBuildScript, runtimeCopyScript, packageJson, edgeOneConfig, labManifest, nextConfig, notebookGenerator, playwrightConfig, builtServer] = await Promise.all([
+  const [content, lite, host, labShell, configUtils, bridgeExtension, bridgePackage, pyodideKernelPackage, buildScript, patchScript, extensionBuildScript, runtimeCopyScript, packageJson, edgeOneConfig, labManifest, nextConfig, notebookGenerator, playwrightConfig, playwrightGlobalSetup, builtServer] = await Promise.all([
     loadContentBank(),
     readFile(new URL("../public/lite/jupyter-lite.json", import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL("../components/JupyterLiteLab.tsx", import.meta.url), "utf8"),
@@ -1378,6 +1378,7 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
     readFile(new URL("../next.config.ts", import.meta.url), "utf8"),
     readFile(new URL("../scripts/generate-jupyterlite-notebooks.py", import.meta.url), "utf8"),
     readFile(new URL("../playwright.config.mjs", import.meta.url), "utf8"),
+    readFile(new URL("./e2e/global-setup.mjs", import.meta.url), "utf8"),
     readFile(new URL("../scripts/start-built-server.mjs", import.meta.url), "utf8"),
   ]);
   const extensions = lite["jupyter-config-data"].federated_extensions;
@@ -1388,15 +1389,15 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
     lite["jupyter-config-data"].litePluginSettings["@jupyterlite/pyodide-kernel-extension:kernel"].pyodideUrl,
     "./static/pyodide/pyodide.js",
   );
-  // The bridge owns cold start so it can wait for Service Worker control before
-  // Pyodide samples serviceWorkerManager.enabled and decides whether to mount
-  // /drive. JupyterLab must not race it with an automatic second owner.
-  assert.equal(notebookOverrides.autoStartDefaultKernel, false);
+  // The async bridge startup preflight completes before the Lab router opens
+  // ?path=. DocumentContext can therefore be the sole cold-start owner while
+  // still seeing Service Worker control and the registered Python kernelspec.
+  assert.equal(notebookOverrides.autoStartDefaultKernel, true);
   assert.equal(Object.hasOwn(notebookOverrides, "autoStartDefault"), false);
   assert.match(labShell, /build\/lab\/bundle\.js/);
   assert.match(labShell, /data-notebook="lab"/);
   assert.match(host, /workspace=\$\{workspaceSlug\}-embed/);
-  assert.match(host, /20260726-pyodide0277-runtime11/);
+  assert.match(host, /20260814-kernel-owner-runtime12/);
   assert.match(host, /path: notebookPath/);
   assert.match(host, /connectionTimer/);
   assert.match(host, /JupyterLite 主界面加载超时/);
@@ -1406,8 +1407,8 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
   assert.match(configUtils, /\/lite\/static\/pyodide\/pyodide\.js/);
   assert.match(configUtils, /pyodideUrl\.searchParams\.set\('runtime', runtime\)/);
   assert.match(configUtils, /pyodideUrl\.searchParams\.set\('attempt', attempt\)/);
-  assert.match(labShell, /config-utils\.js\?_=20260726-pyodide0277-runtime11/);
-  assert.match(bridgeExtension, /kernelStarts/);
+  assert.match(labShell, /config-utils\.js\?_=20260814-kernel-owner-runtime12/);
+  assert.doesNotMatch(bridgeExtension, /kernelStarts|sessionContext\.changeKernel/);
   assert.doesNotMatch(bridgeExtension, /KERNEL_ATTACH_GRACE_MS|attachDeadline/);
   assert.match(bridgeExtension, /sessionContext\.initialize\(\)/);
   assert.match(bridgeExtension, /RuntimePhase/);
@@ -1461,7 +1462,7 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
   assert.match(buildScript, /"opencv-python"/);
   assert.match(buildScript, /"ssl"/);
   assert.match(buildScript, /Get-ChildItem -LiteralPath \$resolvedPyodideDir -File -Filter "\*\.whl"/);
-  assert.match(patchScript, /RUNTIME_REVISION = "20260726-pyodide0277-runtime11"/);
+  assert.match(patchScript, /RUNTIME_REVISION = "20260814-kernel-owner-runtime12"/);
   assert.match(patchScript, /pyodideSettings\.pyodideUrl/);
   assert.match(patchScript, /pyodide\.js/);
   assert.match(patchScript, /pyodide\.mjs/);
@@ -1541,9 +1542,14 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
   }
   assert.doesNotMatch(nextConfig, /Cross-Origin-Opener-Policy|Cross-Origin-Embedder-Policy/);
   assert.doesNotMatch(host, /cross-origin-isolated/);
-  assert.match(playwrightConfig, /start-built-server\.mjs/);
+  assert.match(playwrightConfig, /globalSetup: ["']\.\/tests\/e2e\/global-setup\.mjs["']/);
+  assert.doesNotMatch(playwrightConfig, /\bwebServer:/);
+  assert.match(playwrightGlobalSetup, /start-built-server\.mjs/);
+  assert.match(playwrightGlobalSetup, /child\.kill\(["']SIGTERM["']\)/);
   assert.match(builtServer, /\.next["'], ["']standalone/);
   assert.match(builtServer, /server\.js/);
+  assert.match(builtServer, /next-start\.js/);
+  assert.doesNotMatch(builtServer, /node:child_process|\bspawn\(/);
   // 告警屏蔽与 piplite 安装由扩展通过静默内核请求下发，官方题目文件里不含任何
   // 环境准备代码；每题的依赖清单只以 ai_trainer.pip_packages 元数据形式随行。
   assert.match(bridgeExtension, /filterwarnings\('ignore', category=FutureWarning\)/);
@@ -1590,6 +1596,12 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
     );
     assert.ok(sourceLength >= Number(sourceFloor), `${task.code} 源码长度 ${sourceLength} 低于护栏下限`);
   }
+
+  // Keep the audited official asset bytes unchanged. The bridge normalizes the
+  // mounted workspace copy before first import, removing Python 3.12's
+  // probabilistic `invalid escape sequence '\_'` SyntaxWarning.
+  assert.match(bridgeExtension, /_box_raw_docstring/);
+  assert.match(bridgeExtension, /3\.2\.5 辅助源码结构变化/);
 
   // 题目切换索引渲染在客户端组件里，必须与 content.practical 保持一致，否则上一题
   // / 下一题会指错。它单独存在的原因见 lib/practical-nav.ts。

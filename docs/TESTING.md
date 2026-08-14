@@ -9,7 +9,7 @@
 | 静态质量 | `npm run lint`、`npm run typecheck` | ESLint、TypeScript | 否 |
 | 内容与合同 | `npm run content:validate`、`npm run test:contracts` | 900 道理论题、40 道实操题、评分、认证边界、资源哈希、JupyterLite 配置 | 否 |
 | 生产构建 | `npm run test:build` | Next.js 生产编译、服务端与静态路由生成 | 否 |
-| 浏览器回归 | `npm run test:browser` | 公共页面、匿名跳转、390px 响应式、Pyodide 内核、ONNX 动态导入和 JavaScript MIME | 自动启动本地生产服务 |
+| 浏览器回归 | `npm run test:browser` | 公共页面、匿名跳转、390px 响应式、Pyodide 内核、ONNX 动态导入和 JavaScript MIME | global setup 自动启动并回收本地生产服务 |
 | 正式站冒烟 | `npm run test:smoke` | 正式域名路由、EdgeOne MIME、安全头、运行时文件哈希和部署一致性 | 访问正式站，只读 |
 
 ## 日常命令
@@ -20,7 +20,7 @@
 npm.cmd run test:install-browser
 ```
 
-若本机设置了 `HTTP_PROXY`，必须同时设置 `NO_PROXY=localhost,127.0.0.1,::1`。Playwright 的 webServer 探活请求会经代理返回 `400`，它把“收到任何 HTTP 响应”判定为服务已就绪从而跳过启动 `next start`，导致全部浏览器测试报 `ERR_CONNECTION_REFUSED`。
+浏览器测试服务器由 `tests/e2e/global-setup.mjs` 直接拥有：启动后对 `127.0.0.1` 做就绪探测，结束时等待子进程退出并在截止时间后强制回收。`CI=true` 时端口若已被占用会直接失败；本地普通模式可以显式复用已有服务。不要重新改回 Playwright `webServer`，它在本项目的 Windows 环境里既出现过代理 400 被误判为就绪，也出现过用例全部通过后子进程和管道无法回收的挂起。
 
 ### 手工验证时踩过的三个坑
 
@@ -50,11 +50,13 @@ npm.cmd run test:full
 
 ```powershell
 $env:CI = "true"
+$env:SELF_HOSTED_BUILD = "1"
 npm.cmd run test:ci
 Remove-Item Env:CI
+Remove-Item Env:SELF_HOSTED_BUILD
 ```
 
-`test:ci` 当前与 `test:full` 覆盖相同，但 `CI=true` 会改变 Playwright 的关键行为：禁止复用端口上已有的旧服务、允许一次重试以采集 trace，同时通过 `failOnFlakyTests` 让“重试后才通过”仍然阻断门禁。因此，本地普通模式通过不能替代这一步。
+`test:ci` 当前与 `test:full` 覆盖相同，但 `CI=true` 会改变 Playwright 的关键行为：禁止复用端口上已有的旧服务、允许一次重试以采集 trace，同时通过 `failOnFlakyTests` 让“重试后才通过”仍然阻断门禁。`SELF_HOSTED_BUILD=1` 让浏览器测试运行与阿里云发布一致的 standalone 产物。两者都是 GitHub Quality Gate 的环境设置，因此本地普通模式通过不能替代这一步。
 
 修改 JupyterLite 内核启动、重启、Service Worker、环境准备或等待条件时，还要对冷启动、依赖探针和重启做压力回归：
 
@@ -71,7 +73,7 @@ Remove-Item Env:SELF_HOSTED_BUILD
 
 不得用增加全局超时或重试次数作为 flaky 的默认修复。内核命令可能永久不返回，每个程序化请求都应经过扩展的有界执行入口；超时后该内核代次会被标记为不可复用，恢复必须先受控重启，不能向同一 worker 继续盲目发命令。`idle/connected` 也不是就绪证明，扩展必须在环境准备后成功执行一条新的 follow-up 命令才发布 `ready`。
 
-生命周期用例在同一个 Pyodide worker 中依次验证冷启动和重启。环境探针必须走 `ai-trainer:probe-environment`，由扩展作为程序化内核请求的唯一所有者；测试不得直接调用底层 `kernel.requestExecute`。探针同时验证依赖、`/drive`、工作目录和 warning filter。
+生命周期用例验证三条不同路径：冷启动只能产生一个 session／kernel 且不能出现内核选择弹窗；restart 必须进入新 generation 并重建环境；用户触发的 kernel replacement 必须按新 `kernelId` 自动重建环境。环境探针必须走 `ai-trainer:probe-environment`，由扩展作为程序化内核请求的唯一所有者；测试不得直接调用底层 `kernel.requestExecute`。探针同时验证依赖、`/drive`、工作目录、warning policy、题目 Python helper 和 ONNX 垫片。
 
 只验证已经上线的正式站：
 

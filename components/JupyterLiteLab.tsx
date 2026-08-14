@@ -196,7 +196,7 @@ function buildFillReferences(templateCells: Array<{ id: string; source: string }
 }
 
 export default function JupyterLiteLab({ task, signedIn, userEmail = null, examMode = false, activeSurface = "notebook" }: { task: PracticalTask; signedIn: boolean; userEmail?: string | null; examMode?: boolean; activeSurface?: "notebook" | "document" }) {
-  const labRevision = "20260726-pyodide0277-runtime11";
+  const labRevision = "20260814-kernel-owner-runtime12";
   const iframeId = useMemo(() => `jupyterlite-${task.code.replaceAll(".", "-")}`, [task.code]);
   // JupyterLite 用 PathExt.extname() 判断一个路径是不是目录，所以题号不能直接当
   // 目录名：1.1.1 会被解析成扩展名为 ".1" 的文件，newUntitled 于是写到根目录去，
@@ -439,10 +439,8 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
             setKernel(state.kernel);
           }
           setReady(true);
-          // 内核启动是这条链路上最长的一段（实测 19–35 秒），而草稿加载要等桥接
-          // 往返、模板 fetch 和云端草稿。先把内核踢起来再去加载草稿，两段就重叠了。
-          // 扩展侧 ensure-kernel 用 kernelStarts 这个 WeakMap 对并发启动做了去重，
-          // 后面 prepare-exercise 会复用同一个 Promise，不会重复启动内核。
+          // DocumentContext 是唯一冷启动者；ensure-kernel 只加入它的 initialize()
+          // Promise。这里可以和草稿加载重叠，但绝不再创建第二个 Pyodide worker。
           const kernelStart = bridge.execute("ai-trainer:ensure-kernel", { path: notebookPath });
           kernelStart.catch(() => undefined);
           await loadDrafts();

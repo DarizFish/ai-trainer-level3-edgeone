@@ -13,6 +13,22 @@ export async function exposeJupyterApp(page) {
 
 export async function openNotebook(page, workspace) {
   await exposeJupyterApp(page);
+  await page.addInitScript(() => {
+    window.__aiTrainerDialogTitles = [];
+    const observer = new MutationObserver(records => {
+      for (const record of records) {
+        for (const node of record.addedNodes) {
+          if (!(node instanceof Element)) continue;
+          const dialogs = node.matches(".jp-Dialog") ? [node] : [...node.querySelectorAll(".jp-Dialog")];
+          for (const dialog of dialogs) {
+            const text = dialog.textContent ?? "";
+            if (/Select Kernel|选择内核/i.test(text)) window.__aiTrainerDialogTitles.push(text);
+          }
+        }
+      }
+    });
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+  });
   await page.goto(
     `/lite/lab/index.html?path=${encodeURIComponent(notebookPath)}&workspace=${workspace}`,
     { waitUntil: "domcontentloaded" },
@@ -52,10 +68,10 @@ export async function waitForRuntimeReady(page, minimumGeneration = 1) {
   return state;
 }
 
-export async function probePreparedEnvironment(page) {
+export async function probePreparedEnvironment(page, path = notebookPath) {
   return page.evaluate(async path => {
     const app = window.jupyterapp;
     const result = await app.commands.execute("ai-trainer:probe-environment", { path });
     return result.output;
-  }, notebookPath);
+  }, path);
 }

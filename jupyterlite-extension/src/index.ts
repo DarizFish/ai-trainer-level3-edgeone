@@ -709,6 +709,36 @@ function kernelEnvironmentSource(packages: string[], assets: TaskAsset[], preloa
     // 垫片放在依赖与素材之后：它要 import numpy，也要素材已经就位。
     statements.push(onnxRuntimeSource(onnxTaskCode));
   }
+  if (onnxTaskCode === "3.2.5") {
+    // The immutable official helper contains LaTeX `\_` inside a normal
+    // docstring. DriveFS can restore the official bytes after preparation, so
+    // rewriting the mounted file is not a stable boundary. Compile a normalized
+    // in-memory copy and register it under the official module name instead.
+    // The audited file and its hash remain untouched, while unrelated warnings
+    // keep their normal behavior.
+    statements.push(
+      "import sys as _box_sys",
+      "import types as _box_types",
+      "from pathlib import Path as _BoxPath",
+      "from importlib import import_module as _box_import_module",
+      "_box_name = 'vision.utils.box_utils_numpy'",
+      "_box_parent = _box_import_module('vision.utils')",
+      "_box_path = _BoxPath('vision/utils/box_utils_numpy.py')",
+      "_box_source = _box_path.read_text(encoding='utf-8')",
+      "_box_docstring = '    \\\"\\\"\\\"Convert regressional location results'",
+      "_box_raw_docstring = '    r\\\"\\\"\\\"Convert regressional location results'",
+      "if _box_source.count(_box_docstring) != 1:",
+      "    raise RuntimeError('3.2.5 辅助源码结构变化，无法安全加载')",
+      "_box_normalized = _box_source.replace(_box_docstring, _box_raw_docstring, 1)",
+      "_box_module = _box_types.ModuleType(_box_name)",
+      "_box_module.__file__ = str(_box_path)",
+      "_box_module.__package__ = 'vision.utils'",
+      "exec(compile(_box_normalized, str(_box_path), 'exec'), _box_module.__dict__)",
+      "_box_sys.modules[_box_name] = _box_module",
+      "setattr(_box_parent, 'box_utils_numpy', _box_module)",
+      "del _box_docstring, _box_import_module, _box_module, _box_name, _box_normalized, _box_parent, _box_path, _box_raw_docstring, _box_source, _box_sys, _box_types, _BoxPath"
+    );
+  }
   return statements.join("\n");
 }
 
@@ -801,17 +831,17 @@ const plugin: JupyterFrontEndPlugin<void> = {
   autoStart: true,
   requires: [INotebookTracker, IKernelSpecs, IServiceWorkerManager],
   description: "Connects JupyterLite notebooks with the preparation site's cloud draft service.",
-  activate: (
+  activate: async (
     app: JupyterFrontEnd,
     tracker: INotebookTracker,
     kernelSpecs: IKernelSpecs,
     serviceWorkerManager: IServiceWorkerManager
-  ) => {
-    const kernelStarts = new WeakMap<NotebookPanel, Promise<{ status: string; name: string }>>();
+  ): Promise<void> => {
     const preparedGenerations = new WeakMap<NotebookPanel, number>();
     const preparationRuns = new WeakMap<NotebookPanel, { generation: number; promise: Promise<void> }>();
     const poisonedGenerations = new WeakMap<NotebookPanel, number>();
     const pendingRepreparation = new WeakMap<NotebookPanel, number>();
+    const lastKernelIds = new WeakMap<NotebookPanel, string>();
     const restartRuns = new WeakMap<NotebookPanel, Promise<RuntimeState>>();
     const runtimeStates = new WeakMap<NotebookPanel, RuntimeState>();
     const examMode = new URLSearchParams(window.location.search).get("exam") === "1";
@@ -856,6 +886,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
         lastError: null,
         updatedAt: Date.now()
       };
+      if (kernel?.id) lastKernelIds.set(panel, kernel.id);
       runtimeStates.set(panel, initial);
       return initial;
     };
@@ -876,14 +907,15 @@ const plugin: JupyterFrontEndPlugin<void> = {
     const synchronizeKernel = (panel: NotebookPanel, phase?: RuntimePhase): RuntimeState => {
       const previous = runtimeState(panel);
       const kernel = panel.sessionContext.session?.kernel;
-      const identityChanged = Boolean(kernel?.id && kernel.id !== previous.kernelId);
+      const previousKernelId = lastKernelIds.get(panel) ?? previous.kernelId;
+      const identityChanged = Boolean(kernel?.id && kernel.id !== previousKernelId);
       // A restart already creates the next generation before the worker changes.
       // Do not count the subsequent kernelChanged signal as another generation.
       const restartGenerationPending = pendingRepreparation.get(panel) === previous.generation;
       const nextPhase = phase ?? (identityChanged || ["not_started", "starting_kernel", "error"].includes(previous.phase)
         ? "kernel_connected"
         : previous.phase);
-      return publishRuntimeState(panel, {
+      const next = publishRuntimeState(panel, {
         phase: nextPhase,
         generation: previous.generation + (identityChanged && !restartGenerationPending ? 1 : 0),
         kernelId: kernel?.id ?? null,
@@ -891,6 +923,8 @@ const plugin: JupyterFrontEndPlugin<void> = {
         connectionStatus: kernel?.connectionStatus ?? "disconnected",
         lastError: null
       });
+      if (kernel?.id) lastKernelIds.set(panel, kernel.id);
+      return next;
     };
 
     const beginRestartGeneration = (panel: NotebookPanel, status = "restarting"): RuntimeState => {
@@ -970,78 +1004,91 @@ const plugin: JupyterFrontEndPlugin<void> = {
     // 依赖安装、告警屏蔽、素材恢复和 ONNX 运行时全都活在内核进程里，所以这一段既要
     // 在首次进入时跑，也要在每次内核重启后重跑——见下面 statusChanged 里的处理。
     const prepareEnvironment = async (panel: NotebookPanel): Promise<void> => {
-      const kernel = panel.sessionContext.session?.kernel;
-      if (!kernel) throw new Error("内核尚未连接，无法准备题目环境");
-      const observed = runtimeState(panel);
-      const state = observed.kernelId === kernel.id ? observed : synchronizeKernel(panel);
-      const generation = state.generation;
-      const kernelId = kernel.id;
-      if (poisonedGenerations.get(panel) === generation) {
-        throw new Error("当前内核命令通道曾超时，必须重启内核后再准备环境");
-      }
-      if (preparedGenerations.get(panel) === generation && state.phase === "ready") return;
-      let run = preparationRuns.get(panel);
-      if (!run || run.generation !== generation) {
-        // 只有 5 道 ONNX 题带运行时单元，其余题目文件里全是习题代码。
-        const runtimeCells = cellsTagged(panel, "ai-trainer-onnx");
-        const promise = (async () => {
-          publishRuntimeState(panel, { phase: "preparing_environment", lastError: null });
-          notifyParent("AI_TRAINER_EXERCISE_PREPARING", { path: panel.context.path });
-          notifyParent("AI_TRAINER_EXERCISE_STAGE", { path: panel.context.path, stage: "packages" });
-          await withTimeout(applyKernelEnvironment(panel), "题目依赖准备", ENVIRONMENT_TIMEOUT_MS);
-          assertCurrentGeneration(panel, generation, kernelId);
-          if (runtimeCells.length === 0) {
-            await waitForKernelUsable(panel, generation, kernelId);
-            // `idle` only describes the previous request. Prove that this same
-            // generation can complete a new bounded request before promising
-            // callers that the command channel is ready.
-            await executeKernelCode(panel, "__ai_trainer_channel_ready__ = True", "内核命令通道验证", 30000);
-            await waitForKernelUsable(panel, generation, kernelId);
-            preparedGenerations.set(panel, generation);
-            publishRuntimeState(panel, { phase: "ready", lastError: null });
-            return;
-          }
-          notifyParent("AI_TRAINER_EXERCISE_STAGE", { path: panel.context.path, stage: "runtime" });
-          let lastFailure: string | null = null;
-          for (let attempt = 1; attempt <= 2; attempt += 1) {
-            const succeeded = await withTimeout(
-              NotebookActions.runCells(panel.content, runtimeCells, panel.sessionContext),
-              "浏览器运行时准备",
-              180000
-            );
+      // A user-initiated kernel switch can invalidate a preparation request at
+      // any await point. Follow the new generation instead of surfacing the
+      // expected cancellation as a permanent exercise failure.
+      for (;;) {
+        const kernel = panel.sessionContext.session?.kernel;
+        if (!kernel) throw new Error("内核尚未连接，无法准备题目环境");
+        await withTimeout(kernel.info, "Python 内核握手", KERNEL_BOOT_TIMEOUT_MS);
+        const observed = runtimeState(panel);
+        const state = observed.kernelId === kernel.id ? observed : synchronizeKernel(panel);
+        const generation = state.generation;
+        const kernelId = kernel.id;
+        if (poisonedGenerations.get(panel) === generation) {
+          throw new Error("当前内核命令通道曾超时，必须重启内核后再准备环境");
+        }
+        if (preparedGenerations.get(panel) === generation && state.phase === "ready") return;
+        let run = preparationRuns.get(panel);
+        if (!run || run.generation !== generation) {
+          // 只有 5 道 ONNX 题带运行时单元，其余题目文件里全是习题代码。
+          const runtimeCells = cellsTagged(panel, "ai-trainer-onnx");
+          const promise = (async () => {
+            publishRuntimeState(panel, { phase: "preparing_environment", lastError: null });
+            notifyParent("AI_TRAINER_EXERCISE_PREPARING", { path: panel.context.path });
+            notifyParent("AI_TRAINER_EXERCISE_STAGE", { path: panel.context.path, stage: "packages" });
+            await withTimeout(applyKernelEnvironment(panel), "题目依赖准备", ENVIRONMENT_TIMEOUT_MS);
             assertCurrentGeneration(panel, generation, kernelId);
-            if (succeeded) {
+            if (runtimeCells.length === 0) {
               await waitForKernelUsable(panel, generation, kernelId);
+              // `idle` only describes the previous request. Prove that this same
+              // generation can complete a new bounded request before promising
+              // callers that the command channel is ready.
               await executeKernelCode(panel, "__ai_trainer_channel_ready__ = True", "内核命令通道验证", 30000);
               await waitForKernelUsable(panel, generation, kernelId);
               preparedGenerations.set(panel, generation);
               publishRuntimeState(panel, { phase: "ready", lastError: null });
               return;
             }
-            lastFailure = preparationFailure(runtimeCells);
-            if (attempt < 2) await new Promise(resolve => window.setTimeout(resolve, 1200));
+            notifyParent("AI_TRAINER_EXERCISE_STAGE", { path: panel.context.path, stage: "runtime" });
+            let lastFailure: string | null = null;
+            for (let attempt = 1; attempt <= 2; attempt += 1) {
+              const succeeded = await withTimeout(
+                NotebookActions.runCells(panel.content, runtimeCells, panel.sessionContext),
+                "浏览器运行时准备",
+                180000
+              );
+              assertCurrentGeneration(panel, generation, kernelId);
+              if (succeeded) {
+                await waitForKernelUsable(panel, generation, kernelId);
+                await executeKernelCode(panel, "__ai_trainer_channel_ready__ = True", "内核命令通道验证", 30000);
+                await waitForKernelUsable(panel, generation, kernelId);
+                preparedGenerations.set(panel, generation);
+                publishRuntimeState(panel, { phase: "ready", lastError: null });
+                return;
+              }
+              lastFailure = preparationFailure(runtimeCells);
+              if (attempt < 2) await new Promise(resolve => window.setTimeout(resolve, 1200));
+            }
+            throw new Error(lastFailure ?? "环境准备单元未能成功执行");
+          })();
+          run = { generation, promise };
+          preparationRuns.set(panel, run);
+        }
+        try {
+          await run.promise;
+          return;
+        } catch (error) {
+          // The replacement generation owns recovery. The caller that started
+          // the old preparation waits for it, so the host never renders a
+          // transient red error for a cancellation that is already recovering.
+          const activeKernelId = panel.sessionContext.session?.kernel?.id;
+          if (activeKernelId && runtimeState(panel).kernelId !== activeKernelId) synchronizeKernel(panel);
+          if (runtimeState(panel).generation > generation) continue;
+          let message = error instanceof Error ? error.message : String(error);
+          if (/超时/.test(message)) {
+            poisonedGenerations.set(panel, generation);
+            preparedGenerations.delete(panel);
+            message = `${message}；当前内核命令通道已隔离，请重启内核后重试`;
           }
-          throw new Error(lastFailure ?? "环境准备单元未能成功执行");
-        })();
-        run = { generation, promise };
-        preparationRuns.set(panel, run);
-      }
-      try {
-        await run.promise;
-      } catch (error) {
-        let message = error instanceof Error ? error.message : String(error);
-        if (/超时/.test(message)) {
-          poisonedGenerations.set(panel, generation);
-          preparedGenerations.delete(panel);
-          message = `${message}；当前内核命令通道已隔离，请重启内核后重试`;
+          if (runtimeState(panel).generation === generation) {
+            publishRuntimeState(panel, { phase: "error", lastError: message });
+            notifyParent("AI_TRAINER_EXERCISE_ERROR", { path: panel.context.path, message });
+          }
+          throw new Error(message, { cause: error });
+        } finally {
+          if (preparationRuns.get(panel) === run) preparationRuns.delete(panel);
         }
-        if (runtimeState(panel).generation === generation) {
-          publishRuntimeState(panel, { phase: "error", lastError: message });
-          notifyParent("AI_TRAINER_EXERCISE_ERROR", { path: panel.context.path, message });
-        }
-        throw new Error(message, { cause: error });
-      } finally {
-        if (preparationRuns.get(panel) === run) preparationRuns.delete(panel);
       }
     };
 
@@ -1117,7 +1164,6 @@ const plugin: JupyterFrontEndPlugin<void> = {
     };
 
     const preferredKernel = async (): Promise<string> => {
-      await withTimeout(app.started, "JupyterLite 启动", 15000);
       // Always await activation. During federated startup a plugin can already be
       // marked active while its activation promise is still registering the
       // Python kernelspec; merely checking isPluginActivated() races that work.
@@ -1145,17 +1191,14 @@ const plugin: JupyterFrontEndPlugin<void> = {
         try {
           app.shell.activateById(panel.id);
           await withTimeout(panel.context.ready, "Notebook 准备", 15000);
-          // With autoStartDefaultKernel=false this command is the only cold-
-          // start owner. The service-worker bridge must control the document
-          // before Pyodide samples serviceWorkerManager.enabled to decide
-          // whether /drive is mounted.
-          if (!panel.sessionContext.session?.kernel) await ensureServiceWorkerControl();
-          // SessionContext.initialize() is the one authoritative owner of the
-          // metadata-selected cold start. Waiting for it here serializes our
-          // fallback changeKernel() behind JupyterLab instead of guessing with a
-          // fixed grace period and occasionally creating two Pyodide workers.
+          // DocumentContext owns cold start. Startup preflight guarantees that
+          // its initialize() sees both Service Worker control and the Python
+          // kernelspec; this command only joins that single initialization.
           publishRuntimeState(panel, { phase: "starting_kernel", lastError: null });
-          await withTimeout(panel.sessionContext.initialize(), "内核会话初始化", KERNEL_BOOT_TIMEOUT_MS);
+          const shouldSelect = await withTimeout(panel.sessionContext.initialize(), "内核会话初始化", KERNEL_BOOT_TIMEOUT_MS);
+          if (shouldSelect) {
+            throw new Error("Notebook 未能自动选择唯一的 Python (Pyodide) 内核");
+          }
           const existing = panel.sessionContext.session?.kernel;
           if (existing) {
             if (existing.status === "dead") throw new Error("Python 内核已停止，请重新加载环境");
@@ -1163,28 +1206,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
             synchronizeKernel(panel);
             return { status: existing.status, name: existing.name };
           }
-
-          const inFlight = kernelStarts.get(panel);
-          if (inFlight) return await inFlight;
-
-          const start = (async () => {
-            const preferred = await preferredKernel();
-            notifyParent("AI_TRAINER_KERNEL_STATUS", { path: panel.context.path, status: "starting" });
-            const kernel = await withTimeout(panel.sessionContext.changeKernel({ name: preferred }), "Python 内核启动", KERNEL_BOOT_TIMEOUT_MS);
-            if (!kernel) throw new Error("Python 内核启动后未返回连接");
-            const activeKernel = panel.sessionContext.session?.kernel ?? kernel;
-            await withTimeout(activeKernel.info, "Python 内核握手", KERNEL_BOOT_TIMEOUT_MS);
-            const status = activeKernel.status ?? "starting";
-            synchronizeKernel(panel);
-            notifyParent("AI_TRAINER_KERNEL_STATUS", { path: panel.context.path, status });
-            return { status, name: activeKernel.name || preferred };
-          })();
-          kernelStarts.set(panel, start);
-          try {
-            return await start;
-          } finally {
-            if (kernelStarts.get(panel) === start) kernelStarts.delete(panel);
-          }
+          throw new Error("Notebook 初始化完成但未创建 Python (Pyodide) 内核");
         } catch (error) {
           const message = error instanceof Error ? error.message : String(error);
           pendingRepreparation.delete(panel);
@@ -1212,7 +1234,16 @@ const plugin: JupyterFrontEndPlugin<void> = {
         const panel = activePanel(tracker, targetPath(args));
         const state = runtimeState(panel);
         if (state.phase !== "ready") throw new Error(`题目运行环境尚未就绪（${state.phase}）`);
-        const modules = taskPipPackages(panel).map(pipliteImportName);
+        const pythonAssets = taskAssets(panel)
+          .map(asset => asset.name)
+          .filter(name => name.endsWith(".py"))
+          .map(name => name.slice(0, -3).replaceAll("/", "."))
+          .filter(name => name.split(".").every(part => /^[A-Za-z_][A-Za-z0-9_]*$/.test(part)));
+        const modules = [...new Set([
+          ...taskPipPackages(panel).map(pipliteImportName),
+          ...pythonAssets,
+          ...(taskOnnxRuntime(panel) === null ? [] : ["onnxruntime"])
+        ])];
         const code = [
           "import warnings as _probe_warnings",
           "from pathlib import Path as _ProbePath",
@@ -1413,7 +1444,27 @@ const plugin: JupyterFrontEndPlugin<void> = {
         }
       });
       panel.sessionContext.kernelChanged.connect(() => {
-        synchronizeKernel(panel, "kernel_connected");
+        const previous = runtimeState(panel);
+        const previousKernelId = lastKernelIds.get(panel) ?? previous.kernelId;
+        const next = synchronizeKernel(panel, "kernel_connected");
+        const replacement = Boolean(previousKernelId && next.kernelId && previousKernelId !== next.kernelId);
+        if (!replacement) return;
+        preparedGenerations.delete(panel);
+        pendingRepreparation.set(panel, next.generation);
+        // Kernel switching is allowed by JupyterLab, but a fresh worker never
+        // inherits installed packages, warning policy, assets, or the ONNX
+        // compatibility module. Rebuild that state for every replacement id.
+        void prepareEnvironment(panel)
+          .then(() => {
+            if (runtimeState(panel).generation !== next.generation) return;
+            pendingRepreparation.delete(panel);
+            notifyParent("AI_TRAINER_EXERCISE_READY", {
+              path: panel.context.path,
+              exerciseIndex: exerciseIndexOf(panel),
+              generation: next.generation
+            });
+          })
+          .catch(() => undefined);
       });
       panel.sessionContext.connectionStatusChanged.connect((_context, status) => {
         publishRuntimeState(panel, { connectionStatus: status });
@@ -1444,6 +1495,13 @@ const plugin: JupyterFrontEndPlugin<void> = {
     tracker.forEach(attachPanel);
     tracker.widgetAdded.connect((_sender, panel) => attachPanel(panel));
 
+    // The Lab router opens ?path= only after app.started. Holding startup here
+    // makes Service Worker ownership and Python kernelspec registration hard
+    // preconditions for DocumentContext.initialize(), which is then the sole
+    // cold-start owner. No post-open fallback is allowed to create a rival
+    // Pyodide worker.
+    await ensureServiceWorkerControl();
+    await preferredKernel();
     app.started.then(() => notifyParent("AI_TRAINER_EXTENSION_READY"));
   }
 };
