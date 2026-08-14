@@ -345,6 +345,11 @@ test("theory opens as a direct study console and Python tasks enter a code-first
   assert.match(workbench, /lab-task-sidebar/);
   assert.match(workbench, /lab-workspace-switcher/);
   assert.match(workbench, /PracticalBrief task=\{task\} open=\{false\}/);
+  // Native dialog owns Escape. A second window keydown closer races the
+  // browser cancel/close sequence and has already produced CI-only flakes.
+  assert.match(brief, /onClose=\{\(\) => setDialogOpen\(false\)\}/);
+  assert.doesNotMatch(brief, /addEventListener\(["']keydown["']/);
+  assert.doesNotMatch(brief, /onCancel=/);
   assert.doesNotMatch(workbench, /PracticalMaterialsList|lab-rail-note|代码、结果和导出文件在 Notebook 中完成/);
   assert.ok(
     brief.indexOf("practical-full-prompt-trigger") < brief.indexOf("practical-requirement-list"),
@@ -1359,7 +1364,7 @@ test("starter preview is fully removed and social metadata asset exists", async 
 });
 
 test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes, and both site bridge extensions", async () => {
-  const [content, lite, host, labShell, configUtils, bridgeExtension, bridgePackage, pyodideKernelPackage, buildScript, patchScript, extensionBuildScript, runtimeCopyScript, packageJson, edgeOneConfig, labManifest, nextConfig, notebookGenerator, playwrightConfig, playwrightGlobalSetup, builtServer] = await Promise.all([
+  const [content, lite, host, labShell, configUtils, bridgeExtension, bridgePackage, pyodideKernelPackage, buildScript, patchScript, extensionBuildScript, runtimeCopyScript, packageJson, edgeOneConfig, labManifest, nextConfig, notebookGenerator, playwrightConfig, playwrightGlobalSetup, builtServer, runtimeHelpers] = await Promise.all([
     loadContentBank(),
     readFile(new URL("../public/lite/jupyter-lite.json", import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL("../components/JupyterLiteLab.tsx", import.meta.url), "utf8"),
@@ -1380,6 +1385,7 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
     readFile(new URL("../playwright.config.mjs", import.meta.url), "utf8"),
     readFile(new URL("./e2e/global-setup.mjs", import.meta.url), "utf8"),
     readFile(new URL("../scripts/start-built-server.mjs", import.meta.url), "utf8"),
+    readFile(new URL("./e2e/jupyterlite-runtime-helpers.mjs", import.meta.url), "utf8"),
   ]);
   const extensions = lite["jupyter-config-data"].federated_extensions;
   const notebookOverrides = lite["jupyter-config-data"].settingsOverrides["@jupyterlab/notebook-extension:tracker"];
@@ -1546,6 +1552,12 @@ test("JupyterLite ships isolated task workspaces, all notebooks, local runtimes,
   assert.doesNotMatch(playwrightConfig, /\bwebServer:/);
   assert.match(playwrightGlobalSetup, /start-built-server\.mjs/);
   assert.match(playwrightGlobalSetup, /child\.kill\(["']SIGTERM["']\)/);
+  // Command registration happens before the asynchronous startup preflight
+  // resolves. Direct-Lab tests must prove the requested path is registered in
+  // the shell before executing a panel-scoped command.
+  assert.match(runtimeHelpers, /waitForNotebookPanel/);
+  assert.match(runtimeHelpers, /app\.shell\.widgets\(["']main["']\)/);
+  assert.match(runtimeHelpers, /observed\.commandReady && observed\.panelOpen/);
   assert.match(builtServer, /\.next["'], ["']standalone/);
   assert.match(builtServer, /server\.js/);
   assert.match(builtServer, /next-start\.js/);

@@ -75,6 +75,8 @@ Remove-Item Env:SELF_HOSTED_BUILD
 
 生命周期用例验证三条不同路径：冷启动只能产生一个 session／kernel 且不能出现内核选择弹窗；restart 必须进入新 generation 并重建环境；用户触发的 kernel replacement 必须按新 `kernelId` 自动重建环境。环境探针必须走 `ai-trainer:probe-environment`，由扩展作为程序化内核请求的唯一所有者；测试不得直接调用底层 `kernel.requestExecute`。探针同时验证依赖、`/drive`、工作目录、warning policy、题目 Python helper 和 ONNX 垫片。
 
+直接打开 `/lite/lab/index.html?path=...` 的测试不能把 `window.jupyterapp` 存在或 `ai-trainer:*` 命令已注册当成 Notebook 就绪：扩展会先注册命令，再等待异步 startup preflight，Lab router 只在 `app.started` 后打开目标 path。执行任何 panel-scoped 命令前，必须确认目标 path 已出现在 `app.shell.widgets("main")`；否则快速 runner 可能碰巧通过，慢 runner 会稳定报“尚未打开本题 Notebook”。
+
 只验证已经上线的正式站：
 
 ```powershell

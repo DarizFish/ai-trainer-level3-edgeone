@@ -39,7 +39,7 @@ npm.cmd run dev -- --webpack -p 3200 -H 127.0.0.1
 - **决策**：恢复 `autoStartDefaultKernel=true`。bridge 扩展在 Notebook 打开前等待 JupyterLite Service Worker 接管、Pyodide 插件激活和 Python kernelspec 注册；此后只由 `DocumentContext`／`SessionContext.initialize()` 拥有冷启动，bridge 仅加入初始化，不再用 `changeKernel()` 兜底。
 - 每个真实 `kernelId` 对应一个运行时 generation。用户切换内核或 JupyterLab 更换 worker 后，新 generation 会自动重建依赖、素材、warning policy 和 ONNX 垫片；旧 generation 的取消会跟随新 generation 恢复，不再把正常更替暴露为永久红色错误。
 - 3.2.5 官方 `vision/utils/box_utils_numpy.py` 的普通 docstring 含 `\_`，Python 3.12 首次编译会产生 `SyntaxWarning`。官方文件和审计哈希保持不变；环境准备只在内存中把对应 docstring 规范化为 raw string，编译后以原模块名注册。ONNX 回归重复 3 次均未观察到该 warning。
-- 已通过扩展构建、完整 JupyterLite 构建、生命周期矩阵重复 3 次（9/9）和 ONNX warning 回归重复 3 次（3/3）。最终工作树又通过 `CI=true + SELF_HOSTED_BUILD=1` 的完整门禁：合同测试 50/50、Playwright 27/27，全部首轮通过且无 retry/flaky；typecheck、内容验证、Next.js 16.3.0 standalone 构建均通过，lint 为 0 error、9 个既有 warning。GitHub Quality Gate 仍是跨平台最终判据。
+- 提交 `969f25e` 曾在本地通过 `CI=true + SELF_HOSTED_BUILD=1` 的 27/27 浏览器门禁，但 GitHub runner 暴露出两项独立的测试所有权错误：三个生命周期用例在首轮和 retry 共 6 次于目标 Notebook 注册前调用 panel-scoped 命令；官方题目弹窗又因自定义 keydown 与原生 `<dialog>` 同时处理 Escape 出现 1 次 flaky。前者改为显式等待目标 path 出现在 `app.shell.widgets("main")`，后者只保留浏览器原生 cancel/close。关闭 retry 后，生命周期压力回归 15/15、Escape 回归 20/20；最终工作树的完整同构门禁也通过合同测试 50/50、Playwright 27/27，全部首轮通过且无 retry/flaky，并通过 Next.js 16.3.0 standalone 构建。GitHub Quality Gate 仍待更新提交验证。
 
 **已排除**：这组三个新现象不是 `/drive` 同步 worker 死锁的再次表现。前一轮移除 COOP/COEP、以 Service Worker 作为唯一 `/drive` 桥的约束继续有效；本轮修复的是冷启动所有权和内核 generation 生命周期。
 
