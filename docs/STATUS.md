@@ -8,9 +8,11 @@
 | --- | --- |
 | 正式站 | https://www.aitrainer3.xyz/ |
 | 本地目录 | `C:\Users\zd\Documents\aitrainer3\edgeone-site` |
-| 当前工作分支 | `codex/fix-kernel-selection-race` |
-| 已验证代码基线 | 基于 `main` 提交 `8e777f4` 的当前修复工作树；验证证据见第 3 节 |
-| PR 状态 | 当前修复尚未提交 PR；本地完整门禁已通过，等待审阅与提交 |
+| 当前维护分支 | `main`；本地任务分支 `codex/fix-kernel-selection-race` 已完成合并 |
+| 已验证代码基线 | 修复提交 `94cdd33`，经 PR #7 合并为 `main` 提交 `b8eb0ce`；验证证据见第 3 节 |
+| PR 状态 | PR #7 已在 Quality Gate 通过后合并；未启用硬分支保护 |
+| 阿里云源站 | `39.96.7.2` 已部署并通过 `/api/health/ready`；当前 schema 为 `0002_condemned_klaw` |
+| 正式域名路由 | `www.aitrainer3.xyz` 当前仍由 EdgeOne Pages 响应，尚未切换为 EdgeOne CDN 回源阿里云 |
 | GitHub | `ssh://git@ssh.github.com:443/DarizFish/ai-trainer-level3-edgeone.git` |
 | EdgeOne 项目 | `makers-xyzgssb9k7as` |
 | Supabase | 项目 `sqenbhewvjnmatgkkbqy`，东京区 `aws-0-ap-northeast-1.pooler.supabase.com` |
@@ -31,7 +33,7 @@ npm.cmd run dev -- --webpack -p 3200 -H 127.0.0.1
 
 ## 3. 当前质量门禁
 
-安全依赖升级、PR Quality Gate、verified-artifact 自托管发布和数据库 migration 加固已进入远端 `main`。PR Quality Gate 只验证提交，不部署生产环境。当前分支处理线上出现的 JupyterLite 内核选择弹窗、内核更替警告和更替后环境未准备问题。
+安全依赖升级、PR Quality Gate、verified-artifact 自托管发布、数据库 migration 加固，以及 JupyterLite 内核冷启动与测试 readiness 修复已进入远端 `main`。PR Quality Gate 只验证提交，不部署生产环境。
 
 **已验证（2026-08-14）**：
 
@@ -39,11 +41,14 @@ npm.cmd run dev -- --webpack -p 3200 -H 127.0.0.1
 - **决策**：恢复 `autoStartDefaultKernel=true`。bridge 扩展在 Notebook 打开前等待 JupyterLite Service Worker 接管、Pyodide 插件激活和 Python kernelspec 注册；此后只由 `DocumentContext`／`SessionContext.initialize()` 拥有冷启动，bridge 仅加入初始化，不再用 `changeKernel()` 兜底。
 - 每个真实 `kernelId` 对应一个运行时 generation。用户切换内核或 JupyterLab 更换 worker 后，新 generation 会自动重建依赖、素材、warning policy 和 ONNX 垫片；旧 generation 的取消会跟随新 generation 恢复，不再把正常更替暴露为永久红色错误。
 - 3.2.5 官方 `vision/utils/box_utils_numpy.py` 的普通 docstring 含 `\_`，Python 3.12 首次编译会产生 `SyntaxWarning`。官方文件和审计哈希保持不变；环境准备只在内存中把对应 docstring 规范化为 raw string，编译后以原模块名注册。ONNX 回归重复 3 次均未观察到该 warning。
-- 提交 `969f25e` 曾在本地通过 `CI=true + SELF_HOSTED_BUILD=1` 的 27/27 浏览器门禁，但 GitHub runner 暴露出两项独立的测试所有权错误：三个生命周期用例在首轮和 retry 共 6 次于目标 Notebook 注册前调用 panel-scoped 命令；官方题目弹窗又因自定义 keydown 与原生 `<dialog>` 同时处理 Escape 出现 1 次 flaky。前者改为显式等待目标 path 出现在 `app.shell.widgets("main")`，后者只保留浏览器原生 cancel/close。关闭 retry 后，生命周期压力回归 15/15、Escape 回归 20/20；最终工作树的完整同构门禁也通过合同测试 50/50、Playwright 27/27，全部首轮通过且无 retry/flaky，并通过 Next.js 16.3.0 standalone 构建。GitHub Quality Gate 仍待更新提交验证。
+- 提交 `969f25e` 曾在本地通过 `CI=true + SELF_HOSTED_BUILD=1` 的 27/27 浏览器门禁，但 GitHub runner 暴露出两项独立的测试所有权错误：三个生命周期用例在首轮和 retry 共 6 次于目标 Notebook 注册前调用 panel-scoped 命令；官方题目弹窗又因自定义 keydown 与原生 `<dialog>` 同时处理 Escape 出现 1 次 flaky。前者改为显式等待目标 path 出现在 `app.shell.widgets("main")`，后者只保留浏览器原生 cancel/close。关闭 retry 后，生命周期压力回归 15/15、Escape 回归 20/20；最终工作树的完整同构门禁也通过合同测试 50/50、Playwright 27/27，全部首轮通过且无 retry/flaky，并通过 Next.js 16.3.0 standalone 构建。
+- **已验证（GitHub）**：修复提交 `94cdd33` 的 PR Quality Gate run `31769689925` 成功；PR #7 合并后的 `main` Quality Gate run `31770512365` 成功；`main` 合并提交为 `b8eb0ce`。
+- **已验证（阿里云）**：`Deploy verified self-hosted release` run `31770822118` 成功消费 `b8eb0ce` 的已验证 artifact。公网 `http://39.96.7.2/api/health/ready` 返回 `status=ready`、`database=ok` 和 schema `0002_condemned_klaw`。
+- **风险（正式域名）**：`https://www.aitrainer3.xyz/` 仍返回 `Server: edgeone-pages`；其 `jupyter-lite.json` 仍引用旧的 `remoteEntry.b87d7e54b2e20340d8e4.js`，而 `main` 已引用 `remoteEntry.d2f9597ae02066c2f930.js`，且该域名的 `/api/health/ready` 返回 404。正式域名因此尚不能证明已回源阿里云，切换前不得把 EdgeOne Pages 与阿里云自托管发布视为同一条链路。
 
 **已排除**：这组三个新现象不是 `/drive` 同步 worker 死锁的再次表现。前一轮移除 COOP/COEP、以 Service Worker 作为唯一 `/drive` 桥的约束继续有效；本轮修复的是冷启动所有权和内核 generation 生命周期。
 
-**当前决策**：暂不增加 `main` 的硬分支保护。Quality Gate 已能在 PR 合并前运行，但在 required check 落地前仍依赖人工保证只合并门禁已通过且 head SHA 未变化的 PR。EdgeOne 继续独立监听 `main`。
+**当前决策**：暂不增加 `main` 的硬分支保护。Quality Gate 已能在 PR 合并前运行，但在 required check 落地前仍依赖人工保证只合并门禁已通过且 head SHA 未变化的 PR。EdgeOne Pages 继续独立监听 `main`；未来新增 EdgeOne CDN 回源阿里云时，应保留现有 Pages 项目，并把域名路由、动态 `/api/*` 不缓存和静态 JupyterLite 缓存规则作为独立上线验收项。
 
 ### 已回退：JupyterLite 翻译接口无扩展名别名
 
