@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { TheoryQuestion } from "@/lib/content";
+import { contentAssets } from "@/lib/content-assets";
 
 export type TheoryBank = {
   version: string;
@@ -15,7 +16,7 @@ let pendingTheoryBank: Promise<TheoryBank> | null = null;
 function loadTheoryBank(contentVersion: string): Promise<TheoryBank> {
   if (cachedTheoryBank?.version === contentVersion) return Promise.resolve(cachedTheoryBank);
   if (!pendingTheoryBank) {
-    pendingTheoryBank = fetch(`/content/theory-${encodeURIComponent(contentVersion)}.json`, {
+    pendingTheoryBank = fetch(contentAssets.theory, {
       cache: "force-cache",
     })
       .then(async (response) => {

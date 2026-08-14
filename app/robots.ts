@@ -26,4 +26,4 @@ export default function robots(): MetadataRoute.Robots {
 }
 
 // 注意：`/content/` 和 `/_next/` 必须保持放行。题库页的题目是客户端取
-// `/content/theory-<version>.json` 渲染的，挡掉这两个目录，爬虫渲染出来的就是空页。
+// `/content/theory-<version>.<hash>.json` 渲染的，挡掉这两个目录，爬虫渲染出来的就是空页。

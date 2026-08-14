@@ -12,7 +12,7 @@
 | 已验证代码基线 | 修复提交 `94cdd33`，经 PR #7 合并为 `main` 提交 `b8eb0ce`；验证证据见第 3 节 |
 | PR 状态 | PR #7 已在 Quality Gate 通过后合并；未启用硬分支保护 |
 | 阿里云源站 | `39.96.7.2` 已部署并通过 `/api/health/ready`；当前 schema 为 `0002_condemned_klaw` |
-| 正式域名路由 | `www.aitrainer3.xyz` 当前仍由 EdgeOne Pages 响应，尚未切换为 EdgeOne CDN 回源阿里云 |
+| 正式域名路由 | `www.aitrainer3.xyz` 当前仍由 EdgeOne Pages 响应；新链路 `ali.aitrainer3.xyz` 已是 EdgeOne CDN 回源阿里云 Nginx，测试中，将来替换前者。架构见 `SELF-HOSTING.md` |
 | GitHub | `ssh://git@ssh.github.com:443/DarizFish/ai-trainer-level3-edgeone.git` |
 | EdgeOne 项目 | `makers-xyzgssb9k7as` |
 | Supabase | 项目 `sqenbhewvjnmatgkkbqy`，东京区 `aws-0-ap-northeast-1.pooler.supabase.com` |
@@ -45,6 +45,7 @@ npm.cmd run dev -- --webpack -p 3200 -H 127.0.0.1
 - **已验证（GitHub）**：修复提交 `94cdd33` 的 PR Quality Gate run `31769689925` 成功；PR #7 合并后的 `main` Quality Gate run `31770512365` 成功；`main` 合并提交为 `b8eb0ce`。
 - **已验证（阿里云）**：`Deploy verified self-hosted release` run `31770822118` 成功消费 `b8eb0ce` 的已验证 artifact。公网 `http://39.96.7.2/api/health/ready` 返回 `status=ready`、`database=ok` 和 schema `0002_condemned_klaw`。
 - **风险（正式域名）**：`https://www.aitrainer3.xyz/` 仍返回 `Server: edgeone-pages`；其 `jupyter-lite.json` 仍引用旧的 `remoteEntry.b87d7e54b2e20340d8e4.js`，而 `main` 已引用 `remoteEntry.d2f9597ae02066c2f930.js`，且该域名的 `/api/health/ready` 返回 404。正式域名因此尚不能证明已回源阿里云，切换前不得把 EdgeOne Pages 与阿里云自托管发布视为同一条链路。
+- **风险（正式域名仍停在 2026-08-06 的构建）**：2026-08-14 实测，`https://www.aitrainer3.xyz/` 各页 `last-modified` 全部是 `2026-08-06 14:10`，带随机 query 强制回源（`eo-cache-status: Cache Miss`）拿到的仍是同一份。判定证据是 `/api/health/ready` 返回 404——该路由由 `main` 的 `e739c16`（2026-08-12）新增，说明线上跑的是 `12d5c56`（2026-08-06），`main` 之后的提交从未发布。**这不是缓存问题**：HTML 与 API 的 `Cache-Control` 都是 `public,max-age=0,must-revalidate`，边缘节点虽报 `Cache Hit`，但内容与回源一致。「页面像是被缓存了很久」的真实原因是 EdgeOne Pages 的部署没有跟上 `main`，需要在 EdgeOne 控制台侧确认自动部署是否仍在监听该分支。
 
 **已排除**：这组三个新现象不是 `/drive` 同步 worker 死锁的再次表现。前一轮移除 COOP/COEP、以 Service Worker 作为唯一 `/drive` 桥的约束继续有效；本轮修复的是冷启动所有权和内核 generation 生命周期。
 
@@ -152,6 +153,28 @@ Pyodide 0.27.7 读到旧 lock 文件后 `initializePackageIndex` 抛出 `Lock fi
 ### 4.8 `runtime.spec.mjs` 的依赖安装用例在本机必然超时
 
 「task dependencies install without an environment cell in the official notebook」这条用例打开 `/practical/2.1.2/lab` 等「代码区已就绪」，断言给了 240 秒，但**用例自身的超时是 playwright 配置里的 120 秒**，两者矛盾，慢一点就必然死在 120 秒。2026-08-06 核实：对未改动的产物同样失败，与当轮改动无关；同一台机器上用独立探针跑同一道题，环境准备约 40 秒完成，说明失败在页面就绪链路而非依赖安装本身。修复方向：给该用例加 `test.setTimeout()`，或把断言超时降到 120 秒以内。
+
+### 4.9 已修：`/content/*` 题库按 immutable 缓存，文件名却不带内容哈希
+
+与 4.1／4.2 同一个病根，只是发生在题库而不是 JupyterLite 配置上。`next.config.ts` 给 `/content/:path*` 发 `immutable, max-age=31536000`，而文件名只由 `data/entities/meta.json` 的人工版本号拼成（`theory-2026-07-28-v9.json`）。题库页、实操页和两个模拟考页的题目全部是客户端取这三份 JSON 渲染的，所以只要改了题却忘了改版本号，URL 不变，已经取过它的浏览器和 CDN 节点会把旧题库留整整一年——改对的题永远到不了学员，且没有任何外部信号。
+
+`scripts/generate-public-content.mjs` 已改为按内容 SHA-256 前 16 位命名（`theory-<version>.<hash>.json`），并清掉旧哈希的副本；URL 统一由生成的 `data/content-assets.json` 经 `lib/content-assets.ts` 提供，页面和加载器不再自己拼文件名。改题即换 URL，不依赖任何人记得改版本号。`content.version` 语义不变，仍然只用于草稿与考试快照的失效判断，因此这次修复不会作废学员已写的内容。
+
+### 4.10 已修：`ali.` 新链路上页面被 CDN 缓存一年
+
+2026-08-14 实测 `https://ali.aitrainer3.xyz/`：`cache-control: s-maxage=31536000`、`age: 114379`、`eo-cache-status: HIT`。这个头是 Next.js 给预渲染页面发的，而 `deploy/nginx/aitrainer.conf` 的 `map` 对页面路径取 `default ""`——Nginx 什么都不加，Next 的 `s-maxage` 就原样透给了 EdgeOne，页面因此可以在边缘留最多一年，改了首页也同步不到用户。
+
+与 4.1／4.2／4.9 同一病根的第四次，但这次是新架构带来的：EdgeOne 从 Pages（会把页面重写成 `max-age=0, must-revalidate`）变成纯 CDN 之后，**响应头就是缓存策略本身**，源站不写就等于放任。已把 `default` 改为 `public, max-age=0, must-revalidate`，`/api/*` 单列为 `no-store`（响应按 Cookie 区分用户，CDN 只按 URL 建缓存键），并在 `location /` 增加 `proxy_hide_header Cache-Control` —— 不隐藏的话 Nginx 加的指令只会与 Next 的并列成逗号列表，共享缓存仍然认 `s-maxage`。带内容哈希的路径继续 immutable。
+
+已在容器里用真实 Nginx 加一个冒充 Next 的上游逐路径验证：页面与 `/labs/`、`/materials/` 重校验且 `s-maxage` 不再残留、ETag 保留（重校验实测 304）、`/api/*` 为 `no-store`、`/_next/static/` 与 `/content/` 仍为 immutable。**这份配置不在发布流水线里，需手工同步到服务器并 reload。**
+
+### 4.11 已修：3.2.3 的官方 `Image.ANTIALIAS` 在 Pillow 10 上必然报错
+
+3.2.3 的官方考题写着 `img.resize((64, 64), Image.ANTIALIAS)`。`ANTIALIAS` 在 Pillow 9.1 弃用、10.0 删除，而站点自带的 Pyodide 0.27.7 提供 Pillow 10.2.0，官方代码原样运行必然 `AttributeError`。
+
+降版本这条路不存在：Pillow 是 C 扩展，PyPI 上没有任何 wasm32/emscripten wheel，`piplite` 装不了 9.x；带 Pillow 9 的只有 Pyodide 0.23.x（Python 3.11.2、旧 repodata 格式），0.24 起已经是 Pillow 10。为一个别名把整套 wheel 和 ONNX 运行时退回去不成立。
+
+因此按字体路径映射的同一套办法处理：题目一个字不改，`kernelEnvironmentSource` 在题目 import 了 `PIL` 时于准备阶段补回 `Image.ANTIALIAS = Image.Resampling.LANCZOS`。`ANTIALIAS` 本来就只是 `LANCZOS` 的兼容别名，重采样结果不变。`tests/e2e/pillow-antialias.spec.mjs` 在真实内核里跑那一行官方代码，contracts 另有一条守住「题目源码没有被改写」。
 
 ## 5. 2026-07-26 全量自检结果
 
@@ -267,5 +290,7 @@ Pyodide 0.27.7 读到旧 lock 文件后 `initializePackageIndex` 抛出 `Lock fi
 **准备阶段的产物活在内核进程里，不在面板上。** piplite 装的纯 Python wheel、warning policy、预热 import、素材和 ONNX 垫片都随 worker 更换而消失。因此 `prepareEnvironment` 不仅要在 `sessionContext.statusChanged` 的 `restarting`/`autorestarting` 上清账，还必须按真实 `kernelId` 识别用户切换或其他 replacement，并为新 generation 完整重跑。`tests/e2e/kernel-restart.spec.mjs` 同时钉住冷启动、重启和 replacement。
 
 **`ready` 必须代表同一代内核真正完成了一条后继命令。** `idle + connected` 只描述 Jupyter 消息层的状态，不证明 worker 的下一条 execute 会返回。只有当前 `generation` 和 `kernelId` 未变化、环境准备完成、内核恢复 `idle + connected`，并且随后一条新的有界命令也成功完成时才能发布 `ready`。冷启动前由 bridge 完成 Service Worker 与 kernelspec preflight，冷启动本身只由 `DocumentContext`／`SessionContext.initialize()` 拥有；`autoStartDefaultKernel` 必须保持 `true`，不得恢复 bridge 的 `changeKernel()` fallback、固定 grace period 或任何第二启动者。所有程序化内核请求必须经过统一的有界执行函数，超时后不得向可能仍占有 worker 的内核盲目重发。
+
+**官方考题代码一个字都不能改，版本不兼容一律在准备阶段解决。** 已经有三处：2.1.4 的 Windows 字体路径、3.2.5 的 `\_` docstring、3.2.3 的 `Image.ANTIALIAS`（见 4.11）。判断顺序是先看能不能换库版本，换不了才写垫片；垫片必须只还原被删掉的旧行为，不得改变题目的计算结果，并且要有一条在真实内核里跑官方代码的用例。
 
 **扩展改动的发布流程**：`npm run jupyterlite:extension` 构建 → 把 `jupyterlite-extension/labextension/` 同步到 `public/lite/extensions/ai-trainer-jupyterlite/` → 更新 `public/lite/jupyter-lite.json` 里 `federated_extensions` 的 `remoteEntry.*.js` 哈希。每次构建哈希都会变，漏掉最后一步等于没发布。

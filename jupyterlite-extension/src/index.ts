@@ -642,6 +642,26 @@ function kernelEnvironmentSource(packages: string[], assets: TaskAsset[], preloa
     // 直接 ModuleNotFoundError。
     statements.push(`import ${pyodideImports.join(", ")}`);
   }
+  if (preloadImports.includes("PIL")) {
+    // 3.2.3 的官方考题用 `img.resize((64, 64), Image.ANTIALIAS)`。ANTIALIAS 在
+    // Pillow 9.1 被弃用、10.0 删除，而本站 Pyodide 0.27.7 自带 Pillow 10.2.0，
+    // 官方代码原样运行就是 AttributeError。
+    //
+    // 只能从环境这一侧解决，降版本这条路是死的：Pillow 是 C 扩展，PyPI 上没有任何
+    // wasm32/emscripten wheel，piplite 装不了 9.x；带 Pillow 9 的是 Pyodide 0.23.x
+    // （Python 3.11.2、旧 repodata 格式），0.24 起就已经是 Pillow 10。为一个别名把
+    // 整套 wheel 和 ONNX 运行时退回去不成立。
+    //
+    // ANTIALIAS 本来就只是 LANCZOS 的别名（Pillow 9.1 把常量搬进 Resampling 时留下
+    // 的兼容名），所以补回来是还原 Pillow 9 的 API 表面，不改变重采样结果。与
+    // 字体路径映射同理：题目一个字都不动，让它在浏览器里能解析。
+    statements.push(
+      "from PIL import Image as _PILImage",
+      "if not hasattr(_PILImage, 'ANTIALIAS'):",
+      "    _PILImage.ANTIALIAS = _PILImage.Resampling.LANCZOS",
+      "del _PILImage"
+    );
+  }
   if (assets.length > 0) {
     // 正常情况下素材由 mountDrive 挂进工作目录，下面的哈希校验直接命中、不发请求。
     // 但 mountDrive 在内核创建那一刻就定死了：跨域隔离若未成立（例如页面被从 http

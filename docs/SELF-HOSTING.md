@@ -1,17 +1,48 @@
 # 阿里云自托管运行手册
 
-本文描述统一 `main` 分支的阿里云自托管部署。正式 DNS、ICP备案、EdgeOne 下线和数据库迁移不属于本阶段。
+本文描述统一 `main` 分支的阿里云自托管部署。正式 DNS、ICP备案和数据库迁移不属于本阶段。
 
 ## 架构
 
+目标形态是**阿里云作源站、EdgeOne 只作 CDN**，取代原来「EdgeOne Pages 既构建又托管」的形态。
+
 ```text
-HTTP :80 -> Nginx -> 127.0.0.1:3000 Next.js -> Supabase PostgreSQL
-              \-> /_next/static、/lite、/labs、/materials、/content 本机直出
+用户 -> EdgeOne CDN -> 阿里云 Nginx :80 -> 127.0.0.1:3000 Next.js -> Supabase PostgreSQL
+                                     \-> /_next/static、/lite、/labs、/materials、/content 本机直出
 ```
 
-Nginx 是唯一公网入口。Node 只监听回环地址，PostgreSQL 继续使用 Supabase。服务器通过
+| 域名 | 当前指向 | 状态 |
+| --- | --- | --- |
+| `www.aitrainer3.xyz` | EdgeOne Pages（自建构建与托管） | 现行正式站，待替换 |
+| `ali.aitrainer3.xyz` | EdgeOne CDN 回源阿里云 Nginx | 新链路，测试中 |
+
+Nginx 是源站的唯一公网入口。Node 只监听回环地址，PostgreSQL 继续使用 Supabase。服务器通过
 `TRUSTED_CLIENT_IP_HEADER=x-real-ip` 只信任 Nginx 覆盖写入的客户端地址；Nginx 同时清空
 外部请求中的 `EO-Connecting-IP`，防止攻击者伪装成 EdgeOne 节点绕过限流。
+
+### 缓存语义由 Nginx 单点决定
+
+CDN 挡在前面之后，**响应头就是缓存策略本身**，没有别的开关。`deploy/nginx/aitrainer.conf`
+的 `$aitrainer_cache_control` 是唯一的真相来源，三个头（`Cache-Control`、`CDN-Cache-Control`、
+`Eo-Cdn-Cache-Control`）取同一个值：
+
+| 路径 | 值 | 理由 |
+| --- | --- | --- |
+| `/api/*` | `no-store` | 响应按 Cookie 区分用户，而 CDN 只按 URL 建缓存键 |
+| `/_next/static/`、`/content/`、`/lite/static/`、`/lite/build/`、`/labs/models/`、`/labs/runtime/` | `immutable` 一年 | 文件名带内容哈希 |
+| JupyterLite 的可变配置（`jupyter-lite.json` 等） | `max-age=0, must-revalidate` | 见 `STATUS.md` 4.1／4.2 |
+| 其余一切（**含所有页面文档**） | `max-age=0, must-revalidate` | 见下 |
+
+`default` 必须是重校验，不能是空字符串。空字符串等于 Nginx 什么都不加，`location /`
+代理的页面就会把 Next.js 自己发的 `Cache-Control: s-maxage=31536000` 原样透给 CDN，
+预渲染页面因此在边缘留最多一年——改了首页也同步不到用户。同理，`location /` 里的
+`proxy_hide_header Cache-Control` 不能去掉：不隐藏，Nginx 加的指令只会与 Next 的并列成
+一个逗号列表，而共享缓存仍然认 `s-maxage`。Next 对预渲染页面发 ETag，重校验返回 304，
+代价只是一次条件请求。contracts 里有一条守住这三点。
+
+**这份配置不在发布流水线里**：`deploy-self-hosted.yml` 只投递 Next.js standalone 发布物。
+改了 `deploy/nginx/aitrainer.conf` 必须手工同步到服务器的 `/etc/nginx/conf.d/`，再执行
+`nginx -t && systemctl reload nginx`。
 
 ## 构建与发布物
 
