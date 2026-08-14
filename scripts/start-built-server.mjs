@@ -4,6 +4,15 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 const projectRoot = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const port = process.argv[2] ?? process.env.PORT ?? "3210";
+const parsedPort = Number.parseInt(port, 10);
+
+if (!Number.isInteger(parsedPort) || parsedPort < 1 || parsedPort > 65535) {
+  throw new Error(`Invalid server port: ${port}`);
+}
+
+process.env.NODE_ENV ??= "production";
+process.env.NEXT_RUNTIME ??= "nodejs";
+process.env.NEXT_PRIVATE_START_TIME ??= Date.now().toString();
 
 if (process.env.SELF_HOSTED_BUILD === "1") {
   const standaloneRoot = resolve(projectRoot, ".next", "standalone");
@@ -16,18 +25,12 @@ if (process.env.SELF_HOSTED_BUILD === "1") {
   process.env.PORT = port;
   await import(pathToFileURL(resolve(standaloneRoot, "server.js")).href);
 } else {
-  const { spawn } = await import("node:child_process");
-  const nextBin = resolve(projectRoot, "node_modules", "next", "dist", "bin", "next");
-  const child = spawn(process.execPath, [nextBin, "start", "-H", "127.0.0.1", "-p", port], {
-    cwd: projectRoot,
-    env: process.env,
-    stdio: "inherit",
-    windowsHide: true,
-  });
-  for (const signal of ["SIGINT", "SIGTERM"]) {
-    process.once(signal, () => child.kill(signal));
-  }
-  child.once("exit", code => {
-    process.exitCode = code ?? 1;
-  });
+  // Keep Next in this process. Playwright owns the webServer process tree; a
+  // wrapper that spawns another Node process can retain inherited stdout/stderr
+  // handles after every test has passed, leaving the runner stuck in teardown.
+  const nextStartPath = resolve(projectRoot, "node_modules", "next", "dist", "cli", "next-start.js");
+  const nextStartModule = await import(pathToFileURL(nextStartPath).href);
+  const nextStart = nextStartModule.nextStart ?? nextStartModule.default?.nextStart;
+  if (typeof nextStart !== "function") throw new Error("Next.js nextStart entry point is unavailable");
+  await nextStart({ hostname: "127.0.0.1", port: parsedPort }, projectRoot);
 }

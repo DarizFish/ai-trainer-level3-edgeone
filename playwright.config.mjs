@@ -7,6 +7,7 @@ const baseURL = process.env.TEST_BASE_URL?.replace(/\/$/, "") || localBaseUrl;
 export default defineConfig({
   testDir: "./tests/e2e",
   outputDir: "test-results",
+  globalSetup: "./tests/e2e/global-setup.mjs",
   fullyParallel: false,
   workers: 1,
   retries: process.env.CI ? 1 : 0,
@@ -24,16 +25,6 @@ export default defineConfig({
     trace: process.env.CI ? "on-first-retry" : "retain-on-failure",
     video: "retain-on-failure",
   },
-  webServer: process.env.TEST_BASE_URL
-    ? undefined
-    : {
-        command: `node scripts/start-built-server.mjs ${port}`,
-        url: `${localBaseUrl}/`,
-        reuseExistingServer: !process.env.CI,
-        timeout: 120_000,
-        stdout: "pipe",
-        stderr: "pipe",
-      },
   projects: [
     {
       name: "chromium",

@@ -1,6 +1,6 @@
 # 项目当前状态
 
-更新时间：2026-08-13。本文取代原 `SESSION-HANDOFF.md`，用于把项目移交给其他会话或协作者。只记录**当前**事实与待办；历史改进见 `IMPROVEMENTS.md`。
+更新时间：2026-08-14。本文取代原 `SESSION-HANDOFF.md`，用于把项目移交给其他会话或协作者。只记录**当前**事实与待办；历史改进见 `IMPROVEMENTS.md`。
 
 ## 1. 坐标
 
@@ -8,9 +8,9 @@
 | --- | --- |
 | 正式站 | https://www.aitrainer3.xyz/ |
 | 本地目录 | `C:\Users\zd\Documents\aitrainer3\edgeone-site` |
-| 当前工作分支 | `codex/remove-pyodide-sync-deadlock` |
-| 已验证代码基线 | 基于 `main` 合并提交 `cabffc5` 的当前修复工作树；验证证据见第 3 节 |
-| PR 状态 | PR #5 已合并；当前分支用于提交后续 JupyterLite 死锁修复 |
+| 当前工作分支 | `codex/fix-kernel-selection-race` |
+| 已验证代码基线 | 基于 `main` 提交 `8e777f4` 的当前修复工作树；验证证据见第 3 节 |
+| PR 状态 | 当前修复尚未提交 PR；本地完整门禁已通过，等待审阅与提交 |
 | GitHub | `ssh://git@ssh.github.com:443/DarizFish/ai-trainer-level3-edgeone.git` |
 | EdgeOne 项目 | `makers-xyzgssb9k7as` |
 | Supabase | 项目 `sqenbhewvjnmatgkkbqy`，东京区 `aws-0-ap-northeast-1.pooler.supabase.com` |
@@ -31,17 +31,17 @@ npm.cmd run dev -- --webpack -p 3200 -H 127.0.0.1
 
 ## 3. 当前质量门禁
 
-安全依赖升级、PR Quality Gate、verified-artifact 自托管发布和数据库 migration 加固已随 PR #3 进入远端 `main`。PR #4、#5 的前两轮 JupyterLite 稳定性修复已经合并，但合并后的 `main` 仍各出现一次命令通道永久不返回；PR Quality Gate 只验证提交，不部署生产环境。
+安全依赖升级、PR Quality Gate、verified-artifact 自托管发布和数据库 migration 加固已进入远端 `main`。PR Quality Gate 只验证提交，不部署生产环境。当前分支处理线上出现的 JupyterLite 内核选择弹窗、内核更替警告和更替后环境未准备问题。
 
-**已验证（2026-08-13）**：
+**已验证（2026-08-14）**：
 
-- PR #5 合并后的 `main` 提交 `cabffc5` 在 Quality Gate run `31707361267` 再次失败：`runtime.spec.mjs` 的 openpyxl 探针首次执行 30 秒没有 reply，retry 通过；日志当时为 `kernel=busy/connected`，扩展运行时却仍为 `phase=ready`。`failOnFlakyTests` 正确把这次 flaky 视为失败，打包与部署没有继续。
-- PR #5 head `2cabdd5` 与合并提交 `cabffc5` 的代码树相同，排除 merge 过程改变文件内容。前两轮通过等待 `idle`、减少重复 worker 和调整 import 路径只降低了触发概率，没有消除命令通道永久等待的条件。
-- 已从随站发布的 `@jupyterlite/pyodide-kernel-extension` 0.6.1 bundle 验证：`crossOriginIsolated=true` 会选择 `SharedArrayBuffer`/`Atomics` 的 coincident worker，非隔离页面则选择异步 Comlink worker；`mountDrive` 的判定为 `serviceWorkerManager.enabled || crossOriginIsolated`。因此现在移除 Lab 的 COOP/COEP，并把 JupyterLite Service Worker 设为 `/drive` 的唯一持久化桥。
-- 当前扩展直接依赖并等待同一个 `IServiceWorkerManager.ready/enabled` 对象后才创建 Pyodide 内核；`autoStartDefaultKernel=false` 消除了 JupyterLab 抢先创建内核的第二所有者。环境准备先硬校验 `/drive` 和 cwd，完成后再执行一条新的有界命令，成功后才发布 `ready`；测试探针统一走扩展命令，不再绕过资源所有者直接占用底层内核连接。
-- 当前分支先对结构性修复执行重点浏览器用例单轮 4/4、重复 10 轮 40/40；加入“超时内核必须重启、不得复用”的最终恢复加固后，又执行完整 JupyterLite 构建、重点用例重复 3 轮 12/12，以及 `CI=true + SELF_HOSTED_BUILD=1` 的完整 `npm run test:ci`：合同测试 50/50、Playwright 24/24，全部首次通过且无 retry/flaky。完整门禁同时通过 lint（0 error，9 个既有 warning）、typecheck、内容验证和 standalone 生产构建；浏览器启动日志不再出现用 `next start` 启动 standalone 产物的警告。
+- 生产现象与源码控制流相互印证：JupyterLab 已显示 `Python (Pyodide)` 时，外层仍可能报告“内核已更替，丢弃第 1 代环境准备结果”。基线同时设置 `autoStartDefaultKernel=false`，并让 bridge 在 `SessionContext.initialize()` 之后回退到 `changeKernel()`；JupyterLab 选择流程和 bridge 因而都可能成为冷启动所有者，两个 Pyodide worker 竞争后会改变 `kernelId`，旧 generation 的准备结果随即失效。
+- **决策**：恢复 `autoStartDefaultKernel=true`。bridge 扩展在 Notebook 打开前等待 JupyterLite Service Worker 接管、Pyodide 插件激活和 Python kernelspec 注册；此后只由 `DocumentContext`／`SessionContext.initialize()` 拥有冷启动，bridge 仅加入初始化，不再用 `changeKernel()` 兜底。
+- 每个真实 `kernelId` 对应一个运行时 generation。用户切换内核或 JupyterLab 更换 worker 后，新 generation 会自动重建依赖、素材、warning policy 和 ONNX 垫片；旧 generation 的取消会跟随新 generation 恢复，不再把正常更替暴露为永久红色错误。
+- 3.2.5 官方 `vision/utils/box_utils_numpy.py` 的普通 docstring 含 `\_`，Python 3.12 首次编译会产生 `SyntaxWarning`。官方文件和审计哈希保持不变；环境准备只在内存中把对应 docstring 规范化为 raw string，编译后以原模块名注册。ONNX 回归重复 3 次均未观察到该 warning。
+- 提交 `969f25e` 曾在本地通过 `CI=true + SELF_HOSTED_BUILD=1` 的 27/27 浏览器门禁，但 GitHub runner 暴露出两项独立的测试所有权错误：三个生命周期用例在首轮和 retry 共 6 次于目标 Notebook 注册前调用 panel-scoped 命令；官方题目弹窗又因自定义 keydown 与原生 `<dialog>` 同时处理 Escape 出现 1 次 flaky。前者改为显式等待目标 path 出现在 `app.shell.widgets("main")`，后者只保留浏览器原生 cancel/close。关闭 retry 后，生命周期压力回归 15/15、Escape 回归 20/20；最终工作树的完整同构门禁也通过合同测试 50/50、Playwright 27/27，全部首轮通过且无 retry/flaky，并通过 Next.js 16.3.0 standalone 构建。GitHub Quality Gate 仍待更新提交验证。
 
-**强推断，仍待 GitHub CI 验证**：重复故障的必要条件来自跨源隔离所选择的同步 worker/drive 桥；同步 `/drive` 调用卡住时，Jupyter 消息层仍可保留 `busy/connected`，所以状态值不能证明下一条 execute 一定会返回。源码分支、两次 CI 症状和 10 轮／40 场景压力回归共同支持这一解释，但现有失败 artifact 没有 worker 内部堆栈，不能把具体卡住的函数写成已直接观测事实。修复 PR 的 GitHub Quality Gate 仍是跨平台最终判据。
+**已排除**：这组三个新现象不是 `/drive` 同步 worker 死锁的再次表现。前一轮移除 COOP/COEP、以 Service Worker 作为唯一 `/drive` 桥的约束继续有效；本轮修复的是冷启动所有权和内核 generation 生命周期。
 
 **当前决策**：暂不增加 `main` 的硬分支保护。Quality Gate 已能在 PR 合并前运行，但在 required check 落地前仍依赖人工保证只合并门禁已通过且 head SHA 未变化的 PR。EdgeOne 继续独立监听 `main`。
 
@@ -134,15 +134,11 @@ Pyodide 0.27.7 读到旧 lock 文件后 `initializePackageIndex` 抛出 `Lock fi
 
 `ServiceWorkerManager._pingServiceWorker` 把路径硬编码为站点根下的 `/api/service-worker-heartbeat`，而本站把 JupyterLite 挂在 `/lite/` 下，service worker 作用域是 `/lite/`，永远拦不到该请求。已新增 `app/api/service-worker-heartbeat/route.ts` 返回纯文本 `ok`。注意：心跳失败只会让存活轮询停止，**不会**置空注册，所以它不是 4.1／4.2 的原因。
 
-### 4.6 本机 `HTTP_PROXY` 会让 Playwright 跳过启动本地服务
+### 4.6 Playwright 测试服务器必须有单一所有者并可确认回收
 
-`HTTP_PROXY=http://127.0.0.1:17890` 在 Machine 作用域生效。Playwright 的 webServer 探活请求 `GET http://127.0.0.1:3210/` 经代理返回 **400**，它把“收到任何 HTTP 响应”判定为服务器已就绪，于是不再启动 `next start`；随后 Chromium 直连 localhost 无人监听，15 项浏览器测试全部 `ERR_CONNECTION_REFUSED`。
+旧的 Playwright `webServer` 探活曾被本机 `HTTP_PROXY` 的 400 响应误判为服务已就绪；改用 managed `webServer` 后，在 Windows 上又出现所有用例已经通过、runner 却因子进程和继承管道未回收而不退出。两者本质上都是测试框架无法可靠证明“当前服务由谁创建、何时已经结束”。
 
-已在 User 作用域设置 `NO_PROXY=localhost,127.0.0.1,::1`，设置后 `npm run test:browser` 正常拉起服务（`[WebServer] ✓ Ready in 180ms`）。若要与 `HTTP_PROXY` 同作用域，需用管理员权限执行：
-
-```powershell
-[Environment]::SetEnvironmentVariable("NO_PROXY", "localhost,127.0.0.1,::1", "Machine")
-```
+当前由 `tests/e2e/global-setup.mjs` 直接创建并探活测试服务，测试结束时先发送终止信号、等待退出，超过截止时间才强制回收；`scripts/start-built-server.mjs` 也在同一 Node 进程中启动 Next，不再额外套一层 Node 子进程。`CI=true` 时若端口已被占用会直接失败，避免复用旧构建。`NO_PROXY=localhost,127.0.0.1,::1` 仍可保留给其他本地工具，但不再是 Playwright 正确启动服务的前提。
 
 ### 4.7 生产冒烟的素材检查在慢网络下必然超时
 
@@ -263,8 +259,8 @@ Pyodide 0.27.7 读到旧 lock 文件后 `initializePackageIndex` 抛出 `Lock fi
 
 **`.csv` 在 `fileTypes` 里是 `fileFormat: "base64"`，这是刻意的。** drive 的 `get()` 忽略 `options.format`，只能按扩展名定格式；改回 `text` 会让 2.1.4 那份 GBK 数据集在读写两个方向都被 UTF-8 解码销毁。显示端的解码在 `jupyterlite-extension/src/csvViewer.ts`，**只改 `fromString`，不要动 `toString`**——`CSVViewer._updateGrid` 正是从 `toString()` 取数据喂 DataGrid，在那里还原成字节会让表格重新变回乱码。
 
-**准备阶段的产物活在内核进程里，不在面板上。** piplite 装的纯 Python wheel、`FutureWarning` 屏蔽、预热 import、ONNX 运行时单元都随内核重启消失，因此 `prepareEnvironment` 必须在 `sessionContext.statusChanged` 的 `restarting`/`autorestarting` 上清账并重跑。`tests/e2e/kernel-restart.spec.mjs` 钉住了这个行为。
+**准备阶段的产物活在内核进程里，不在面板上。** piplite 装的纯 Python wheel、warning policy、预热 import、素材和 ONNX 垫片都随 worker 更换而消失。因此 `prepareEnvironment` 不仅要在 `sessionContext.statusChanged` 的 `restarting`/`autorestarting` 上清账，还必须按真实 `kernelId` 识别用户切换或其他 replacement，并为新 generation 完整重跑。`tests/e2e/kernel-restart.spec.mjs` 同时钉住冷启动、重启和 replacement。
 
-**`ready` 必须代表同一代内核真正完成了一条后继命令。** `idle + connected` 只描述 Jupyter 消息层的状态，不证明 worker 的下一条 execute 会返回。只有当前 `generation` 和 `kernelId` 未变化、环境准备完成、内核恢复 `idle + connected`，并且随后一条新的有界命令也成功完成时才能发布 `ready`。冷启动只由 bridge 在 Service Worker 就绪后负责，不要恢复自动启动、固定 grace period 或第二个启动者；所有程序化 `requestExecute` 必须经过统一的有界执行函数，超时后不得向可能仍占有 worker 的内核盲目重发。
+**`ready` 必须代表同一代内核真正完成了一条后继命令。** `idle + connected` 只描述 Jupyter 消息层的状态，不证明 worker 的下一条 execute 会返回。只有当前 `generation` 和 `kernelId` 未变化、环境准备完成、内核恢复 `idle + connected`，并且随后一条新的有界命令也成功完成时才能发布 `ready`。冷启动前由 bridge 完成 Service Worker 与 kernelspec preflight，冷启动本身只由 `DocumentContext`／`SessionContext.initialize()` 拥有；`autoStartDefaultKernel` 必须保持 `true`，不得恢复 bridge 的 `changeKernel()` fallback、固定 grace period 或任何第二启动者。所有程序化内核请求必须经过统一的有界执行函数，超时后不得向可能仍占有 worker 的内核盲目重发。
 
 **扩展改动的发布流程**：`npm run jupyterlite:extension` 构建 → 把 `jupyterlite-extension/labextension/` 同步到 `public/lite/extensions/ai-trainer-jupyterlite/` → 更新 `public/lite/jupyter-lite.json` 里 `federated_extensions` 的 `remoteEntry.*.js` 哈希。每次构建哈希都会变，漏掉最后一步等于没发布。

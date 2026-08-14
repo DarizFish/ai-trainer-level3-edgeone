@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-const runtimeRevision = "20260726-pyodide0277-runtime11";
+const runtimeRevision = "20260814-kernel-owner-runtime12";
 const pyodideEntryPath = "/lite/static/pyodide/pyodide.js";
 const pyodideWasmLoaderPath = "/lite/static/pyodide/pyodide.asm.js";
 const onnxEntryPath = "/labs/runtime/onnxruntime-web/1.27.0/ort.wasm.bundle.min.js";
@@ -115,4 +115,34 @@ test("task dependencies install without an environment cell in the official note
 
   expect(observed.runtime).toMatchObject({ phase: "ready", lastError: null });
   expect(observed.output).toBe("env-ok True True True");
+});
+
+test("the ONNX exercise is prepared on the active kernel without a SyntaxWarning", async ({ page }) => {
+  test.setTimeout(420_000);
+  const warnings = [];
+  page.on("console", message => {
+    if (/SyntaxWarning|invalid escape sequence/.test(message.text())) warnings.push(message.text());
+  });
+  await page.route("**/lite/jupyter-lite.json*", async route => {
+    const response = await route.fetch();
+    const config = JSON.parse(await response.text());
+    config["jupyter-config-data"].exposeAppInBrowser = "true";
+    await route.fulfill({ response, body: JSON.stringify(config) });
+  });
+  await page.goto("/practical/3.2.5/lab", { waitUntil: "domcontentloaded" });
+  await expect(page.getByText("代码区已就绪", { exact: false })).toBeVisible({ timeout: 300_000 });
+
+  const observed = await page.locator("iframe.jupyter-frame").evaluate(async (iframe, path) => {
+    const app = iframe.contentWindow?.jupyterapp;
+    if (!app) throw new Error("JupyterLite app is not exposed to the ONNX exercise test");
+    const state = await app.commands.execute("ai-trainer:get-runtime-state", { path });
+    const panel = [...app.shell.widgets("main")].find(widget => widget.context?.path === path);
+    const kernelId = panel?.sessionContext.session?.kernel?.id ?? null;
+    const probe = await app.commands.execute("ai-trainer:probe-environment", { path });
+    return { state, kernelId, output: probe.output };
+  }, "3-2-5/3.2.5.ipynb");
+
+  expect(observed.state).toMatchObject({ phase: "ready", kernelId: observed.kernelId, lastError: null });
+  expect(observed.output).toBe("env-ok True True True");
+  expect(warnings).toEqual([]);
 });

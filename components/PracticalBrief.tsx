@@ -22,11 +22,6 @@ export function PracticalBrief({ task, open = true }: { task: PracticalTask; ope
       inertAttribute: frame.hasAttribute("inert"),
       tabIndex: frame.getAttribute("tabindex"),
     }));
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key !== "Escape") return;
-      event.preventDefault();
-      dialogRef.current?.close();
-    };
     const containFocus = (event: FocusEvent) => {
       const dialog = dialogRef.current;
       if (!dialog?.open || !(event.target instanceof Node) || dialog.contains(event.target)) return;
@@ -38,7 +33,6 @@ export function PracticalBrief({ task, open = true }: { task: PracticalTask; ope
       frame.setAttribute("inert", "");
       frame.setAttribute("tabindex", "-1");
     }
-    window.addEventListener("keydown", closeOnEscape, true);
     document.addEventListener("focusin", containFocus, true);
     return () => {
       document.body.style.overflow = previousOverflow;
@@ -48,7 +42,6 @@ export function PracticalBrief({ task, open = true }: { task: PracticalTask; ope
         if (tabIndex === null) frame.removeAttribute("tabindex");
         else frame.setAttribute("tabindex", tabIndex);
       }
-      window.removeEventListener("keydown", closeOnEscape, true);
       document.removeEventListener("focusin", containFocus, true);
     };
   }, [dialogOpen]);
@@ -91,15 +84,13 @@ export function PracticalBrief({ task, open = true }: { task: PracticalTask; ope
       </div>
     </details>
 
+    {/* Native <dialog> exclusively owns Escape/cancel. onClose only mirrors
+        the resulting browser state into React, avoiding two competing closers. */}
     <dialog
       ref={dialogRef}
       className="practical-prompt-dialog"
       aria-labelledby={titleId}
       onClick={closeFromBackdrop}
-      onCancel={(event) => {
-        event.preventDefault();
-        closeOfficialPrompt();
-      }}
       onClose={() => setDialogOpen(false)}
     >
       <article className="practical-prompt-document">

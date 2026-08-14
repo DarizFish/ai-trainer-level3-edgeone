@@ -8,7 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 CONFIG_UTILS = ROOT / "public" / "lite" / "config-utils.js"
 LAB_INDEX = ROOT / "public" / "lite" / "lab" / "index.html"
 JUPYTER_LITE_CONFIG = ROOT / "public" / "lite" / "jupyter-lite.json"
-RUNTIME_REVISION = "20260726-pyodide0277-runtime11"
+RUNTIME_REVISION = "20260814-kernel-owner-runtime12"
 # all.json 里所有 .csv 的 mimetype 都是这个（构建机 Windows 的 mimetypes 映射）。
 CSV_BINARY_MIMETYPE = "application/vnd.ms-excel"
 PYODIDE_CONFIG_URL = "./static/pyodide/pyodide.js"
