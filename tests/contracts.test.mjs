@@ -344,6 +344,9 @@ test("email accounts use versioned PostgreSQL schema, hashed passwords, and revo
   assert.match(login, /verifyPassword/);
   assert.match(login, /ensureAccountSchema/);
   assert.match(logout, /deleteSession/);
+  // 登出跳转必须是相对地址。Next 16 的 request.url 取服务器自己的监听地址而不是 Host 头，
+  // 反代后面 `new URL("/", request.url)` 会算成 http://localhost:3000/，用户一退出就被甩出站。
+  assert.match(logout, /location: "\/"/);
   assert.match(accountPage, /force-dynamic/);
   assert.match(accountForm, /autocomplete|autoComplete/i);
   assert.match(accountForm, /无法连接账号服务/);
