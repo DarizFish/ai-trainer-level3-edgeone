@@ -12,7 +12,10 @@ EnvironmentFile=/etc/aitrainer/aitrainer.env
 Environment=NODE_ENV=production
 Environment=HOSTNAME=127.0.0.1
 Environment=PORT=3000
-Environment=DATABASE_POOL_MAX=3
+# 整站共用这一个进程的连接池，和 EdgeOne「每个函数实例一条连接」完全不同：池子太小时
+# 一次慢写入就会把其他用户的请求排在后面。lab 每 12 秒自动保存一次草稿，正文上限 4 MB，
+# 且数据库在东京、源站在北京，慢写入是常态而不是异常。db/index.ts 允许到 20。
+Environment=DATABASE_POOL_MAX=10
 Environment=TRUSTED_CLIENT_IP_HEADER=x-real-ip
 ExecStart=/opt/node/bin/node server.js
 Restart=on-failure
