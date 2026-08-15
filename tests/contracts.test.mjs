@@ -1956,7 +1956,7 @@ test("credential endpoints spend rate-limit quota before doing password work", a
 });
 
 test("self-hosted releases preserve proxy trust, runtime health, and cache semantics", async () => {
-  const [nextConfig, packageJson, database, throttle, live, ready, nginx, edgeOneOrigins, systemd, envExample, packaging, guide, deployWorkflow, deployScript, deployBootstrap, knownHosts] = await Promise.all([
+  const [nextConfig, packageJson, database, throttle, live, ready, nginx, edgeOneOrigins, systemd, envExample, packaging, guide, deployWorkflow, deployScript, deployBootstrap, knownHosts, edgeOne] = await Promise.all([
     readFile(new URL("../next.config.ts", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8"),
     readFile(new URL("../db/index.ts", import.meta.url), "utf8"),
@@ -1973,6 +1973,7 @@ test("self-hosted releases preserve proxy trust, runtime health, and cache seman
     readFile(new URL("../deploy/scripts/deploy-release.sh", import.meta.url), "utf8"),
     readFile(new URL("../deploy/scripts/bootstrap-deploy-user.sh", import.meta.url), "utf8"),
     readFile(new URL("../deploy/ssh/known_hosts", import.meta.url), "utf8"),
+    readFile(new URL("../edgeone.json", import.meta.url), "utf8"),
   ]);
 
   assert.match(nextConfig, /SELF_HOSTED_BUILD/);
@@ -2006,6 +2007,17 @@ test("self-hosted releases preserve proxy trust, runtime health, and cache seman
   assert.match(nginx, /default "public, max-age=0, must-revalidate"/);
   assert.match(nginx, /~\^\/api\/ "no-store"/);
   assert.match(nginx, /proxy_hide_header Cache-Control;/);
+
+  // EdgeOne 与自托管是两套独立的头配置，各自演化一次就会漂移，而这一组漂移过：
+  // b175204 为跨源隔离加上 COOP/COEP，1aee62c 把当时的 edgeone.json 抄进了这份 Nginx
+  // 配置，11 天后 ff54ebd 只从 edgeone.json 和 next.config.ts 删掉，Nginx 留到了迁移
+  // 当天才第一次挡在用户前面。跨源隔离会把 Pyodide Kernel 0.6.1 切回
+  // SharedArrayBuffer/Atomics 的同步 worker，也就是 ff54ebd 要移除的永久等待路径，
+  // 而且只在自托管这条链路上复活——EdgeOne 预览环境测不出来。约束见 STATUS.md 第 9 节。
+  for (const [name, source] of [["nginx", nginx], ["edgeone.json", edgeOne], ["next.config.ts", nextConfig]]) {
+    assert.doesNotMatch(source, /Cross-Origin-Opener-Policy/i, `${name} 不得给 Lab 发 COOP`);
+    assert.doesNotMatch(source, /Cross-Origin-Embedder-Policy/i, `${name} 不得给 Lab 发 COEP`);
+  }
 
   // CDN 挡在前面后 $remote_addr 是边缘节点，而应用只信 X-Real-IP。不还原就等于把同一
   // 节点后面的所有用户压进一个限流桶（login:ip 20 次/15 分钟）。realip 只在对端可信时

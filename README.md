@@ -103,7 +103,9 @@ EdgeOne 项目监控受保护的 `main`。自托管发布不再自行重建源�
 
 内容导入和资源生成命令仍保留在 `package.json`。原始参考资料和大型源压缩包不得提交到网站仓库；只提交已经审计、浏览器可交付的成品资源。
 
-重建 JupyterLite 扩展后，产物需同步到 `public/lite/extensions/ai-trainer-jupyterlite/`，并更新 `public/lite/jupyter-lite.json` 里的 `remoteEntry.*.js` hash 引用——每次构建 hash 都会变。`public/lite` 带 service worker 缓存，验证扩展改动需用无痕窗口或硬刷新。
+重建 JupyterLite 扩展后，产物需同步到 `public/lite/extensions/ai-trainer-jupyterlite/`，并更新 `public/lite/jupyter-lite.json` 里的 `remoteEntry.*.js` hash 引用——每次构建 hash 都会变。漏掉最后一步等于没发布，而且线上表现是实验室永远停在加载中；`npm run test:smoke` 有一条断言会把它挡下来。
+
+验证扩展改动请用**硬刷新**（Ctrl+Shift+R），不要用无痕窗口。JupyterLite 的 service worker 注册 URL 带 `?enableCache=false`，本身不写 Cache Storage，需要清的是按 `immutable` 缓存的那批文件（见 `docs/STATUS.md` 4.1）。更重要的是：Firefox 隐私窗口和 Safari 无痕浏览**直接禁用 Service Worker**，而实验室要靠它挂载 `/drive`，在那里只会得到一个明确的报错——Chrome 与 Edge 的无痕窗口才支持。
 
 ## 文档
 

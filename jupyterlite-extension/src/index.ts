@@ -72,6 +72,19 @@ const KERNEL_BOOT_TIMEOUT_MS = 180000;
 // 超过原来的 180 秒。超时判早的代价是给一个仍在正常下载的环境报错，比等久了更糟，
 // 何况前端有分阶段进度卡片和「重试准备」按钮兜着。
 const ENVIRONMENT_TIMEOUT_MS = 600000;
+
+// 没有 Service Worker 时 JupyterLite 会静默退回内存文件系统：学员 to_csv 出来的文件
+// 在文件浏览器里看不到、刷新即失，而题目因为有素材兜底照常能跑，完全没有外部信号。
+// 所以这里选择硬失败。但硬失败必须给出下一步——真实原因几乎从来不是「浏览器太旧」，
+// 而是隐私窗口：Firefox 隐私窗口和 Safari 无痕浏览直接禁用 Service Worker，Chrome 与
+// Edge 的无痕窗口反而支持。文案写给考生看，不要在里面解释内部机制。
+const SERVICE_WORKER_UNAVAILABLE_HINT =
+  "请改用 Chrome 或 Edge 的普通窗口重新打开本页（Firefox 隐私窗口、Safari 无痕浏览会禁用 Service Worker）。"
+  + "如果浏览器由单位统一管理，可能是安全策略禁用了该功能。";
+
+// 注册存在但不是本站的、或者没接管页面，基本都是旧注册残留，强制刷新即可重建。
+const SERVICE_WORKER_STALE_HINT = "请按 Ctrl+Shift+R（macOS 为 Shift+Command+R）强制刷新本页后重试。";
+
 const BLANK_PATTERN = /_{3,}/g;
 
 type FillVerdict = "exact" | "different" | "empty";
@@ -993,7 +1006,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
 
     const ensureServiceWorkerControl = async (): Promise<void> => {
       if (!("serviceWorker" in navigator)) {
-        throw new Error("当前浏览器不支持 Service Worker，无法挂载持久化文件系统");
+        throw new Error(`浏览器没有提供 Service Worker，实验室无法保存文件。${SERVICE_WORKER_UNAVAILABLE_HINT}`);
       }
       // Pyodide samples IServiceWorkerManager.enabled exactly once when the
       // kernel is created. Await that same service object instead of inferring
@@ -1001,11 +1014,11 @@ const plugin: JupyterFrontEndPlugin<void> = {
       // before JupyterLite has published its registration.
       await withTimeout(serviceWorkerManager.ready, "JupyterLite Service Worker 注册", 30000);
       if (!serviceWorkerManager.enabled || !serviceWorkerManager.browsingContextId) {
-        throw new Error("JupyterLite Service Worker 管理器尚未就绪");
+        throw new Error(`浏览器拒绝启用 Service Worker，实验室无法保存文件。${SERVICE_WORKER_UNAVAILABLE_HINT}`);
       }
       const registration = await withTimeout(navigator.serviceWorker.ready, "浏览器 Service Worker 激活", 15000);
       if (!registration.active?.scriptURL.includes("/lite/service-worker.js")) {
-        throw new Error(`JupyterLite Service Worker 路径异常：${registration.active?.scriptURL ?? "未激活"}`);
+        throw new Error(`本机注册的 Service Worker 不是本站的（${registration.active?.scriptURL ?? "未激活"}）。${SERVICE_WORKER_STALE_HINT}`);
       }
       if (!navigator.serviceWorker.controller) {
         await withTimeout(
@@ -1017,7 +1030,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
         );
       }
       if (!navigator.serviceWorker.controller?.scriptURL.includes("/lite/service-worker.js")) {
-        throw new Error("JupyterLite Service Worker 未接管当前页面");
+        throw new Error(`本站的 Service Worker 没有接管这个页面。${SERVICE_WORKER_STALE_HINT}`);
       }
     };
 

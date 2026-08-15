@@ -224,19 +224,77 @@ test("production public routes and anonymous redirect stay healthy", {
   }
 });
 
+// 缓存键从本地 lab 外壳里读，不再逐字写死。写死的那版停在
+// `20260726-pyodide0277-runtime11`，而 969f25e 已经把它换成了
+// `20260814-kernel-owner-runtime12`——测试跟着发布一起过期，等于没有守住任何东西。
+async function expectedLabCacheKey() {
+  const shell = await readFile(new URL("../public/lite/lab/index.html", import.meta.url), "utf8");
+  const match = shell.match(/config-utils\.js\?_=([\w.-]+)/);
+  assert.ok(match, "public/lite/lab/index.html 不再以缓存键导入 config-utils.js");
+  return match[1];
+}
+
 test("production JupyterLite configuration points to the cache-busted JS runtime", {
   timeout: deploymentWaitMs + requestTimeoutMs * 2,
 }, async () => {
   await waitForExpectedDeployment();
 
-  const lab = await fetchRemote("/lite/lab/index.html?ui=20260726-pyodide0277-runtime11");
+  const cacheKey = await expectedLabCacheKey();
+
+  const lab = await fetchRemote(`/lite/lab/index.html?ui=${cacheKey}`);
   const labHtml = await lab.text();
   assert.equal(lab.status, 200);
-  assert.match(labHtml, /config-utils\.js\?_=20260726-pyodide0277-runtime11/);
+  assert.ok(
+    labHtml.includes(`config-utils.js?_=${cacheKey}`),
+    `已发布的 lab 外壳没有引用当前缓存键 ${cacheKey}`,
+  );
 
-  const config = await fetchRemote("/lite/config-utils.js?_=20260726-pyodide0277-runtime11");
+  const config = await fetchRemote(`/lite/config-utils.js?_=${cacheKey}`);
   const configSource = await config.text();
   assert.equal(config.status, 200);
   assert.match(configSource, /\/lite\/static\/pyodide\/pyodide\.js/);
   assert.doesNotMatch(configSource, /new URL\(pyodideSettings\.pyodideUrl/);
+});
+
+// 这两条守的是「配置引用的东西在线上真的存在、且没有多余的隔离头」。EdgeOne 与自托管
+// 是两套独立的头配置，各自演化过一次就会漂移：COOP/COEP 已经漂过一次（edgeone.json 在
+// ff54ebd 删掉，deploy/nginx 留到了迁移当天），而 remoteEntry 哈希每次构建都变，配置漏更
+// 新的后果是扩展 404、实验室永远停在加载中。两者都只有真打一次线上才能发现。
+test("production lab shell stays outside cross-origin isolation", {
+  timeout: deploymentWaitMs + requestTimeoutMs,
+}, async () => {
+  await waitForExpectedDeployment();
+
+  const lab = await fetchRemote("/lite/lab/index.html", "coep");
+  assert.equal(lab.status, 200);
+  // 跨源隔离会把 Pyodide Kernel 0.6.1 切回 SharedArrayBuffer/Atomics 的同步 worker，
+  // 也就是 ff54ebd 移除的永久等待路径。约束见 docs/STATUS.md 第 9 节。
+  assert.equal(
+    lab.headers.get("cross-origin-opener-policy"),
+    null,
+    "lab 外壳不得带 COOP：它会让跨源隔离在顶层页也配上时立刻成立",
+  );
+  assert.equal(
+    lab.headers.get("cross-origin-embedder-policy"),
+    null,
+    "lab 外壳不得带 COEP：同上，且会拦掉 /lite/build 下不带该头的 worker",
+  );
+});
+
+test("production serves every federated extension the deployed config references", {
+  timeout: deploymentWaitMs + requestTimeoutMs * 2,
+}, async () => {
+  await waitForExpectedDeployment();
+
+  const response = await fetchRemote("/lite/jupyter-lite.json", "extensions");
+  assert.equal(response.status, 200);
+  const config = JSON.parse(await response.text());
+  const extensions = config["jupyter-config-data"]?.federated_extensions ?? [];
+  assert.ok(extensions.length > 0, "已发布的 jupyter-lite.json 没有声明任何联邦扩展");
+
+  for (const extension of extensions) {
+    const path = `/lite/extensions/${extension.name}/${extension.load}`;
+    const entry = await fetchRemote(path, "extensions");
+    assert.equal(entry.status, 200, `${path} 必须返回 200：${extension.name} 的入口缺失会让实验室停在加载中`);
+  }
 });
