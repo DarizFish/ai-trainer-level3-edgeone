@@ -2081,6 +2081,12 @@ test("self-hosted releases preserve proxy trust, runtime health, and cache seman
   assert.match(qualityWorkflow, /npm audit --omit=dev --audit-level=high/);
   assert.match(qualityWorkflow, /npm run test:ci/);
   assert.match(qualityWorkflow, /aitrainer-\$\{\{ github\.sha \}\}/);
+  // 打包步骤不能只在 main 上跑。它是唯一会校验「迁移脚本的依赖在发布物里能解析」的地方，
+  // 而 2026-08-15 连着两次部署失败都是合并之后才发现的——门禁必须覆盖到这一步。
+  // 产物仍然只在 main 上传，PR 上只是跑一遍。
+  const packagingStep = /- name: Package the tested standalone build([\s\S]*?)run: npm run package:self-hosted/.exec(qualityWorkflow);
+  assert.ok(packagingStep, "quality.yml 里必须有打包步骤");
+  assert.doesNotMatch(packagingStep[1], /^\s*if:/m, "打包步骤不能被限制成只在 main 上跑");
   assert.match(deployWorkflow, /workflow_run:/);
   assert.match(deployWorkflow, /workflows:[\s\S]*- Quality gate/);
   assert.match(deployWorkflow, /conclusion == 'success'/);
