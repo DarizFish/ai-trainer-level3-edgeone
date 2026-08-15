@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="640" viewBox="0 0 640 640" role="img" aria-labelledby="title desc">
+  <title id="title">收款码占位图</title>
+  <desc id="desc">该图片仅用于预留版式，当前不可用于支付。</desc>
+  <rect width="640" height="640" fill="#fffdf7"/>
+  <rect x="26" y="26" width="588" height="588" rx="14" fill="none" stroke="#102a43" stroke-width="4" stroke-dasharray="14 10"/>
+  <path d="M145 165h82v82h-82zM413 165h82v82h-82zM145 393h82v82h-82z" fill="none" stroke="#b23a2b" stroke-width="18"/>
+  <path d="M276 176h30v30h-30zM326 176h30v30h-30zM276 226h80v30h-80zM386 276h30v30h-30zM436 276h30v30h-30zM276 326h30v80h-30zM326 326h80v30h-80zM326 376h30v30h-30zM386 426h80v30h-80z" fill="#102a43" opacity=".16"/>
+  <rect x="108" y="274" width="424" height="94" rx="8" fill="#102a43"/>
+  <text x="320" y="313" fill="#fffdf7" font-family="Microsoft YaHei, sans-serif" font-size="25" font-weight="700" text-anchor="middle">收款码占位</text>
+  <text x="320" y="345" fill="#d9e3ea" font-family="Microsoft YaHei, sans-serif" font-size="17" text-anchor="middle">请替换图片后再启用</text>
+  <text x="320" y="558" fill="#8e2d23" font-family="Microsoft YaHei, sans-serif" font-size="17" font-weight="700" text-anchor="middle">当前不可用于支付</text>
+</svg>

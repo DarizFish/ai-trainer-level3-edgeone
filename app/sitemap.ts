@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { content } from "@/lib/content";
-import { practicalMockEnabled } from "@/lib/features";
+import { practicalMockEnabled, voluntarySupportEnabled } from "@/lib/features";
 import { SITE_ORIGIN } from "@/lib/site";
 
 export const dynamic = "force-static";
@@ -22,6 +22,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // 实操组卷在开关关闭时会 302 回 `/practical`，重定向的地址不该出现在 sitemap 里。
     ...(practicalMockEnabled ? [["/practical/mock", 0.8] as [string, number]] : []),
     ["/resources", 0.5],
+    ["/access", 0.4],
+    // 赞赏关闭时 `/support` 同样会 302 回首页，同理不进 sitemap。
+    ...(voluntarySupportEnabled ? [["/support", 0.3] as [string, number]] : []),
     ["/disclaimer", 0.3],
     ["/terms", 0.3],
     ["/privacy", 0.3],
