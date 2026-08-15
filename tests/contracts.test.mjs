@@ -1971,6 +1971,18 @@ test("self-hosted releases preserve proxy trust, runtime health, and cache seman
   // 退路，把 deploy/ 设成硬性要求等于连退路一起堵死。所以只校验「有就必须完整」。
   assert.match(deployScript, /has_infra/);
   assert.match(deployScript, /if \[\[ -d "\$\{staging\}\/deploy" \]\]; then[\s\S]*?nginx config is missing/);
+
+  // 发布脚本经 `sudo` 执行，PATH 被 secure_path 换成 /sbin:/bin:/usr/sbin:/usr/bin，
+  // 而 node 装在 /usr/local/bin -> /opt/node/bin。2026-08-15 线上首次跑到迁移这一步就是
+  // `node: command not found`（exit 127）。所以脚本里不能出现裸的 node 调用，解释器只能
+  // 从 unit 的 ExecStart 解析出来——迁移和运行时必须是同一个 Node。
+  assert.match(deployScript, /node_bin="\$\(resolve_node\)"/);
+  assert.match(deployScript, /"\$\{node_bin\}" scripts\/manage-database\.mjs migrate/);
+  assert.match(deployScript, /"\$\{node_bin\}" scripts\/manage-database\.mjs check/);
+  assert.doesNotMatch(deployScript, /^\s*node\s+scripts\//m, "发布脚本不能依赖 PATH 里的 node");
+  // 上面的解析靠这一行成立：ExecStart 必须是可执行文件的绝对路径，不能写成裸 `node`。
+  assert.match(systemd, /^ExecStart=\/\S+\/node\s/m);
+
   assert.match(systemd, /User=aitrainer/);
   assert.match(systemd, /HOSTNAME=127\.0\.0\.1/);
   assert.match(systemd, /SuccessExitStatus=143/);
