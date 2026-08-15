@@ -1,4 +1,5 @@
-import { access, cp, mkdir, rm, writeFile } from "node:fs/promises";
+import { access, cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { createRequire } from "node:module";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -30,10 +31,44 @@ await cp(resolve(projectRoot, "drizzle"), resolve(outputRoot, "drizzle"), { recu
 // 更新 Nginx 配置、systemd unit 和它自己。
 await cp(resolve(projectRoot, "deploy"), resolve(outputRoot, "deploy"), { recursive: true });
 await mkdir(resolve(outputRoot, "scripts"), { recursive: true });
-await cp(
-  resolve(projectRoot, "scripts", "manage-database.mjs"),
-  resolve(outputRoot, "scripts", "manage-database.mjs"),
-);
+const migrationScript = resolve(projectRoot, "scripts", "manage-database.mjs");
+const packagedScript = resolve(outputRoot, "scripts", "manage-database.mjs");
+await cp(migrationScript, packagedScript);
+
+// 迁移脚本不经过 webpack：它以源码形式随 artifact 下发，由 deploy-release.sh 直接执行。
+// 而 Next 的 standalone 只带「应用 server 代码 trace 到」的依赖，应用里的 postgres 已经被
+// 打进 .next/server 的 chunk，不会以包的形式留在 node_modules 里——2026-08-15 线上因此报
+// `ERR_MODULE_NOT_FOUND: Cannot find package 'postgres'`，发布中断在迁移这一步。
+//
+// 所以脚本自己的第三方依赖必须显式带上。放在 scripts/node_modules 而不是根 node_modules：
+// 后者是 Next trace 出来的，混入手工拷贝的内容会分不清哪些是自动的、哪些不是。
+const scriptModules = resolve(outputRoot, "scripts", "node_modules");
+const pending = [...(await readFile(migrationScript, "utf8")).matchAll(/^import\s[^"']*["']([^"']+)["']/gm)]
+  .map(match => match[1])
+  .filter(specifier => !specifier.startsWith("node:") && !specifier.startsWith("."));
+const packaged = new Set();
+while (pending.length > 0) {
+  const specifier = pending.pop();
+  if (packaged.has(specifier)) continue;
+  packaged.add(specifier);
+  const target = resolve(scriptModules, specifier);
+  await cp(resolve(projectRoot, "node_modules", specifier), target, { recursive: true });
+  // 传递依赖照 npm 的扁平布局一并带上；当前 postgres@3.4.7 是零依赖，这个循环只跑一轮。
+  const manifest = JSON.parse(await readFile(resolve(target, "package.json"), "utf8"));
+  pending.push(...Object.keys(manifest.dependencies ?? {}));
+}
+
+// 拷完必须验证，而且要验证「解析结果落在 artifact 里」而不是「能 import 到」——本仓库的
+// node_modules 是 dist/ 的祖先目录，只判断能否 import 的话，即使一个字节都没拷进去也照样
+// 通过，等于没验。少拷一个包会让解析逃到仓库的 node_modules，这里当场发现。
+const requireFromPackagedScript = createRequire(packagedScript);
+for (const specifier of packaged) {
+  const resolved = requireFromPackagedScript.resolve(specifier);
+  if (!resolved.startsWith(outputRoot)) {
+    throw new Error(`${specifier} resolves outside the release to ${resolved}; the migration script would fail on the server`);
+  }
+}
+
 await writeFile(resolve(outputRoot, "DEPLOYMENT.txt"), [
   "AI Trainer self-hosted release",
   ...(sourceRevision ? [`Source revision: ${sourceRevision}`] : []),

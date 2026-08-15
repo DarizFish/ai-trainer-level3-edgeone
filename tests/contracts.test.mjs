@@ -2050,6 +2050,24 @@ test("self-hosted releases preserve proxy trust, runtime health, and cache seman
   // 上面的解析靠这一行成立：ExecStart 必须是可执行文件的绝对路径，不能写成裸 `node`。
   assert.match(systemd, /^ExecStart=\/\S+\/node\s/m);
 
+  // 迁移脚本不经过 webpack，是以源码形式随 artifact 下发的；而 standalone 的 node_modules
+  // 只有 Next trace 出来的东西，应用里的 postgres 早被打进 .next/server 的 chunk。2026-08-15
+  // 线上因此报 `Cannot find package 'postgres'`。它的依赖必须显式打包，而且每一个都得在
+  // dependencies 里——落到 devDependencies 就会在生产安装里消失，重演同一个故障。
+  const migrationManager = await readFile(new URL("../scripts/manage-database.mjs", import.meta.url), "utf8");
+  const migrationDependencies = [...migrationManager.matchAll(/^import\s[^"']*["']([^"']+)["']/gm)]
+    .map(match => match[1])
+    .filter(specifier => !specifier.startsWith("node:") && !specifier.startsWith("."));
+  assert.ok(migrationDependencies.length > 0, "迁移脚本至少要有一个第三方依赖（数据库驱动）");
+  const declaredDependencies = JSON.parse(packageJson).dependencies ?? {};
+  for (const specifier of migrationDependencies) {
+    assert.ok(specifier in declaredDependencies, `${specifier} 必须声明在 dependencies 里`);
+  }
+  assert.match(packaging, /scripts["'], ["']node_modules/);
+  // 校验必须是「解析结果落在 artifact 内」。仓库的 node_modules 是 dist/ 的祖先目录，
+  // 只判断能否 import 的话，一个字节都没拷进去也照样通过，等于没验。
+  assert.match(packaging, /resolves outside the release/);
+
   assert.match(systemd, /User=aitrainer/);
   assert.match(systemd, /HOSTNAME=127\.0\.0\.1/);
   assert.match(systemd, /SuccessExitStatus=143/);
@@ -2063,6 +2081,12 @@ test("self-hosted releases preserve proxy trust, runtime health, and cache seman
   assert.match(qualityWorkflow, /npm audit --omit=dev --audit-level=high/);
   assert.match(qualityWorkflow, /npm run test:ci/);
   assert.match(qualityWorkflow, /aitrainer-\$\{\{ github\.sha \}\}/);
+  // 打包步骤不能只在 main 上跑。它是唯一会校验「迁移脚本的依赖在发布物里能解析」的地方，
+  // 而 2026-08-15 连着两次部署失败都是合并之后才发现的——门禁必须覆盖到这一步。
+  // 产物仍然只在 main 上传，PR 上只是跑一遍。
+  const packagingStep = /- name: Package the tested standalone build([\s\S]*?)run: npm run package:self-hosted/.exec(qualityWorkflow);
+  assert.ok(packagingStep, "quality.yml 里必须有打包步骤");
+  assert.doesNotMatch(packagingStep[1], /^\s*if:/m, "打包步骤不能被限制成只在 main 上跑");
   assert.match(deployWorkflow, /workflow_run:/);
   assert.match(deployWorkflow, /workflows:[\s\S]*- Quality gate/);
   assert.match(deployWorkflow, /conclusion == 'success'/);

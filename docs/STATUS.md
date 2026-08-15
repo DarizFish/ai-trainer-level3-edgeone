@@ -212,6 +212,44 @@ Pyodide 0.27.7 读到旧 lock 文件后 `initializePackageIndex` 抛出 `Lock fi
 
 首次启用需手工装一次 `deploy-aitrainer`（已完成，2026-08-14），之后靠自更新维持。
 
+### 4.14 已修：迁移门禁第一次真跑就断在 `node: command not found`
+
+PR #9 合并后 Quality Gate 通过，部署失败：
+
+```text
+/usr/local/sbin/deploy-aitrainer: line 141: node: command not found
+Error: Process completed with exit code 127
+```
+
+根因是 sudo，不是 node 没装。脚本经 `sudo /usr/local/sbin/deploy-aitrainer` 执行，sudo 用 `secure_path` 覆盖 PATH（`/etc/sudoers` 里是 `/sbin:/bin:/usr/sbin:/usr/bin`），而 node 装在 `/usr/local/bin -> /opt/node/bin`。systemd unit 写的是绝对路径 `ExecStart=/opt/node/bin/node`，所以应用一直正常——只有 4.13 新加的这条迁移命令踩到，而它此前从不存在，等于这个洞一直被 4.13 那个 bug 盖着。
+
+解释器改成从 systemd unit 的 `ExecStart` 解析：迁移和运行时必须是同一个 Node，而 unit 本来就是「这个应用用哪个 node」的唯一权威，不必再引入一份配置。优先读本次发布物自带的 unit，其次已装的，最后才退回 PATH；一个都拿不到就 `exit 14` 并说明是 `secure_path` 的问题。服务器上复刻失败环境验证：`env -i PATH=/sbin:/bin:/usr/sbin:/usr/bin` 下 `resolve_node` 得到 `/opt/node/bin/node`（v22.23.2），裸 `node` 仍然 not found。脚本用到的其余 27 个外部命令在同一环境下逐个查过，全部可解析，node 是唯一缺口。
+
+**站点未受影响**：失败发生在切换 symlink 之前，`current` 仍指向上一版，`/api/health/ready` 返回 ready。代价是 `main` 的新代码没能上线。
+
+**教训**：容器彩排把 `node` 换成桩并放进 PATH，恰好绕开了这个洞。用桩验证控制流是有效的，但桩会连带把「这个命令能不能找到」一并假设成真——凡是被替换掉的东西，它的存在性就不再被这次彩排覆盖。
+
+### 4.15 已修：迁移脚本的依赖不在 artifact 里
+
+4.14 修完，node 找到了（v22.23.2），同一步紧接着换了个错法：
+
+```text
+Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'postgres'
+  imported from /srv/aitrainer/releases/<sha>/scripts/manage-database.mjs
+```
+
+`scripts/manage-database.mjs` **不经过 webpack**：它以源码形式随 artifact 下发，由 `deploy-release.sh` 直接执行。而 `.next/standalone` 的 `node_modules` 只包含 Next 文件追踪的结果——应用里用到的 `postgres` 早被打进 `.next/server` 的 chunk，不会以包的形式留下来。实测发布物顶层 `node_modules` 共 52 个包，没有 `postgres`，也没有 `drizzle-orm`；当前在跑的旧版同样没有，只是它从来不需要。
+
+已让 `package-self-hosted.mjs` 显式打包迁移脚本的第三方依赖到 `scripts/node_modules/`（不放根 `node_modules`：那是 Next trace 出来的，混入手工内容就分不清哪些是自动的），并按 npm 扁平布局带上传递依赖——`postgres@3.4.7` 零依赖，当前只有一个包、357K。
+
+**校验必须是「解析结果落在 artifact 内」，不能是「能不能 import 到」**：本仓库的 `node_modules` 是 `dist/` 的祖先目录，只判断能否 import 的话，一个字节都没拷进去也照样通过，等于没验。打包脚本因此断言 `require.resolve` 的结果以 `outputRoot` 开头。
+
+**端到端验证**（不再只靠桩和本地）：把打包出的依赖布局送到服务器，用真实 `/etc/aitrainer/aitrainer.env`、真实 Supabase、以及复刻的 `env -i PATH=/sbin:/bin:/usr/sbin:/usr/bin`，跑真正的 `manage-database.mjs check` —— 输出 `Schema is current at 0002_condemned_klaw`，退出码 0。另在仓库之外的隔离目录做了正反对照：带依赖能 import，删掉依赖复现线上同一条 `ERR_MODULE_NOT_FOUND`。
+
+**教训**：4.14 和 4.15 是同一个盲点的两次发作——「这段代码在服务器上真的能跑起来吗」这件事，此前从来没有被任何环节验证过，本地构建、契约测试和容器彩排各自都只覆盖了它的一部分。修完这两条之后，打包阶段会自证依赖完整，契约测试会守住依赖必须在 `dependencies` 里。
+
+> 附带记录一次操作失误：4.14 的文档提交写在 push 之后，因此 PR #10 只带走了代码修复，这段说明留在了本地。已随本次一并补上。
+
 ## 5. 2026-07-26 全量自检结果
 
 | 检查 | 结果 |

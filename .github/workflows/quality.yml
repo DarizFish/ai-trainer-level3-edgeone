@@ -49,8 +49,11 @@ jobs:
       - name: Run the full quality gate
         run: npm run test:ci
 
+      # 打包在 PR 上也要跑。它现在会自证迁移脚本的依赖真的在发布物里能解析，而这类问题
+      # 只在打包阶段暴露：2026-08-15 连着两次部署失败（node 找不到、postgres 找不到）都是
+      # 合并之后才发现的，因为这一步原先只在 main 上执行。产物只在 main 上传，PR 上跑它
+      # 纯粹是为了让门禁覆盖「这个 artifact 在服务器上真的跑得起来」。
       - name: Package the tested standalone build
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         env:
           SOURCE_REVISION: ${{ github.sha }}
         run: npm run package:self-hosted
