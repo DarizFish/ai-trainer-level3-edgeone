@@ -1877,6 +1877,12 @@ test("credential endpoints spend rate-limit quota before doing password work", a
   // 密码校验失败之后才累加。
   assert.ok(login.indexOf("peekThrottle(") < login.indexOf("verifyPassword("), "邮箱额度应在密码校验前只读检查");
   assert.ok(login.indexOf("consumeThrottle(failureBucket") > login.indexOf("verifyPassword("), "邮箱额度应当只在校验失败后累加");
+
+  // 账号不存在也必须计数。realip 的可信集合现在是全网信任（免费版拿不到回源网段，
+  // 见 STATUS.md 4.12），伪造 IP 之后 login:ip / register:ip 都不再是硬上界，这条按
+  // 邮箱计的失败额度是撞库和 PBKDF2 放大唯一还站着的闸门。若改成「账号存在才计数」，
+  // 它就退化成账号枚举器：不存在的邮箱可以无限敲，而那条路径同样跑满 10 万轮哈希。
+  assert.match(login, /if \(!user \|\| !valid\)[\s\S]{0,160}?consumeThrottle\(failureBucket/, "账号不存在时也必须累加邮箱失败额度");
 });
 
 test("self-hosted releases preserve proxy trust, runtime health, and cache semantics", async () => {
@@ -1940,9 +1946,15 @@ test("self-hosted releases preserve proxy trust, runtime health, and cache seman
   assert.match(nginx, /include \/etc\/nginx\/aitrainer-edgeone-origin\.conf;/);
   assert.match(nginx, /proxy_set_header EO-Connecting-IP ["']["'];/);
   assert.match(nginx, /\$realip_remote_addr/, "日志要能区分「节点不可信」和「没发这个头」");
-  // 已下线的 api.edgeone.ai/ips 现在返回 0.0.0.0/0，照抄等于信任所有人、彻底关掉判定。
+  // 可信集合是收紧/放宽 IP 还原的唯一旋钮，它被 include 进 http 上下文：混进别的指令
+  // 会以很难定位的方式改掉全局行为，所以这里只允许注释和 set_real_ip_from。
+  // 当前取值是全网信任（免费版拿不到回源网段，2026-08-15 决策，见 STATUS.md 4.12）。
+  for (const line of edgeOneOrigins.split(/\r?\n/)) {
+    const directive = line.trim();
+    if (!directive || directive.startsWith("#")) continue;
+    assert.match(directive, /^set_real_ip_from \S+;$/, `可信集合文件里出现了非 set_real_ip_from 指令：${directive}`);
+  }
   assert.match(edgeOneOrigins, /^set_real_ip_from \S+;$/m);
-  assert.doesNotMatch(edgeOneOrigins, /set_real_ip_from\s+(?:0\.0\.0\.0\/0|::\/0)/);
 
   // 基础设施配置必须跟应用代码走同一条已验证路径。手工同步一定会漂：2026-08-14 实测
   // 服务器上的 deploy-aitrainer 是旧版，整段迁移门禁不存在，而文档一直声称它在。

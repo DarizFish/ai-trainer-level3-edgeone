@@ -182,9 +182,17 @@ Pyodide 0.27.7 读到旧 lock 文件后 `initializePackageIndex` 抛出 `Lock fi
 
 `lib/auth-throttle.ts:50` 的注释假设「EdgeOne 部署」和「自托管部署」二选一，而新架构是两者同时成立，这个组合不在原设计里。
 
-也不能无条件相信那个头：实测直连源站伪造 `EO-Connecting-IP: 9.9.9.9` 能成功，那等于把限流整个绕开。改用 Nginx `realip` 模块——只有对端本身落在 `deploy/nginx/aitrainer-edgeone-origin.conf` 里时才改写 `$remote_addr`。**漏列一个节点只会退化成修复前的行为，多列一个非 EdgeOne 地址才是安全漏洞**，所以宁可漏不可多，增量补网段永远安全。已下线的 `api.edgeone.ai/ips` 现在返回 `0.0.0.0/0`，照抄等于关掉判定。
+改用 Nginx `realip` 模块——只有对端本身落在 `deploy/nginx/aitrainer-edgeone-origin.conf` 的可信集合里时才改写 `$remote_addr`。可信集合是唯一的旋钮，收紧或放宽都只改那一个文件，应用代码不参与。
 
-线上实测三种情况：经 CDN → `183.195.11.71 via=223.109.0.243`（还原成功）；直连伪造 `9.9.9.9` → `183.195.11.71 via=183.195.11.71`（伪造被丢弃）；应用侧只看得到 Nginx 判定过的 `X-Real-IP`，原始头继续清空。
+**2026-08-15 决策：可信集合取全网信任（`0.0.0.0/0`）。** 免费版 EdgeOne 控制台不提供「源站防护 / 回源 IP 网段」，官方 `api.edgeone.ai/ips` 已于 2026-07 下线（现在恰好返回 `0.0.0.0/0`）。手里只有实测到的两个节点，远不是全部；拿这份残缺清单去收紧，绝大多数节点后面的用户仍然共用一个桶——正是要修的那个毛病。所以先保证「所有用户的 IP 都是准的」，伪造留给不依赖 IP 的那道兜底。
+
+代价是明确的，实测直连源站伪造 `EO-Connecting-IP: 9.9.9.9` 能成功、源站目前也确实可直连（见 6.1）：`register:ip` 5 次/小时**失效**（灌注册没有别的闸门，最大敞口）；`login:ip` 20 次/15 分钟**失效**（它同时是 PBKDF2 的 CPU 上界，登录接口对不存在的账号也走等时路径）。仍然有效的是 `login:email` 失败 10 次/15 分钟——它不依赖 IP，现在是撞库的唯一闸门，contracts 有一条守住「账号不存在时也要计数」。
+
+收紧回去两条路，都不用改应用代码：升级套餐拿到网段清单换掉那两行；或者堵住直连——安全组只放行回源网段 + 管理 IP，做到之后全网信任本身就不再有代价，因为唯一可能的对端只剩 EdgeOne，同时解掉 6.1 里「源站可直连」那一条。
+
+2026-08-15 线上实测：经 CDN → `183.195.11.71 via=223.109.0.243`（还原成功）；直连伪造 → `9.9.9.9 via=183.195.11.71`（伪造生效，符合预期）。收紧到实测两节点时测过同一条伪造 → `183.195.11.71 via=183.195.11.71`（被丢弃），说明判定链本身是通的，改回去随时生效。应用侧始终只看得到 Nginx 判定过的 `X-Real-IP`，原始头继续清空。
+
+**伪造挡不住，但看得见。** `$realip_remote_addr` 始终是真实 TCP 对端，`realip` 改不掉它，日志两列都记。经 CDN 的请求 `via=` 是 EdgeOne 节点，直连的不是，所以绕过 CDN 的来源可以直接列出来并按 `via=` 封禁：`awk '$2 ~ /^via=/ {print substr($2,5)}' … | sort | uniq -c | sort -rn`。这是全网信任期间的补偿手段——事后可查，不是事前拦截。
 
 ### 4.13 已修：基础设施配置靠手工同步，已经漂了一份
 
@@ -240,8 +248,8 @@ Pyodide 0.27.7 读到旧 lock 文件后 `initializePackageIndex` 抛出 `Lock fi
 | 题库来源与二次发布授权 | 法律面问题，需自行确认 |
 | 错误监控 / 分析 | 无。线上出问题时没有任何服务端信号 |
 | `app/blueprint/` 空目录 | 删除还是补全，未决定 |
-| **EdgeOne 回源 IP 网段只填了 2 个实测节点** | `deploy/nginx/aitrainer-edgeone-origin.conf` 需要从 EdgeOne 控制台「源站防护 / 回源 IP 网段」补全。漏列只会让该节点后的用户共用限流桶（等于修复前），不是安全漏洞，但正式放量前必须补齐。见 4.12 |
-| **源站可直连、可绕过 CDN** | `curl http://39.96.7.2/` 直接返回完整站点；`firewalld` inactive、iptables 全 ACCEPT。绕过 CDN 的人反而拿到独立限流桶。且回源全程明文 HTTP（Nginx 只 `listen 80`）。修法：安全组只放行 EdgeOne 回源网段 + 管理 IP，回源改 HTTPS |
+| **`register:ip` / `login:ip` 目前可被绕过** | 免费版拿不到回源网段，realip 取全网信任（2026-08-15 决策，见 4.12）。直连源站的人可自造 IP：灌注册无闸门、PBKDF2 无 CPU 上界。撞库仍由 `login:email` 挡住。解法与下一条相同——堵住直连即可，不需要网段清单 |
+| **源站可直连、可绕过 CDN** | `curl http://39.96.7.2/` 直接返回完整站点；`firewalld` inactive、iptables 全 ACCEPT。且回源全程明文 HTTP（Nginx 只 `listen 80`）。修法：安全组只放行 EdgeOne 回源网段 + 管理 IP，回源改 HTTPS。**这条现在同时是上一条的解法，优先级随之上升** |
 | **宝塔面板监听 `0.0.0.0:8888`** | root 权限的 Python 面板，外网可达，仓库与文档零提及。它抵消了这套部署链路全部的最小权限设计（deploy 用户不能登 shell、sudo 只有一条命令、非特权解包）|
 | `releases/` 无清理 | 9 份 × 约 280MB = 2.5G，`deploy-release.sh` 从不删旧版本。40G 磁盘用了 27%，按当前节奏还能撑约 100 次发布。另有 `releases/1aee62c/`（8-02 手工造的孤儿，目录名不是 40 位 SHA、`DEPLOYMENT.txt` 无 `Source revision` 行）|
 | 迁移命令以 root 运行发布物里的 JS | `deploy-release.sh` 的 `node scripts/manage-database.mjs` 在 root 下执行 release 自带代码。解包已经降权到 `aitrainer`，这一步没有 |
