@@ -129,19 +129,6 @@ else
   staging=""
 fi
 
-# The database is shared by EdgeOne and this service. The migration command
-# serializes every deployment target with the same PostgreSQL advisory lock,
-# then validates the resulting schema before any release becomes active.
-set -a
-# shellcheck disable=SC1091
-source /etc/aitrainer/aitrainer.env
-set +a
-(
-  cd "${target}"
-  node scripts/manage-database.mjs migrate
-  node scripts/manage-database.mjs check
-)
-
 # 这一步之前的发布物里没有 deploy/，回滚到那些版本时不能因为找不到文件而失败。
 # 缺就跳过并说清楚，服务器保持现有配置——降级到修复前的行为，而不是部署不了。
 infra_root="${target}/deploy"
@@ -151,6 +138,49 @@ if [[ -d "${infra_root}" ]]; then
 else
   echo "release ${revision} predates artifact-delivered infrastructure; keeping the installed configuration" >&2
 fi
+
+# 绝对不能依赖调用方的 PATH。本脚本经 `sudo /usr/local/sbin/deploy-aitrainer` 执行，
+# sudo 会把 PATH 换成 secure_path（实测 `/sbin:/bin:/usr/sbin:/usr/bin`），而 node 装在
+# /usr/local/bin -> /opt/node/bin。2026-08-15 线上首次跑到迁移这一步就是
+# `node: command not found`（exit 127），发布中断在切换 symlink 之前。
+#
+# 解释器取 systemd unit 里 ExecStart 用的那一个：迁移和运行时必须是同一个 Node，
+# 而 unit 本来就是「这个应用用哪个 node」的唯一权威。优先读本次发布物自带的 unit
+# （它马上就要生效），其次读已装的，最后才退回 PATH。
+node_from_unit() {
+  local unit="$1" candidate
+  [[ -f "${unit}" ]] || return 1
+  candidate="$(sed -n 's/^ExecStart=[-@+!]*\([^[:space:]]*\).*/\1/p' "${unit}" | head -n 1)"
+  [[ -n "${candidate}" && -x "${candidate}" ]] || return 1
+  printf '%s\n' "${candidate}"
+}
+
+resolve_node() {
+  if [[ "${has_infra}" -eq 1 ]]; then
+    node_from_unit "${infra_root}/systemd/${service_name}" && return 0
+  fi
+  node_from_unit "${unit_path}" && return 0
+  command -v node 2>/dev/null && return 0
+  return 1
+}
+
+if ! node_bin="$(resolve_node)"; then
+  echo "cannot locate a Node.js interpreter: no usable ExecStart in ${unit_path} and no node on PATH (sudo secure_path excludes /usr/local/bin)" >&2
+  exit 14
+fi
+
+# The database is shared by EdgeOne and this service. The migration command
+# serializes every deployment target with the same PostgreSQL advisory lock,
+# then validates the resulting schema before any release becomes active.
+set -a
+# shellcheck disable=SC1091
+source /etc/aitrainer/aitrainer.env
+set +a
+(
+  cd "${target}"
+  "${node_bin}" scripts/manage-database.mjs migrate
+  "${node_bin}" scripts/manage-database.mjs check
+)
 
 # systemd unit 决定进程怎么起，必须在重启之前生效。备份留着，健康检查失败时要跟着
 # 发布一起回滚——否则回滚只把代码换回去，进程仍然按新 unit 运行。
