@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import PracticalCatalog, { type PracticalCatalogTask } from "./PracticalCatalog";
+import { contentAssets } from "@/lib/content-assets";
 
 type PracticalCatalogBank = {
   version: string;
@@ -14,7 +15,7 @@ let pendingCatalog: Promise<PracticalCatalogBank> | null = null;
 function loadCatalog(contentVersion: string): Promise<PracticalCatalogBank> {
   if (cachedCatalog?.version === contentVersion) return Promise.resolve(cachedCatalog);
   if (!pendingCatalog) {
-    pendingCatalog = fetch(`/content/practical-catalog-${encodeURIComponent(contentVersion)}.json`, {
+    pendingCatalog = fetch(contentAssets.practicalCatalog, {
       cache: "force-cache",
     })
       .then(async (response) => {

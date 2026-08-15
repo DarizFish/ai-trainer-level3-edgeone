@@ -103,11 +103,11 @@ test("public route shells are static while answer scoring is immediate and persi
   assert.match(intentLink, /prefetch=\{false\}/);
   assert.match(intentLink, /router\.prefetch\(href\)/);
   assert.match(theoryPage, /rel="preload"/);
-  assert.match(theoryPage, /content\/theory-/);
-  assert.match(practicalPage, /content\/practical-catalog-/);
-  assert.match(publicContent, /theory-\$\{content\.version\}\.json/);
-  assert.match(publicContent, /practical-\$\{content\.version\}\.json/);
-  assert.match(publicContent, /practical-catalog-\$\{content\.version\}\.json/);
+  assert.match(theoryPage, /contentAssets\.theory/);
+  assert.match(practicalPage, /contentAssets\.practicalCatalog/);
+  assert.match(publicContent, /theory-\$\{content\.version\}/);
+  assert.match(publicContent, /practical-\$\{content\.version\}/);
+  assert.match(publicContent, /practical-catalog-\$\{content\.version\}/);
   assert.match(theoryPractice, /const correct = isCorrect\(question, answer\)/);
   assert.match(theoryPractice, /pendingAnswersRef/);
   assert.match(theoryPractice, /progressInFlightRef\.current/);
@@ -188,12 +188,14 @@ test("every request-facing database call is bounded by a deadline", async () => 
 });
 
 test("versioned public content banks exactly match the source content", async () => {
-  const content = await loadContentBank();
-  const [theory, practical, catalog] = await Promise.all([
-    readFile(new URL(`../public/content/theory-${content.version}.json`, import.meta.url), "utf8").then(JSON.parse),
-    readFile(new URL(`../public/content/practical-${content.version}.json`, import.meta.url), "utf8").then(JSON.parse),
-    readFile(new URL(`../public/content/practical-catalog-${content.version}.json`, import.meta.url), "utf8").then(JSON.parse),
+  const [content, assets] = await Promise.all([
+    loadContentBank(),
+    readFile(new URL("../data/content-assets.json", import.meta.url), "utf8").then(JSON.parse),
   ]);
+  const read = (url) => readFile(new URL(`../public${url}`, import.meta.url), "utf8");
+  const [theory, practical, catalog] = await Promise.all(
+    [assets.theory, assets.practical, assets.practicalCatalog].map(url => read(url).then(JSON.parse)),
+  );
   assert.equal(theory.version, content.version);
   assert.deepEqual(theory.questions, content.theory);
   assert.deepEqual(theory.officialQuestionIds, content.officialTheoryMock.questionIds);
@@ -216,6 +218,27 @@ test("versioned public content banks exactly match the source content", async ()
     title: task.title,
     unit: task.unit,
   })));
+});
+
+test("公开题库按内容哈希命名，改题即换 URL，immutable 缓存不会留下旧题库", async () => {
+  const [assets, nextConfig, published] = await Promise.all([
+    readFile(new URL("../data/content-assets.json", import.meta.url), "utf8").then(JSON.parse),
+    readFile(new URL("../next.config.ts", import.meta.url), "utf8"),
+    readdir(new URL("../public/content/", import.meta.url)),
+  ]);
+  // /content/* 按 immutable 发布，所以文件名必须由内容推导。只带 meta.json 的人工
+  // 版本号是不够的：忘记改版本号就等于把旧题库钉死在浏览器和 CDN 里整整一年，
+  // 这是 docs/STATUS.md 第 4 节记的同一类故障。
+  assert.match(nextConfig, /source: "\/content\/:path\*"[\s\S]*?immutable/);
+  const urls = [assets.theory, assets.practical, assets.practicalCatalog];
+  for (const url of urls) {
+    const digest = /\.([0-9a-f]{16})\.json$/.exec(url)?.[1];
+    assert.ok(digest, `${url} 的文件名里没有内容哈希`);
+    const body = await readFile(new URL(`../public${url}`, import.meta.url), "utf8");
+    assert.equal(createHash("sha256").update(body).digest("hex").slice(0, 16), digest, `${url} 的哈希与内容不符`);
+  }
+  // 旧哈希的副本必须被清掉，否则会跟着部署一起发出去，却再没有页面引用。
+  assert.deepEqual(published.sort(), urls.map(url => url.replace("/content/", "")).sort());
 });
 
 test("email accounts use versioned PostgreSQL schema, hashed passwords, and revocable sessions", async () => {
@@ -1031,6 +1054,36 @@ test("每题素材有清单兜底，跨域隔离失效时也能读到数据文�
   }
 });
 
+test("官方考题用到的 Pillow 9 别名由准备阶段补回，题目源码不被改写", async () => {
+  const [content, bridgeExtension, pyodideLock] = await Promise.all([
+    loadContentBank(),
+    readFile(new URL("../jupyterlite-extension/src/index.ts", import.meta.url), "utf8"),
+    readFile(new URL("../public/lite/static/pyodide/pyodide-lock.json", import.meta.url), "utf8").then(JSON.parse),
+  ]);
+  // Pillow 10.0 删掉了 ANTIALIAS/LINEAR/CUBIC 这批 9.1 起弃用的常量别名，而站点自带
+  // 的 Pyodide 只提供 Pillow 10.2.0——降版本这条路不存在：PyPI 上 Pillow 没有任何
+  // wasm32 wheel，piplite 装不了 9.x。所以官方代码继续原样保留，别名在准备阶段补回。
+  const pillowMajor = Number(pyodideLock.packages.pillow.version.split(".")[0]);
+  assert.ok(pillowMajor >= 10, "Pillow 已低于 10，应重新评估这层兼容垫片是否还需要");
+
+  const users = content.practical.filter(task => task.hasNotebook
+    && (task.notebook.cells ?? []).some(cell => cell.source.includes("Image.ANTIALIAS")));
+  assert.deepEqual(users.map(task => task.code), ["3.2.3"]);
+  for (const task of users) {
+    const workspaceDir = task.code.replaceAll(".", "-");
+    const notebook = JSON.parse(
+      await readFile(new URL(`../public/lite/files/${workspaceDir}/${task.code}.ipynb`, import.meta.url), "utf8"),
+    );
+    // 发布出去的 notebook 必须与实体层逐字一致：修复不允许落在题目文件里。
+    assert.ok(
+      notebook.cells.some(cell => cell.source.join("").includes("Image.ANTIALIAS")),
+      `${task.code} 的官方代码被改写了`,
+    );
+  }
+  assert.match(bridgeExtension, /preloadImports\.includes\("PIL"\)/);
+  assert.match(bridgeExtension, /_PILImage\.ANTIALIAS = _PILImage\.Resampling\.LANCZOS/);
+});
+
 test("Word deliverable answers never expose Python code to learners", async () => {
   const [content, answers] = await Promise.all([
     loadContentBank(),
@@ -1824,10 +1877,16 @@ test("credential endpoints spend rate-limit quota before doing password work", a
   // 密码校验失败之后才累加。
   assert.ok(login.indexOf("peekThrottle(") < login.indexOf("verifyPassword("), "邮箱额度应在密码校验前只读检查");
   assert.ok(login.indexOf("consumeThrottle(failureBucket") > login.indexOf("verifyPassword("), "邮箱额度应当只在校验失败后累加");
+
+  // 账号不存在也必须计数。realip 的可信集合现在是全网信任（免费版拿不到回源网段，
+  // 见 STATUS.md 4.12），伪造 IP 之后 login:ip / register:ip 都不再是硬上界，这条按
+  // 邮箱计的失败额度是撞库和 PBKDF2 放大唯一还站着的闸门。若改成「账号存在才计数」，
+  // 它就退化成账号枚举器：不存在的邮箱可以无限敲，而那条路径同样跑满 10 万轮哈希。
+  assert.match(login, /if \(!user \|\| !valid\)[\s\S]{0,160}?consumeThrottle\(failureBucket/, "账号不存在时也必须累加邮箱失败额度");
 });
 
 test("self-hosted releases preserve proxy trust, runtime health, and cache semantics", async () => {
-  const [nextConfig, packageJson, database, throttle, live, ready, nginx, systemd, envExample, packaging, guide, deployWorkflow, deployScript, deployBootstrap, knownHosts] = await Promise.all([
+  const [nextConfig, packageJson, database, throttle, live, ready, nginx, edgeOneOrigins, systemd, envExample, packaging, guide, deployWorkflow, deployScript, deployBootstrap, knownHosts] = await Promise.all([
     readFile(new URL("../next.config.ts", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8"),
     readFile(new URL("../db/index.ts", import.meta.url), "utf8"),
@@ -1835,6 +1894,7 @@ test("self-hosted releases preserve proxy trust, runtime health, and cache seman
     readFile(new URL("../app/api/health/live/route.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/api/health/ready/route.ts", import.meta.url), "utf8"),
     readFile(new URL("../deploy/nginx/aitrainer.conf", import.meta.url), "utf8"),
+    readFile(new URL("../deploy/nginx/aitrainer-edgeone-origin.conf", import.meta.url), "utf8"),
     readFile(new URL("../deploy/systemd/aitrainer.service", import.meta.url), "utf8"),
     readFile(new URL("../.env.example", import.meta.url), "utf8"),
     readFile(new URL("../scripts/package-self-hosted.mjs", import.meta.url), "utf8"),
@@ -1870,6 +1930,47 @@ test("self-hosted releases preserve proxy trust, runtime health, and cache seman
   assert.match(nginx, /proxy_set_header EO-Connecting-IP ["']["']/);
   assert.match(nginx, /pyodide-lock\\\.json[\s\S]*must-revalidate/);
   assert.match(nginx, /labs\/models\/[\s\S]*max-age=31536000/);
+  // EdgeOne 作为 CDN 回源阿里云时，页面文档的缓存语义由 Nginx 单点决定。default 若
+  // 退回空字符串，Next 对预渲染页面发的 `s-maxage=31536000` 会原样透给 CDN，改了
+  // 首页也同步不到用户；不隐藏 Next 的 Cache-Control 则等于没覆盖。
+  assert.match(nginx, /default "public, max-age=0, must-revalidate"/);
+  assert.match(nginx, /~\^\/api\/ "no-store"/);
+  assert.match(nginx, /proxy_hide_header Cache-Control;/);
+
+  // CDN 挡在前面后 $remote_addr 是边缘节点，而应用只信 X-Real-IP。不还原就等于把同一
+  // 节点后面的所有用户压进一个限流桶（login:ip 20 次/15 分钟）。realip 只在对端可信时
+  // 才改写，所以原始头必须继续清空，否则直连的人能绕过这层判定自造身份。
+  assert.match(nginx, /real_ip_header EO-Connecting-IP;/);
+  assert.match(nginx, /real_ip_recursive off;/);
+  // 刻意放在 conf.d 之外：conf.d/*.conf 会被主配置通配包含，放里面等于加载两次。
+  assert.match(nginx, /include \/etc\/nginx\/aitrainer-edgeone-origin\.conf;/);
+  assert.match(nginx, /proxy_set_header EO-Connecting-IP ["']["'];/);
+  assert.match(nginx, /\$realip_remote_addr/, "日志要能区分「节点不可信」和「没发这个头」");
+  // 可信集合是收紧/放宽 IP 还原的唯一旋钮，它被 include 进 http 上下文：混进别的指令
+  // 会以很难定位的方式改掉全局行为，所以这里只允许注释和 set_real_ip_from。
+  // 当前取值是全网信任（免费版拿不到回源网段，2026-08-15 决策，见 STATUS.md 4.12）。
+  for (const line of edgeOneOrigins.split(/\r?\n/)) {
+    const directive = line.trim();
+    if (!directive || directive.startsWith("#")) continue;
+    assert.match(directive, /^set_real_ip_from \S+;$/, `可信集合文件里出现了非 set_real_ip_from 指令：${directive}`);
+  }
+  assert.match(edgeOneOrigins, /^set_real_ip_from \S+;$/m);
+
+  // 基础设施配置必须跟应用代码走同一条已验证路径。手工同步一定会漂：2026-08-14 实测
+  // 服务器上的 deploy-aitrainer 是旧版，整段迁移门禁不存在，而文档一直声称它在。
+  assert.match(packaging, /["']deploy["']/);
+  assert.match(deployScript, /manage-database\.mjs migrate/);
+  assert.match(deployScript, /manage-database\.mjs check/);
+  assert.match(deployScript, /install_if_changed/);
+  assert.match(deployScript, /nginx -t/);
+  assert.match(deployScript, /systemctl reload nginx/);
+  assert.match(deployScript, /systemctl daemon-reload/);
+  // 自更新是闭环的关键：少了它，这个脚本本身就是唯一永远无法通过流水线更新的文件。
+  assert.match(deployScript, /install -o root -g root -m 0755 "\$\{infra_root\}\/scripts\/deploy-release\.sh" "\$\{self_path\}"/);
+  // 旧发布物里没有 deploy/，回滚到它们时必须跳过而不是失败——回滚正是出事时唯一的
+  // 退路，把 deploy/ 设成硬性要求等于连退路一起堵死。所以只校验「有就必须完整」。
+  assert.match(deployScript, /has_infra/);
+  assert.match(deployScript, /if \[\[ -d "\$\{staging\}\/deploy" \]\]; then[\s\S]*?nginx config is missing/);
   assert.match(systemd, /User=aitrainer/);
   assert.match(systemd, /HOSTNAME=127\.0\.0\.1/);
   assert.match(systemd, /SuccessExitStatus=143/);
@@ -2034,6 +2135,8 @@ test("content lives in a reviewable entity layer, not one 944KB single-line blob
   const bank = await assembleBank();
   assert.equal(bank.stats.theoryQuestions, 900);
   assert.equal(bank.stats.practicalTasks, 40);
-  const published = JSON.parse(await readFile(new URL(`../public/content/theory-${bank.version}.json`, import.meta.url), "utf8"));
+  const assets = JSON.parse(await readFile(new URL("../data/content-assets.json", import.meta.url), "utf8"));
+  assert.equal(assets.version, bank.version);
+  const published = JSON.parse(await readFile(new URL(`../public${assets.theory}`, import.meta.url), "utf8"));
   assert.deepEqual(published.questions, bank.theory, "发布的理论题库与实体层不一致");
 });

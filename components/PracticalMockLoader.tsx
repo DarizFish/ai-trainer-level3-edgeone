@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { PracticalTask } from "@/lib/content";
+import { contentAssets } from "@/lib/content-assets";
 import PracticalMock from "./PracticalMock";
 
 type PracticalBank = {
@@ -16,7 +17,7 @@ let pendingPracticalBank: Promise<PracticalBank> | null = null;
 function loadPracticalBank(contentVersion: string): Promise<PracticalBank> {
   if (cachedPracticalBank?.version === contentVersion) return Promise.resolve(cachedPracticalBank);
   if (!pendingPracticalBank) {
-    pendingPracticalBank = fetch(`/content/practical-${encodeURIComponent(contentVersion)}.json`, {
+    pendingPracticalBank = fetch(contentAssets.practical, {
       cache: "force-cache",
     })
       .then(async (response) => {
