@@ -1,18 +1,21 @@
 import IntentLink from "@/components/IntentLink";
 import { content } from "@/lib/content";
 import { HomeAccountCta } from "@/components/AccountSession";
+import HomeNotice from "@/components/HomeNotice";
+import { voluntarySupportEnabled } from "@/lib/features";
 
 export default function HomePage() {
   const stats = content.stats;
 
   return (
     <main>
+      <HomeNotice />
       <section className="hero paper-texture">
         <div className="container hero-grid">
           <div className="hero-copy">
             <p className="eyebrow">国家职业技能等级 · 三级</p>
             <h1>把厚厚的指导手册，<br /><em>练成你的分数。</em></h1>
-            <p className="lede">一站覆盖理论题库、模拟考试、实操评分细则与 20 个浏览器 Python 实验。从练习到复盘，按真实考试节奏稳步提分。</p>
+            <p className="lede">理论题库与模拟考试之外，实操题支持自动准备环境、浏览器直接运行 Python、逐项对照答案和一键恢复原始模板。</p>
             <HomeAccountCta />
           </div>
           <aside className="exam-docket" aria-label="题库概览">
@@ -29,6 +32,15 @@ export default function HomePage() {
         </div>
       </section>
 
+      {voluntarySupportEnabled && (
+        <section className="home-support-band" aria-labelledby="home-support-title">
+          <div className="container home-support-row">
+            <div><p className="eyebrow">保持免费开放</p><h2 id="home-support-title">觉得有帮助，可以支持本站继续维护。</h2><p>不支持也不影响任何题库、答案、实验或账号功能。</p></div>
+            <IntentLink className="button button-quiet" href="/support">了解如何支持</IntentLink>
+          </div>
+        </section>
+      )}
+
       <section className="container section-block">
         <div className="section-heading">
           <div><p className="eyebrow">按考试路径学习</p><h2>从知识点，到考场节奏</h2></div>
@@ -36,12 +48,21 @@ export default function HomePage() {
         </div>
         <div className="path-grid">
           <IntentLink className="path-card" href="/theory"><span className="path-number">壹</span><h3>理论题库</h3><p>判断、单选、多选独立进度；即时评分、错题与收藏。</p><b>900 道理论题 →</b></IntentLink>
-          <IntentLink className="path-card featured" href="/theory/mock"><span className="path-number">贰</span><h3>90 分钟模拟</h3><p>标准卷或随机卷，190 题、100 分，完全按规则计分。</p><b>进入模拟考场 →</b></IntentLink>
-          <IntentLink className="path-card" href="/practical"><span className="path-number">叁</span><h3>实操与实验</h3><p>逐项对照官方评分表，Python 代码直接在浏览器运行。</p><b>40 道实操题 →</b></IntentLink>
+          <IntentLink className="path-card" href="/theory/mock"><span className="path-number">贰</span><h3>90 分钟模拟</h3><p>标准卷或随机卷，190 题、100 分，完全按规则计分。</p><b>进入模拟考场 →</b></IntentLink>
+          <IntentLink className="path-card featured" href="/practical"><span className="path-number">叁</span><h3>实操与实验</h3><p>环境自动准备，Python 浏览器运行；完成后逐项对照答案。</p><b>40 道实操题 →</b></IntentLink>
         </div>
+        <section className="home-practical-proof" aria-labelledby="home-practical-title">
+          <div className="home-practical-copy"><p className="eyebrow light">实操强化</p><h2 id="home-practical-title">打开就能做，核对完还能恢复重练。</h2><p>从环境准备、动手作答到答案复盘，实操练习在同一个页面完成。</p><IntentLink className="button button-light" href="/practical">体验实操题库</IntentLink></div>
+          <div className="home-practical-features">
+            <article><span>01</span><div><b>自动准备环境</b><p>进入 Python 实验后，自动准备运行环境和题目素材。</p></div></article>
+            <article><span>02</span><div><b>浏览器直接运行</b><p>无需安装本机 Python，在 Notebook 中完成代码和结果。</p></div></article>
+            <article><span>03</span><div><b>答案逐项核对</b><p>Word 题逐空对照，Notebook 和交付物按任务查看参考成果。</p></div></article>
+            <article><span>04</span><div><b>恢复原始模板</b><p>一键回到未作答状态，同一道题可以反复练习。</p></div></article>
+          </div>
+        </section>
         <div className="home-resource-callout">
-          <div><span>上海认定信息</span><p>查看上海交通大学职业技能等级认定相关信息。</p></div>
-          <IntentLink className="text-link" href="/resources">查看参考资料 →</IntentLink>
+          <div><span>个人报名攻略</span><p>先查资格路径，再选正规渠道；报名完成后回到本站开始备考。</p></div>
+          <IntentLink className="text-link" href="/resources">查看六步报名攻略 →</IntentLink>
         </div>
       </section>
 

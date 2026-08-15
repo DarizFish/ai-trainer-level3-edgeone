@@ -34,23 +34,89 @@ test("completed Chinese exam-prep homepage contains product-specific content", a
   assert.doesNotMatch(`${page}${layout}`, /codex-preview|Your site is taking shape|react-loading-skeleton/);
 });
 
-test("resources page only keeps the Shanghai Jiao Tong University skill entry", async () => {
+test("registration guide speaks directly to applicants without exposing product notes", async () => {
   const [resources, layout, homepage, progress] = await Promise.all([
     readFile(new URL("../app/resources/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/ProgressDashboard.tsx", import.meta.url), "utf8"),
   ]);
+  assert.equal(resources.match(/<li>/g)?.length, 6);
+  assert.match(resources, /确认报考地区、职业和等级/);
+  assert.match(resources, /找到适合自己的申报条件/);
+  assert.match(resources, /选择一家机构咨询报名/);
+  assert.match(resources, /按清单整理材料并送审/);
+  assert.match(resources, /审核通过后完成缴费/);
+  assert.match(resources, /保存考试资料，安排理论与实操练习/);
+  assert.match(resources, /是否受理个人报名、需要哪些材料、从哪里提交/);
   assert.match(resources, /https:\/\/gjzs\.sjtu\.edu\.cn\/skill/);
-  assert.doesNotMatch(resources, /mohrss\.gov\.cn|osta\.org\.cn|xzy\.mohrss\.gov\.cn/);
+  assert.match(resources, /上海市计算技术研究所有限公司/);
+  assert.match(resources, /上海市人工智能行业协会/);
+  assert.doesNotMatch(resources, /xiaohongshu|小红书|行动路线图|不复制|先看清边界|经验帖|旧帖|整理依据/);
+  assert.doesNotMatch(resources, /\b1[3-9]\d{9}\b|500\s*元|考试日期|报名截止/);
   assert.match(resources, /target="_blank"/);
   assert.match(resources, /rel="noopener noreferrer"/);
-  assert.match(resources, /上海交通大学职业技能等级认定/);
-  assert.match(layout, /\["参考资料", "\/resources"\]/);
+  assert.match(layout, /\["报名攻略", "\/resources"\]/);
+  assert.match(layout, /\["备用网址", "\/access"\]/);
   assert.match(layout, /人工智能训练师（上海）/);
   assert.doesNotMatch(layout, /认定方案|\/blueprint/);
   assert.match(homepage, /href="\/resources"/);
   assert.doesNotMatch(progress, /href="\/blueprint"/);
+});
+
+test("site operations features remain discoverable, honest, and non-blocking", async () => {
+  const [site, notice, homeNotice, layout, homepage, access, support, placeholder, sitemap, features, proxy] = await Promise.all([
+    readFile(new URL("../lib/site.ts", import.meta.url), "utf8"),
+    readFile(new URL("../lib/site-notices.ts", import.meta.url), "utf8"),
+    readFile(new URL("../components/HomeNotice.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/access/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/support/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../public/support-code-placeholder.svg", import.meta.url), "utf8"),
+    readFile(new URL("../app/sitemap.ts", import.meta.url), "utf8"),
+    readFile(new URL("../lib/features.ts", import.meta.url), "utf8"),
+    readFile(new URL("../proxy.ts", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(site, /沪ICP备2026039336号-1/);
+  assert.match(site, /https:\/\/beian\.miit\.gov\.cn\//);
+  assert.match(layout, /ICP_RECORD/);
+  assert.match(layout, /\["备用网址", "\/access"\]/);
+
+  assert.match(notice, /href: "\/resources"/);
+  assert.doesNotMatch(notice, /\b1[3-9]\d{9}\b|\d+\s*元|报名截止/);
+  assert.match(homeNotice, /localStorage/);
+  assert.match(homeNotice, /aria-label="关闭这条公告"/);
+
+  assert.match(site, /BACKUP_SITE_ORIGIN: string \| null = null/);
+  assert.match(access, /尚未对外启用/);
+  assert.match(access, /不会展示服务器 IP/);
+  assert.match(access, /不同域名不会共享登录 Cookie/);
+
+  assert.match(homepage, /自动准备环境/);
+  assert.match(homepage, /浏览器直接运行/);
+  assert.match(homepage, /答案逐项核对/);
+  assert.match(homepage, /恢复原始模板/);
+
+  // 赞赏整条关闭：收款码还是占位图，任何入口都会把用户领到一个不能付款的页面。页面
+  // 本身保留，等真实收款码到位后翻开关即可，所以这里守的是「四个出口一个都不漏」，
+  // 而不是「代码已删除」——漏一个的后果就是用户点进去发现付不了款。
+  assert.match(features, /voluntarySupportEnabled = false/);
+  for (const source of [layout, homepage, sitemap, support, proxy]) {
+    assert.match(source, /voluntarySupportEnabled/);
+  }
+  assert.match(support, /redirect\("\/"\)/);
+  assert.match(proxy, /matcher: \["\/practical\/mock\/:path\*", "\/support\/:path\*"\]/);
+
+  // 关掉的是入口，不是那套边界声明——重新打开时它们必须还在。
+  assert.match(support, /不赞赏，不影响任何功能/);
+  assert.match(support, /本站不创建订单/);
+  assert.doesNotMatch(support, /<form|fetch\(|setInterval\(/);
+  assert.match(support, /support-code-placeholder\.svg/);
+  assert.match(placeholder, /当前不可用于支付/);
+
+  assert.match(sitemap, /\["\/access", 0\.4\]/);
 });
 
 test("theory and practical content pages remain public while progress is protected", async () => {
@@ -81,7 +147,8 @@ test("practical mock is hidden and blocked behind a centralized feature flag", a
   }
   assert.doesNotMatch(catalog, /href="\/progress"/);
   assert.match(page, /redirect\("\/practical"\)/);
-  assert.match(proxy, /matcher: \["\/practical\/mock\/:path\*"\]/);
+  // matcher 里还有别的开关（自愿赞赏），这里只认领自己那一条，完整数组由运营功能那条守。
+  assert.match(proxy, /matcher: \[[^\]]*"\/practical\/mock\/:path\*"/);
   assert.match(proxy, /NextResponse\.redirect\(new URL\("\/practical"/);
   assert.match(practicalApi, /status: 404/);
 });

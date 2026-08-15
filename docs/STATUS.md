@@ -35,6 +35,14 @@ npm.cmd run dev -- --webpack -p 3200 -H 127.0.0.1
 
 安全依赖升级、PR Quality Gate、verified-artifact 自托管发布、数据库 migration 加固，以及 JupyterLite 内核冷启动与测试 readiness 修复已进入远端 `main`。PR Quality Gate 只验证提交，不部署生产环境。
 
+### 网站运营功能分支
+
+**已验证（2026-08-15，尚未发布）**：`codex/site-operations-features` 实现公告、面向考生的个人报名六步清单、备用网址状态页、ICP 备案页脚和自愿赞赏。备用网址已进入顶部菜单，实操题的环境准备、浏览器运行、逐项核对和模板恢复已在首页前置展示。公告关闭状态刷新后仍保留，桌面和 390px 无横向溢出。
+
+**自愿赞赏当前整条关闭**：收款码还是占位图，留着入口只会把用户领到一个不能付款的页面。开关是 `lib/features.ts` 的 `voluntarySupportEnabled = false`，沿用 `practicalMockEnabled` 那套写法——首页提示带、顶部菜单、页脚、sitemap 四个出口都不出现，直达 `/support` 由 `proxy.ts` 302 回首页。页面与文案整体保留，真实收款码到位并用真机验过金额与收款主体后翻成 `true` 即恢复，不需要重新实现。契约测试守的是「四个出口一个都不漏」而不是「代码已删除」——漏一个的后果就是用户点进去付不了款。
+
+**待配置**：真实收款码（决定赞赏何时开启）；备用域名尚未提供，`/access` 明确显示“尚未对外启用”且不暴露服务器 IP。需求边界和开启条件见 `SITE-OPERATIONS-PRODUCT-REQUIREMENTS.md`。
+
 **已验证（2026-08-14）**：
 
 - 生产现象与源码控制流相互印证：JupyterLab 已显示 `Python (Pyodide)` 时，外层仍可能报告“内核已更替，丢弃第 1 代环境准备结果”。基线同时设置 `autoStartDefaultKernel=false`，并让 bridge 在 `SessionContext.initialize()` 之后回退到 `changeKernel()`；JupyterLab 选择流程和 bridge 因而都可能成为冷启动所有者，两个 Pyodide worker 竞争后会改变 `kernelId`，旧 generation 的准备结果随即失效。

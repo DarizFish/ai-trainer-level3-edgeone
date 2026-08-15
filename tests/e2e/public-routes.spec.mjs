@@ -6,6 +6,7 @@ const publicRoutes = [
   "/theory/mock",
   "/practical",
   "/resources",
+  "/access",
 ];
 
 for (const route of publicRoutes) {
@@ -75,7 +76,7 @@ test("every Word practical family uses the 1.2 paper answer-sheet structure", as
 test("core study pages do not overflow a 390px mobile viewport", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
 
-  for (const route of ["/theory", "/practical", "/theory/mock"]) {
+  for (const route of ["/theory", "/practical", "/theory/mock", "/resources", "/access"]) {
     const response = await page.goto(route, { waitUntil: "domcontentloaded" });
     expect(response.status(), `${route} should load on mobile`).toBeLessThan(400);
     await expect(page.locator("main")).toBeVisible();
@@ -85,6 +86,57 @@ test("core study pages do not overflow a 390px mobile viewport", async ({ page }
     }));
     expect(dimensions.scrollWidth, `${route} should not scroll horizontally`).toBeLessThanOrEqual(dimensions.clientWidth + 1);
   }
+});
+
+test("announcement and site operations entries stay reachable without blocking study", async ({ page }) => {
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+
+  const notice = page.getByRole("region", { name: "网站公告" });
+  await expect(notice).toBeVisible();
+  await expect(notice.getByRole("link", { name: /查看报名攻略/ })).toHaveAttribute("href", "/resources");
+  await notice.getByRole("button", { name: "关闭这条公告" }).click();
+  await expect(notice).toHaveCount(0);
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await expect(page.getByRole("region", { name: "网站公告" })).toHaveCount(0);
+
+  const mainNavigation = page.getByRole("navigation", { name: "主导航" });
+  await expect(mainNavigation.getByRole("link", { name: "备用网址" })).toHaveAttribute("href", "/access");
+  await expect(page.getByRole("contentinfo").getByRole("link", { name: "沪ICP备2026039336号-1" })).toHaveAttribute("href", "https://beian.miit.gov.cn/");
+
+  for (const value of ["自动准备环境", "浏览器直接运行", "答案逐项核对", "恢复原始模板"]) {
+    await expect(page.getByText(value, { exact: true })).toBeVisible();
+  }
+});
+
+test("voluntary support is fully switched off until a real payment code exists", async ({ page }) => {
+  // 只断言「跳转」不够：真正会伤到用户的是入口还在、点进去却付不了款，所以四个出口
+  // 逐个查一遍——首页提示带、顶部菜单、页脚、以及直达 URL。
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+  await expect(page.locator(".home-support-band")).toHaveCount(0);
+  await expect(page.getByRole("link", { name: "了解如何支持" })).toHaveCount(0);
+  await expect(page.getByRole("navigation", { name: "主导航" }).getByRole("link", { name: "支持本站" })).toHaveCount(0);
+  await expect(page.getByRole("contentinfo").getByRole("link", { name: "支持本站" })).toHaveCount(0);
+
+  const response = await page.goto("/support", { waitUntil: "domcontentloaded" });
+  expect(response).not.toBeNull();
+  expect(response.status()).toBe(200);
+  await expect(page).toHaveURL(/\/$/);
+  await expect(page.locator("main")).toBeVisible();
+});
+
+test("registration guide reads as an applicant checklist instead of a product note", async ({ page }) => {
+  await page.goto("/resources", { waitUntil: "domcontentloaded" });
+
+  await expect(page.locator(".registration-steps > li")).toHaveCount(6);
+  await expect(page.getByText(/是否受理个人报名、需要哪些材料、从哪里提交/)).toBeVisible();
+  await expect(page.getByRole("heading", { name: "选择一家，开始咨询报名" })).toBeVisible();
+  await expect(page.getByText(/小红书|行动路线图|先看清边界|经验帖/)).toHaveCount(0);
+});
+
+test("the backup address page states its inactive boundary", async ({ page }) => {
+  await page.goto("/access", { waitUntil: "domcontentloaded" });
+  await expect(page.getByText("尚未对外启用", { exact: true })).toBeVisible();
+  await expect(page.getByText(/未提供备用域名之前不会展示服务器 IP/)).toBeVisible();
 });
 
 test("Word answer sheet stays within a 390px practical lab viewport", async ({ page }) => {

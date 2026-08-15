@@ -1,6 +1,6 @@
 # 阿里云自托管运行手册
 
-本文描述统一 `main` 分支的阿里云自托管部署。正式 DNS、ICP备案和数据库迁移不属于本阶段。
+本文描述统一 `main` 分支的阿里云自托管部署。正式 DNS 切换和数据库迁移不属于本阶段；EdgeOne 也不下线，它在新架构里继续作为 CDN（见下）。ICP 备案已完成，网站页脚配置为 `沪ICP备2026039336号-1`。
 
 ## 架构
 
@@ -177,11 +177,11 @@ DEPLOY_SSH_PRIVATE_KEY=<专用 Ed25519 私钥全文>
 
 `main` 是 EdgeOne 与阿里云共用的受保护生产分支。变更必须通过 PR 和 `Quality gate / Full build and browser regression` 后才能合并。EdgeOne 用合并提交执行标准 Next.js 构建；自托管只消费同一提交的已验证 artifact。建议为 `self-hosted-production` Environment 配置人工审批。
 
-## IP 测试限制
+## IP 直连测试限制
 
-备案完成前可以访问 `http://服务器IP` 验证公开页面、API、数据库和静态文件。但普通
+即使备案已经完成，`http://服务器IP` 也只用于验证公开页面、API、数据库和静态文件。普通
 HTTP IP 地址不是浏览器安全上下文，不能作为 JupyterLite Service Worker、Secure Cookie
-和完整 COOP/COEP 验收结论。
+或 HTTPS 的完整验收结论。
 
 完整浏览器测试通过 SSH 隧道访问 Nginx：
 
@@ -206,6 +206,6 @@ curl -fsS http://127.0.0.1/api/health/ready
 - `/lite/static/pyodide/pyodide-lock.json` 为 `must-revalidate`；
 - `/labs/models/...` 为一年 `immutable`；
 - JavaScript、MJS 和 WASM MIME 正确；
-- Lab 页面与 JupyterLite iframe 具备 COOP/COEP；
+- Lab 页面与 JupyterLite iframe 不设置 COOP/COEP，创建内核前已确认 JupyterLite Service Worker `ready/enabled`；
 - 登录 Cookie、真实 IP、4 MiB 草稿和退出登录正常；
 - EdgeOne 正式站保持可回滚，正式 DNS 未改动。

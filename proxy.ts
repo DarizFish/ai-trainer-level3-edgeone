@@ -1,7 +1,13 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { practicalMockEnabled } from "@/lib/features";
+import { practicalMockEnabled, voluntarySupportEnabled } from "@/lib/features";
 
 export function proxy(request: NextRequest) {
+  if (request.nextUrl.pathname.startsWith("/support")) {
+    if (!voluntarySupportEnabled) {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+    return NextResponse.next();
+  }
   if (!practicalMockEnabled) {
     return NextResponse.redirect(new URL("/practical", request.url));
   }
@@ -9,5 +15,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/practical/mock/:path*"],
+  matcher: ["/practical/mock/:path*", "/support/:path*"],
 };
