@@ -229,6 +229,27 @@ Error: Process completed with exit code 127
 
 **教训**：容器彩排把 `node` 换成桩并放进 PATH，恰好绕开了这个洞。用桩验证控制流是有效的，但桩会连带把「这个命令能不能找到」一并假设成真——凡是被替换掉的东西，它的存在性就不再被这次彩排覆盖。
 
+### 4.15 已修：迁移脚本的依赖不在 artifact 里
+
+4.14 修完，node 找到了（v22.23.2），同一步紧接着换了个错法：
+
+```text
+Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'postgres'
+  imported from /srv/aitrainer/releases/<sha>/scripts/manage-database.mjs
+```
+
+`scripts/manage-database.mjs` **不经过 webpack**：它以源码形式随 artifact 下发，由 `deploy-release.sh` 直接执行。而 `.next/standalone` 的 `node_modules` 只包含 Next 文件追踪的结果——应用里用到的 `postgres` 早被打进 `.next/server` 的 chunk，不会以包的形式留下来。实测发布物顶层 `node_modules` 共 52 个包，没有 `postgres`，也没有 `drizzle-orm`；当前在跑的旧版同样没有，只是它从来不需要。
+
+已让 `package-self-hosted.mjs` 显式打包迁移脚本的第三方依赖到 `scripts/node_modules/`（不放根 `node_modules`：那是 Next trace 出来的，混入手工内容就分不清哪些是自动的），并按 npm 扁平布局带上传递依赖——`postgres@3.4.7` 零依赖，当前只有一个包、357K。
+
+**校验必须是「解析结果落在 artifact 内」，不能是「能不能 import 到」**：本仓库的 `node_modules` 是 `dist/` 的祖先目录，只判断能否 import 的话，一个字节都没拷进去也照样通过，等于没验。打包脚本因此断言 `require.resolve` 的结果以 `outputRoot` 开头。
+
+**端到端验证**（不再只靠桩和本地）：把打包出的依赖布局送到服务器，用真实 `/etc/aitrainer/aitrainer.env`、真实 Supabase、以及复刻的 `env -i PATH=/sbin:/bin:/usr/sbin:/usr/bin`，跑真正的 `manage-database.mjs check` —— 输出 `Schema is current at 0002_condemned_klaw`，退出码 0。另在仓库之外的隔离目录做了正反对照：带依赖能 import，删掉依赖复现线上同一条 `ERR_MODULE_NOT_FOUND`。
+
+**教训**：4.14 和 4.15 是同一个盲点的两次发作——「这段代码在服务器上真的能跑起来吗」这件事，此前从来没有被任何环节验证过，本地构建、契约测试和容器彩排各自都只覆盖了它的一部分。修完这两条之后，打包阶段会自证依赖完整，契约测试会守住依赖必须在 `dependencies` 里。
+
+> 附带记录一次操作失误：4.14 的文档提交写在 push 之后，因此 PR #10 只带走了代码修复，这段说明留在了本地。已随本次一并补上。
+
 ## 5. 2026-07-26 全量自检结果
 
 | 检查 | 结果 |
