@@ -32,7 +32,7 @@ CDN 挡在前面之后，**响应头就是缓存策略本身**，没有别的开
 | --- | --- | --- |
 | `/api/*` | `no-store` | 响应按 Cookie 区分用户，而 CDN 只按 URL 建缓存键 |
 | `/_next/static/`、`/content/`、`/lite/static/`、`/lite/build/`、`/labs/models/`、`/labs/runtime/` | `immutable` 一年 | 文件名带内容哈希 |
-| JupyterLite 的可变配置（`jupyter-lite.json` 等） | `max-age=0, must-revalidate` | 见 `STATUS.md` 4.1／4.2 |
+| JupyterLite 的可变配置（`jupyter-lite.json` 等） | `max-age=0, must-revalidate` | 见 `INCIDENTS.md` 4.1／4.2 |
 | 其余一切（**含所有页面文档**） | `max-age=0, must-revalidate` | 见下 |
 
 `default` 必须是重校验，不能是空字符串。空字符串等于 Nginx 什么都不加，`location /`
@@ -76,7 +76,7 @@ EdgeOne 挡在前面之后，`$remote_addr` 是边缘节点而不是用户。实
 
 收紧回去有两条路，都不用改应用代码：升级套餐拿到回源网段清单换掉那两行；或者堵住直连
 ——安全组只放行回源网段 + 管理 IP，做到这一步之后全网信任本身就不再有代价，因为唯一
-可能的对端只剩 EdgeOne。后者同时解掉 §6.1 里「源站可直连」那一条。
+可能的对端只剩 EdgeOne。后者同时解掉 `BACKLOG.md` 里「源站可直连、可绕过 CDN」那一条。
 
 伪造挡不住，但**看得见**：日志格式是 `$remote_addr via=$realip_remote_addr`，`via=` 始终
 是真实 TCP 对端，`realip` 改不掉它。经 CDN 的请求 `via=` 是 EdgeOne 节点，直连的不是，

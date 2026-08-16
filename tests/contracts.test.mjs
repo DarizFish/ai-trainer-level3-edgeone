@@ -295,7 +295,7 @@ test("公开题库按内容哈希命名，改题即换 URL，immutable 缓存不
   ]);
   // /content/* 按 immutable 发布，所以文件名必须由内容推导。只带 meta.json 的人工
   // 版本号是不够的：忘记改版本号就等于把旧题库钉死在浏览器和 CDN 里整整一年，
-  // 这是 docs/STATUS.md 第 4 节记的同一类故障。
+  // 这是 docs/INCIDENTS.md 记的同一类故障。
   assert.match(nextConfig, /source: "\/content\/:path\*"[\s\S]*?immutable/);
   const urls = [assets.theory, assets.practical, assets.practicalCatalog];
   for (const url of urls) {
@@ -1949,7 +1949,7 @@ test("credential endpoints spend rate-limit quota before doing password work", a
   assert.ok(login.indexOf("consumeThrottle(failureBucket") > login.indexOf("verifyPassword("), "邮箱额度应当只在校验失败后累加");
 
   // 账号不存在也必须计数。realip 的可信集合现在是全网信任（免费版拿不到回源网段，
-  // 见 STATUS.md 4.12），伪造 IP 之后 login:ip / register:ip 都不再是硬上界，这条按
+  // 见 docs/INCIDENTS.md 4.12），伪造 IP 之后 login:ip / register:ip 都不再是硬上界，这条按
   // 邮箱计的失败额度是撞库和 PBKDF2 放大唯一还站着的闸门。若改成「账号存在才计数」，
   // 它就退化成账号枚举器：不存在的邮箱可以无限敲，而那条路径同样跑满 10 万轮哈希。
   assert.match(login, /if \(!user \|\| !valid\)[\s\S]{0,160}?consumeThrottle\(failureBucket/, "账号不存在时也必须累加邮箱失败额度");
@@ -2013,7 +2013,7 @@ test("self-hosted releases preserve proxy trust, runtime health, and cache seman
   // 配置，11 天后 ff54ebd 只从 edgeone.json 和 next.config.ts 删掉，Nginx 留到了迁移
   // 当天才第一次挡在用户前面。跨源隔离会把 Pyodide Kernel 0.6.1 切回
   // SharedArrayBuffer/Atomics 的同步 worker，也就是 ff54ebd 要移除的永久等待路径，
-  // 而且只在自托管这条链路上复活——EdgeOne 预览环境测不出来。约束见 STATUS.md 第 9 节。
+  // 而且只在自托管这条链路上复活——EdgeOne 预览环境测不出来。约束见 jupyterlite/README.md 的硬约束一节。
   for (const [name, source] of [["nginx", nginx], ["edgeone.json", edgeOne], ["next.config.ts", nextConfig]]) {
     assert.doesNotMatch(source, /Cross-Origin-Opener-Policy/i, `${name} 不得给 Lab 发 COOP`);
     assert.doesNotMatch(source, /Cross-Origin-Embedder-Policy/i, `${name} 不得给 Lab 发 COEP`);
@@ -2030,7 +2030,7 @@ test("self-hosted releases preserve proxy trust, runtime health, and cache seman
   assert.match(nginx, /\$realip_remote_addr/, "日志要能区分「节点不可信」和「没发这个头」");
   // 可信集合是收紧/放宽 IP 还原的唯一旋钮，它被 include 进 http 上下文：混进别的指令
   // 会以很难定位的方式改掉全局行为，所以这里只允许注释和 set_real_ip_from。
-  // 当前取值是全网信任（免费版拿不到回源网段，2026-08-15 决策，见 STATUS.md 4.12）。
+  // 当前取值是全网信任（免费版拿不到回源网段，2026-08-15 决策，见 docs/INCIDENTS.md 4.12）。
   for (const line of edgeOneOrigins.split(/\r?\n/)) {
     const directive = line.trim();
     if (!directive || directive.startsWith("#")) continue;

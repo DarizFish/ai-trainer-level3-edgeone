@@ -73,10 +73,15 @@
 
 ## 项目文档
 
-- `docs/STATUS.md` 是当前里程碑、已验证状态、最高风险和下一步的入口；
-  `docs/TESTING.md` 是验证命令的来源；`docs/IMPROVEMENTS.md` 保存历史调查；
-  数据库与 JupyterLite 的细节分别放在 `docs/DATABASE-MIGRATIONS.md` 和
-  `jupyterlite/README.md`。
+- 按上面路由表的分类，本项目的落点是：`docs/STATUS.md`（现在是什么状态）、
+  `docs/BACKLOG.md`（还有什么没做）、`docs/INCIDENTS.md`（这个现象以前查过吗）、
+  `docs/decisions/`（为什么这么定）、`docs/TESTING.md`（验证命令的来源）、
+  `docs/IMPROVEMENTS.md`（历史改进）。数据库分两份：`DATABASE-MIGRATIONS.md` 讲
+  迁移流程，`DATABASE-CAPACITY.md` 讲容量与增长。JupyterLite 的硬约束和构建流程
+  在 `jupyterlite/README.md`。
+- 这四份按生命周期分开，不要合并回一份：状态会天天变，待办按完成删除，故障档案
+  只增不改，决策记录被推翻时追加而不改写。混在一起的结果是文档长到没人完整读，
+  而没人读完的显式状态等同于隐式状态。
 - 有意义的已验证改动若改变构建、测试、部署、恢复方式、运行时硬约束或
   P0/P1 风险，应只同步因此失真的最小文档集。不要为格式修改或临时调试日志
   更新状态文档。

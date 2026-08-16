@@ -70,7 +70,7 @@
 
 `theory_progress` 主键是 `(email, question_id)`、写入走 upsert，`question_id` 来自固定的 900 道题库——**900 是每人的硬上限，不是增长曲线上的一个点**。生产库实测（35 用户 / 2943 行）每行连索引约 193 字节，单人查询计划是主键 `Index Scan`；外推每人答满约 174 kB，一万用户 1.7 GB。要盯的是 Supabase 存储配额，不是查询性能。
 
-真正无上限增长的是 `theory_attempts`（每次模拟考约 3 kB，无清理）、`practical_attempts` 和 `sessions`（35 用户对应 46 行，只增不减）。完整分析与另外三项待办见 `STATUS.md` 第 8 节。
+真正无上限增长的是 `theory_attempts`（每次模拟考约 3 kB，无清理）、`practical_attempts` 和 `sessions`（35 用户对应 46 行，只增不减）。完整分析与另外三项待办见 `DATABASE-CAPACITY.md`。
 
 ### 本轮实现：请求路径上不再有裸 `getDb()`
 
@@ -109,7 +109,7 @@
 
 ### 未闭环
 
-`STATUS.md` 第 8 节记的另外三项：`/api/theory/state` 去冗余字段并加 ETag（同一份数据现在发了三遍）、`sessions` 照抄 `sweepThrottle` 加过期清理、`theory_attempts` 只保留每人最近 N 次。第四项（email 换 `user_id`）判断为暂不做——要改 7 张表的外键，收益只是存储。
+`DATABASE-CAPACITY.md`记的另外三项：`/api/theory/state` 去冗余字段并加 ETag（同一份数据现在发了三遍）、`sessions` 照抄 `sweepThrottle` 加过期清理、`theory_attempts` 只保留每人最近 N 次。第四项（email 换 `user_id`）判断为暂不做——要改 7 张表的外键，收益只是存储。
 
 ## 2026-08-06：修复 CSV 预览显示为 Base64，以及 `/drive` 挂载失败导致学员产物丢失
 

@@ -268,7 +268,7 @@ test("production lab shell stays outside cross-origin isolation", {
   const lab = await fetchRemote("/lite/lab/index.html", "coep");
   assert.equal(lab.status, 200);
   // 跨源隔离会把 Pyodide Kernel 0.6.1 切回 SharedArrayBuffer/Atomics 的同步 worker，
-  // 也就是 ff54ebd 移除的永久等待路径。约束见 docs/STATUS.md 第 9 节。
+  // 也就是 ff54ebd 移除的永久等待路径。约束见 jupyterlite/README.md 的硬约束一节。
   assert.equal(
     lab.headers.get("cross-origin-opener-policy"),
     null,

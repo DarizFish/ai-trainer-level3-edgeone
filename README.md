@@ -105,14 +105,19 @@ EdgeOne 项目监控受保护的 `main`。自托管发布不再自行重建源�
 
 重建 JupyterLite 扩展后，产物需同步到 `public/lite/extensions/ai-trainer-jupyterlite/`，并更新 `public/lite/jupyter-lite.json` 里的 `remoteEntry.*.js` hash 引用——每次构建 hash 都会变。漏掉最后一步等于没发布，而且线上表现是实验室永远停在加载中；`npm run test:smoke` 有一条断言会把它挡下来。
 
-验证扩展改动请用**硬刷新**（Ctrl+Shift+R），不要用无痕窗口。JupyterLite 的 service worker 注册 URL 带 `?enableCache=false`，本身不写 Cache Storage，需要清的是按 `immutable` 缓存的那批文件（见 `docs/STATUS.md` 4.1）。更重要的是：Firefox 隐私窗口和 Safari 无痕浏览**直接禁用 Service Worker**，而实验室要靠它挂载 `/drive`，在那里只会得到一个明确的报错——Chrome 与 Edge 的无痕窗口才支持。
+验证扩展改动请用**硬刷新**（Ctrl+Shift+R），不要用无痕窗口。JupyterLite 的 service worker 注册 URL 带 `?enableCache=false`，本身不写 Cache Storage，需要清的是按 `immutable` 缓存的那批文件（见 `docs/INCIDENTS.md` 4.1）。更重要的是：Firefox 隐私窗口和 Safari 无痕浏览**直接禁用 Service Worker**，而实验室要靠它挂载 `/drive`，在那里只会得到一个明确的报错——Chrome 与 Edge 的无痕窗口才支持。
 
 ## 文档
 
 | 文档 | 用途 |
 | --- | --- |
-| `docs/STATUS.md` | 当前状态、未提交改动、已知问题和下一步；接手项目先读这份 |
+| `docs/STATUS.md` | 现在是什么状态：坐标、本地运行、已验证基线；接手项目先读这份 |
+| `docs/BACKLOG.md` | 还有什么没做 |
+| `docs/INCIDENTS.md` | 这个现象以前查过吗、结论是什么；含已修故障的根因与判据 |
+| `docs/decisions/` | 为什么做出某个重要决定；只收「改错了会造成事故」的决定 |
 | `docs/TESTING.md` | 五层质量门禁、CI 行为和失败定位顺序 |
 | `docs/DATABASE-MIGRATIONS.md` | 生产基线、迁移锁、schema 门禁和 expand/contract 发布规则 |
+| `docs/DATABASE-CAPACITY.md` | 数据库会先在哪里撑不住，以及为什么现在不动它 |
+| `jupyterlite/README.md` | 改 JupyterLite 前必读的硬约束与构建流程 |
 | `docs/USER_INPUT.md` | 产品负责人可直接编辑的需求入口与状态 |
 | `docs/IMPROVEMENTS.md` | 可验证的产品改进记录，按日期倒序 |
