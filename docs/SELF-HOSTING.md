@@ -13,8 +13,10 @@
 
 | 域名 | 当前指向 | 状态 |
 | --- | --- | --- |
-| `www.aitrainer3.xyz` | EdgeOne Pages（自建构建与托管） | 现行正式站，待替换 |
-| `ali.aitrainer3.xyz` | EdgeOne CDN 回源阿里云 Nginx | 新链路，测试中 |
+| `www.aitrainer3.xyz` | EdgeOne CDN 回源阿里云 Nginx | **现行正式站**，2026-08-15 完成切换 |
+| `ali.aitrainer3.xyz` | EdgeOne CDN 回源阿里云 Nginx | 切换期的验证入口，与正式站同源站 |
+
+切换当天实测：`Server: nginx`、`/api/health/ready` 返回 `ready` / `database=ok` / schema `0002_condemned_klaw`、`npm run test:smoke` 6/6 通过。EdgeOne Pages 不再承载正式流量，但项目保留——它是回退路径，`edgeone.json` 仍需与 `deploy/nginx/aitrainer.conf` 保持同一套缓存与安全头语义。
 
 Nginx 是源站的唯一公网入口。Node 只监听回环地址，PostgreSQL 继续使用 Supabase。服务器通过
 `TRUSTED_CLIENT_IP_HEADER=x-real-ip` 只信任 Nginx 覆盖写入的客户端地址；Nginx 同时清空

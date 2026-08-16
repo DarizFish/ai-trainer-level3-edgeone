@@ -1,6 +1,6 @@
 # 项目当前状态
 
-更新时间：2026-08-14。本文取代原 `SESSION-HANDOFF.md`，用于把项目移交给其他会话或协作者。只记录**当前**事实与待办；历史改进见 `IMPROVEMENTS.md`。
+更新时间：2026-08-15。本文取代原 `SESSION-HANDOFF.md`，用于把项目移交给其他会话或协作者。只记录**当前**事实与待办；历史改进见 `IMPROVEMENTS.md`。
 
 ## 1. 坐标
 
@@ -8,11 +8,11 @@
 | --- | --- |
 | 正式站 | https://www.aitrainer3.xyz/ |
 | 本地目录 | `C:\Users\zd\Documents\aitrainer3\edgeone-site` |
-| 当前维护分支 | `main`；本地任务分支 `codex/fix-kernel-selection-race` 已完成合并 |
-| 已验证代码基线 | 修复提交 `94cdd33`，经 PR #7 合并为 `main` 提交 `b8eb0ce`；验证证据见第 3 节 |
-| PR 状态 | PR #7 已在 Quality Gate 通过后合并；未启用硬分支保护 |
+| 当前维护分支 | `main`；本地任务分支 `codex/post-migration-hardening` 已合并 |
+| 已验证代码基线 | 加固提交 `43ebdac`，经 PR #14 合并为 `main` 提交 `8cca4ec`；验证证据见第 3 节 |
+| PR 状态 | PR #14 已在 Quality Gate 通过后合并；未启用硬分支保护 |
 | 阿里云源站 | `39.96.7.2` 已部署并通过 `/api/health/ready`；当前 schema 为 `0002_condemned_klaw` |
-| 正式域名路由 | `www.aitrainer3.xyz` 当前仍由 EdgeOne Pages 响应；新链路 `ali.aitrainer3.xyz` 已是 EdgeOne CDN 回源阿里云 Nginx，测试中，将来替换前者。架构见 `SELF-HOSTING.md` |
+| 正式域名路由 | **已切换完成**：`www.aitrainer3.xyz` 由 EdgeOne CDN 回源阿里云 Nginx，2026-08-15 实测返回 `Server: nginx`、`/api/health/ready` 为 `ready`。EdgeOne Pages 不再承载正式流量。架构见 `SELF-HOSTING.md` |
 | GitHub | `ssh://git@ssh.github.com:443/DarizFish/ai-trainer-level3-edgeone.git` |
 | EdgeOne 项目 | `makers-xyzgssb9k7as` |
 | Supabase | 项目 `sqenbhewvjnmatgkkbqy`，东京区 `aws-0-ap-northeast-1.pooler.supabase.com` |
@@ -52,8 +52,25 @@ npm.cmd run dev -- --webpack -p 3200 -H 127.0.0.1
 - 提交 `969f25e` 曾在本地通过 `CI=true + SELF_HOSTED_BUILD=1` 的 27/27 浏览器门禁，但 GitHub runner 暴露出两项独立的测试所有权错误：三个生命周期用例在首轮和 retry 共 6 次于目标 Notebook 注册前调用 panel-scoped 命令；官方题目弹窗又因自定义 keydown 与原生 `<dialog>` 同时处理 Escape 出现 1 次 flaky。前者改为显式等待目标 path 出现在 `app.shell.widgets("main")`，后者只保留浏览器原生 cancel/close。关闭 retry 后，生命周期压力回归 15/15、Escape 回归 20/20；最终工作树的完整同构门禁也通过合同测试 50/50、Playwright 27/27，全部首轮通过且无 retry/flaky，并通过 Next.js 16.3.0 standalone 构建。
 - **已验证（GitHub）**：修复提交 `94cdd33` 的 PR Quality Gate run `31769689925` 成功；PR #7 合并后的 `main` Quality Gate run `31770512365` 成功；`main` 合并提交为 `b8eb0ce`。
 - **已验证（阿里云）**：`Deploy verified self-hosted release` run `31770822118` 成功消费 `b8eb0ce` 的已验证 artifact。公网 `http://39.96.7.2/api/health/ready` 返回 `status=ready`、`database=ok` 和 schema `0002_condemned_klaw`。
-- **风险（正式域名）**：`https://www.aitrainer3.xyz/` 仍返回 `Server: edgeone-pages`；其 `jupyter-lite.json` 仍引用旧的 `remoteEntry.b87d7e54b2e20340d8e4.js`，而 `main` 已引用 `remoteEntry.d2f9597ae02066c2f930.js`，且该域名的 `/api/health/ready` 返回 404。正式域名因此尚不能证明已回源阿里云，切换前不得把 EdgeOne Pages 与阿里云自托管发布视为同一条链路。
-- **风险（正式域名仍停在 2026-08-06 的构建）**：2026-08-14 实测，`https://www.aitrainer3.xyz/` 各页 `last-modified` 全部是 `2026-08-06 14:10`，带随机 query 强制回源（`eo-cache-status: Cache Miss`）拿到的仍是同一份。判定证据是 `/api/health/ready` 返回 404——该路由由 `main` 的 `e739c16`（2026-08-12）新增，说明线上跑的是 `12d5c56`（2026-08-06），`main` 之后的提交从未发布。**这不是缓存问题**：HTML 与 API 的 `Cache-Control` 都是 `public,max-age=0,must-revalidate`，边缘节点虽报 `Cache Hit`，但内容与回源一致。「页面像是被缓存了很久」的真实原因是 EdgeOne Pages 的部署没有跟上 `main`，需要在 EdgeOne 控制台侧确认自动部署是否仍在监听该分支。
+- ~~**风险（正式域名）**~~ 与 ~~**风险（正式域名仍停在 2026-08-06 的构建）**~~：**2026-08-15 已解除。** 正式域名当天完成切换，实测 `Server: nginx`、`/api/health/ready` 返回 `ready` / `database=ok` / schema `0002_condemned_klaw`、`jupyter-lite.json` 与 checkout 一致。原因也随之明确：那两条不是缓存问题，而是 EdgeOne Pages 的部署没有跟上 `main`，切换到 CDN 回源阿里云后该链路不复存在。
+
+### 迁移后加固（2026-08-15，PR #14 / `43ebdac` → `main` `8cca4ec`）
+
+正式域名切换的同一天，线上还一步从 `e67c7a8`（08-06）升到了 `main`，跨 38 个提交。三处按 EdgeOne 假设写的东西没跟着改，已修复：
+
+- **退连接的爆炸半径。** `withDbDeadline` 原先一次超时就 `end({ timeout: 0 })`——那是按 EdgeOne 的 `max: 1` 设计的：函数实例各自独立，退掉只炸自己那一个。自托管是单进程共用一个 client，同样的动作会把当时**所有用户**的在途查询一起拒掉；而 lab 每 12 秒自动保存一次草稿、正文上限 4 MB、数据库还在东京，一个大草稿用户反复超时就能拖垮全站的数据库层。现改为按原因分流：真正的连接故障立即退，纯语句超时只让该请求失败，**连续 3 次**才认为连接卡死。阈值不能是 1（等于没改），也不能没有（卡死的连接会被永久占住）。`DATABASE_POOL_MAX` 3 → 10。
+- **SW 门禁的报错改成给出下一步。** `ensureServiceWorkerControl` 是本次升级新增的硬门禁（`e67c7a8` 里 0 处），方向正确——没有 SW 时 JupyterLite 会静默退回内存文件系统，学员 `to_csv` 出来的文件刷新即失且无任何外部信号。但四条报错写的都是内部机制。真实原因几乎从来不是浏览器太旧，而是隐私窗口：**Firefox 隐私窗口和 Safari 无痕浏览直接禁用 Service Worker，Chrome/Edge 无痕反而支持。**
+- **nginx 多带的 COOP/COEP 已删除。** `b175204`(07-27) 为跨源隔离加上 → `1aee62c`(08-02) 照抄进 Nginx → `ff54ebd`(08-13) 只从 `edgeone.json` 和 `next.config.ts` 删掉，Nginx 留到了迁移当天才第一次挡在用户前面。约束本身见第 9 节。
+
+**守卫**：`tests/contracts.test.mjs` 断言 `nginx`、`edgeone.json`、`next.config.ts` 三份都不含这两个头（反向验证过会红）；`tests/production-smoke.test.mjs` 断言 lab 外壳不带 COOP/COEP，且 `jupyter-lite.json` 引用的每个 `remoteEntry.*.js` 返回 200。后者能把「配置漏更新导致实验室永远加载中」在发布后立刻抓出来。
+
+**顺带修掉一个一直是红的测试**：`test:smoke` 的缓存键写死在 `20260726-pyodide0277-runtime11`，而 `969f25e` 已换成 `20260814-kernel-owner-runtime12`，现改为从 `public/lite/lab/index.html` 读取。
+
+**已验证（线上，2026-08-15）**：`npm run test:smoke` 6/6 通过；`/lite/lab/index.html` 不再返回任何 `Cross-Origin-*` 头；新扩展入口 `remoteEntry.2982eb0ec7d48f12e948.js` 返回 200，旧的 `remoteEntry.00ce498ab5bcc55d1ce7.js` 返回 404。
+
+**未能从本机验证**：`DATABASE_POOL_MAX=10` 是否已随 `systemctl daemon-reload` 生效——`/api/health/ready` 不暴露池大小。需在服务器上执行 `systemctl show aitrainer -p Environment` 确认。
+
+**排查时已排除，不必重查**：用户端缓存在这次跳版本中是干净的（`/lite/static/`、`/lite/build/`、`/labs/models/`、`/labs/runtime/` 一个字节没动，变了的文件全在 must-revalidate 上）；发布切换是原子换 symlink，静态文件没有 404 窗口；`.wasm` 在 Nginx 下拿到 `application/wasm`。另外 2026-07-26（`c1d08ee`）之前的 immutable 缓存不构成存量用户风险——网站 7-29 才对外推广，外部用户的首次访问全在修复之后。
 
 **已排除**：这组三个新现象不是 `/drive` 同步 worker 死锁的再次表现。前一轮移除 COOP/COEP、以 Service Worker 作为唯一 `/drive` 桥的约束继续有效；本轮修复的是冷启动所有权和内核 generation 生命周期。
 
@@ -362,7 +379,7 @@ Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'postgres'
 
 **不要再把 `@jupyterlite/application-extension:service-worker-manager` 加进 `disabledExtensions`。** 上游判定是 `mountDrive = serviceWorkerManager?.enabled || crossOriginIsolated`（`@jupyterlite/pyodide-kernel-extension` 0.6.1，与上游 wheel 逐字节一致，改不了）。禁用它等于把这个 OR 砍成只剩跨源隔离一项，而跨源隔离由 COOP/COEP 响应头承载、随响应进浏览器缓存，**部署到不了已经缓存旧头的设备**。挂载失败时学员的 `to_csv` 产物会落进内存文件系统：文件浏览器看不到、刷新即失，而题目因为有素材兜底仍然照常能跑，所以完全没有外部信号。该 SW 的 HTTP 缓存默认是关的（注册 URL 带 `?enableCache=false`），不会造成 4.1 那类缓存毒化。
 
-**不要为 Lab 恢复 COOP/COEP 或 iframe 的 `cross-origin-isolated` 权限。** 在当前 Pyodide Kernel 0.6.1 中，跨源隔离会把内核切回 `SharedArrayBuffer`/`Atomics` 的同步 worker；这正是本轮永久等待的高风险执行路径。`/drive` 必须只依赖 JupyterLite Service Worker。冷启动前要等待注入的 `IServiceWorkerManager.ready` 且确认 `enabled`，不能只看 `navigator.serviceWorker.controller` 后猜测 JupyterLite 已更新内部注册状态。
+**不要为 Lab 恢复 COOP/COEP 或 iframe 的 `cross-origin-isolated` 权限。** 在当前 Pyodide Kernel 0.6.1 中，跨源隔离会把内核切回 `SharedArrayBuffer`/`Atomics` 的同步 worker；这正是本轮永久等待的高风险执行路径。这条约束已经被违反过一次：`deploy/nginx/aitrainer.conf` 从 `1aee62c` 一直带着这两个头，直到 2026-08-15 迁移当天才挡在用户前面（详见第 3 节）。**头配置有三份**——`edgeone.json`、`next.config.ts`、`deploy/nginx/aitrainer.conf`——改任何一份都要同步另外两份；`tests/contracts.test.mjs` 现在会断言三份都不含这两个头。`/drive` 必须只依赖 JupyterLite Service Worker。冷启动前要等待注入的 `IServiceWorkerManager.ready` 且确认 `enabled`，不能只看 `navigator.serviceWorker.controller` 后猜测 JupyterLite 已更新内部注册状态。
 
 **`.csv` 在 `fileTypes` 里是 `fileFormat: "base64"`，这是刻意的。** drive 的 `get()` 忽略 `options.format`，只能按扩展名定格式；改回 `text` 会让 2.1.4 那份 GBK 数据集在读写两个方向都被 UTF-8 解码销毁。显示端的解码在 `jupyterlite-extension/src/csvViewer.ts`，**只改 `fromString`，不要动 `toString`**——`CSVViewer._updateGrid` 正是从 `toString()` 取数据喂 DataGrid，在那里还原成字节会让表格重新变回乱码。
 
