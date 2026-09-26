@@ -2131,7 +2131,7 @@ test("self-hosted releases preserve proxy trust, runtime health, and cache seman
 });
 
 test("blue/green staging cannot switch traffic before the root-only cutover", async () => {
-  const [quality, containerWorkflow, legacyWorkflow, dockerfile, stage, cutover, bootstrap, legacyRelease] = await Promise.all([
+  const [quality, containerWorkflow, legacyWorkflow, dockerfile, stage, cutover, bootstrap, legacyRelease, fetchArtifact] = await Promise.all([
     readFile(new URL("../.github/workflows/quality.yml", import.meta.url), "utf8"),
     readFile(new URL("../.github/workflows/deploy-container.yml", import.meta.url), "utf8"),
     readFile(new URL("../.github/workflows/deploy-self-hosted.yml", import.meta.url), "utf8"),
@@ -2140,6 +2140,7 @@ test("blue/green staging cannot switch traffic before the root-only cutover", as
     readFile(new URL("../deploy/scripts/switch-container-release.sh", import.meta.url), "utf8"),
     readFile(new URL("../deploy/scripts/bootstrap-container-deploy.sh", import.meta.url), "utf8"),
     readFile(new URL("../deploy/scripts/deploy-release.sh", import.meta.url), "utf8"),
+    readFile(new URL("../deploy/scripts/fetch-container-artifact.sh", import.meta.url), "utf8"),
   ]);
 
   const imageStep = /- name: Build and smoke-test the container image([\s\S]*?)docker build/.exec(quality);
@@ -2157,8 +2158,12 @@ test("blue/green staging cannot switch traffic before the root-only cutover", as
     assert.match(workflow, /if: github\.ref == 'refs\/heads\/main'/);
     assert.match(workflow, /group: self-hosted-production/);
     assert.match(workflow, /Quality gate\|push\|main\|\$\{VERIFIED_SHA\}\|success/);
-    assert.match(workflow, /run-id:\s*\$\{\{ inputs\.quality_run_id \}\}/);
   }
+  assert.match(legacyWorkflow, /run-id:\s*\$\{\{ inputs\.quality_run_id \}\}/);
+  assert.match(containerWorkflow, /actions\/runs\/\$\{QUALITY_RUN_ID\}\/artifacts/);
+  assert.match(containerWorkflow, /ARTIFACT_DIGEST/);
+  assert.match(fetchArtifact, /GitHub artifact digest mismatch/);
+  assert.match(fetchArtifact, /artifact member count mismatch/);
   assert.match(containerWorkflow, /deploy-aitrainer-container/);
   assert.match(containerWorkflow, /Stage verified container release/);
   assert.doesNotMatch(containerWorkflow, /switch-aitrainer-container/);
