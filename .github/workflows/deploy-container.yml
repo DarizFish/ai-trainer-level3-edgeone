@@ -1,0 +1,113 @@
+name: Stage verified container release
+
+on:
+  workflow_dispatch:
+    inputs:
+      quality_run_id:
+        description: Successful main push Quality gate run ID
+        required: true
+        type: string
+      verified_sha:
+        description: Full 40-character Git SHA from that run
+        required: true
+        type: string
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: self-hosted-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    name: Stage and verify container candidate
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    environment:
+      name: self-hosted-production
+      url: http://39.96.7.2
+    env:
+      DEPLOY_HOST: 39.96.7.2
+      DEPLOY_USER: deploy
+      QUALITY_RUN_ID: ${{ inputs.quality_run_id }}
+      VERIFIED_SHA: ${{ inputs.verified_sha }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Confirm artifact belongs to a successful main push
+        shell: bash
+        run: |
+          [[ "${QUALITY_RUN_ID}" =~ ^[0-9]+$ ]] || exit 2
+          [[ "${VERIFIED_SHA}" =~ ^[0-9a-f]{40}$ ]] || exit 2
+          details="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${QUALITY_RUN_ID}" \
+            --jq '[.name,.event,.head_branch,.head_sha,.conclusion] | join("|")')"
+          [[ "${details}" == "Quality gate|push|main|${VERIFIED_SHA}|success" ]] || {
+            echo "Quality run does not certify the requested main revision: ${details}" >&2
+            exit 3
+          }
+
+      - name: Check out deployment metadata from the verified revision
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.verified_sha }}
+
+      - name: Download both archives from that quality run
+        uses: actions/download-artifact@v4
+        with:
+          name: aitrainer-${{ inputs.verified_sha }}
+          path: release
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.quality_run_id }}
+
+      - name: Configure pinned SSH identity
+        shell: bash
+        env:
+          DEPLOY_SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+        run: |
+          [[ -n "${DEPLOY_SSH_PRIVATE_KEY}" ]] || exit 4
+          install -d -m 0700 "${HOME}/.ssh"
+          printf '%s\n' "${DEPLOY_SSH_PRIVATE_KEY}" > "${HOME}/.ssh/aitrainer_deploy"
+          chmod 0600 "${HOME}/.ssh/aitrainer_deploy"
+          install -m 0644 deploy/ssh/known_hosts "${HOME}/.ssh/known_hosts"
+          ssh-keygen -y -f "${HOME}/.ssh/aitrainer_deploy" >/dev/null
+
+      - name: Upload and stage verified container
+        shell: bash
+        run: |
+          release_archive="release/aitrainer-${VERIFIED_SHA}.tar.gz"
+          image_archive="release/aitrainer-image-${VERIFIED_SHA}.tar.gz"
+          [[ -s "${release_archive}" && -s "${image_archive}" ]] || exit 5
+          release_sha="$(sha256sum "${release_archive}" | cut -d ' ' -f 1)"
+          image_sha="$(sha256sum "${image_archive}" | cut -d ' ' -f 1)"
+          ssh_options=(
+            -i "${HOME}/.ssh/aitrainer_deploy"
+            -o IdentitiesOnly=yes
+            -o StrictHostKeyChecking=yes
+            -o UserKnownHostsFile="${HOME}/.ssh/known_hosts"
+            -o ConnectTimeout=15
+            -o ServerAliveInterval=30
+            -o ServerAliveCountMax=10
+          )
+          for archive in "${release_archive}" "${image_archive}"; do
+            name="$(basename "${archive}")"
+            scp "${ssh_options[@]}" "${archive}" \
+              "${DEPLOY_USER}@${DEPLOY_HOST}:uploads/.${name}.upload"
+            ssh "${ssh_options[@]}" "${DEPLOY_USER}@${DEPLOY_HOST}" \
+              "mv -- 'uploads/.${name}.upload' 'uploads/${name}'"
+          done
+          ssh "${ssh_options[@]}" "${DEPLOY_USER}@${DEPLOY_HOST}" \
+            "sudo /usr/local/sbin/deploy-aitrainer-container '${VERIFIED_SHA}' '${release_sha}' '${image_sha}'"
+
+      - name: Verify the unchanged public route remains ready
+        shell: bash
+        run: |
+          curl --fail --show-error --silent \
+            --retry 12 --retry-delay 5 --retry-connrefused \
+            "http://${DEPLOY_HOST}/api/health/ready"
+
+      - name: Remove ephemeral SSH identity
+        if: always()
+        shell: bash
+        run: rm -f "${HOME}/.ssh/aitrainer_deploy"
