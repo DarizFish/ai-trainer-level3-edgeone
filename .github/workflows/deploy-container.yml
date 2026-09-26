@@ -53,13 +53,21 @@ jobs:
         with:
           ref: ${{ inputs.verified_sha }}
 
-      - name: Download both archives from that quality run
-        uses: actions/download-artifact@v4
-        with:
-          name: aitrainer-${{ inputs.verified_sha }}
-          path: release
-          github-token: ${{ github.token }}
-          run-id: ${{ inputs.quality_run_id }}
+      - name: Resolve immutable artifact from that quality run
+        shell: bash
+        run: |
+          set -euo pipefail
+          artifacts="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${QUALITY_RUN_ID}/artifacts?per_page=100")"
+          artifact="$(jq -c --arg name "aitrainer-${VERIFIED_SHA}" \
+            '[.artifacts[] | select(.name == $name and .expired == false)] | if length == 1 then .[0] else empty end' \
+            <<< "${artifacts}")"
+          artifact_id="$(jq -r '.id' <<< "${artifact}")"
+          artifact_digest="$(jq -r '.digest' <<< "${artifact}")"
+          [[ ${artifact_id} =~ ^[0-9]+$ && ${artifact_digest} =~ ^sha256:[0-9a-f]{64}$ ]] || {
+            echo 'expected artifact or its digest is unavailable' >&2; exit 5;
+          }
+          echo "ARTIFACT_ID=${artifact_id}" >> "${GITHUB_ENV}"
+          echo "ARTIFACT_DIGEST=${artifact_digest#sha256:}" >> "${GITHUB_ENV}"
 
       - name: Configure pinned SSH identity
         shell: bash
@@ -73,14 +81,10 @@ jobs:
           install -m 0644 deploy/ssh/known_hosts "${HOME}/.ssh/known_hosts"
           ssh-keygen -y -f "${HOME}/.ssh/aitrainer_deploy" >/dev/null
 
-      - name: Upload and stage verified container
+      - name: Fetch and stage verified container
         shell: bash
         run: |
-          release_archive="release/aitrainer-${VERIFIED_SHA}.tar.gz"
-          image_archive="release/aitrainer-image-${VERIFIED_SHA}.tar.gz"
-          [[ -s "${release_archive}" && -s "${image_archive}" ]] || exit 5
-          release_sha="$(sha256sum "${release_archive}" | cut -d ' ' -f 1)"
-          image_sha="$(sha256sum "${image_archive}" | cut -d ' ' -f 1)"
+          set -euo pipefail
           ssh_options=(
             -i "${HOME}/.ssh/aitrainer_deploy"
             -o IdentitiesOnly=yes
@@ -90,13 +94,26 @@ jobs:
             -o ServerAliveInterval=30
             -o ServerAliveCountMax=10
           )
-          for archive in "${release_archive}" "${image_archive}"; do
-            name="$(basename "${archive}")"
-            scp "${ssh_options[@]}" "${archive}" \
-              "${DEPLOY_USER}@${DEPLOY_HOST}:uploads/.${name}.upload"
-            ssh "${ssh_options[@]}" "${DEPLOY_USER}@${DEPLOY_HOST}" \
-              "mv -- 'uploads/.${name}.upload' 'uploads/${name}'"
-          done
+          # GitHub returns a short-lived Azure Blob URL. Only that URL crosses SSH stdin.
+          headers="$(mktemp)"
+          trap 'rm -f -- "${headers}"' EXIT
+          status="$(curl --silent --show-error --max-time 20 --dump-header "${headers}" \
+            --output /dev/null --write-out '%{http_code}' \
+            --header "Authorization: Bearer ${GH_TOKEN}" \
+            --header 'Accept: application/vnd.github+json' \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/${ARTIFACT_ID}/zip")"
+          [[ ${status} == 302 ]] || { echo "artifact URL request returned ${status}" >&2; exit 5; }
+          signed_url="$(sed -n 's/^[Ll]ocation: //p' "${headers}" | tr -d '\r' | tail -n 1)"
+          [[ ${signed_url} == https://*.blob.core.windows.net/* ]] || exit 5
+          scp "${ssh_options[@]}" deploy/scripts/fetch-container-artifact.sh \
+            "${DEPLOY_USER}@${DEPLOY_HOST}:uploads/.fetch-container-artifact.sh"
+          hashes="$(printf '%s\n' "${signed_url}" | ssh "${ssh_options[@]}" \
+            "${DEPLOY_USER}@${DEPLOY_HOST}" \
+            "bash uploads/.fetch-container-artifact.sh '${VERIFIED_SHA}' '${ARTIFACT_DIGEST}'")"
+          read -r release_sha image_sha <<< "${hashes}"
+          [[ ${release_sha} =~ ^[0-9a-f]{64}$ && ${image_sha} =~ ^[0-9a-f]{64}$ ]] || exit 5
+          ssh "${ssh_options[@]}" "${DEPLOY_USER}@${DEPLOY_HOST}" \
+            'rm -f -- uploads/.fetch-container-artifact.sh'
           ssh "${ssh_options[@]}" "${DEPLOY_USER}@${DEPLOY_HOST}" \
             "sudo /usr/local/sbin/deploy-aitrainer-container '${VERIFIED_SHA}' '${release_sha}' '${image_sha}'"
 

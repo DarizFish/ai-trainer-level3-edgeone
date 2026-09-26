@@ -165,7 +165,7 @@ DIRECT_URL=postgresql://...
 
 ## GitHub Actions 发布
 
-`.github/workflows/quality.yml` 在 PR 与 `main` push 上执行完整质量门禁和容器镜像构建检查。只有成功的 `main` push run 才上传同一 SHA 的 release 归档与镜像归档。旧发布与容器预备工作流均为手动 `workflow_dispatch`，仅允许从 `main` 运行，并共用 `self-hosted-production` 并发锁。运行者必须输入成功的 `main` push Quality gate 的 run ID 和完整 Git SHA；工作流向 GitHub API 核对其事件、分支、SHA 和结论，再按 run ID 下载归档，服务器另校验 SHA-256。容器工作流只预备候选实例，不能执行最终切流。
+`.github/workflows/quality.yml` 在 PR 与 `main` push 上执行完整质量门禁和容器镜像构建检查。只有成功的 `main` push run 才上传同一 SHA 的 release 归档与镜像归档。旧发布与容器预备工作流均为手动 `workflow_dispatch`，仅允许从 `main` 运行，并共用 `self-hosted-production` 并发锁。运行者必须输入成功的 `main` push Quality gate 的 run ID 和完整 Git SHA；工作流向 GitHub API 核对其事件、分支、SHA、结论及 artifact 身份。容器预备时服务器通过 GitHub 提供的一次性下载地址取得 artifact，先校验 GitHub 记录的外层 SHA-256，再校验内层归档并运行预备脚本。容器工作流只预备候选实例，不能执行最终切流。
 
 ### 单机双实例切换（尚未在生产执行）
 
