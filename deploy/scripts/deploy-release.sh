@@ -44,6 +44,25 @@ if ! flock -n 9; then
   exit 3
 fi
 
+# A staged candidate or active blue/green route must not be overwritten by the
+# legacy script, including when the Docker daemon is temporarily unavailable.
+if [[ -e /var/lib/aitrainer-deploy/pending || -e /var/lib/aitrainer-deploy/active ]]; then
+  echo "blue/green staging or routing is active; legacy release is disabled" >&2
+  exit 3
+fi
+if command -v docker >/dev/null 2>&1; then
+  if ! docker info >/dev/null 2>&1; then
+    echo "cannot establish Docker state; legacy release is disabled" >&2
+    exit 3
+  fi
+  for container in aitrainer aitrainer-blue aitrainer-green; do
+    if docker container inspect "${container}" >/dev/null 2>&1; then
+      echo "container deployment is active; legacy release is disabled" >&2
+      exit 3
+    fi
+  done
+fi
+
 archive="${upload_root}/aitrainer-${revision}.tar.gz"
 target="${release_root}/${revision}"
 staging=""

@@ -2102,11 +2102,10 @@ test("self-hosted releases preserve proxy trust, runtime health, and cache seman
   const packagingStep = /- name: Package the tested standalone build([\s\S]*?)run: npm run package:self-hosted/.exec(qualityWorkflow);
   assert.ok(packagingStep, "quality.yml 里必须有打包步骤");
   assert.doesNotMatch(packagingStep[1], /^\s*if:/m, "打包步骤不能被限制成只在 main 上跑");
-  assert.match(deployWorkflow, /workflow_run:/);
-  assert.match(deployWorkflow, /workflows:[\s\S]*- Quality gate/);
-  assert.match(deployWorkflow, /conclusion == 'success'/);
-  assert.match(deployWorkflow, /workflow_run\.head_sha/);
-  assert.match(deployWorkflow, /run-id:\s*\$\{\{ github\.event\.workflow_run\.id \}\}/);
+  assert.match(deployWorkflow, /workflow_dispatch:/);
+  assert.doesNotMatch(deployWorkflow, /workflow_run:/, "旧发布不能在 main push 后自动抢占容器端口");
+  assert.match(deployWorkflow, /Quality gate\|push\|main\|\$\{VERIFIED_SHA\}\|success/);
+  assert.match(deployWorkflow, /run-id:\s*\$\{\{ inputs\.quality_run_id \}\}/);
   assert.match(deployWorkflow, /DEPLOY_SSH_PRIVATE_KEY/);
   assert.match(deployWorkflow, /StrictHostKeyChecking=yes/);
   assert.match(deployWorkflow, /sudo \/usr\/local\/sbin\/deploy-aitrainer/);
@@ -2129,6 +2128,69 @@ test("self-hosted releases preserve proxy trust, runtime health, and cache seman
   assert.match(deployBootstrap, /NOPASSWD: \/usr\/local\/sbin\/deploy-aitrainer/);
   assert.match(deployBootstrap, /passwd --lock deploy/);
   assert.match(knownHosts, /^39\.96\.7\.2 ssh-ed25519 /);
+});
+
+test("blue/green staging cannot switch traffic before the root-only cutover", async () => {
+  const [quality, containerWorkflow, legacyWorkflow, dockerfile, stage, cutover, bootstrap, legacyRelease] = await Promise.all([
+    readFile(new URL("../.github/workflows/quality.yml", import.meta.url), "utf8"),
+    readFile(new URL("../.github/workflows/deploy-container.yml", import.meta.url), "utf8"),
+    readFile(new URL("../.github/workflows/deploy-self-hosted.yml", import.meta.url), "utf8"),
+    readFile(new URL("../deploy/Dockerfile", import.meta.url), "utf8"),
+    readFile(new URL("../deploy/scripts/deploy-container-release.sh", import.meta.url), "utf8"),
+    readFile(new URL("../deploy/scripts/switch-container-release.sh", import.meta.url), "utf8"),
+    readFile(new URL("../deploy/scripts/bootstrap-container-deploy.sh", import.meta.url), "utf8"),
+    readFile(new URL("../deploy/scripts/deploy-release.sh", import.meta.url), "utf8"),
+  ]);
+
+  const imageStep = /- name: Build and smoke-test the container image([\s\S]*?)docker build/.exec(quality);
+  assert.ok(imageStep, "容器镜像必须在 Quality gate 构建");
+  assert.doesNotMatch(imageStep[1], /^\s*if:/m, "PR 也必须验证镜像构建");
+  assert.match(quality, /docker save "aitrainer:\$\{GITHUB_SHA\}"/);
+  assert.match(quality, /\/api\/health\/live/);
+  assert.match(quality, /aitrainer-image-\$\{\{ github\.sha \}\}\.tar\.gz/);
+  assert.match(dockerfile, /USER node/);
+  assert.match(dockerfile, /HEALTHCHECK[\s\S]*\/api\/health\/live/);
+
+  for (const workflow of [containerWorkflow, legacyWorkflow]) {
+    assert.match(workflow, /workflow_dispatch:/);
+    assert.doesNotMatch(workflow, /workflow_run:/);
+    assert.match(workflow, /if: github\.ref == 'refs\/heads\/main'/);
+    assert.match(workflow, /group: self-hosted-production/);
+    assert.match(workflow, /Quality gate\|push\|main\|\$\{VERIFIED_SHA\}\|success/);
+    assert.match(workflow, /run-id:\s*\$\{\{ inputs\.quality_run_id \}\}/);
+  }
+  assert.match(containerWorkflow, /deploy-aitrainer-container/);
+  assert.match(containerWorkflow, /Stage verified container release/);
+  assert.doesNotMatch(containerWorkflow, /switch-aitrainer-container/);
+  assert.match(containerWorkflow, /StrictHostKeyChecking=yes/);
+  assert.match(bootstrap, /NOPASSWD: \/usr\/local\/sbin\/deploy-aitrainer-container/);
+  assert.doesNotMatch(bootstrap, /NOPASSWD:[^\n]*switch-aitrainer-container/);
+  assert.match(legacyRelease, /container deployment is active; legacy release is disabled/);
+  assert.match(legacyRelease, /aitrainer-blue aitrainer-green/);
+
+  assert.match(stage, /sha256sum "\$\{release_archive\}"/);
+  assert.match(stage, /sha256sum "\$\{image_archive\}"/);
+  assert.match(stage, /scripts\/manage-database\.mjs migrate[\s\S]*scripts\/manage-database\.mjs check/);
+  assert.match(stage, /if \[\[ \$\{key\} != DIRECT_URL \]\]; then[\s\S]*runtime_env/);
+  assert.match(stage, /--publish "127\.0\.0\.1:\$\{candidate_port\}:3000"/);
+  assert.match(stage, /old release is not ready after the migration/);
+  assert.match(stage, /immutable static URL changed bytes/);
+  assert.match(stage, /public\/lite\/static/);
+  assert.match(stage, /cp -an "\$\{old_release\}\/public\/\."/);
+  assert.match(stage, /live_static_before[\s\S]*live_static_after/);
+  assert.match(stage, /nginx -t -c "\$\{nginx_test\}"/);
+  assert.match(stage, /STAGED revision=/);
+  assert.doesNotMatch(stage, /systemctl (stop|disable|reload) (aitrainer|nginx)/);
+  assert.doesNotMatch(stage, /install[^\n]*"\$\{nginx_conf\}"/);
+  assert.doesNotMatch(stage, /mv -Tf[^\n]*\/current/);
+  assert.match(cutover, /\[\[ \$\{EUID\} -eq 0 \]\]/);
+  assert.match(cutover, /\$\{state_root\}\/pending/);
+  assert.match(cutover, /wait_local "\$\{old_port\}"/);
+  assert.match(cutover, /wait_local "\$\{port\}"/);
+  assert.match(cutover, /install_nginx_conf "\$\{candidate_conf\}"/);
+  assert.match(cutover, /switch-in-progress/);
+  assert.match(cutover, /served_static=.*curl[\s\S]*expected_static.*served_static/);
+  assert.match(cutover, /rollback-nginx\.conf/);
 });
 
 test("robots and sitemap keep crawlers on content and off the runtime", async () => {

@@ -15,3 +15,4 @@
 | --- | --- | --- |
 | Lab 不得进入跨源隔离（COOP/COEP） | 生效中 | [001](001-lab-no-cross-origin-isolation.md) |
 | 网站运营功能的产品边界 | 生效中 | [`../SITE-OPERATIONS-ANALYSIS.md`](../SITE-OPERATIONS-ANALYSIS.md) 记录取舍，[`../SITE-OPERATIONS-PRODUCT-REQUIREMENTS.md`](../SITE-OPERATIONS-PRODUCT-REQUIREMENTS.md) 是当前边界 |
+| 单机双槽容器发布、独立人工切流 | 已决定，生产待验证 | [003](003-single-host-blue-green-container-release.md)，操作见 [`../SELF-HOSTING.md`](../SELF-HOSTING.md) |
