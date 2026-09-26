@@ -19,7 +19,7 @@ trap 'rm -f -- "${archive}"; rm -rf -- "${extract_root}"' EXIT
 
 printf 'url = "%s"\n' "${artifact_url}" | \
   curl --config - --fail --silent --show-error --connect-timeout 15 --max-time 2400 \
-    --retry 3 --retry-all-errors --output "${archive}"
+    --retry 3 --retry-connrefused --output "${archive}"
 actual_digest=$(sha256sum "${archive}" | cut -d ' ' -f 1)
 [[ ${actual_digest} == "${expected_digest}" ]] || {
   echo 'GitHub artifact digest mismatch' >&2; exit 3;
