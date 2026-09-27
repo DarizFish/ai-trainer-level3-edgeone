@@ -23,9 +23,9 @@
 | 正式站 | https://www.aitrainer3.xyz/ |
 | 本地目录 | `C:\Users\zd\Documents\aitrainer3\edgeone-site` |
 | 当前维护分支 | `main`。任务分支合并后即失效，不在此登记分支名 |
-| 已验证代码基线 | `47c05719ef773ce9a43d185b3fc502cfca7e8a40`；`main` Quality Gate 与容器预备工作流通过，证据见第 3 节 |
-| PR 状态 | PR #14—#17 已合并；未启用硬分支保护 |
-| 阿里云源站 | `39.96.7.2` 的 Nginx 当前代理 `127.0.0.1:3001`（`aitrainer-green`）；旧 `aitrainer.service` 留在 3000 供回退；当前 schema 为 `0002_condemned_klaw` |
+| 已验证代码基线 | `3bded47114f7c84430e4407712f5c942ce58c166`；`main` Quality Gate、容器预备和线上冒烟测试通过，证据见第 3 节 |
+| PR 状态 | PR #19 已合并；未启用硬分支保护 |
+| 阿里云源站 | `39.96.7.2` 的 Nginx 当前代理 `127.0.0.1:3000`（`aitrainer-blue`）；`aitrainer-green` 在 3001 保留作即时回退，旧 `aitrainer.service` 已停用；当前 schema 为 `0002_condemned_klaw` |
 | 正式域名路由 | `www.aitrainer3.xyz` 由 EdgeOne CDN 回源阿里云 Nginx；2026-09-27 对正式域名运行 `test:smoke` 6/6 通过。EdgeOne Pages 不承载正式流量。架构见 `SELF-HOSTING.md` |
 | GitHub | `ssh://git@ssh.github.com:443/DarizFish/ai-trainer-level3-edgeone.git` |
 | EdgeOne 项目 | `makers-xyzgssb9k7as` |
@@ -55,7 +55,15 @@ npm.cmd run dev -- --webpack -p 3200 -H 127.0.0.1
 
 **已验证**：切流后从对应 checkout 对源站 `http://39.96.7.2/` 与正式域名分别运行 `npm.cmd run test:smoke`，均为 6/6 通过；覆盖公开路由、静态文件字节哈希和 MIME、Lab 配置、扩展入口及隔离头。新旧实例的 `/api/health/ready` 均返回 `database=ok` 和 `schema=0002_condemned_klaw`。
 
-**观察期**：旧 `aitrainer.service` 仍在 3000 端口运行，供 `switch-aitrainer-container rollback` 回退；显式回退动作尚未演练。冒烟测试不覆盖账号登录、业务写入或 ONNX 推理。
+**历史阶段**：首次切流时旧 `aitrainer.service` 曾留在 3000 端口。2026-09-27 数据分析版本发布前已停用，当前回退目标改为 `aitrainer-green`；本次发布中显式执行过 `switch-aitrainer-container rollback` 并验证 green readiness。冒烟测试不覆盖账号登录、业务写入或 ONNX 推理。
+
+### 数据记录与分析上线（2026-09-27）
+
+**已验证**：PR #19 合并提交 `3bded47114f7c84430e4407712f5c942ce58c166` 的 [main Quality Gate run 36291278911](https://github.com/DarizFish/ai-trainer-level3-edgeone/actions/runs/36291278911) 成功；[容器预备 run 36292696263](https://github.com/DarizFish/ai-trainer-level3-edgeone/actions/runs/36292696263) 使用同一提交的 artifact 成功。服务器 `active` 记录、Nginx 路由和 blue 镜像版本均指向该提交。源站与正式域名在切流后各运行 `npm.cmd run test:smoke`，均为 6/6 通过；正式域名的 `tests/e2e/analytics.spec.mjs` 为 2/2 通过。green 保持 healthy，可回退。
+
+**已验证**：浏览器 `page.viewed`、`lab.environment_ready` 和真实请求触发的服务端 `theory.answers_saved` 事件进入 blue 的 journald，事件含完整 `release_revision`；成功保存事件在代码中位于数据库操作成功之后。Nginx 新日志记录 `rt=` 且不记录查询参数；journald 实际配置为持久化、逐日轮转、最长 30 天及 512 MB 上限。服务器日报成功读取 blue/green 日志、Nginx 日志并对 Supabase 执行只读汇总。首次短暂切流产生的 2 条事件缺少版本字段，日报按 `unknown` 保留；旧格式 Nginx 行被计为无效输入。当天窗口尚未结束，`window.complete=false`。操作与指标口径见 [ANALYTICS.md](ANALYTICS.md)。
+
+**尚未验证**：注册、登录及交卷成功事件尚无本轮生产观测；本轮未创建额外的生产测试账号。历史交卷可能早于新日志上线，不能把当日数据库交卷数与当日新日志数的差异当作数据丢失。
 
 ### 网站运营功能分支
 
