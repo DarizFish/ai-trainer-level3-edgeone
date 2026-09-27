@@ -10,7 +10,7 @@
 | 内容与合同 | `npm run content:validate`、`npm run test:contracts` | 900 道理论题、40 道实操题、评分、认证边界、资源哈希、JupyterLite 配置 | 否 |
 | 生产构建 | `npm run test:build` | Next.js 生产编译、服务端与静态路由生成 | 否 |
 | 浏览器回归 | `npm run test:browser` | 公共页面、匿名跳转、390px 响应式、Pyodide 内核、ONNX 动态导入和 JavaScript MIME | global setup 自动启动并回收本地生产服务 |
-| 正式站冒烟 | `npm run test:smoke` | 正式域名路由、EdgeOne MIME、安全头、运行时文件哈希和部署一致性 | 访问正式站，只读 |
+| 正式站冒烟 | `npm run test:smoke` | 公开路由、MIME、安全头、运行时文件哈希和部署一致性；可指定源站或正式域名 | 只读 |
 
 ## 日常命令
 
@@ -77,13 +77,16 @@ Remove-Item Env:SELF_HOSTED_BUILD
 
 直接打开 `/lite/lab/index.html?path=...` 的测试不能把 `window.jupyterapp` 存在或 `ai-trainer:*` 命令已注册当成 Notebook 就绪：扩展会先注册命令，再等待异步 startup preflight，Lab router 只在 `app.started` 后打开目标 path。执行任何 panel-scoped 命令前，必须确认目标 path 已出现在 `app.shell.widgets("main")`；否则快速 runner 可能碰巧通过，慢 runner 会稳定报“尚未打开本题 Notebook”。
 
-只验证已经上线的正式站：
+切流后先核对源站，再核对正式域名（两次都从待验证版本的 checkout 运行）：
 
 ```powershell
+$env:SMOKE_BASE_URL='http://39.96.7.2/'
+npm.cmd run test:smoke
+Remove-Item Env:SMOKE_BASE_URL
 npm.cmd run test:smoke
 ```
 
-可用 `SMOKE_BASE_URL` 指向 EdgeOne 预览域名。正式站大文件经跨境 CDN 时可能超过 30 秒，冒烟单请求允许 90 秒并对瞬时网络失败重试；仍会逐字节核对本地 hash，不因放宽超时降低一致性要求。
+也可用 `SMOKE_BASE_URL` 指向 EdgeOne 预览域名。正式站大文件经跨境 CDN 时可能超过 30 秒，冒烟单请求允许 90 秒并对瞬时网络失败重试；仍会逐字节核对本地 hash，不因放宽超时降低一致性要求。此脚本不测试登录、业务写入或 ONNX 推理。
 
 ## 浏览器测试边界
 
@@ -104,5 +107,5 @@ PR 上的 Quality Gate **不负责部署**：打包和 artifact 上传步骤只�
 
 1. 先运行失败日志中对应的单层命令。
 2. 浏览器失败时查看 `playwright-report/` 或 CI artifact。
-3. 正式站哈希不一致通常表示 EdgeOne 尚未完成部署或部署了不同提交。
+3. 正式站哈希不一致时，先检查源站 active 版本和 Nginx 静态目录，再检查 CDN 缓存；也可能是测试 checkout 与已部署提交不同。
 4. MIME 失败时优先检查 `.js` 路径、`Content-Type` 和 `X-Content-Type-Options`，不要只检查 HTTP 200。
