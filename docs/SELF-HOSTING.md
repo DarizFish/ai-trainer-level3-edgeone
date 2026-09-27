@@ -178,6 +178,8 @@ DIRECT_URL=postgresql://...
 
 首次切流的已验证版本、工作流和冒烟结果见 [STATUS.md](STATUS.md)。旧实例的 readiness 已核对；显式 rollback 命令尚未演练。
 
+数据记录上线后，容器标准输出经 Docker `journald` 驱动进入宿主机日志；30 天保留配置和只读日报操作见 [ANALYTICS.md](ANALYTICS.md)。切流脚本不负责日志留存配置，首次上线需从同一已验证 release 单独安装并检查。
+
 旧 `Deploy legacy self-hosted release manually` 工作流只用于预备候选实例之前的 systemd 发布；一旦存在候选或蓝绿容器，旧脚本会拒绝执行。单机双实例减少发布切换中断，但主机故障仍会同时影响两个实例。数据库迁移须保持旧版兼容；回滚应用不会反向执行迁移。
 
 仓库或 `self-hosted-production` Environment 需要配置一个 Secret：

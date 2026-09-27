@@ -191,7 +191,7 @@ curl -fsS --max-time 5 http://127.0.0.1/api/health/ready >/dev/null || {
 docker run --detach --name "${candidate_name}" --restart unless-stopped \
   --publish "127.0.0.1:${candidate_port}:3000" --env-file "${runtime_env}" \
   --env HOSTNAME=0.0.0.0 --env PORT=3000 --env NODE_ENV=production \
-  --env DATABASE_POOL_MAX=10 --env TRUSTED_CLIENT_IP_HEADER=x-real-ip \
+  --env DATABASE_POOL_MAX=10 --env TRUSTED_CLIENT_IP_HEADER=x-real-ip --env "APP_REVISION=${revision}" \
   --log-driver journald --security-opt no-new-privileges --cap-drop ALL \
   --pids-limit 256 --stop-timeout 30 "${image}" >/dev/null
 candidate_created=1

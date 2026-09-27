@@ -7,6 +7,8 @@ import { getPracticalWordDeliverable } from "@/lib/practical-word-deliverable";
 import { isLabCold, labHasModel, markLabWarm, subscribeWarmth } from "@/lib/lab-warmup";
 import { PracticalWordDeliverable } from "./PracticalWordDeliverable";
 import LabWarmupNotice, { type WarmupStage } from "./LabWarmupNotice";
+import { reportBrowserEvent } from "@/lib/analytics-client";
+import type { LabFailureReason } from "@/lib/analytics-events";
 
 type NotebookCell = {
   cell_type: string;
@@ -229,6 +231,7 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
   const [startupSlow, setStartupSlow] = useState(false);
   const [warmupStage, setWarmupStage] = useState<WarmupStage>("shell");
   const [fillReview, setFillReview] = useState<{ visible: boolean; summary: FillReviewSummary } | null>(null);
+  const observationRef = useRef({ taskCode: task.code, generation: 0, startedAt: 0, reported: new Set<string>() });
   const wordDeliverable = useMemo(() => getPracticalWordDeliverable(task), [task]);
   const solutionCells = task.notebook?.solutionCells;
   const templateCells = task.notebook?.cells;
@@ -244,11 +247,28 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
   );
   const hasModel = useMemo(() => labHasModel(task), [task]);
 
+  const reportLab = useCallback((outcome: "ready" | LabFailureReason) => {
+    const observation = observationRef.current;
+    if (observation.taskCode !== task.code || observation.generation !== iframeGeneration) return;
+    const key = outcome === "ready" ? "ready" : `failed:${outcome}`;
+    if (observation.reported.has(key)) return;
+    observation.reported.add(key);
+    const common = {
+      task_code: task.code,
+      load_generation: iframeGeneration,
+      duration_ms: Math.min(300_000, Math.max(0, Math.round(performance.now() - observation.startedAt))),
+      occurred_at: new Date().toISOString(),
+    };
+    if (outcome === "ready") reportBrowserEvent({ event_name: "lab.environment_ready", ...common });
+    else reportBrowserEvent({ event_name: "lab.environment_failed", reason_code: outcome, ...common });
+  }, [iframeGeneration, task.code]);
+
   const finishWarmup = useCallback(() => {
     // 只有真正走完准备阶段才记热身，中途关页面下次仍会提示。
     markLabWarm(task, labRevision);
     setWarmupStage("ready");
-  }, [labRevision, task]);
+    reportLab("ready");
+  }, [labRevision, reportLab, task]);
 
   const configureFillReferences = useCallback(async (bridge: Bridge) => {
     if (examMode || fillReferences.length === 0) return;
@@ -414,6 +434,11 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
   }, [applyNotebook, loadTemplate, localKey, readNotebook, saveDraft, signedIn, task.code]);
 
   useEffect(() => {
+    if (observationRef.current.taskCode !== task.code || observationRef.current.generation !== iframeGeneration) {
+      observationRef.current = { taskCode: task.code, generation: iframeGeneration, startedAt: performance.now(), reported: new Set<string>() };
+    } else if (observationRef.current.startedAt === 0) {
+      observationRef.current.startedAt = performance.now();
+    }
     initializedRef.current = false;
     kernelRef.current = "unknown";
     const bridge = createBridge({ iframeId });
@@ -425,6 +450,7 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
       if (cancelled || bridgeConnected) return;
       setStartupSlow(true);
       setError("JupyterLite 主界面加载超时。可能是网络波动或旧运行时缓存；点击“重新加载环境”会发起新的资源请求，草稿不会被删除。");
+      reportLab("iframe_timeout");
     }, 30000);
     void bridge.ready.then(async () => {
       bridgeConnected = true;
@@ -465,6 +491,7 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
             const message = cause instanceof Error ? cause.message : String(cause);
             setStartupSlow(true);
             setError(`题目环境准备失败：${message}`);
+            reportLab("prepare_failed");
           }
           return;
         } catch {
@@ -474,6 +501,7 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
       if (!cancelled) {
         setStartupSlow(true);
         setError("JupyterLite 环境未能连接，可点击“重新加载环境”自动恢复；你的本机草稿不会被删除。");
+        reportLab("state_timeout");
       }
     }).catch(cause => {
       if (cancelled) return;
@@ -481,6 +509,7 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
       setStartupSlow(true);
       const message = cause instanceof Error ? cause.message : String(cause);
       setError(`JupyterLite 主界面加载失败：${message || "请重新加载环境重试"}`);
+      reportLab("iframe_connect");
     });
 
     const onMessage = (event: MessageEvent) => {
@@ -511,10 +540,12 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
       if (data.type === "AI_TRAINER_EXERCISE_ERROR" && data.message) {
         setStartupSlow(true);
         setError(`题目环境准备失败：${data.message}`);
+        reportLab("prepare_failed");
       }
       if (data.type === "AI_TRAINER_KERNEL_ERROR" && data.message) {
         setStartupSlow(true);
         setError(`Python 内核启动失败：${data.message}`);
+        reportLab("kernel_failed");
       }
     };
     window.addEventListener("message", onMessage);
@@ -526,7 +557,7 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
       if (autosaveRef.current) clearTimeout(autosaveRef.current);
       if (snapshotRef.current) clearTimeout(snapshotRef.current);
     };
-  }, [configureFillReferences, finishWarmup, iframeGeneration, iframeId, loadDrafts, notebookPath, signedIn, snapshotAndSchedule]);
+  }, [configureFillReferences, finishWarmup, iframeGeneration, iframeId, loadDrafts, notebookPath, reportLab, signedIn, snapshotAndSchedule, task.code]);
 
   async function resolveConflict(choice: "local" | "cloud") {
     if (!conflict) return;
@@ -561,6 +592,7 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
     setKernel("unknown");
     setWarmupStage("shell");
     setSaveState("正在重新加载 JupyterLite 环境…");
+    observationRef.current = { taskCode: task.code, generation: iframeGeneration + 1, startedAt: performance.now(), reported: new Set<string>() };
     setIframeGeneration((value) => value + 1);
   }
 
@@ -576,6 +608,7 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
     } catch (cause) {
       const message = cause instanceof Error ? cause.message : String(cause);
       setError(`题目环境准备失败：${message}`);
+      reportLab("prepare_failed");
     }
   }
 
@@ -595,7 +628,10 @@ export default function JupyterLiteLab({ task, signedIn, userEmail = null, examM
         setSaveState(signedIn ? "代码区已就绪；修改会自动同步" : "代码区已就绪；登录后可云端同步");
       }
     }
-    catch (cause) { setError(cause instanceof Error ? cause.message : String(cause)); }
+    catch (cause) {
+      setError(cause instanceof Error ? cause.message : String(cause));
+      if (command === "ai-trainer:restart-and-prepare") reportLab("prepare_failed");
+    }
   }
 
   async function toggleFillReview() {

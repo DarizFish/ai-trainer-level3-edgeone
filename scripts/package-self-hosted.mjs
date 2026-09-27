@@ -1,6 +1,6 @@
 import { access, cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
-import { resolve } from "node:path";
+import { basename, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const projectRoot = fileURLToPath(new URL("..", import.meta.url));
@@ -33,9 +33,13 @@ await cp(resolve(projectRoot, "deploy"), resolve(outputRoot, "deploy"), { recurs
 await mkdir(resolve(outputRoot, "scripts"), { recursive: true });
 const migrationScript = resolve(projectRoot, "scripts", "manage-database.mjs");
 const packagedScript = resolve(outputRoot, "scripts", "manage-database.mjs");
-await cp(migrationScript, packagedScript);
+const reportScript = resolve(projectRoot, "scripts", "analytics-report.mjs");
+const reportCore = resolve(projectRoot, "scripts", "analytics-report-core.mjs");
+for (const script of [migrationScript, reportScript, reportCore]) {
+  await cp(script, resolve(outputRoot, "scripts", basename(script)));
+}
 
-// 迁移脚本不经过 webpack：它以源码形式随 artifact 下发，由 deploy-release.sh 直接执行。
+// 数据库管理与分析脚本不经过 webpack：它们以源码形式随 artifact 下发。
 // 而 Next 的 standalone 只带「应用 server 代码 trace 到」的依赖，应用里的 postgres 已经被
 // 打进 .next/server 的 chunk，不会以包的形式留在 node_modules 里——2026-08-15 线上因此报
 // `ERR_MODULE_NOT_FOUND: Cannot find package 'postgres'`，发布中断在迁移这一步。
@@ -43,8 +47,8 @@ await cp(migrationScript, packagedScript);
 // 所以脚本自己的第三方依赖必须显式带上。放在 scripts/node_modules 而不是根 node_modules：
 // 后者是 Next trace 出来的，混入手工拷贝的内容会分不清哪些是自动的、哪些不是。
 const scriptModules = resolve(outputRoot, "scripts", "node_modules");
-const pending = [...(await readFile(migrationScript, "utf8")).matchAll(/^import\s[^"']*["']([^"']+)["']/gm)]
-  .map(match => match[1])
+const pending = (await Promise.all([migrationScript, reportScript, reportCore].map(script => readFile(script, "utf8"))))
+  .flatMap(source => [...source.matchAll(/^import\s[^"']*["']([^"']+)["']/gm)].map(match => match[1]))
   .filter(specifier => !specifier.startsWith("node:") && !specifier.startsWith("."));
 const packaged = new Set();
 while (pending.length > 0) {
@@ -65,7 +69,7 @@ const requireFromPackagedScript = createRequire(packagedScript);
 for (const specifier of packaged) {
   const resolved = requireFromPackagedScript.resolve(specifier);
   if (!resolved.startsWith(outputRoot)) {
-    throw new Error(`${specifier} resolves outside the release to ${resolved}; the migration script would fail on the server`);
+    throw new Error(`${specifier} resolves outside the release to ${resolved}; a standalone script would fail on the server`);
   }
 }
 

@@ -2219,12 +2219,13 @@ test("robots and sitemap keep crawlers on content and off the runtime", async ()
 });
 
 test("legal pages exist, are linked from every page, and describe what is actually collected", async () => {
-  const [layout, privacy, terms, disclaimer, site] = await Promise.all([
+  const [layout, privacy, terms, disclaimer, site, nginx] = await Promise.all([
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/privacy/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/terms/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/disclaimer/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../lib/site.ts", import.meta.url), "utf8"),
+    readFile(new URL("../deploy/nginx/aitrainer.conf", import.meta.url), "utf8"),
   ]);
 
   // 页尾三条链接出现在 layout 里，等于每一页都能到达。
@@ -2245,9 +2246,12 @@ test("legal pages exist, are linked from every page, and describe what is actual
   // 解释这个决定本身要用到这些词。
   const privacyText = privacy.replace(/^\s*\/\/.*$/gm, "");
   for (const leak of [/IP/, /撞库/, /频率/, /限流/]) assert.doesNotMatch(privacyText, leak);
-  // 数据存在东京、站点在境外，这两点决定了用户数据受哪边管辖，必须写明。
+  // 数据库和源站分别在东京、中国大陆，不能沿用旧的 EdgeOne Pages 地域说明。
   assert.match(privacy, /东京/);
-  assert.match(privacy, /中国大陆境外/);
+  assert.match(privacy, /中国大陆的阿里云服务器/);
+  assert.match(privacy, /站内使用与运行事件/);
+  assert.match(privacy, /服务器访问记录/);
+  assert.match(nginx, /"\$request_method \$uri \$server_protocol"/, "访问日志不得记录包含查询参数的完整请求");
 
   // 两处条款都承诺「发邮件可以处理」，联系方式就必须真的存在。
   assert.match(site, /SITE_CONTACT_EMAIL/);
