@@ -5,6 +5,7 @@ import { withDbDeadline } from "@/db";
 import { theoryAttempts } from "@/db/schema";
 import { withDatabaseErrors } from "@/lib/api-db";
 import { examBlueprint } from "@/lib/exam-blueprint";
+import { recordServerEvent } from "@/lib/analytics-server";
 
 export const POST = withDatabaseErrors("theory.attempt", async (request: Request) => {
   const user = await requireApiUser(); if (!user) return unauthorized();
@@ -16,7 +17,9 @@ export const POST = withDatabaseErrors("theory.attempt", async (request: Request
   const distribution = { judge: typed.filter((q) => q.type === "judge").length, single: typed.filter((q) => q.type === "single").length, multi: typed.filter((q) => q.type === "multi").length };
   if (distribution.judge !== examBlueprint.theory.types.judge.count || distribution.single !== examBlueprint.theory.types.single.count || distribution.multi !== examBlueprint.theory.types.multi.count) return Response.json({ error: "试卷题型配比无效" }, { status: 400 });
   const result = scoreTheory(typed, payload.answers);
-  const row = { email: user.email, mode: payload.mode === "official" ? "official" : "random", score: result.score, maxScore: result.maxScore, passed: result.passed, answersJson: JSON.stringify(payload.answers), contentVersion: content.version };
+  const mode: "official" | "random" = payload.mode === "official" ? "official" : "random";
+  const row = { email: user.email, mode, score: result.score, maxScore: result.maxScore, passed: result.passed, answersJson: JSON.stringify(payload.answers), contentVersion: content.version };
   await withDbDeadline("theory.attempt.insert", (db) => db.insert(theoryAttempts).values(row));
+  recordServerEvent({ event_name: "theory.exam_submitted", mode: row.mode, content_version: content.version });
   return Response.json(result);
 }, "成绩暂时无法保存，请稍后重试");

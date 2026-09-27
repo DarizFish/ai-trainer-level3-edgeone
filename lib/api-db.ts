@@ -1,4 +1,5 @@
 import { errorSummary, isDatabaseUnavailable } from "@/db";
+import { recordServerEvent } from "@/lib/analytics-server";
 
 /**
  * 数据库超时/断连时给客户端的统一应答。
@@ -10,6 +11,7 @@ import { errorSummary, isDatabaseUnavailable } from "@/db";
 export function databaseUnavailable(operation: string, cause: unknown, message = "数据暂时无法读取，请稍后重试"): Response {
   const code = operation.toUpperCase().replace(/[^A-Z0-9]+/g, "_");
   console.error("Database unavailable", { operation, ...errorSummary(cause) });
+  recordServerEvent({ event_name: "business.operation_failed", operation, reason_code: isDatabaseUnavailable(cause) ? "database_unavailable" : "internal_error" });
   return Response.json(
     { error: message, code },
     { status: 503, headers: { "Cache-Control": "no-store", "Retry-After": "2" } },

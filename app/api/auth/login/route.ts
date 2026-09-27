@@ -2,6 +2,7 @@ import { eq } from "drizzle-orm";
 import { isDatabaseUnavailable, withDbDeadline } from "@/db";
 import { users } from "@/db/schema";
 import { describeErrorChain, ensureAccountSchema } from "@/lib/account-schema";
+import { recordServerEvent } from "@/lib/analytics-server";
 import {
   createSession,
   isSecureRequest,
@@ -59,10 +60,12 @@ export async function POST(request: Request) {
     const session = await createSession(user.email);
     const response = Response.json({ user: { email: user.email, displayName: user.displayName || user.email } });
     response.headers.set("set-cookie", serializeSessionCookie(session.token, isSecureRequest(request)));
+    recordServerEvent({ event_name: "account.login_succeeded" });
     return response;
   } catch (cause) {
     const message = describeErrorChain(cause);
     console.error("Account login failed", cause);
+    recordServerEvent({ event_name: "business.operation_failed", operation: `account.login.${stage}`, reason_code: isDatabaseUnavailable(cause) ? "database_unavailable" : "internal_error" });
     // 超时错误的文案对不上下面那条正则（它匹配的是连接类字样），单独判一次，
     // 否则 deadline 触发时会掉进末尾的 500，客户端不会重试。
     if (isDatabaseUnavailable(cause) || /relation .* does not exist|postgres|database|DATABASE_URL|ECONN|ENOTFOUND|connect|SSL|TLS|password authentication failed/i.test(message)) {

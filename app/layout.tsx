@@ -3,6 +3,7 @@ import Link from "next/link";
 import { AccountControls, AccountProvider } from "@/components/AccountSession";
 import IntentLink from "@/components/IntentLink";
 import SiteNavigationLinks from "@/components/SiteNavigationLinks";
+import PageViewRecorder from "@/components/PageViewRecorder";
 import { practicalMockEnabled, voluntarySupportEnabled } from "@/lib/features";
 import { ICP_QUERY_URL, ICP_RECORD, SITE_ORIGIN } from "@/lib/site";
 import "./globals.css";
@@ -39,6 +40,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="zh-CN">
       <body>
         <AccountProvider>
+          <PageViewRecorder />
           <header className="site-header">
             <div className="container nav-row">
               <IntentLink className="brand" href="/" aria-label="人工智能训练师三级备考站（上海）首页">

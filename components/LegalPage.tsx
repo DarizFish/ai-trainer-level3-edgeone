@@ -2,11 +2,12 @@ import Link from "next/link";
 import { LEGAL_UPDATED, SITE_CONTACT_EMAIL } from "@/lib/site";
 
 /** 隐私政策、服务条款、免责声明共用的版式：面包屑 + 标题 + 修订日期 + 正文 + 联系方式。 */
-export default function LegalPage({ eyebrow, title, summary, children }: {
+export default function LegalPage({ eyebrow, title, summary, children, updatedAt = LEGAL_UPDATED }: {
   eyebrow: string;
   title: string;
   summary: string;
   children: React.ReactNode;
+  updatedAt?: string;
 }) {
   return (
     <main className="container workspace legal-page">
@@ -15,7 +16,7 @@ export default function LegalPage({ eyebrow, title, summary, children }: {
         <p className="eyebrow">{eyebrow}</p>
         <h1>{title}</h1>
         <p className="legal-summary">{summary}</p>
-        <p className="legal-updated">最后更新：{LEGAL_UPDATED}</p>
+        <p className="legal-updated">最后更新：{updatedAt}</p>
       </header>
       <article className="legal-body">{children}</article>
       <footer className="legal-contact">

@@ -4,6 +4,7 @@ import { requireApiUser, unauthorized } from "@/lib/server-user";
 import { withDbDeadline } from "@/db";
 import { theoryProgress } from "@/db/schema";
 import { databaseUnavailable } from "@/lib/api-db";
+import { recordServerEvent } from "@/lib/analytics-server";
 import { sql } from "drizzle-orm";
 
 const SYNC_UNAVAILABLE = "学习记录暂时无法同步，请稍后重试";
@@ -77,6 +78,8 @@ export async function POST(request: Request) {
   } catch (cause) {
     return databaseUnavailable("theory.answer.upsert", cause, SYNC_UNAVAILABLE);
   }
+
+  recordServerEvent({ event_name: "theory.answers_saved", question_count: rows.length, content_version: content.version });
 
   if (!Array.isArray(payload.attempts) && payload.questionId) {
     const question = theoryById.get(payload.questionId)!;
