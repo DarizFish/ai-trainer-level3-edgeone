@@ -1,13 +1,14 @@
 # 阿里云自托管运行手册
 
-本文描述统一 `main` 分支的阿里云自托管部署。**现网仍由 `aitrainer.service` 运行 Next.js**；仓库已准备容器发布路径，但 Docker 首次切换尚未执行或经生产验证。EdgeOne 继续作为 CDN。ICP 备案已完成，网站页脚配置为 `沪ICP备2026039336号-1`。
+本文描述统一 `main` 分支的阿里云自托管部署。**现网由 `aitrainer-green` 容器运行 Next.js，Nginx 指向 3001 端口**；旧 `aitrainer.service` 留在 3000 端口供观察期回退。首次容器切流于 2026-09-27 完成并通过源站及正式域名冒烟测试。EdgeOne 继续作为 CDN。ICP 备案已完成，网站页脚配置为 `沪ICP备2026039336号-1`。
 
 ## 架构
 
-目标形态是**阿里云作源站、EdgeOne 只作 CDN**，取代原来「EdgeOne Pages 既构建又托管」的形态。
+当前形态是**阿里云作源站、EdgeOne 只作 CDN**，取代原来「EdgeOne Pages 既构建又托管」的形态。
 
 ```text
-用户 -> EdgeOne CDN -> 阿里云 Nginx :80 -> 127.0.0.1:3000 Next.js（当前 systemd；待切换 Docker）-> Supabase PostgreSQL
+用户 -> EdgeOne CDN -> 阿里云 Nginx :80 -> 127.0.0.1:3001 Next.js（aitrainer-green 容器）-> Supabase PostgreSQL
+                                           127.0.0.1:3000 旧 systemd 实例（观察期回退）
                                      \-> /_next/static、/lite、/labs、/materials、/content 本机直出
 ```
 
@@ -97,7 +98,7 @@ awk '$2 ~ /^via=/ && $1 == substr($2,5)' /var/log/nginx/aitrainer.access.log
 
 ## 基础设施配置随 artifact 下发
 
-当前 systemd 路径中，`deploy/` 下的 Nginx 配置、systemd unit 和发布脚本本身，
+旧 systemd 路径中，`deploy/` 下的 Nginx 配置、systemd unit 和发布脚本本身，
 **和应用代码走同一条已验证路径**：`package-self-hosted.mjs` 把 `deploy/` 打进 artifact，
 `deploy-release.sh` 在发布过程中按需应用。容器路径沿用同一 release 归档提供静态文件和 Nginx 配置，另从同次 Quality gate 输出加载镜像。预备阶段把新版静态文件与旧版仍可能被打开页面请求的文件合并到版本化目录；同一不可变 URL 若字节不同则拒绝预备。候选 Nginx 配置同时指向该静态目录和空闲端口，不修改现用配置；切流时原子替换这一份配置并 reload，旧 worker 继续使用旧配置直到请求结束。`current` 保留给旧 systemd 服务，不参与容器流量路由。
 
@@ -150,7 +151,7 @@ Remove-Item Env:SELF_HOSTED_BUILD
 /srv/aitrainer/current -> releases/<git-commit>
 ```
 
-当前 systemd 发布回滚时把 `current` 指回上一个通过验证的版本并重启 `aitrainer.service`。双容器切换保留旧实例；切流脚本失败时自动恢复旧 Nginx 配置，成功后仍可用 `switch-aitrainer-container rollback` 切回。数据库迁移不自动反向执行，必须遵守 `DATABASE-MIGRATIONS.md` 的向后兼容要求。
+旧 systemd 发布回滚时把 `current` 指回上一个通过验证的版本并重启 `aitrainer.service`。双容器切换保留旧实例；切流脚本失败时自动恢复旧 Nginx 配置，成功后仍可用 `switch-aitrainer-container rollback` 切回。数据库迁移不自动反向执行，必须遵守 `DATABASE-MIGRATIONS.md` 的向后兼容要求。
 
 ## 运行环境
 
@@ -167,13 +168,15 @@ DIRECT_URL=postgresql://...
 
 `.github/workflows/quality.yml` 在 PR 与 `main` push 上执行完整质量门禁和容器镜像构建检查。只有成功的 `main` push run 才上传同一 SHA 的 release 归档与镜像归档。旧发布与容器预备工作流均为手动 `workflow_dispatch`，仅允许从 `main` 运行，并共用 `self-hosted-production` 并发锁。运行者必须输入成功的 `main` push Quality gate 的 run ID 和完整 Git SHA；工作流向 GitHub API 核对其事件、分支、SHA、结论及 artifact 身份。容器预备时服务器通过 GitHub 提供的一次性下载地址取得 artifact，先校验 GitHub 记录的外层 SHA-256，再校验内层归档并运行预备脚本。容器工作流只预备候选实例，不能执行最终切流。
 
-### 单机双实例切换（尚未在生产执行）
+### 单机双实例切换（2026-09-27 首次生产验证）
 
 1. 在阿里云主机安装并启动 Docker Engine，确认 `docker info`；检查可用内存、磁盘、当前 systemd 服务和 Nginx readiness。管理员从已审核的仓库版本运行 `sudo bash deploy/scripts/bootstrap-container-deploy.sh deploy/scripts/deploy-container-release.sh`，只把“预备候选实例”命令加入 deploy 用户的 sudo 白名单。
 2. 选择成功的 `main` push Quality gate run，在 GitHub Actions 手动运行 `Stage verified container release`，填写 run ID 和完整 SHA。脚本验包、加载镜像、运行一次性迁移容器，再把候选 Web 容器启动到空闲的回环端口；首次是 `127.0.0.1:3001`，旧 systemd 服务仍在 3000。脚本验证候选 readiness、准备新旧兼容的静态文件目录、生成新版本的 Nginx 配置并做语法检查。此阶段不 reload Nginx，不改 `current`，线上仍是旧版本。
 3. 切流前核对 `/var/lib/aitrainer-deploy/pending` 的 SHA、`docker ps`、`docker logs aitrainer-green`、候选 `/api/health/ready`、当前公开 readiness 和资源余量。通过 SSH 隧道检查候选页面与关键 API。仅在这份证据可审阅后，人工确认最终切换。
 4. **最终切换命令（须人工确认后才执行）**：管理员运行 `sudo /usr/local/sbin/switch-aitrainer-container switch <已预备的完整 SHA>`。root-only 脚本再次检查新旧实例 readiness，原子替换一份 Nginx 配置并 graceful reload；新请求的代理目标和静态目录同时变更。若 readiness 或静态哈希检查失败，会恢复旧路由。旧实例继续运行，`current` 保持指向旧 systemd release，避免它意外重启时运行新代码。
-5. 切流成功后，从对应 checkout 运行 `npm.cmd run test:smoke`，检查登录、静态资源、业务写入与日志。在观察期内可运行 `sudo /usr/local/sbin/switch-aitrainer-container rollback` 恢复旧路由。确认不需即时回退后，再单独停用旧 systemd 服务；下一次发布使用空闲的 3000 端口和 `aitrainer-blue` 容器。后续版本在 blue/green 两槽之间交替，旧槽需在观察期结束后退役。
+5. 切流成功后，从对应 checkout 对源站和正式域名分别运行 `npm.cmd run test:smoke`，核对公开路由、静态资源字节、MIME、Lab 配置和安全头；登录、业务写入与 ONNX 推理需另行验证。在观察期内可运行 `sudo /usr/local/sbin/switch-aitrainer-container rollback` 恢复旧路由。确认不需即时回退后，再单独停用旧 systemd 服务；下一次发布使用空闲的 3000 端口和 `aitrainer-blue` 容器。后续版本在 blue/green 两槽之间交替，旧槽需在观察期结束后退役。
+
+首次切流的已验证版本、工作流和冒烟结果见 [STATUS.md](STATUS.md)。旧实例的 readiness 已核对；显式 rollback 命令尚未演练。
 
 旧 `Deploy legacy self-hosted release manually` 工作流只用于预备候选实例之前的 systemd 发布；一旦存在候选或蓝绿容器，旧脚本会拒绝执行。单机双实例减少发布切换中断，但主机故障仍会同时影响两个实例。数据库迁移须保持旧版兼容；回滚应用不会反向执行迁移。
 
@@ -187,7 +190,7 @@ DEPLOY_SSH_PRIVATE_KEY=<专用 Ed25519 私钥全文>
 容器引导后可通过 sudo 调用 `/usr/local/sbin/deploy-aitrainer-container`，原有 systemd 命令仍受保护。服务器 SSH 主机公钥固定记录在
 `deploy/ssh/known_hosts`，Actions 禁止在首次连接时动态信任未知主机。
 
-`main` 是 EdgeOne 与阿里云共用的受保护生产分支。变更必须通过 PR 和 `Quality gate / Full build and browser regression` 后才能合并。EdgeOne 用合并提交执行标准 Next.js 构建；自托管只消费同一提交的已验证 artifact。建议为 `self-hosted-production` Environment 配置人工审批。
+`main` 是 EdgeOne 与阿里云共用的生产分支，当前未启用硬分支保护。变更必须通过 PR 和 `Quality gate / Full build and browser regression` 后才能合并。EdgeOne 用合并提交执行标准 Next.js 构建；自托管只消费同一提交的已验证 artifact。建议为 `self-hosted-production` Environment 配置人工审批。
 
 ## IP 直连测试限制
 
@@ -207,14 +210,14 @@ Service Worker 和 JupyterLite。正式上线仍必须使用受信任 HTTPS 证�
 ## 验收
 
 ```bash
-curl -fsS http://127.0.0.1:3000/api/health/live
-curl -fsS http://127.0.0.1:3000/api/health/ready
+curl -fsS http://127.0.0.1:3001/api/health/live
+curl -fsS http://127.0.0.1:3001/api/health/ready
 curl -fsS http://127.0.0.1/api/health/ready
 ```
 
 还必须检查：
 
-- Node 3000 和数据库端口未暴露公网；
+- Node 3000/3001 和数据库端口未暴露公网；
 - `/lite/static/pyodide/pyodide-lock.json` 为 `must-revalidate`；
 - `/labs/models/...` 为一年 `immutable`；
 - JavaScript、MJS 和 WASM MIME 正确；

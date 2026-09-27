@@ -1,6 +1,6 @@
 # 项目当前状态
 
-更新时间：2026-08-15。用于把项目移交给其他会话或协作者。
+更新时间：2026-09-27。用于把项目移交给其他会话或协作者。
 
 本文只回答**现在是什么状态**。其余问题按下表分流——每类信息的更新节奏不同，
 混在一份文档里的结果是它长到没人会完整读，而没人读完的显式状态等同于隐式状态。
@@ -23,10 +23,10 @@
 | 正式站 | https://www.aitrainer3.xyz/ |
 | 本地目录 | `C:\Users\zd\Documents\aitrainer3\edgeone-site` |
 | 当前维护分支 | `main`。任务分支合并后即失效，不在此登记分支名 |
-| 已验证代码基线 | 加固提交 `43ebdac`，经 PR #14 合并为 `main` 提交 `8cca4ec`；验证证据见第 3 节 |
-| PR 状态 | PR #14 已在 Quality Gate 通过后合并；未启用硬分支保护 |
-| 阿里云源站 | `39.96.7.2` 已部署并通过 `/api/health/ready`；当前 schema 为 `0002_condemned_klaw` |
-| 正式域名路由 | **已切换完成**：`www.aitrainer3.xyz` 由 EdgeOne CDN 回源阿里云 Nginx，2026-08-15 实测返回 `Server: nginx`、`/api/health/ready` 为 `ready`。EdgeOne Pages 不再承载正式流量。架构见 `SELF-HOSTING.md` |
+| 已验证代码基线 | `47c05719ef773ce9a43d185b3fc502cfca7e8a40`；`main` Quality Gate 与容器预备工作流通过，证据见第 3 节 |
+| PR 状态 | PR #14—#17 已合并；未启用硬分支保护 |
+| 阿里云源站 | `39.96.7.2` 的 Nginx 当前代理 `127.0.0.1:3001`（`aitrainer-green`）；旧 `aitrainer.service` 留在 3000 供回退；当前 schema 为 `0002_condemned_klaw` |
+| 正式域名路由 | `www.aitrainer3.xyz` 由 EdgeOne CDN 回源阿里云 Nginx；2026-09-27 对正式域名运行 `test:smoke` 6/6 通过。EdgeOne Pages 不承载正式流量。架构见 `SELF-HOSTING.md` |
 | GitHub | `ssh://git@ssh.github.com:443/DarizFish/ai-trainer-level3-edgeone.git` |
 | EdgeOne 项目 | `makers-xyzgssb9k7as` |
 | Supabase | 项目 `sqenbhewvjnmatgkkbqy`，东京区 `aws-0-ap-northeast-1.pooler.supabase.com` |
@@ -48,6 +48,14 @@ npm.cmd run dev -- --webpack -p 3200 -H 127.0.0.1
 ## 3. 当前质量门禁
 
 安全依赖升级、PR Quality Gate、verified-artifact 自托管发布、数据库 migration 加固，以及 JupyterLite 内核冷启动与测试 readiness 修复已进入远端 `main`。PR Quality Gate 只验证提交，不部署生产环境。
+
+### 单机双槽容器首次切流（2026-09-27）
+
+**已验证**：`main` 的 [Quality Gate run 36258772694](https://github.com/DarizFish/ai-trainer-level3-edgeone/actions/runs/36258772694) 为成功，产物对应 `47c05719ef773ce9a43d185b3fc502cfca7e8a40`；[容器预备 run 36284665165](https://github.com/DarizFish/ai-trainer-level3-edgeone/actions/runs/36284665165) 成功。候选 `aitrainer-green` 在 3001 端口为 healthy，切流脚本成功；服务器的 `active` 记录及 Nginx 配置均指向该提交和 3001 端口。
+
+**已验证**：切流后从对应 checkout 对源站 `http://39.96.7.2/` 与正式域名分别运行 `npm.cmd run test:smoke`，均为 6/6 通过；覆盖公开路由、静态文件字节哈希和 MIME、Lab 配置、扩展入口及隔离头。新旧实例的 `/api/health/ready` 均返回 `database=ok` 和 `schema=0002_condemned_klaw`。
+
+**观察期**：旧 `aitrainer.service` 仍在 3000 端口运行，供 `switch-aitrainer-container rollback` 回退；显式回退动作尚未演练。冒烟测试不覆盖账号登录、业务写入或 ONNX 推理。
 
 ### 网站运营功能分支
 
