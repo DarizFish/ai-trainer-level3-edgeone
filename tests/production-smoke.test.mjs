@@ -13,6 +13,23 @@ const requestTimeoutMs = 90_000;
 const manifestPath = "/labs/manifest.json";
 const manifestLocal = "../public/labs/manifest.json";
 
+test("production logout clears the session with secure cookie attributes", async () => {
+  const response = await fetch(new URL("/api/auth/logout", baseUrl), {
+    method: "POST",
+    headers: { Accept: "application/json" },
+    signal: AbortSignal.timeout(requestTimeoutMs),
+  });
+  assert.equal(response.status, 200);
+  assert.deepEqual(await response.json(), { ok: true });
+  const cookie = response.headers.get("set-cookie") ?? "";
+  assert.match(cookie, /(?:^|;)\s*ai_trainer_session=;/i);
+  assert.match(cookie, /(?:^|;)\s*Max-Age=0(?:;|$)/i);
+  assert.match(cookie, /(?:^|;)\s*HttpOnly(?:;|$)/i);
+  assert.match(cookie, /(?:^|;)\s*Secure(?:;|$)/i);
+  assert.match(cookie, /(?:^|;)\s*SameSite=Lax(?:;|$)/i);
+  assert.match(response.headers.get("cache-control") ?? "", /no-store/i);
+});
+
 const assets = [
   {
     path: "/lite/static/pyodide/pyodide.js",

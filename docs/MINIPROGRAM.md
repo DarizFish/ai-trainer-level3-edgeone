@@ -22,7 +22,7 @@
 
 事务设置 `statement_timeout=5s`、`lock_timeout=3s`，外层继续使用现有数据库 deadline。新增逻辑不关闭共享连接池；锁等待超时只回滚当前事务。并发测试使用隔离的 PGlite 协议服务及单连接池，不能替代多进程生产负载测试。
 
-迁移 `0003_freezing_white_queen.sql` 仅新增表，启用 RLS，未授予客户端直接访问策略。按 [数据库迁移流程](DATABASE-MIGRATIONS.md) 发布。代码实现不代表迁移已在生产执行。
+迁移 `0003_freezing_white_queen.sql` 仅新增表，启用 RLS，未授予客户端直接访问策略。按 [数据库迁移流程](DATABASE-MIGRATIONS.md) 发布。2026-10-03 已在生产应用 `0003` 并通过 schema 检查；正式 API 验证了去重、账号隔离和独立登出。
 
 ## 内容生成与验证
 
@@ -48,3 +48,5 @@ npm.cmd run content:miniprogram:audit
 `test:devtools` 将运行代码复制到独立的临时开发者工具项目，通过自动化端口执行界面验收。该测试项目允许模拟器访问本机 HTTP，原项目配置保持不变。此项不证明正式域名配置及真机网络已验收。截图通过 `CAPTURE_DEVTOOLS=1` 单独开启，避免桌面截图接口故障掩盖功能断言。
 
 生产发布需要先完成迁移、网站部署和正式域名配置，再验证小程序真机登录、退出、弱网及重启。合并、部署、小程序提交审核均需要用户明确授权。
+
+当前测试号 `wxa14c09fabccbf577` 已配置 `https://www.aitrainer3.xyz` 为 request 合法域名；测试号预览不能代替正式个人主体注册、备案与审核。用户当前选择先完成测试号验收。

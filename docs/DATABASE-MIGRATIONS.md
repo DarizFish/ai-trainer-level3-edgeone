@@ -4,7 +4,7 @@ EdgeOne 与自托管服务共享同一个 PostgreSQL 数据库。数据库结构
 
 ## 已验证基线
 
-截至 2026-08-12，生产库的 8 张业务表、列、主外键和索引已与 `drizzle/meta/0002_snapshot.json` 逐项核对，并在 `drizzle.__drizzle_migrations` 中登记了 `0000`—`0002` 的时间戳与 SHA-256。当前版本为 `0002_condemned_klaw`。
+截至 2026-08-12，生产库的 8 张业务表、列、主外键和索引已与 `drizzle/meta/0002_snapshot.json` 逐项核对，并在 `drizzle.__drizzle_migrations` 中登记了 `0000`—`0002` 的时间戳与 SHA-256。这次初始基线为 `0002_condemned_klaw`。2026-10-03 已通过已验证主线发布包应用 `0003_freezing_white_queen` 并通过 schema 检查；旧版本 readiness 仍通过。
 
 `db:baseline` 只用于接管一个已有但尚未登记迁移历史的数据库。它先校验完整 schema，再写迁移记录；若表结构不一致、历史只有一部分或 hash 分叉，会回滚并失败。生产基线已经建立，不应再次把它当作日常发布命令。
 
