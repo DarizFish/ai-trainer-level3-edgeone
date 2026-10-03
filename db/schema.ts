@@ -34,6 +34,17 @@ export const sessions = pgTable("sessions", {
   index("sessions_expires_at_idx").on(table.expiresAt),
 ]);
 
+// A client submission and its business write commit together. RLS denies the
+// public Data API; the existing server-side database role owns access.
+export const apiSubmissions = pgTable("api_submissions", {
+  email: text("email").notNull().references(() => users.email, { onDelete: "cascade" }),
+  operation: text("operation").notNull(),
+  submissionId: text("submission_id").notNull(),
+  payloadHash: text("payload_hash").notNull(),
+  responseJson: text("response_json").notNull(),
+  createdAt: createdAt(),
+}, (table) => [primaryKey({ columns: [table.email, table.operation, table.submissionId] })]).enableRLS();
+
 /**
  * 注册与登录的固定窗口计数器。放数据库而不是进程内存，是因为 EdgeOne 函数是多实例
  * 的，进程内计数各数各的，攻击者只要并发就能把每个实例的额度分别用满。
