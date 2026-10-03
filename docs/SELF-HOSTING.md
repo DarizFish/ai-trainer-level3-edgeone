@@ -1,14 +1,14 @@
 # 阿里云自托管运行手册
 
-本文描述统一 `main` 分支的阿里云自托管部署。**现网由 `aitrainer-blue` 容器运行 Next.js，Nginx 指向 3000 端口**；`aitrainer-green` 在 3001 端口供即时回退，旧 `aitrainer.service` 已停用。首次容器切流和第二次蓝绿切换均于 2026-09-27 完成并通过源站及正式域名冒烟测试。EdgeOne 继续作为 CDN。ICP 备案已完成，网站页脚配置为 `沪ICP备2026039336号-1`。
+本文描述统一 `main` 分支的阿里云自托管部署。**现网由 blue/green 容器运行 Next.js，Nginx 在 3000/3001 端口间切换**；实际活动槽以 `/var/lib/aitrainer-deploy/active` 为准，前一实例保留回退，旧 `aitrainer.service` 已停用。首次容器切流和第二次蓝绿切换均于 2026-09-27 完成并通过源站及正式域名冒烟测试。EdgeOne 继续作为 CDN。ICP 备案已完成，网站页脚配置为 `沪ICP备2026039336号-1`。
 
 ## 架构
 
 当前形态是**阿里云作源站、EdgeOne 只作 CDN**，取代原来「EdgeOne Pages 既构建又托管」的形态。
 
 ```text
-用户 -> EdgeOne CDN -> 阿里云 Nginx :80 -> 127.0.0.1:3000 Next.js（aitrainer-blue 容器）-> Supabase PostgreSQL
-                                           127.0.0.1:3001 aitrainer-green 容器（回退）
+用户 -> EdgeOne CDN -> 阿里云 Nginx :80 -> 当前活动端口 Next.js（blue 或 green 容器）-> Supabase PostgreSQL
+                                           另一端口的前一实例（回退）
                                      \-> /_next/static、/lite、/labs、/materials、/content 本机直出
 ```
 
@@ -122,6 +122,10 @@ awk '$2 ~ /^via=/ && $1 == substr($2,5)' /var/log/nginx/aitrainer.access.log
 ```bash
 install -o root -g root -m 0755 deploy/scripts/deploy-release.sh /usr/local/sbin/deploy-aitrainer
 ```
+
+### HTTPS 会话 Cookie
+
+EdgeOne 在边缘终止 TLS，再以 HTTP 回源，因此 Nginx 的 `$scheme` 不能代表浏览器协议。Nginx 对 `ai_trainer_session` 使用 `proxy_cookie_flags ... secure`，保证登录、注册和清除会话 Cookie 都有 `Secure`。它不修改其他 Cookie；HTTP IP 直连仍只用于诊断，账号浏览器验收使用正式 HTTPS 域名。线上冒烟测试通过匿名 JSON 登出验证该属性，无需创建账号或写入业务数据。EdgeOne Pages 由平台直接处理 HTTPS；这条自托管代理 Cookie 规则不改变三处共同维护的缓存与 COOP/COEP 响应头。
 
 ## 构建与发布物
 

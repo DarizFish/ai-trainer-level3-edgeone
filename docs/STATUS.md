@@ -18,19 +18,23 @@
 
 ## 1. 坐标
 
-### 2026-10-03：小程序接入（本地实现，尚未发布）
+### 2026-10-03：小程序接口已发布，真机验收待完成
 
-内容清单、实操填空产物、理论提交去重、成绩列表及 JSON 登出响应已实现。独立候选已通过完整 CI（56 项快速测试、生产构建、35 项浏览器回归）与隔离数据库 API 联调。SQL 换行保护补充后，57 项快速测试及本机 `db:check` 通过。接入与验证方式见 [微信小程序接入](MINIPROGRAM.md)。本次未执行生产迁移或部署；以下正式站记录保持原有核验范围。
+**已验证**：PR #21 的合并版本通过 [主线 Quality Gate](https://github.com/DarizFish/ai-trainer-level3-edgeone/actions/runs/37132376140)，包括 57 项快速测试、构建、35 项浏览器回归和容器检查。生产迁移 `0003`、候选预备和切流成功；正式域名与源站的原有 6 项冒烟均通过。正式 HTTPS API 验证了注册登录、独立会话、账号隔离、作答去重、190 题计分、交卷重放及成绩列表。接入方式见 [微信小程序接入](MINIPROGRAM.md)。
+
+**发现与修复**：CDN 以 HTTP 回源时，原配置返回的会话 Cookie 缺少 `Secure`。Nginx 现对 `ai_trainer_session` 强制添加该属性，新增线上登出 Cookie 冒烟检查；修复版本部署后必须对正式域名及源站重新运行完整 `test:smoke`。
+
+**边界**：当前小程序 AppID 是测试号，已配置正式站 request 域名并生成预览；用户选择先完成测试号验收。iOS、Android 真机恢复和弱网验收尚未完成。
 
 | 项目 | 值 |
 | --- | --- |
 | 正式站 | https://www.aitrainer3.xyz/ |
 | 本地目录 | `C:\Users\zd\Documents\aitrainer3\edgeone-site` |
 | 当前维护分支 | `main`。任务分支合并后即失效，不在此登记分支名 |
-| 已验证代码基线 | `3bded47114f7c84430e4407712f5c942ce58c166`；`main` Quality Gate、容器预备和线上冒烟测试通过，证据见第 3 节 |
-| PR 状态 | PR #19 已合并；未启用硬分支保护 |
-| 阿里云源站 | `39.96.7.2` 的 Nginx 当前代理 `127.0.0.1:3000`（`aitrainer-blue`）；`aitrainer-green` 在 3001 保留作即时回退，旧 `aitrainer.service` 已停用；当前 schema 为 `0002_condemned_klaw` |
-| 正式域名路由 | `www.aitrainer3.xyz` 由 EdgeOne CDN 回源阿里云 Nginx；2026-09-27 对正式域名运行 `test:smoke` 6/6 通过。EdgeOne Pages 不承载正式流量。架构见 `SELF-HOSTING.md` |
+| 已验证代码基线 | `64d0963e899cfe8972b24542d069e2287d0be5e0`；主线 Quality Gate、迁移、容器预备及切流后原有 6 项线上冒烟通过；后续 Cookie 修复以新增第 7 项冒烟验收 |
+| PR 状态 | PR #21 已合并；未启用硬分支保护 |
+| 阿里云源站 | `39.96.7.2` 的 Nginx 在 blue:3000 / green:3001 间切换，实际活动槽以服务器 `/var/lib/aitrainer-deploy/active` 为准，前一实例保留回退；旧 `aitrainer.service` 已停用；当前 schema 为 `0003_freezing_white_queen` |
+| 正式域名路由 | `www.aitrainer3.xyz` 由 EdgeOne CDN 回源阿里云 Nginx；2026-10-03 小程序接口切流后，源站及正式域名原有 `test:smoke` 均 6/6 通过。EdgeOne Pages 不承载正式流量。架构见 `SELF-HOSTING.md` |
 | GitHub | `ssh://git@ssh.github.com:443/DarizFish/ai-trainer-level3-edgeone.git` |
 | EdgeOne 项目 | `makers-xyzgssb9k7as` |
 | Supabase | 项目 `sqenbhewvjnmatgkkbqy`，东京区 `aws-0-ap-northeast-1.pooler.supabase.com` |

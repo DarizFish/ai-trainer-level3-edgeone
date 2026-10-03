@@ -34,7 +34,7 @@
 | `theory_attempts` | 每次模拟考 1 行，`answers_json` 装 190 题答案 ≈ 3 KB | 无 |
 | `practical_attempts` | 每次实操评分 1 行，含 `rubric_json` | 仅用户手动重置 |
 | `sessions` | 每次登录 1 行 | 仅显式登出时删（`lib/account-auth.ts`） |
-| `api_submissions`（小程序迁移新增，尚未确认生产部署） | 每批作答或模考提交 1 行，保存请求摘要和返回值 | 随账号删除；暂不按时间清理，防止旧队列重放后重复入账 |
+| `api_submissions`（2026-10-03 已随 `0003` 在生产新增） | 每批作答或模考提交 1 行，保存请求摘要和返回值 | 随账号删除；暂不按时间清理，防止旧队列重放后重复入账 |
 
 一个刷 200 次模拟考的用户在 `theory_attempts` 里占 600 KB，是他全部 900 行进度的 3.5 倍。`sessions` 表上有 `sessions_expires_at_idx`，但**没有任何代码用它做清理**——`auth_throttle` 反而有 `sweepThrottle()`（`lib/auth-throttle.ts`，2% 概率顺手清过期行），把同样的手法照搬到 `sessions` 即可。生产库现状印证了这一点：35 个用户对应 46 行 `sessions`，只增不减。
 
