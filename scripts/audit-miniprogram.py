@@ -19,7 +19,11 @@ def tokens(source):
     except tokenize.TokenError as error:
         # A blank can sit on one line of a multi-line call. Whole-notebook AST
         # parsing below independently checks the complete syntax.
-        assert error.args[0] == 'EOF in multi-line statement', error
+        # Python 3.12 adds "unexpected" to this same incomplete-line error.
+        assert error.args[0] in (
+            'EOF in multi-line statement',
+            'unexpected EOF in multi-line statement',
+        ), error
     return found
 
 codes = set()
