@@ -3,6 +3,7 @@ import { mkdir, readdir, rm, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { assembleBank } from "./assemble-entities.mjs";
+import { buildMiniprogramContent } from "./miniprogram-content.mjs";
 
 const projectRoot = dirname(dirname(fileURLToPath(import.meta.url)));
 // 直接从实体层装配，不再经过 data/content.json 这个中间大文件。
@@ -16,6 +17,11 @@ if (!/^[a-zA-Z0-9._-]+$/.test(content.version)) {
 await mkdir(outputDirectory, { recursive: true });
 
 const files = [
+  {
+    asset: "miniprogramPractical",
+    base: `miniprogram-practical-${content.version}`,
+    payload: buildMiniprogramContent(content),
+  },
   {
     asset: "theory",
     base: `theory-${content.version}`,
@@ -64,7 +70,7 @@ const files = [
   },
 ];
 
-// 文件名里必须带内容哈希，而不是只带 content.version。这三份题库按
+// 文件名里必须带内容哈希，而不是只带 content.version。这四份题库按
 // `immutable, max-age=31536000` 发布（见 next.config.ts），而 content.version 是
 // data/entities/meta.json 里的人工版本号——只要改了题却忘了改它，URL 就不变，已经
 // 取过这个 URL 的浏览器和 CDN 节点会把旧题库留整整一年，修好的题永远到不了学员。

@@ -42,6 +42,7 @@ try {
   // sequential after the static pair to avoid Windows process-spawn flakiness.
   await Promise.all([run("lint"), run("typecheck")]);
   await run("content:validate");
+  await run("content:miniprogram:audit");
   await run("test:contracts");
 } catch (error) {
   stopChildren();

@@ -11,3 +11,5 @@ public/lite/files/**/*.py text eol=lf
 public/lite/**/*.js text eol=lf
 public/lite/**/*.mjs text eol=lf
 data/references/theory-review-state/manifest.json text eol=crlf
+
+drizzle/*.sql text eol=lf

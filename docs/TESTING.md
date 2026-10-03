@@ -95,6 +95,8 @@ npm.cmd run test:smoke
 - 当前只覆盖公开学习页面和匿名认证跳转，不连接 Supabase。
 - 账号注册、登录、学习进度和草稿写入需要单独的临时 PostgreSQL 测试库；在建立可自动清理的测试数据库前，不应让 CI 写入生产 Supabase。
 
+- 小程序接入提供了独立的本机 PGlite API 测试库，覆盖账号、会话、作答和成绩去重；运行方法与边界见 [微信小程序接入](MINIPROGRAM.md)。普通浏览器回归仍不写入该数据库。快速门禁还包含 `content:miniprogram:audit`，独立核对实操填空来源及重建代码。
+
 ## CI
 
 `.github/workflows/quality.yml` 在推送和拉取请求时执行生产依赖 high 级审计、完整构建与浏览器/JupyterLite 门禁。`main` 的成功 run 额外生成以 commit SHA 命名的自托管 artifact；部署工作流只能消费该 run 的 artifact。浏览器失败会保留七天的 trace、截图、视频和 HTML 报告。

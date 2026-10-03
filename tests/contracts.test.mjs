@@ -184,7 +184,11 @@ test("public route shells are static while answer scoring is immediate and persi
   assert.match(theoryPractice, /progressTimerRef\.current = null;\s+flushProgress\(\);\s+}, 900\)/);
   assert.match(theoryAnswer, /Array\.isArray\(payload\.attempts\)/);
   assert.match(theoryAnswer, /excluded\.attempts/);
-  assert.match(theoryAnswer, /withDbDeadline\("theory\.answer\.upsert"/);
+  assert.match(theoryAnswer, /saveSubmission\(user\.email, "theory\.answer\.upsert"/);
+  const submission = await readFile(new URL("../lib/submission.ts", import.meta.url), "utf8");
+  assert.match(submission, /withDbDeadline\(operation/);
+  assert.match(submission, /set local statement_timeout/);
+  assert.match(submission, /set local lock_timeout/);
   assert.match(theoryAnswer, /databaseUnavailable\("theory\.answer\.upsert"/);
   assert.match(progressPage, /initialData=\{progress\}/);
   assert.doesNotMatch(dashboard, /fetch\("\/api\/progress"/);
@@ -297,7 +301,7 @@ test("公开题库按内容哈希命名，改题即换 URL，immutable 缓存不
   // 版本号是不够的：忘记改版本号就等于把旧题库钉死在浏览器和 CDN 里整整一年，
   // 这是 docs/INCIDENTS.md 记的同一类故障。
   assert.match(nextConfig, /source: "\/content\/:path\*"[\s\S]*?immutable/);
-  const urls = [assets.theory, assets.practical, assets.practicalCatalog];
+  const urls = [assets.theory, assets.practical, assets.practicalCatalog, assets.miniprogramPractical];
   for (const url of urls) {
     const digest = /\.([0-9a-f]{16})\.json$/.exec(url)?.[1];
     assert.ok(digest, `${url} 的文件名里没有内容哈希`);
@@ -2328,4 +2332,18 @@ test("content lives in a reviewable entity layer, not one 944KB single-line blob
   assert.equal(assets.version, bank.version);
   const published = JSON.parse(await readFile(new URL(`../public${assets.theory}`, import.meta.url), "utf8"));
   assert.deepEqual(published.questions, bank.theory, "发布的理论题库与实体层不一致");
+});
+
+test("migration bytes stay portable and match the required schema hash", async () => {
+  const root = new URL("../drizzle/", import.meta.url);
+  const names = (await readdir(root)).filter(name => name.endsWith(".sql")).sort();
+  for (const name of names) {
+    const bytes = await readFile(new URL(name, root), "utf8");
+    assert.doesNotMatch(bytes, /\r/, name + " must retain LF bytes across checkouts");
+  }
+  const latest = names.at(-1);
+  const hash = createHash("sha256").update(await readFile(new URL(latest, root))).digest("hex");
+  const version = await readFile(new URL("../db/schema-version.ts", import.meta.url), "utf8");
+  assert.ok(version.includes(hash), "schema version must match the latest SQL bytes");
+  assert.ok(version.includes(latest.replace(/\.sql$/, "")), "schema version must identify the latest migration");
 });
