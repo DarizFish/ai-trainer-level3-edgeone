@@ -1,0 +1,71 @@
+<view wx:if="{{task}}" class="workspace {{mode === 'code' && !writing ? 'code-workspace' : ''}}" style="height:{{keyboardHeight ? viewportHeight + 'px' : '100vh'}};padding-bottom:{{safeBottom}}px">
+  <view wx:if="{{!keyboardHeight && !writing}}" class="workspace-top">
+    <button class="top-action" bindtap="openPanel" data-panel="info">题目</button>
+    <view class="mode-switch" wx:if="{{codeFields.length && textFields.length}}"><button class="{{mode === 'code' ? 'selected' : ''}}" bindtap="switchMode" data-mode="code">代码 {{codeFilled}}/{{codeFields.length}}</button><button class="{{mode === 'document' ? 'selected' : ''}}" bindtap="switchMode" data-mode="document">{{task.group === '3.2' ? '流程' : '报告'}} {{textFilled}}/{{textFields.length}}</button></view>
+    <text wx:else class="mode-label">{{mode === 'code' ? '代码练习' : document.template ? '文书填空' : '分析报告'}}</text>
+    <button class="top-action" bindtap="openPanel" data-panel="directory">目录</button>
+  </view>
+  <view wx:if="{{saveError}}" class="save-error">{{saveError}}</view>
+
+  <block wx:if="{{writing}}">
+    <view class="writing-heading"><button bindtap="done">‹ 返回</button><view class="writing-title">{{field.label}}</view><button bindtap="reveal" data-action="reveal">参考答案</button></view>
+    <scroll-view wx:if="{{promptOpen}}" class="writing-context" scroll-y><view class="writing-context-title">{{task.title}}</view><view class="pre">{{field.context || task.description}}</view></scroll-view>
+    <view class="writing-area"><textarea wx:if="{{!panel}}" class="long-answer" value="{{answer}}" focus="{{inputFocus}}" maxlength="10000" placeholder="写下你的分析与思路…" bindinput="input" bindkeyboardheightchange="keyboard" adjust-position="{{false}}" show-confirm-bar="{{false}}" /></view>
+    <view class="writing-footer"><button bindtap="togglePrompt" data-action="toggle-prompt">{{promptOpen ? '收起题目' : '看题目'}}</button><text>{{savedLabel}}</text><button class="finish-writing" bindtap="done">完成</button></view>
+  </block>
+  <block wx:else>
+    <scroll-view wx:if="{{mode === 'code' && codeAvailable}}" class="reader code-reader {{wrapCode ? 'wrapped' : 'unwrapped'}}" scroll-y scroll-x="{{!wrapCode}}" scroll-into-view="{{codeTarget}}" scroll-top="{{codeScroll}}" scroll-left="{{codeLeft}}" bindscroll="readerScroll" data-mode="code" show-scrollbar="{{false}}">
+      <view class="code-content">
+        <view wx:for="{{codeCells}}" wx:key="id" wx:for-item="cell">
+          <view wx:if="{{codeCells.length > 1}}" class="cell-heading">{{cell.title}}</view>
+          <view wx:for="{{cell.lines}}" wx:key="id" wx:for-item="line" id="{{line.id}}" class="code-line {{field.source.cellId === cell.id && field.source.line === line.number ? 'current-line' : ''}}">
+            <text class="line-number">{{line.number}}</text>
+            <view class="line-content"><block wx:for="{{line.tokens}}" wx:key="key" wx:for-item="token"><view wx:if="{{token.blank}}" class="code-blank {{token.index === current ? 'active-blank' : ''}} {{token.filled ? 'filled-blank' : ''}}" style="{{editing && token.index === current && !panel ? 'width:' + inlineWidth + 'px' : ''}}" data-index="{{token.index}}" bindtap="selectField"><textarea wx:if="{{editing && token.index === current && !panel}}" class="inline-editor code-answer" data-index="{{token.index}}" value="{{answers[token.id]}}" focus="{{inputFocus}}" auto-height maxlength="10000" aria-label="填写答案" bindinput="input" catchtap="swallow" bindkeyboardheightchange="keyboard" adjust-position="{{false}}" show-confirm-bar="{{false}}" /><text wx:else>{{token.text}}</text></view><text wx:else class="code-text">{{token.text}}</text></block></view>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+    <view wx:elif="{{mode === 'code'}}" class="unavailable">这道题已更新，请更新小程序后继续。之前的填写可以在“题目”中查看。</view>
+    <scroll-view wx:else class="reader document-reader" scroll-y scroll-into-view="{{documentTarget}}" scroll-top="{{documentScroll}}" bindscroll="readerScroll" data-mode="document" show-scrollbar="{{false}}">
+      <view class="document-content">
+        <block wx:if="{{document.template}}"><block wx:for="{{document.blocks}}" wx:key="id">
+          <view wx:if="{{item.field}}" id="section-{{item.field.index}}" class="template-field {{current === item.field.index ? 'current-field' : ''}}"><text>{{item.before}}</text><view class="inline-answer {{answers[item.field.id] ? 'answered' : ''}}" style="{{editing && current === item.field.index && !panel ? 'width:' + inlineWidth + 'px' : ''}}" bindtap="selectField" data-index="{{item.field.index}}"><textarea wx:if="{{editing && current === item.field.index && !panel}}" class="inline-editor template-answer" data-index="{{item.field.index}}" value="{{answers[item.field.id]}}" focus="{{inputFocus}}" auto-height maxlength="10000" aria-label="填写答案" bindinput="input" catchtap="swallow" bindkeyboardheightchange="keyboard" adjust-position="{{false}}" show-confirm-bar="{{false}}" /><text wx:else>{{answers[item.field.id] || ''}}</text></view><text>{{item.after}}</text></view>
+          <view wx:else class="document-block {{item.kind === 'heading' ? 'document-heading' : ''}}">{{item.text}}</view>
+        </block></block>
+        <block wx:else><view wx:for="{{document.sections}}" wx:key="name" class="report"><view class="report-title">{{item.title}}</view><view wx:for="{{item.fields}}" wx:key="id" wx:for-item="entry" id="section-{{entry.index}}" class="report-section"><answer-field class="answer-field" data-index="{{entry.index}}" field="{{entry}}" value="{{answers[entry.id]}}" checked="{{checks[entry.id]}}" bind:activate="selectField" /></view></view></block>
+      </view>
+    </scroll-view>
+
+    <view wx:if="{{editing}}" class="fill-toolbar">
+      <button data-step="-1" bindtap="move" disabled="{{position === 0}}" aria-label="上一项">‹</button><button class="position" bindtap="openPanel" data-panel="directory" data-action="fill-directory" aria-label="填写目录">{{position + 1}}/{{fieldCount}} ⌄</button><button data-step="1" bindtap="move" disabled="{{position + 1 === fieldCount}}" aria-label="下一项">›</button><button class="reference-action" bindtap="reveal" data-action="reveal">参考答案</button><button class="done-action" bindtap="done" data-action="done">收起</button>
+    </view>
+    <view wx:else class="reader-footer"><button class="completion" bindtap="openRemaining" data-action="remaining">已填 {{filled}}/{{task.total}} ›</button><button wx:if="{{mode === 'code'}}" class="wrap-toggle" bindtap="toggleWrap">{{wrapCode ? '横向查看' : '自动换行'}}</button><button class="reader-reference" bindtap="reveal" data-action="reveal">参考答案</button><button wx:if="{{mode !== 'code' && !document.template}}" class="start-action" bindtap="start" data-action="start">{{filled ? '继续填写' : '开始填写'}}</button></view>
+  </block>
+
+  <view wx:if="{{panel}}" class="panel-mask" bindtap="closePanel">
+    <view class="panel {{panel === 'reference' ? 'reference-panel' : 'full-panel'}}" catchtap="swallow">
+      <view class="panel-heading"><text>{{panel === 'info' ? '题目' : panel === 'directory' ? '填写目录' : '参考答案'}}</text><button bindtap="closePanel" data-action="close-panel" aria-label="关闭">×</button></view>
+      <view wx:if="{{panel === 'reference'}}" class="reference-navigation"><button bindtap="moveReference" data-action="reference-previous" data-step="-1" disabled="{{reference.position === 0}}">上一项</button><text>{{reference.position + 1}} / {{reference.count}}</text><button bindtap="moveReference" data-action="reference-next" data-step="1" disabled="{{reference.position + 1 === reference.count}}">下一项</button></view>
+      <view wx:if="{{panel === 'directory'}}" class="directory-filters"><button class="{{directoryFilter === 'all' ? 'selected' : ''}}" bindtap="changeDirectoryFilter" data-filter="all">全部 {{task.total}}</button><button class="{{directoryFilter === 'missing' ? 'selected' : ''}}" bindtap="changeDirectoryFilter" data-filter="missing">未填 {{remaining}}</button><button class="{{directoryFilter === 'review' ? 'selected' : ''}}" bindtap="changeDirectoryFilter" data-filter="review">需练习 {{needsReview}}</button></view>
+      <scroll-view class="panel-body" scroll-y scroll-into-view="{{panel === 'reference' ? referenceTarget : ''}}">
+        <block wx:if="{{panel === 'info'}}">
+          <view class="info-title">{{task.title}}</view><view class="info-description">{{task.description}}</view>
+          <view class="info-section">评分要点</view><view class="criterion" wx:for="{{task.rubric}}" wx:key="id">{{item.description}}<text class="points">{{item.points}} 分</text></view>
+          <block wx:if="{{task.materials.length}}"><view class="info-section">配套素材</view><view class="material" wx:for="{{task.materials}}" wx:key="name"><view>{{item.name}}</view><view class="muted">{{item.note}}</view></view></block>
+          <view wx:if="{{older.length}}" class="history-link" bindtap="older" data-action="older">历史填写（{{older.length}}） {{showOlder ? '收起' : '查看'}}</view><block wx:if="{{showOlder}}"><view wx:for="{{older}}" wx:key="version" class="old-draft"><view wx:for="{{item.answers}}" wx:for-item="old" wx:key="id"><view class="old-label">{{old.label}}</view><view class="pre">{{old.answer}}</view></view></view></block>
+          <view class="info-note">填写保存在这台设备上。需要运行代码时，在电脑访问 www.aitrainer3.xyz，找到 {{task.code}} 题。</view>
+        </block>
+        <block wx:elif="{{panel === 'directory'}}"><button wx:for="{{visibleDirectory}}" wx:key="id" class="directory-row {{current === item.index ? 'directory-current' : ''}}" data-index="{{item.index}}" data-locate="{{true}}" bindtap="selectField"><text class="directory-number">{{item.index + 1}}</text><text class="directory-label">{{item.label}}</text><text class="directory-status">{{item.needsReview ? '需练习' : item.checked ? '已掌握' : item.filled ? '已填' : '待填'}}</text></button><view wx:if="{{!visibleDirectory.length}}" class="directory-empty">{{directoryFilter === 'missing' ? '本题已全部填写' : '还没有标记为需练习的项目'}}</view></block>
+        <block wx:else>
+          <view id="reference-current" class="reference-label">{{reference.label}}</view>
+          <block wx:if="{{reference.context}}"><view class="reference-context {{reference.kind === 'code' ? 'reference-code' : ''}} {{reference.contextExpandable && !referenceContextOpen ? 'context-collapsed' : ''}}">{{reference.context}}</view><button wx:if="{{reference.contextExpandable}}" class="context-toggle" bindtap="toggleReferenceContext">{{referenceContextOpen ? '收起题目' : '展开题目'}}</button></block>
+          <view class="reference-section">参考答案</view><view class="reference-answer pre">{{reference.answer}}</view>
+          <block wx:if="{{reference.mine}}"><view class="reference-section">我的填写</view><view class="my-answer pre">{{reference.mine}}</view></block>
+          <button wx:if="{{reference.index !== current}}" class="reference-jump" bindtap="fillReference" data-action="fill-reference">去填写这一项 →</button>
+          <block wx:if="{{reference.criteria.length}}"><button class="criteria-toggle" bindtap="toggleCriteria">评分要点 {{referenceCriteriaOpen ? '⌃' : '⌄'}}</button><view wx:if="{{referenceCriteriaOpen}}" wx:for="{{reference.criteria}}" wx:key="id" class="criterion">{{item.description}}</view></block>
+        </block>
+      </scroll-view>
+      <view wx:if="{{panel === 'reference'}}" class="reference-footer"><button class="{{reference.checked === false ? 'assessed' : ''}}" data-value="no" bindtap="check">还需练习</button><button class="{{reference.checked === true ? 'assessed' : ''}}" data-value="yes" bindtap="check">已掌握</button><button class="return-answer" bindtap="closePanel" data-action="close-panel">{{editing ? '继续填写' : '返回题目'}}</button></view>
+    </view>
+  </view>
+</view>

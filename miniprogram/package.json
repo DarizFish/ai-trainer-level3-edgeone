@@ -1,0 +1,19 @@
+{
+  "name": "aitrainer-wechat",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "content:sync": "node scripts/sync-content.mjs",
+    "test": "node --test tests/*.test.cjs",
+    "test:devtools": "node scripts/run-devtools.cjs",
+    "test:devtools:restart": "node scripts/run-devtools.cjs --restart-only",
+    "test:api": "node --test tests/api.integration.cjs",
+    "dev:api": "node scripts/start-local-api.mjs"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.5.8",
+    "miniprogram-automator": "0.12.1",
+    "pglite-server": "0.1.5"
+  }
+}

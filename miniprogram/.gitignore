@@ -1,0 +1,14 @@
+/node_modules/
+/test-results/
+/coverage/
+/docs/evidence/
+/project.private.config.json
+/config.local.js
+.env*
+*.pem
+*.key
+*.log
+/preview*.png
+/preview*-info.json
+/upload*-info.json
+.DS_Store

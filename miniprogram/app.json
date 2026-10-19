@@ -1,0 +1,47 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/mock/mock",
+    "pages/practical/practical",
+    "pages/me/me",
+    "pages/practice/practice",
+    "pages/exam/exam",
+    "pages/task/task",
+    "pages/account/account",
+    "pages/privacy/privacy"
+  ],
+  "window": {
+    "navigationBarTitleText": "训练师备考",
+    "navigationBarBackgroundColor": "#f6f4ed",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f6f4ed"
+  },
+  "tabBar": {
+    "color": "#747970",
+    "selectedColor": "#245946",
+    "backgroundColor": "#fffef9",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "理论"
+      },
+      {
+        "pagePath": "pages/mock/mock",
+        "text": "模考"
+      },
+      {
+        "pagePath": "pages/practical/practical",
+        "text": "实操"
+      },
+      {
+        "pagePath": "pages/me/me",
+        "text": "我的"
+      }
+    ]
+  },
+  "style": "v2",
+  "componentFramework": "glass-easel",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

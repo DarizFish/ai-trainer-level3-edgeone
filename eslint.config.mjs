@@ -16,6 +16,8 @@ const eslintConfig = defineConfig([
     // artifacts. They are gitignored build output, not project source.
     "playwright-report/**",
     "test-results/**",
+    // Native WeChat code is checked by miniprogram/tests, outside Next/React.
+    "miniprogram/**",
   ]),
 ]);
 

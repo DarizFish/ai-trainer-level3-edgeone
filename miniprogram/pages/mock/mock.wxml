@@ -1,0 +1,7 @@
+<view class="page"><view class="eyebrow">检验你的备考成果</view><view class="title">模拟考场</view><view class="subtitle">按正式题型配比，练习完整考试节奏。</view>
+  <view class="card hero" style="margin-top:30rpx"><view class="row"><view><view class="stat">190</view><view>道题</view></view><view><view class="stat">90</view><view>分钟</view></view><view><view class="stat">60</view><view>分及格</view></view></view></view>
+  <button wx:if="{{active}}" class="primary" bindtap="resume" data-action="resume">继续未完成的考试</button>
+  <view class="card" style="margin-top:24rpx"><view class="section-title" style="margin-top:0">选择试卷</view><view class="muted">判断 40 题 · 单选 140 题 · 多选 10 题</view><view class="actions"><button class="primary" data-mode="official" bindtap="start" data-action="start">标准卷</button><button class="secondary" data-mode="random" bindtap="start" data-action="start">随机卷</button></view></view>
+  <view class="notice">考试中切到后台，计时会继续。作答保存在本机，可返回继续；登录期间完成的考试会同步成绩。本机保留最近 10 份完整试卷供复盘。</view>
+  <view class="section-title">本机考试复盘</view><view wx:for="{{history}}" wx:key="id" class="card row" data-id="{{item.id}}" bindtap="review" data-action="review"><view><view>{{item.mode}}</view><view class="muted">{{item.date}} · 查看逐题复盘</view></view><view class="stat">{{item.score}}</view></view><view wx:if="{{!history.length}}" class="empty">完成第一次模考，看看哪些知识点需要巩固。</view>
+</view>

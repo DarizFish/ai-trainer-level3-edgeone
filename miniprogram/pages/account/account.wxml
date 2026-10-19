@@ -1,0 +1,8 @@
+<view class="page"><view class="eyebrow">同一个账号，继续你的学习</view><view class="title">{{mode === 'login' ? '欢迎回来' : '创建账号'}}</view><view class="subtitle">使用网站 www.aitrainer3.xyz 的邮箱账号。已有账号可直接登录。</view>
+  <view class="card" style="margin-top:32rpx"><view class="label">邮箱</view><input class="input" type="text" maxlength="254" value="{{email}}" placeholder="你的邮箱地址" data-name="email" bindinput="input" />
+  <block wx:if="{{mode === 'register'}}"><view class="label">昵称（选填）</view><input class="input" maxlength="60" value="{{displayName}}" placeholder="希望如何称呼你" data-name="displayName" bindinput="input" /></block>
+  <view class="label">密码</view><input class="input" password maxlength="128" value="{{password}}" placeholder="{{mode === 'register' ? '8–128 个字符' : '你的密码'}}" data-name="password" bindinput="input" />
+  <checkbox-group bindchange="consent"><label class="small"><checkbox value="yes" checked="{{accepted}}" color="#245946" />我已阅读并同意隐私说明与使用条款</label></checkbox-group><view class="link small" style="margin:16rpx 0" bindtap="privacy" data-action="privacy">阅读隐私说明与使用条款 →</view>
+  <view wx:if="{{error}}" class="notice error">{{error}}</view><button class="primary" bindtap="submit" data-action="submit" loading="{{busy}}" disabled="{{busy}}">{{mode === 'login' ? '登录' : '注册并登录'}}</button><button class="quiet" style="margin-top:18rpx" bindtap="switchMode" data-action="switchMode">{{mode === 'login' ? '还没有账号？注册' : '已有账号？登录'}}</button></view>
+  <view class="muted">网站与小程序分别保持登录。访客记录独立保存在本机，登录不会将它自动合并到账号。</view>
+</view>

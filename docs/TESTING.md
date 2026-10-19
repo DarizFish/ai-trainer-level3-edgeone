@@ -7,6 +7,7 @@
 | 层级 | 命令 | 覆盖范围 | 是否需要服务 |
 |---|---|---|---|
 | 静态质量 | `npm run lint`、`npm run typecheck` | ESLint、TypeScript | 否 |
+| 小程序客户端 | `npm run test:miniprogram` | 原生页面状态、理论与实操、离线队列、内容哈希；包含在根目录 `npm test` 与 CI 中 | 否，无需微信开发者工具 |
 | 内容与合同 | `npm run content:validate`、`npm run test:contracts` | 900 道理论题、40 道实操题、评分、认证边界、资源哈希、JupyterLite 配置 | 否 |
 | 生产构建 | `npm run test:build` | Next.js 生产编译、服务端与静态路由生成 | 否 |
 | 浏览器回归 | `npm run test:browser` | 公共页面、匿名跳转、390px 响应式、Pyodide 内核、ONNX 动态导入和 JavaScript MIME | global setup 自动启动并回收本地生产服务 |

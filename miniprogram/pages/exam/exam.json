@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "理论模考",
+  "usingComponents": {
+    "question": "/components/question/question"
+  }
+}
