@@ -63,6 +63,12 @@ npm.cmd run dev -- --webpack -p 3200 -H 127.0.0.1
 
 安全依赖升级、PR Quality Gate、verified-artifact 自托管发布、数据库 migration 加固，以及 JupyterLite 内核冷启动与测试 readiness 修复已进入远端 `main`。PR Quality Gate 只验证提交，不部署生产环境。
 
+### 2026-10-19：生产依赖高危审计修补（尚未部署）
+
+**已验证（代码与本地门禁）**：Next.js 与 eslint-config-next 从 `16.3.6` 升至同系列补丁 `16.3.8`，锁文件中的 sharp 升至 `0.35.5`、source-map-js 升至 `1.2.2`。`npm.cmd audit --omit=dev --audit-level=high` 通过，消除这三项依赖的 high 通告；sanitize-html 及其上层依赖仍报告 8 项 moderate，未在本次修补范围内。`CI=true`、`SELF_HOSTED_BUILD=1` 的完整 `test:ci` 通过 57 项合同测试、生产构建和 35 项浏览器回归，无重试或 flaky。
+
+**边界**：本轮仅修补仓库依赖，不执行网站预备或切流；线上仍运行既有部署，依赖修补须随之后的网站独立发布生效。
+
 ### 单机双槽容器首次切流（2026-09-27）
 
 **已验证**：`main` 的 [Quality Gate run 36258772694](https://github.com/DarizFish/ai-trainer-level3-edgeone/actions/runs/36258772694) 为成功，产物对应 `47c05719ef773ce9a43d185b3fc502cfca7e8a40`；[容器预备 run 36284665165](https://github.com/DarizFish/ai-trainer-level3-edgeone/actions/runs/36284665165) 成功。候选 `aitrainer-green` 在 3001 端口为 healthy，切流脚本成功；服务器的 `active` 记录及 Nginx 配置均指向该提交和 3001 端口。
