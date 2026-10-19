@@ -1,0 +1,18 @@
+<view class="page practice-page">
+  <view wx:if="{{empty}}" class="empty">这里还没有题目。回到理论页开始练习吧。</view>
+  <block wx:else>
+    <view class="eyebrow">{{groupLabel}} · 第 {{current + 1}} / {{total}} 题</view>
+    <view class="bar"><view class="bar-fill" style="width:{{(current + 1) / total * 100}}%"></view></view>
+    <view wx:if="{{revealed}}" class="history-row"><text>{{restored ? '上次作答' : '本次作答'}} · {{answerRight ? '答对' : '答错'}}</text><button bindtap="retry" data-action="retry">重新作答</button></view>
+    <view wx:else class="answer-hint">{{question.type === 'multi' ? '多选题 · 选完后确认答案' : '点选即查看解析，再按自己的节奏进入下一题'}}</view>
+    <view class="card"><question id="question" question="{{question}}" selected="{{selected}}" revealed="{{revealed}}" bind:choose="choose" /></view>
+    <view class="practice-toolbar">
+      <button wx:if="{{!revealed && question.type === 'multi'}}" class="primary confirm" bindtap="submit" data-action="submit" disabled="{{!selected.length}}">确认答案</button>
+      <view class="toolbar-row">
+        <button class="quiet" bindtap="previous" data-action="previous" disabled="{{current === 0}}">上一题</button>
+        <button class="favorite {{favorite ? 'is-favorite' : ''}}" bindtap="favorite" data-action="favorite" aria-label="{{favorite ? '取消收藏' : '收藏本题'}}">{{favorite ? '★ 已收藏' : '☆ 收藏'}}</button>
+        <button class="primary" bindtap="next" data-action="next" disabled="{{current + 1 === total}}">下一题</button>
+      </view>
+    </view>
+  </block>
+</view>

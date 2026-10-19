@@ -1,0 +1,8 @@
+<view class="page" wx:if="{{exam}}">
+  <view wx:if="{{exam.phase === 'finished'}}" class="card hero"><view class="eyebrow">模考结果 · {{exam.result.passed ? '达到及格线' : '继续巩固'}}</view><view class="stat">{{exam.result.score}} <text class="small">/ 100 分</text></view><view wx:for="{{exam.result.byType}}" wx:key="type" class="row small" style="margin-top:14rpx"><text>{{item.label}}</text><text>{{item.correct}} / {{item.total}} 题正确</text></view><view class="subtitle">下方可逐题查看答案和解析。</view></view>
+  <view class="row"><text class="eyebrow">{{exam.current + 1}} / 190 题</text><text wx:if="{{exam.phase === 'active'}}" class="tag">剩余 {{clock}}</text><text class="link" bindtap="toggleSheet" data-action="toggleSheet">答题卡</text></view>
+  <view wx:if="{{sheet}}" class="answer-grid"><view wx:for="{{numbers}}" wx:key="index" class="answer-cell {{item.answered ? 'done' : ''}} {{item.wrong ? 'wrong' : ''}}" data-index="{{item.index}}" bindtap="move" data-action="move">{{item.index + 1}}</view></view>
+  <view class="card" style="margin-top:24rpx"><question id="question" question="{{question}}" selected="{{selected}}" revealed="{{exam.phase === 'finished'}}" bind:choose="choose" /></view>
+  <view class="actions"><button class="quiet" data-step="-1" bindtap="move" data-action="move" disabled="{{exam.current === 0}}">上一题</button><button class="secondary" data-step="1" bindtap="move" data-action="move" disabled="{{exam.current === 189}}">下一题</button></view>
+  <button wx:if="{{exam.phase === 'active'}}" class="primary" style="margin-top:22rpx" bindtap="submit" data-action="submit">交卷 · 已答 {{answered}} 题</button>
+</view>

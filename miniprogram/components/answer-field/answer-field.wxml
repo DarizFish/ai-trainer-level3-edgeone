@@ -1,0 +1,4 @@
+<view class="field">
+  <view class="label">{{field.label}}<text wx:if="{{checked === 'yes'}}" class="mastered">已掌握</text></view>
+  <button class="answer-preview {{value ? 'has-answer' : ''}}" bindtap="activate"><text class="preview-text">{{value || '点击填写'}}</text><text class="edit-mark">{{value ? '编辑' : '+'}}</text></button>
+</view>

@@ -1,0 +1,16 @@
+<view class="page practical-page">
+  <view class="eyebrow">先理解场景，再动手填写</view><view class="title">实操题库</view>
+  <view class="subtitle">{{total}} 道题 · 按模块练习，随时接着写</view>
+  <view class="search-box"><input placeholder="搜索题号或名称" value="{{keyword}}" bindinput="search" /><button wx:if="{{keyword}}" bindtap="clear" data-action="clear">清除</button></view>
+  <block wx:if="{{!group && !keyword}}">
+    <view wx:if="{{recent}}" class="card recent" bindtap="open" data-action="open" data-code="{{recent.code}}"><view class="eyebrow">继续上次实操</view><view class="label">{{recent.code}} · {{recent.title}}</view><view class="recent-footer"><text>已填 {{recent.filled}} / {{recent.fields}} 项</text><text>继续 →</text></view></view>
+    <view wx:for="{{sections}}" wx:key="title" class="module-section"><view class="section-title">{{item.title}}</view><view class="grid"><button wx:for="{{item.modules}}" wx:for-item="module" wx:key="id" class="module-card" bindtap="select" data-group="{{module.id}}"><view class="module-meta">{{module.id}} · {{module.kind}}</view><view class="module-name">{{module.title}}</view><view class="module-count">{{module.count}} 题<text wx:if="{{module.started}}"> · 已开始 {{module.started}} 题</text><text class="arrow">→</text></view></button></view></view>
+    <view class="local-note">填写自动保存在本机，切换设备不会带走草稿。</view>
+  </block>
+  <block wx:else>
+    <view class="list-heading"><button class="back" bindtap="back" data-action="back">‹ 模块目录</button><text class="muted">{{tasks.length}} 道题</text></view>
+    <view class="section-title">{{keyword ? '搜索结果' : groupTitle}}</view>
+    <view class="task-list"><view wx:for="{{tasks}}" wx:key="code" class="task-row" bindtap="open" data-action="open" data-code="{{item.code}}"><view class="task-code">{{item.code}}</view><view class="task-main"><view class="label">{{item.title}}</view><view class="task-status">{{item.filled ? '已填 ' + item.filled + ' / ' + item.fields + ' 项' : '尚未开始'}}</view></view><text class="task-arrow">›</text></view></view>
+    <view wx:if="{{!tasks.length}}" class="empty">没有找到相关题目，试试题号或其他关键词。</view>
+  </block>
+</view>

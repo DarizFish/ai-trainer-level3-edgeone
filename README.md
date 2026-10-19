@@ -4,6 +4,17 @@
 
 原 Sites 项目是回退版本；本目录是独立部署副本。未正式发布前不迁移旧用户、会话或学习记录，Supabase 使用全新表结构。
 
+## 微信小程序
+
+原生小程序源码位于 [`miniprogram/`](miniprogram/README.md)，与网站使用同一 Git 仓库，保留独立的 npm 包和微信发布流程。微信开发者工具打开该子目录；完整开发与验收命令见其 README，接口说明见 [`docs/MINIPROGRAM.md`](docs/MINIPROGRAM.md)。
+
+```powershell
+npm.cmd run test:miniprogram
+npm.cmd run content:miniprogram:sync
+```
+
+题库源数据在网站实体层维护；同步命令更新小程序内置快照。根目录 `npm.cmd test` 和现有 Quality Gate 同时检查小程序；网站的 React/Next.js 检查范围排除原生微信代码。网站部署与微信代码上传、审核、发布分别进行。
+
 ## 目标架构
 
 - Web 与 API：Next.js 16，部署到 EdgeOne Makers 全球可用区（不含中国大陆）。

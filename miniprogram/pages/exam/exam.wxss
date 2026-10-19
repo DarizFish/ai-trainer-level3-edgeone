@@ -1,0 +1,1 @@
+.answer-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:10rpx;padding:20rpx 0}.answer-cell{text-align:center;padding:12rpx 0;border:1rpx solid #d3dccc;border-radius:8rpx;background:#fffef9;font-size:24rpx}.done{background:#d5e5ce}.wrong{background:#f3daca}

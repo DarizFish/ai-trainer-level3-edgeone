@@ -1,0 +1,6 @@
+<view wx:if="{{question}}" class="question">
+  <view class="meta">{{question.typeLabel}} · {{question.category}}</view>
+  <view class="stem">{{question.stem}}</view>
+  <button wx:for="{{options}}" wx:key="value" class="option {{item.chosen ? 'chosen' : ''}} {{revealed && item.correct ? 'correct' : ''}} {{revealed && item.chosen && !item.correct ? 'wrong' : ''}}" data-value="{{item.value}}" bindtap="select"><text class="letter">{{item.value}}</text><text class="option-text">{{item.text}}</text><text wx:if="{{item.chosen}}" class="choice-mark">{{revealed && !item.correct ? '×' : '✓'}}</text></button>
+  <view wx:if="{{revealed}}" class="explanation"><view class="answer">{{right ? '回答正确' : '继续巩固'}} · 参考答案 {{answerText}}</view><view>{{question.explanation}}</view></view>
+</view>

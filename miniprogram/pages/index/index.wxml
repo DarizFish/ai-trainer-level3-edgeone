@@ -1,0 +1,13 @@
+<view class="page theory-page">
+  <view class="eyebrow">人工智能训练师 · 三级</view><view class="title">理论练习</view>
+  <view class="subtitle">选择题型，接着上次的位置练习。</view>
+  <view class="type-list">
+    <view class="card type-card" wx:for="{{types}}" wx:key="type" data-type="{{item.type}}" bindtap="practice" data-action="practice">
+      <view class="row"><text class="type-name">{{item.label}}</text><text class="type-count">已答 {{item.answered}} / {{item.count}}</text></view>
+      <view class="bar"><view class="bar-fill" style="width:{{item.answered / item.count * 100}}%"></view></view>
+      <view class="row type-footer"><text class="muted">答对 {{item.right}} · 待订正 {{item.wrong}}</text><text class="link">{{item.started ? '继续第 ' + item.current + ' 题' : '开始练习'}} →</text></view>
+    </view>
+  </view>
+  <view class="grid"><view class="card" bindtap="practice" data-action="practice" data-mode="wrong"><view class="muted">待订正错题</view><view class="stat">{{wrong}}</view><view class="link small">集中巩固 →</view></view><view class="card" bindtap="practice" data-action="practice" data-mode="favorite"><view class="muted">我的收藏</view><view class="stat">{{favorites}}</view><view class="link small">重新温习 →</view></view></view>
+  <view wx:if="{{guest}}" class="notice">访客练习保存在本机。登录后可同步账号的学习记录。</view>
+</view>

@@ -4,7 +4,7 @@
 
 原生小程序提供理论练习、理论模考、实操填空和邮箱账号。运行 Python 时仅显示文字，告知用户在电脑访问 www.aitrainer3.xyz 并找到相同题号。实操填写保存在设备上，按账号、题号与练习版本隔离。
 
-小程序源码位于独立项目 `miniprogram-1`。产品范围快照是该项目的 `docs/MINIPROGRAM-PLAN-2026-10-03.md`。网站的学习页面和 JupyterLite 不需要为此增加跳转或导入逻辑。
+小程序源码位于同仓库的 [`miniprogram/`](../miniprogram/README.md)，保留独立 npm 包和微信发布流程。微信开发者工具打开该子目录；原独立目录仅作迁移备份。产品范围历史快照见 [`miniprogram/docs/MINIPROGRAM-PLAN-2026-10-03.md`](../miniprogram/docs/MINIPROGRAM-PLAN-2026-10-03.md)。网站的学习页面和 JupyterLite 不需要为此增加跳转或导入逻辑。
 
 ## 接口与数据
 
@@ -37,13 +37,13 @@ npm.cmd run content:miniprogram:audit
 
 审计从实体文件独立重建全部 20 份 Notebook，检查 331 个代码空位、148 个文字项的来源、Python 语法和 AST。`3.2.3` 原模板使用 `Image.ANTIALIAS`，完成版省略该参数；校验只放行这个明确列出的原有差异，不修改原题。
 
-在小程序目录运行 `npm.cmd run content:sync -- <网站目录>` 更新内置题库。线上内容通过清单哈希校验后整体替换；下载失败继续使用完整旧缓存。
+在仓库根目录运行 `npm.cmd run content:miniprogram:sync` 更新内置题库，也可在小程序目录运行 `npm.cmd run content:sync`，默认使用父目录网站，仍支持显式传入其他网站目录。线上内容通过清单哈希校验后整体替换；下载失败继续使用完整旧缓存。
 
 ## 验证与发布边界
 
-网站快速测试已包含小程序内容审计。小程序的 `dev:api` 启动内存 PGlite，应用真实 Drizzle 迁移并启动本地 Next API；`test:api` 使用该数据库验证账号、会话、去重、回滚与隔离。测试连接固定为本机测试端口，不读取生产数据库连接。
+网站快速测试已包含小程序内容审计和原生客户端的 `test:miniprogram`；现有 Quality Gate 通过 `test:ci` 调用该门禁。小程序代码由自己的测试检查，网站 ESLint 与 TypeScript 排除 `miniprogram/`。小程序的 `dev:api` 启动内存 PGlite，应用真实 Drizzle 迁移并启动父目录 Next API；`test:api` 使用该数据库验证账号、会话、去重、回滚与隔离。测试连接固定为本机测试端口，不读取生产数据库连接。
 
-小程序验收证据保存在其 `docs/ACCEPTANCE.md`；独立网站发布范围与验证记录在其 `docs/RELEASE-SCOPE.md`。
+小程序验证范围与导入基线见 [`miniprogram/docs/ACCEPTANCE.md`](../miniprogram/docs/ACCEPTANCE.md)。每次上传记录微信版本号与 Git commit；网站部署和微信上传、审核、发布分别执行。
 
 `test:devtools` 将运行代码复制到独立的临时开发者工具项目，通过自动化端口执行界面验收。该测试项目允许模拟器访问本机 HTTP，原项目配置保持不变。此项不证明正式域名配置及真机网络已验收。截图通过 `CAPTURE_DEVTOOLS=1` 单独开启，避免桌面截图接口故障掩盖功能断言。
 

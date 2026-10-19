@@ -41,6 +41,7 @@ try {
   // and contract tests both launch Python fixture processes, so keep those
   // sequential after the static pair to avoid Windows process-spawn flakiness.
   await Promise.all([run("lint"), run("typecheck")]);
+  await run("test:miniprogram");
   await run("content:validate");
   await run("content:miniprogram:audit");
   await run("test:contracts");
