@@ -49,4 +49,10 @@ npm.cmd run content:miniprogram:audit
 
 生产发布需要先完成迁移、网站部署和正式域名配置，再验证小程序真机登录、退出、弱网及重启。合并、部署、小程序提交审核均需要用户明确授权。
 
-当前测试号 `wxa14c09fabccbf577` 已配置 `https://www.aitrainer3.xyz` 为 request 合法域名；测试号预览不能代替正式个人主体注册、备案与审核。用户当前选择先完成测试号验收。
+正式 AppID 以 [`project.config.json`](../miniprogram/project.config.json) 为准，当前为 `wx0f69365297121ce0`；测试号 `wxa14c09fabccbf577` 仅属于早期验收记录。各微信版本对应的源码与平台状态见 [版本记录](../miniprogram/docs/RELEASES.md)。
+
+## 仓库协作
+
+网站与小程序共用 `main`；日常改动从最新主线创建 `codex/` 功能分支，通过 PR 和完整 Quality Gate 后合并。微信开发者工具打开主仓库内的 `miniprogram/`。题库源、内容生成和共用接口继续在网站目录维护；客户端页面、原生组件与本机存储在小程序目录维护。
+
+合并代码与发布产品分别执行。仅修改客户端时走微信上传、审核和发布；修改网站时走网站发布；修改共用接口或题库时检查已发布客户端的兼容性，再安排发布。自托管网站仍须单独预备和切流；保留的 EdgeOne Pages 按原配置监听 `main`。

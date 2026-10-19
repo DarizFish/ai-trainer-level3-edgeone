@@ -73,4 +73,4 @@ npm.cmd run test:devtools
 2. 核对微信后台的请求域名、类目、备案和隐私配置。
 3. 测试通过后提交代码，记录上传版本号与 Git commit；在开发者工具上传、后台提交审核，审核通过后发布。Git 提交本身不会执行微信发布。
 
-代码版本由 `package.json` 记录，正式 AppID 以 `project.config.json` 为准。每次上传对应一个已提交的代码版本；正式发布后可加 `miniprogram-v<版本号>` 标签。平台审核及线上状态以微信后台为准，迁入 Git 不代表重新上传或发布。验证范围见 [验收记录](docs/ACCEPTANCE.md)。
+代码版本由 `package.json` 记录，正式 AppID 以 `project.config.json` 为准。每次上传在 [版本记录](docs/RELEASES.md) 中关联已提交的源码、内容基线和验证结果；正式发布后在对应源码提交上添加 `miniprogram-v<版本号>` 标签。平台审核及线上状态以微信后台为准，迁入 Git 不代表重新上传或发布。验证范围见 [验收记录](docs/ACCEPTANCE.md)。
