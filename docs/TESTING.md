@@ -100,7 +100,7 @@ npm.cmd run test:smoke
 
 ## CI
 
-`.github/workflows/quality.yml` 在推送和拉取请求时执行生产依赖 high 级审计、完整构建与浏览器/JupyterLite 门禁。`main` 的成功 run 额外生成以 commit SHA 命名的自托管 artifact；部署工作流只能消费该 run 的 artifact。浏览器失败会保留七天的 trace、截图、视频和 HTML 报告。
+`.github/workflows/quality.yml` 在推送和拉取请求时执行生产依赖 high 级审计、完整构建与浏览器/JupyterLite 门禁。`main` 的成功 run 额外生成以 commit SHA 命名的自托管 artifact；部署工作流只能消费该 run 的 artifact。质量门禁失败时上传浏览器诊断，并保留七天的 trace、截图、视频和 HTML 报告；成功运行不上传浏览器报告。正式发布 artifact 的上传仍为必需步骤，不能因存储额度不足而跳过。
 
 PR 上的 Quality Gate **不负责部署**：打包和 artifact 上传步骤只在 `push main` 时执行，部署工作流再消费已经验证的 artifact。EdgeOne 仍会独立监听 `main`。
 

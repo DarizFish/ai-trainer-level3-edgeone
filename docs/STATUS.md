@@ -67,6 +67,8 @@ npm.cmd run dev -- --webpack -p 3200 -H 127.0.0.1
 
 **已验证（代码与本地门禁）**：Next.js 与 eslint-config-next 从 `16.3.6` 升至同系列补丁 `16.3.8`，锁文件中的 sharp 升至 `0.35.5`、source-map-js 升至 `1.2.2`。`npm.cmd audit --omit=dev --audit-level=high` 通过，消除这三项依赖的 high 通告；sanitize-html 及其上层依赖仍报告 8 项 moderate，未在本次修补范围内。`CI=true`、`SELF_HOSTED_BUILD=1` 的完整 `test:ci` 通过 57 项合同测试、生产构建和 35 项浏览器回归，无重试或 flaky。
 
+成功运行不再上传浏览器报告，减少 artifact 占用，也避免存储额度影响成功门禁的结果。失败诊断与正式发布产物的要求见 [测试说明](TESTING.md)；部署工作流继续验证正式产物的身份和哈希。
+
 **边界**：本轮仅修补仓库依赖，不执行网站预备或切流；线上仍运行既有部署，依赖修补须随之后的网站独立发布生效。
 
 ### 单机双槽容器首次切流（2026-09-27）
