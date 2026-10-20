@@ -65,10 +65,10 @@ test("registration guide speaks directly to applicants without exposing product 
 });
 
 test("site operations features remain discoverable, honest, and non-blocking", async () => {
-  const [site, notice, homeNotice, layout, homepage, access, support, placeholder, sitemap, features, proxy] = await Promise.all([
+  const [site, notice, noticeComponent, layout, homepage, access, support, placeholder, sitemap, features, proxy] = await Promise.all([
     readFile(new URL("../lib/site.ts", import.meta.url), "utf8"),
     readFile(new URL("../lib/site-notices.ts", import.meta.url), "utf8"),
-    readFile(new URL("../components/HomeNotice.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/SiteNotice.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/access/page.tsx", import.meta.url), "utf8"),
@@ -84,10 +84,10 @@ test("site operations features remain discoverable, honest, and non-blocking", a
   assert.match(layout, /ICP_RECORD/);
   assert.match(layout, /\["备用网址", "\/access"\]/);
 
-  assert.match(notice, /href: "\/resources"/);
+  assert.match(notice, /href: "\/miniprogram"/);
   assert.doesNotMatch(notice, /\b1[3-9]\d{9}\b|\d+\s*元|报名截止/);
-  assert.match(homeNotice, /localStorage/);
-  assert.match(homeNotice, /aria-label="关闭这条公告"/);
+  assert.match(noticeComponent, /localStorage/);
+  assert.match(noticeComponent, /aria-label="关闭这条公告"/);
 
   assert.match(site, /BACKUP_SITE_ORIGIN: string \| null = null/);
   assert.match(access, /尚未对外启用/);

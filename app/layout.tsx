@@ -4,6 +4,7 @@ import { AccountControls, AccountProvider } from "@/components/AccountSession";
 import IntentLink from "@/components/IntentLink";
 import SiteNavigationLinks from "@/components/SiteNavigationLinks";
 import PageViewRecorder from "@/components/PageViewRecorder";
+import SiteNotice from "@/components/SiteNotice";
 import { practicalMockEnabled, voluntarySupportEnabled } from "@/lib/features";
 import { ICP_QUERY_URL, ICP_RECORD, SITE_ORIGIN } from "@/lib/site";
 import "./globals.css";
@@ -14,6 +15,7 @@ const navigation = ([
   ["模拟考试", "/theory/mock"],
   ["实操题库", "/practical"],
   ["实操组卷", "/practical/mock"],
+  ["小程序", "/miniprogram"],
   ["报名攻略", "/resources"],
   ["备用网址", "/access"],
   ["支持本站", "/support"],
@@ -66,6 +68,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               </details>
             </div>
           </header>
+          <SiteNotice />
           {children}
           <footer className="site-footer">
             <div className="container footer-row">

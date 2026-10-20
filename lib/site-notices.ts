@@ -8,14 +8,13 @@ export type SiteNotice = {
 };
 
 /**
- * 首页同一时间只展示一条行动型公告。报名日期、费用和联系方式不在这里复制，
- * 用户沿 CTA 进入稳定攻略后，再到对应发布方核验当期信息。
+ * 全站同一时间只维护一条公告。更新 id 后，同一浏览器可以再次触达。
  */
-export const homeNotice: SiteNotice = {
-  id: "registration-guide-2026-08",
-  label: "报名攻略已上线",
-  title: "报名前，先核对资格路径与正规渠道",
-  summary: "六步走完资格自查、渠道审核、缴费确认和资料准备，再开始备考。",
-  href: "/resources",
-  actionLabel: "查看报名攻略",
+export const siteNotice: SiteNotice = {
+  id: "miniprogram-launch-2026-10",
+  label: "新上线",
+  title: "微信小程序上线了",
+  summary: "手机刷题、模考与实操填空，随时接着练。",
+  href: "/miniprogram",
+  actionLabel: "查看小程序",
 };

@@ -7,6 +7,7 @@ const publicRoutes = [
   "/practical",
   "/resources",
   "/access",
+  "/miniprogram",
 ];
 
 for (const route of publicRoutes) {
@@ -93,7 +94,7 @@ test("announcement and site operations entries stay reachable without blocking s
 
   const notice = page.getByRole("region", { name: "网站公告" });
   await expect(notice).toBeVisible();
-  await expect(notice.getByRole("link", { name: /查看报名攻略/ })).toHaveAttribute("href", "/resources");
+  await expect(notice.getByRole("link", { name: /查看小程序/ })).toHaveAttribute("href", "/miniprogram");
   await notice.getByRole("button", { name: "关闭这条公告" }).click();
   await expect(notice).toHaveCount(0);
   await page.reload({ waitUntil: "domcontentloaded" });
