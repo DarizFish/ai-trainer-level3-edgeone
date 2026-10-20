@@ -1,7 +1,6 @@
 import IntentLink from "@/components/IntentLink";
 import { content } from "@/lib/content";
 import { HomeAccountCta } from "@/components/AccountSession";
-import HomeNotice from "@/components/HomeNotice";
 import { voluntarySupportEnabled } from "@/lib/features";
 
 export default function HomePage() {
@@ -9,7 +8,6 @@ export default function HomePage() {
 
   return (
     <main>
-      <HomeNotice />
       <section className="hero paper-texture">
         <div className="container hero-grid">
           <div className="hero-copy">
