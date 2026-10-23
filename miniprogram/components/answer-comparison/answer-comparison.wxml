@@ -1,0 +1,5 @@
+<view wx:if="{{reference}}" class="comparison {{reference.comparison.state}}">
+  <text class="verdict" aria-label="{{reference.comparison.label}}">{{reference.comparison.state === 'exact' ? '✓ 一致' : reference.comparison.state === 'different' ? '≠ 差异' : '· 未填'}}</text>
+  <text class="answer-label">参考{{reference.slot > 1 ? reference.slot : ''}}</text>
+  <view class="reference"><text wx:for="{{reference.comparison.answerParts}}" wx:key="key" class="{{item.changed ? 'changed' : ''}}">{{item.text}}</text></view>
+</view>

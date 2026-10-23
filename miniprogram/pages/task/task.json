@@ -1,1 +1,1 @@
-{"navigationBarTitleText":"实操练习","disableScroll":true,"usingComponents":{"answer-field":"/components/answer-field/answer-field"}}
+{"navigationBarTitleText":"实操练习","disableScroll":true,"usingComponents":{"answer-field":"/components/answer-field/answer-field","answer-comparison":"/components/answer-comparison/answer-comparison","website-guide":"/components/website-guide/website-guide"}}

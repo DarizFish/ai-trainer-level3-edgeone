@@ -2,14 +2,16 @@ const content=require('../../utils/content');
 const storage=require('../../utils/storage');
 const ui=require('../../utils/ui');
 const view=require('../../utils/practical-view');
+const {compare}=require('../../utils/answer-comparison');
 const afterRender=fn=>wx.nextTick?wx.nextTick(fn):fn();
 Page({
+  onShareAppMessage:require('../../utils/share').task,
   data:{task:null,field:null,current:0,answer:'',revealed:false,checked:null,filled:0,older:[],showOlder:false,
     mode:'code',codeCells:[],codeFields:[],codePosition:0,codeTarget:'',documentTarget:'',answers:{},checks:{},
     document:{template:false,blocks:[],sections:[]},textFields:[],codeAvailable:false,saveError:'',
     editing:false,writing:false,inputFocus:false,panel:'',wrapCode:true,keyboardHeight:0,viewportHeight:667,safeBottom:0,
-    position:0,fieldCount:0,positionLabel:'',directory:[],savedLabel:'',criteria:[],inlineWidth:120,referenceTarget:'',
-    reference:null,referenceContextOpen:false,referenceCriteriaOpen:false,promptOpen:false,
+    position:0,fieldCount:0,positionLabel:'',directory:[],savedLabel:'',criteria:[],inlineWidth:120,
+    comparisons:{},promptOpen:false,websiteOpen:false,
     codeScroll:0,codeLeft:0,documentScroll:0,directoryFilter:'all',visibleDirectory:[],remaining:0,needsReview:0,codeFilled:0,textFilled:0},
   onLoad(options){
     this.user=storage.owner();this.task=content.get().tasks.find(t=>t.code===options.code);
@@ -34,7 +36,7 @@ Page({
       return {...block,before,after:rest.join('【待填写】')};
     });
     const current=Math.max(0,Math.min(this.draft.current||0,this.task.fields.length-1));
-    this.setData({task:{code:this.task.code,title:this.task.title,description:this.task.description,rubric:this.task.rubric,materials:this.task.materials,total:this.task.fields.length,group:this.task.group},
+    this.setData({task:{code:this.task.code,title:this.task.title,description:this.task.description,rubric:this.task.rubric,materials:this.task.materials,total:this.task.fields.length,group:this.task.group,executable:codeFields.length>0},
       codeFields,textFields,codeCells,codeAvailable:codeCells.length>0,document,answers:this.draft.answers,
       checks:Object.fromEntries(Object.entries(this.draft.checks).map(([id,value])=>[id,value?'yes':'no'])),
       mode:this.task.fields[current].kind==='code'?'code':'document',
@@ -91,17 +93,18 @@ Page({
     const field=this.task.fields[index];if(!field)return;this.draft.answers[field.id]=value;delete this.draft.checks[field.id];
     const changes={answers:this.draft.answers,checks:{...this.data.checks,[field.id]:''}};
     const token=this.tokenPaths[field.id];if(token){changes[token+'.text']=value;changes[token+'.filled']=!!value.trim();}
+    if(this.data.revealed)changes['comparisons.'+field.id]=this.comparisonFor(field,index);
     this.setData(changes);this.show(this.data.current);this.save();
   },
   locate(){
     const field=this.task.fields[this.data.current];
     const key=field.kind==='code'?'codeTarget':'documentTarget';
     const target=field.kind==='code'?`code-${field.source.cellId}-${Math.max(1,field.source.line-2)}`:`section-${this.data.current}`;
-    this.setData({[key]:''});afterRender(()=>this.setData({[key]:target}));
+    this.setData({[key]:'',...(field.kind==='code'?{codeLeft:0}:{})});afterRender(()=>this.setData({[key]:target}));
   },
   readerScroll(e){
     const mode=e.currentTarget.dataset.mode;
-    if(this.data.writing || mode!==this.data.mode)return;
+    if(this.data.writing || this.data.revealed || mode!==this.data.mode)return;
     this.draft.scroll[mode]={top:e.detail.scrollTop,left:e.detail.scrollLeft||0};
   },
   restoreReader(){
@@ -113,12 +116,14 @@ Page({
   selectField(e){const index=Number(e.currentTarget.dataset.index??e.detail?.index);if(Number.isInteger(index))this.select(index,!!e.currentTarget.dataset.locate);},
   select(index,locate=true){
     const field=this.task.fields[index];if(!field)return;
-    this.setData({mode:field.kind==='code'?'code':'document',panel:'',revealed:false,editing:true,inputFocus:false,promptOpen:false});
+    this.comparisonReturn=null;
+    this.setData({mode:field.kind==='code'?'code':'document',panel:'',editing:true,inputFocus:false,promptOpen:false});
     this.show(index);this.save();
     afterRender(()=>{if(locate)this.locate();this.setData({inputFocus:true});});
   },
   start(){if(this.data.mode==='code'&&!this.data.codeAvailable)return;this.select(this.data.current);},
   done(){
+    this.comparisonReturn=null;
     const writing=this.data.writing;
     this.setData({editing:false,writing:false,inputFocus:false});wx.hideKeyboard?.();
     this.keyboard({height:0});this.refreshDirectory();if(writing)afterRender(()=>this.restoreReader());
@@ -129,6 +134,7 @@ Page({
   },
   switchMode(e){
     const mode=e.currentTarget.dataset.mode;if(mode===this.data.mode)return;
+    this.comparisonReturn=null;
     this.setData({editing:false,writing:false,inputFocus:false,mode});wx.hideKeyboard?.();this.keyboard({height:0});
     const fields=mode==='code'?this.data.codeFields:this.data.textFields;
     const remembered=fields.find(f=>f.index===this.draft.positions[mode])||fields[0];
@@ -139,32 +145,48 @@ Page({
   togglePrompt(){this.setData({promptOpen:!this.data.promptOpen});},
   setPanel(panel){
     this.returnToEditing=this.data.editing;
-    this.setData({panel,inputFocus:false,revealed:panel==='reference'});wx.hideKeyboard?.();this.keyboard({height:0});
+    this.setData({panel,inputFocus:false});wx.hideKeyboard?.();this.keyboard({height:0});
     if(panel==='directory')this.refreshDirectory();
   },
   closePanel(){
-    this.setData({panel:'',revealed:false});
+    this.setData({panel:''});
     if(this.returnToEditing)afterRender(()=>this.setData({inputFocus:true}));
   },
-  showReference(index){
-    const field=this.task.fields[index],fields=field.kind==='code'?this.data.codeFields:this.data.textFields;
-    const position=fields.findIndex(f=>f.index===index);
-    this.setData({reference:{index,position,count:fields.length,kind:field.kind,
-      label:field.kind==='code'?`第 ${field.source.line} 行${field.source.slot>1?' · 本行第 '+field.source.slot+' 处':''}`:field.label,
-      context:view.fieldContext(this.task,field),contextExpandable:field.kind!=='code'&&!this.data.document.template,
-      answer:field.answer,mine:this.draft.answers[field.id]||'',checked:this.draft.checks[field.id]??null,
-      criteria:this.task.rubric.filter(r=>field.rubricIds.includes(r.id))},referenceContextOpen:false,referenceCriteriaOpen:false,referenceTarget:''});
-    afterRender(()=>this.setData({referenceTarget:'reference-current'}));
+  comparisonFor(field,index){
+    return {index,kind:field.kind,slot:field.source.slot||0,comparison:compare(this.draft.answers[field.id],field.answer,field.kind)};
   },
-  reveal(){this.showReference(this.data.current);this.setPanel('reference');},
-  moveReference(e){
-    const ref=this.data.reference,fields=ref.kind==='code'?this.data.codeFields:this.data.textFields;
-    const next=fields[ref.position+Number(e.currentTarget.dataset.step)];if(next)this.showReference(next.index);
+  reveal(){
+    if(this.data.revealed&&!this.data.writing){this.closeReference();return;}
+    this.beginComparison(this.data.current);
   },
-  toggleReferenceContext(){this.setData({referenceContextOpen:!this.data.referenceContextOpen});},
-  toggleCriteria(){this.setData({referenceCriteriaOpen:!this.data.referenceCriteriaOpen});},
-  fillReference(){this.select(this.data.reference.index);},
-  check(e){const value=e.currentTarget.dataset.value,index=this.data.reference.index,id=this.task.fields[index].id;this.draft.checks[id]=value==='yes';this.setData({checks:{...this.data.checks,[id]:value},'reference.checked':value==='yes'});this.show(this.data.current);this.save();},
+  revealField(){this.reveal();},
+  beginComparison(index){
+    if(!this.task.fields[index])return;
+    if(this.data.revealed&&!this.data.writing)return;
+    this.comparisonReturn={editing:this.data.editing,writing:this.data.writing};
+    const locate=this.data.editing;
+    this.setData({comparisons:Object.fromEntries(this.task.fields.map((field,i)=>[field.id,this.comparisonFor(field,i)])),editing:false,writing:false,inputFocus:false,panel:'',revealed:true});wx.hideKeyboard?.();this.keyboard({height:0});
+    if(locate)afterRender(()=>this.locate());
+  },
+  closeReference(restore=true){
+    const previous=this.comparisonReturn;this.comparisonReturn=null;
+    this.setData({comparisons:{},revealed:false});
+    if(restore)afterRender(()=>this.restoreReader());
+    if(restore&&previous?.editing){this.setData({editing:true,writing:!!previous.writing,inputFocus:false});afterRender(()=>this.setData({inputFocus:true}));}
+  },
+  assessField(e){
+    const index=Number(e.currentTarget.dataset.index),field=this.task.fields[index];if(!field)return;
+    wx.showActionSheet({itemList:['还需练习','已掌握','取消标记'],success:result=>{
+      if(storage.owner()!==this.user)return;
+      if(result.tapIndex===2)delete this.draft.checks[field.id];else this.draft.checks[field.id]=result.tapIndex===1;
+      this.setData({checks:Object.fromEntries(Object.entries(this.draft.checks).map(([id,value])=>[id,value?'yes':'no']))});
+      this.show(this.data.current);this.save();this.refreshDirectory();
+    }});
+  },
+  openWebsite(){
+    this.returnToEditing=this.data.editing;this.setData({websiteOpen:true,inputFocus:false});wx.hideKeyboard?.();this.keyboard({height:0});
+  },
+  closeWebsite(){this.setData({websiteOpen:false});if(this.returnToEditing)afterRender(()=>this.setData({inputFocus:true}));},
   refreshDirectory(){
     const directory=this.task.fields.map((f,index)=>({index,id:f.id,kind:f.kind,label:f.kind==='code'?`第 ${f.source.line} 行 · 第 ${f.source.slot} 处`:f.label,filled:!!this.draft.answers[f.id]?.trim(),checked:this.draft.checks[f.id]===true,needsReview:this.draft.checks[f.id]===false}));
     this.setData({directory,remaining:directory.filter(f=>!f.filled).length,needsReview:directory.filter(f=>f.needsReview).length});this.filterDirectory();

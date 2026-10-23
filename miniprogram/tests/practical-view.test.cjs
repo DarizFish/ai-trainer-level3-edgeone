@@ -16,6 +16,7 @@ test('all 20 code exercises retain every original line and map all 331 blanks ex
       const original=contexts[task.code].cells.find(c=>c.id===cell.id).source.split('\n');
       assert.equal(cell.lines.length,original.length);
       for(const [index,line] of cell.lines.entries()){
+        for(const token of line.tokens.filter(t=>!t.blank))assert.equal(token.parts.map(p=>p.text).join(''),token.text,'Syntax coloring preserves every source character');
         const placeholders=[...original[index].matchAll(/_{5,}/g)].map(m=>m[0]);
         let slot=0;
         const rebuilt=line.tokens.map(t=>{
@@ -35,6 +36,19 @@ test('all 20 code exercises retain every original line and map all 331 blanks ex
     assert.equal(filled.text,answer);assert.equal(filled.filled,true);
   }
   assert.equal(exercises,20);assert.equal(blanks,331);
+});
+
+test('notebook colors preserve strings and multiline context instead of highlighting their contents as code',()=>{
+  const {pythonLines}=require('../utils/python-colors');
+  const source='def analyze(df):\n    """if # text\nreturn documentation"""\n    value = "# for x" # note\n    return len(df) + 10';
+  const lines=pythonLines(source);
+  assert.equal(lines.map(line=>line.map(p=>p.text).join('')).join('\n'),source);
+  assert.equal(lines[0].find(p=>p.text==='def').syntax,'keyword');
+  assert.equal(lines[0].find(p=>p.text==='analyze').syntax,'definition');
+  assert.equal(lines[2].find(p=>p.text.startsWith('return')).syntax,'string');
+  assert.equal(lines[3].find(p=>p.text==='"# for x"').syntax,'string');
+  assert.equal(lines[3].find(p=>p.text==='# note').syntax,'comment');
+  assert.equal(lines[4].find(p=>p.text==='10').syntax,'number');
 });
 
 test('every text field remains editable in its full document and the 10 templates preserve the original paragraphs',()=>{

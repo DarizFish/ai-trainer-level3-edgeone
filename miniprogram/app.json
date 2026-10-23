@@ -12,14 +12,14 @@
   ],
   "window": {
     "navigationBarTitleText": "训练师备考",
-    "navigationBarBackgroundColor": "#f6f4ed",
+    "navigationBarBackgroundColor": "#f4efe3",
     "navigationBarTextStyle": "black",
-    "backgroundColor": "#f6f4ed"
+    "backgroundColor": "#f4efe3"
   },
   "tabBar": {
-    "color": "#747970",
-    "selectedColor": "#245946",
-    "backgroundColor": "#fffef9",
+    "color": "#3e5365",
+    "selectedColor": "#b23a2b",
+    "backgroundColor": "#fffdf7",
     "borderStyle": "white",
     "list": [
       {

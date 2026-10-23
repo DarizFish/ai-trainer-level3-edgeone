@@ -5,6 +5,7 @@ const ui=require('../../utils/ui');
 const theory=require('../../utils/theory-view');
 const {correct}=require('../../utils/exam');
 Page({
+  onShareAppMessage:require('../../utils/share').question,
   data:{current:0,total:0,question:null,selected:[],revealed:false,favorite:false,empty:false,restored:false,answerRight:false,groupLabel:'理论练习'},
   onLoad(options){this.filter=options;this.user=storage.owner();this.load();},
   onShow(){if(this.user!==storage.owner()){this.user=storage.owner();this.load();}},

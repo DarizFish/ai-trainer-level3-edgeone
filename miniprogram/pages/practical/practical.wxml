@@ -1,6 +1,7 @@
 <view class="page practical-page">
   <view class="eyebrow">先理解场景，再动手填写</view><view class="title">实操题库</view>
   <view class="subtitle">{{total}} 道题 · 按模块练习，随时接着写</view>
+  <view class="website-callout"><view class="website-kicker">电脑实操 · www.aitrainer3.xyz</view><view class="website-title">运行代码，到网页端。</view><view class="website-description">完整素材、在线 Python 环境、实验文件导出。</view><button bindtap="openWebsite" data-action="open-website">查看网页实操指引 <text>→</text></button></view>
   <view class="search-box"><input placeholder="搜索题号或名称" value="{{keyword}}" bindinput="search" /><button wx:if="{{keyword}}" bindtap="clear" data-action="clear">清除</button></view>
   <block wx:if="{{!group && !keyword}}">
     <view wx:if="{{recent}}" class="card recent" bindtap="open" data-action="open" data-code="{{recent.code}}"><view class="eyebrow">继续上次实操</view><view class="label">{{recent.code}} · {{recent.title}}</view><view class="recent-footer"><text>已填 {{recent.filled}} / {{recent.fields}} 项</text><text>继续 →</text></view></view>
@@ -14,3 +15,4 @@
     <view wx:if="{{!tasks.length}}" class="empty">没有找到相关题目，试试题号或其他关键词。</view>
   </block>
 </view>
+<website-guide class="website-guide" visible="{{websiteOpen}}" bind:close="closeWebsite" />

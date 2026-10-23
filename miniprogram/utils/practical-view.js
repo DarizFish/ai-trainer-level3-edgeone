@@ -1,4 +1,5 @@
 const contexts = require('../data/practical-context');
+const {pythonLines,sliceParts}=require('./python-colors');
 
 const modules = [
   ['1.1','业务数据处理','代码练习'], ['1.2','业务效果优化','分析报告'],
@@ -16,7 +17,9 @@ function contextFor(task) {
 function notebook(task, answers = {}) {
   const context = contextFor(task);
   if (!context?.cells) return [];
-  return context.cells.filter(cell=>cell.source.trim()).map((cell, cellIndex)=>({
+  return context.cells.filter(cell=>cell.source.trim()).map((cell, cellIndex)=>{
+    const highlighted=pythonLines(cell.source);
+    return {
     id:cell.id, title:`第 ${cellIndex + 1} 部分`,
     lines:cell.source.split('\n').map((source, lineIndex)=>{
       let cursor=0, slot=0;
@@ -26,14 +29,14 @@ function notebook(task, answers = {}) {
         const index=task.fields.findIndex(f=>f.kind==='code' && f.source.cellId===cell.id && f.source.line===lineIndex+1 && f.source.slot===slot);
         if(index<0)continue;
         const field=task.fields[index];
-        tokens.push({key:tokens.length,text:source.slice(cursor,match.index),blank:false});
+        tokens.push({key:tokens.length,text:source.slice(cursor,match.index),parts:sliceParts(highlighted[lineIndex],cursor,match.index),blank:false});
         tokens.push({key:tokens.length,text:answers[field.id]||'',blank:true,index,id:field.id,filled:!!answers[field.id]?.trim()});
         cursor=match.index+match[0].length;
       }
-      tokens.push({key:tokens.length,text:source.slice(cursor),blank:false});
+      tokens.push({key:tokens.length,text:source.slice(cursor),parts:sliceParts(highlighted[lineIndex],cursor,source.length),blank:false});
       return {id:`code-${cell.id}-${lineIndex+1}`,number:lineIndex+1,tokens};
     }),
-  }));
+  };});
 }
 
 function documents(task) {

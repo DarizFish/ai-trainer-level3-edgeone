@@ -4,6 +4,7 @@ const exams=require('../../utils/exam');
 const study=require('../../utils/study');
 const ui=require('../../utils/ui');
 Page({
+  onShareAppMessage:require('../../utils/share').mock,
   data:{exam:null,question:null,selected:[],clock:'90:00',sheet:false,numbers:[]},
   async onLoad(options){
     this.user=storage.owner();this.key=storage.key('exam',this.user);
