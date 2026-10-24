@@ -180,8 +180,8 @@ test('reading starts without an editor; short fills keep context and long report
     assert.equal(page.data.editing,false);assert.equal(page.data.writing,false);assert.equal(page.data.panel,'');
     page.start();assert.equal(page.data.editing,true);
     assert.equal(page.data.writing,['1.2.1','3.1.1'].includes(code));
-    page.input({detail:{value:'自己的答案'}});page.reveal();assert.equal(page.data.panel,'reference');
-    page.closePanel();assert.equal(page.data.answer,'自己的答案');
+    page.input({detail:{value:'自己的答案'}});page.reveal();assert.equal(page.data.panel,'');assert.ok(page.data.revealed);
+    page.closeReference();assert.equal(page.data.answer,'自己的答案');
     page.done();assert.equal(page.data.editing,false);assert.equal(page.data.writing,false);
     assert.equal(page.data.answers[page.data.field.id],'自己的答案');
   }
@@ -217,30 +217,26 @@ test('inline input events stay with their blank when the user switches fields',(
   assert.equal(restored.data.answers[page.task.fields[0].id],'first(final)');
 });
 
-test('reference browsing shows each answer without entering editing or copying it into the draft',()=>{
+test('one action expands every reference and collapses them without filling drafts',()=>{
   cache.clear();
-  for(const code of ['2.1.1','4.2.1','1.2.1']){
-    const page=loadPage('task');page.onLoad({code});page.reveal();
-    page.moveReference({currentTarget:{dataset:{step:1}}});
-    assert.equal(page.data.panel,'reference');assert.equal(page.data.current,0);assert.equal(page.data.reference.index,1);
-    assert.equal(page.data.reference.answer,page.task.fields[1].answer);
-    assert.equal(page.data.editing,false);assert.equal(page.data.inputFocus,false);
-    assert.equal(page.data.answer,'');assert.equal(Object.keys(page.draft.answers).length,0);
-    page.closePanel();assert.equal(page.data.editing,false);assert.equal(page.data.inputFocus,false);
+  for(const task of bank.tasks){
+    const page=loadPage('task');page.onLoad({code:task.code});const before=structuredClone(page.draft);page.reveal();
+    assert.equal(page.data.panel,'');assert.equal(page.data.current,0);assert.equal(page.data.editing,false);
+    assert.equal(Object.keys(page.data.comparisons).length,task.fields.length);
+    for(const field of task.fields){const ref=page.data.comparisons[field.id];assert.equal(ref.comparison.state,'empty');assert.equal(ref.comparison.answerParts.map(p=>p.text).join(''),field.answer);}
+    assert.deepEqual(structuredClone(page.draft),before);page.reveal();assert.equal(page.data.revealed,false);assert.equal(Object.keys(page.data.comparisons).length,0);
   }
 });
 
-test('reference browsing and self-assessment keep the unfinished answer and resume position intact',()=>{
-  cache.clear();const page=loadPage('task');page.onLoad({code:'2.1.1'});page.select(2);
-  page.input({detail:{value:'my_answer'}});page.reveal();
-  page.moveReference({currentTarget:{dataset:{step:1}}});
-  page.check({currentTarget:{dataset:{value:'no'}}});
-  assert.equal(page.data.reference.index,3);assert.equal(page.draft.checks[page.task.fields[3].id],false);
-  assert.equal(page.draft.checks[page.task.fields[2].id],undefined);
-  page.closePanel();assert.equal(page.data.current,2);assert.equal(page.data.answer,'my_answer');assert.equal(page.data.inputFocus,true);
-  const restored=loadPage('task');restored.onLoad({code:'2.1.1'});assert.equal(restored.data.current,2);
-  page.reveal();page.moveReference({currentTarget:{dataset:{step:1}}});page.fillReference();
-  assert.equal(page.data.current,3);assert.equal(page.data.panel,'');assert.equal(page.data.editing,true);
+test('expanded comparisons stay visible across fields and modes and update when a blank is edited',()=>{
+  cache.clear();const page=loadPage('task');page.onLoad({code:'2.1.1'});page.select(2);page.input({detail:{value:'my_answer'}});page.reveal();
+  page.closeReference();assert.equal(page.data.current,2);assert.equal(page.data.answer,'my_answer');assert.equal(page.data.inputFocus,true);
+  page.reveal();page.select(3);assert.equal(page.data.revealed,true);page.input({detail:{value:page.task.fields[3].answer}});
+  assert.equal(page.data.comparisons[page.task.fields[3].id].comparison.state,'exact');assert.equal(page.data.comparisons[page.task.fields[2].id].comparison.state,'different');
+  page.switchMode({currentTarget:{dataset:{mode:'document'}}});assert.equal(page.data.revealed,true);
+  page.switchMode({currentTarget:{dataset:{mode:'code'}}});assert.equal(page.data.revealed,true);assert.equal(page.data.current,3);
+  page.closeReference();assert.equal(page.data.current,3);assert.equal(page.data.editing,false);
+  const restored=loadPage('task');restored.onLoad({code:'2.1.1'});assert.equal(restored.data.current,3);assert.equal(restored.data.answers[page.task.fields[2].id],'my_answer');
 });
 
 test('code/report switches and reentry preserve their own answer and scroll positions',()=>{
@@ -257,8 +253,15 @@ test('code/report switches and reentry preserve their own answer and scroll posi
   assert.equal(restored.data.current,report);assert.equal(restored.data.answer,'report_2');assert.equal(restored.data.documentScroll,175);
 });
 
+test('report writing can reopen all comparisons when they were already expanded',()=>{
+  cache.clear();const page=loadPage('task');page.onLoad({code:'1.2.1'});page.reveal();page.select(1);page.input({detail:{value:'my report'}});
+  assert.equal(page.data.writing,true);page.reveal();assert.equal(page.data.revealed,true);assert.equal(page.data.writing,false);
+  assert.equal(Object.keys(page.data.comparisons).length,page.task.fields.length);page.reveal();
+  assert.equal(page.data.writing,true);assert.equal(page.data.current,1);assert.equal(page.data.answer,'my report');
+});
+
 test('unfinished and review filters identify the right items without changing answers',()=>{
-  cache.clear();const page=loadPage('task');page.onLoad({code:'4.2.1'});page.select(0);page.input({detail:{value:'draft'}});page.reveal();page.check({currentTarget:{dataset:{value:'no'}}});page.closePanel();page.done();
+  cache.clear();const page=loadPage('task');page.onLoad({code:'4.2.1'});page.select(0);page.input({detail:{value:'draft'}});global.wx.showActionSheet=options=>options.success({tapIndex:0});page.assessField({currentTarget:{dataset:{index:0}}});delete global.wx.showActionSheet;page.done();
   page.openRemaining();assert.equal(page.data.remaining,4);assert.equal(page.data.visibleDirectory.length,4);assert.ok(page.data.visibleDirectory.every(f=>f.index!==0));
   page.changeDirectoryFilter({currentTarget:{dataset:{filter:'review'}}});assert.equal(page.data.visibleDirectory.length,1);assert.equal(page.data.visibleDirectory[0].index,0);
   page.changeDirectoryFilter({currentTarget:{dataset:{filter:'all'}}});assert.equal(page.data.visibleDirectory.length,5);

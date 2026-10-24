@@ -109,20 +109,21 @@ async function until(label,read,check=Boolean,ms=15000){
   await (await page.$('input')).input('4.1.1');await until('practical search',()=>page.data('tasks'),v=>v.length===1);
   await tap(page,'view[data-code="4.1.1"]');page=await pageAt('pages/task/task');
   const stopEditing=async()=>{
+    if(await page.data('revealed'))await page.callMethod('closeReference');
     if(await page.data('panel')){await page.callMethod('closePanel');await until('panel closed',()=>page.data('panel'),v=>v==='');}
     if(await page.data('editing')){await page.callMethod('done');await until('reading mode',()=>page.data('editing'),v=>!v);}
   };
   const editText=async(index,value)=>{
     await stopEditing();
     if(await page.data('document.template'))await tap(page,`.inline-answer[data-index="${index}"]`);
-    else {const field=await until('field '+index,()=>page.$(`.answer-field[data-index="${index}"]`));await tap(field,'button');}
+    else {const field=await until('field '+index,()=>page.$(`.answer-field[data-index="${index}"]`));await tap(field,'.answer-preview');}
     await until('text editor open',()=>page.data('editing'));
     const textarea=await until('text input',()=>page.$('textarea'));
     await textarea.input(value);await until('text input saved',()=>page.data(),d=>d.current===index && d.answer===value);return page;
   };
   await editText(0,'本机恢复验收');
-  await tap(page,'button[data-action="reveal"]');await until('reference revealed',()=>page.data('panel'),v=>v==='reference');
-  await tap(page,'button[data-value="yes"]');await until('self assessment saved',()=>page.data('checked'),v=>v===true);
+  await tap(page,'button[data-action="reveal"]');await until('reference revealed',()=>page.data('revealed'),v=>!!v);
+  await mini.mockWxMethod('showActionSheet',{tapIndex:1});await page.callMethod('assessField',{currentTarget:{dataset:{index:0}}});await mini.restoreWxMethod('showActionSheet');await until('self assessment saved',()=>page.data('checked'),v=>v===true);
   await editText(1,'第二项恢复验收');
   page=await route('/pages/task/task?code=4.1.1');
   await until('second answer restored',()=>page.data('answer'),v=>v==='第二项恢复验收');
@@ -137,9 +138,9 @@ async function until(label,read,check=Boolean,ms=15000){
     assert.equal(await page.data('codeAvailable'),true);
     await tap(page,'.code-blank[data-index="0"]');await until('code editor open',()=>page.data('editing'));
     await (await page.$('.code-answer')).input('验收 '+task.code);await until('code input saved',()=>page.data('answer'),v=>v==='验收 '+task.code);
-    await tap(page,'button[data-action="reveal"]');await until('code reference',()=>page.data('panel'),v=>v==='reference');
+    await tap(page,'button[data-action="reveal"]');await until('code reference',()=>page.data('revealed'),v=>!!v);
     assert.equal(await page.data('field.answer'),first.answer);
-    await page.callMethod('closePanel');await until('reference closed',()=>page.data('panel'),v=>v==='');
+    await page.callMethod('closeReference');await until('reference closed',()=>page.data('revealed'),v=>!v);
     const cells=await page.data('codeCells');
     await tap(page,'.code-blank[data-index="1"]');await until('inline blank selected',()=>page.data('current'),v=>v===1);
     await (await page.$('.code-answer')).input('第二空');await until('second input saved',()=>page.data('answer'),v=>v==='第二空');
@@ -153,7 +154,7 @@ async function until(label,read,check=Boolean,ms=15000){
     }
    }else{
     await editText(0,'验收 '+task.code);
-    await tap(page,'button[data-action="reveal"]');await until('written reference',()=>page.data('panel'),v=>v==='reference');
+    await tap(page,'button[data-action="reveal"]');await until('written reference',()=>page.data('revealed'),v=>!!v);
     assert.equal(await page.data('field.answer'),first.answer);
     await stopEditing();
     const selector=await page.data('document.template')?'.inline-answer':'.answer-field';

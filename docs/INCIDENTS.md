@@ -198,6 +198,21 @@ Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'postgres'
 
 > 附带记录一次操作失误：4.14 的文档提交写在 push 之后，因此 PR #10 只带走了代码修复，这段说明留在了本地。已随本次一并补上。
 
+### 4.16 PR 连续失败：生产依赖审计没有纳入本地 CI 入口
+
+**症状（2026-10-23 至 24）**：PR #26 的本地 `CI=true npm run test:ci` 通过，但 GitHub Quality Gate 连续三次失败。运行 [39981982265](https://github.com/DarizFish/ai-trainer-level3-edgeone/actions/runs/39981982265)、[40055720376](https://github.com/DarizFish/ai-trainer-level3-edgeone/actions/runs/40055720376)、[40057473881](https://github.com/DarizFish/ai-trainer-level3-edgeone/actions/runs/40057473881) 均在 `Audit production dependencies` 退出 1，浏览器安装及后续测试均未执行。
+
+**根因**有两层：
+
+1. 锁定的 `next@16.3.8` 命中新增的 critical / high 通告，受影响范围为 `16.0.0` 至 `16.4.0`，包括 [SVG 图片优化](https://github.com/advisories/GHSA-2464-fhr4-w9xw)、[Server Actions 拒绝服务](https://github.com/advisories/GHSA-p3m5-59mp-jv5r)和 [`use cache` typed arrays](https://github.com/advisories/GHSA-673q-mjm6-r5xr)。依赖安装本身成功，阻断来自 `npm audit --omit=dev --audit-level=high`，与小程序交互或 artifact 存储额度无关。
+2. 本地 `test:ci` 当时仅调用 `test:full`，而 Actions 另有独立审计步骤。设置 `CI=true` 只改变 Playwright 行为，不能补上缺失的审计。漏洞数据库会更新，过去审计通过也不能证明当前锁文件安全。
+
+**修复**：Next.js 与 eslint-config-next 同步固定为 `16.4.3` 并更新锁文件。审计命令归入 `test:security`，本地 `test:ci` 先审计再执行 `test:full`；Actions 同样调用这两个公共脚本，并在安装浏览器前完成审计。合同测试约束两个入口的覆盖与顺序。
+
+**已验证**：升级后 `test:security` 退出 0，生产依赖的 high / critical 均为 0；当日仍有 9 项 moderate，现有 high 阈值保持不变。复核必须先看失败步骤，再执行对应的单层命令；不要通过重跑旧提交、提高审计阈值或跳过审计解决依赖通告。
+
+本地完整检查命令与 CI 的职责见 [TESTING.md](TESTING.md)。网站运行时依赖的修补需随网站版本发布生效，PR 门禁不会部署生产。
+
 ## 附：2026-07-26 全量自检快照
 
 一次性快照，保留用于对照当时的基线，不代表当前状态——当前门禁与验证命令见 `TESTING.md`。

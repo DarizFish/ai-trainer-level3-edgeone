@@ -2,7 +2,10 @@ const content=require('../../utils/content');
 const storage=require('../../utils/storage');
 const {modules}=require('../../utils/practical-view');
 Page({
-  data:{sections:[],group:'',groupTitle:'',keyword:'',tasks:[],recent:null,total:40},
+  onShareAppMessage:require('../../utils/share').practical,
+  data:{sections:[],group:'',groupTitle:'',keyword:'',tasks:[],recent:null,total:40,websiteOpen:false},
+  openWebsite(){this.setData({websiteOpen:true});},
+  closeWebsite(){this.setData({websiteOpen:false});},
   onShow(){this.bank=content.get();this.render();},
   onPageScroll(e){this.scrollTop=e.scrollTop;},
   select(e){this.directoryScroll=this.scrollTop||0;const group=e.currentTarget.dataset.group;this.setData({group,keyword:'',groupTitle:modules.find(m=>m.id===group)?.title||group});this.render();wx.pageScrollTo({scrollTop:0,duration:0});},

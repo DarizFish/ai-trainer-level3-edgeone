@@ -1,6 +1,7 @@
 const api=require('../../utils/request');
 const study=require('../../utils/study');
 Page({
+  onShareAppMessage:require('../../utils/share').home,
   data:{mode:'login',email:'',password:'',displayName:'',accepted:false,busy:false,error:''},
   onLoad(options){if(options.mode==='register')this.setData({mode:'register'});},
   input(e){this.setData({[e.currentTarget.dataset.name]:e.detail.value,error:''});},

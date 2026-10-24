@@ -19,8 +19,9 @@
     "test:quick": "node scripts/run-quick-tests.mjs",
     "test:build": "npm run build",
     "test:browser": "playwright test",
+    "test:security": "npm audit --omit=dev --audit-level=high",
     "test:full": "npm run test:quick && npm run test:build && npm run test:browser",
-    "test:ci": "npm run test:full",
+    "test:ci": "npm run test:security && npm run test:full",
     "test:smoke": "node --test tests/production-smoke.test.mjs",
     "analytics:report": "node scripts/analytics-report.mjs",
     "test:install-browser": "playwright install --no-shell chromium",
@@ -54,7 +55,7 @@
   "dependencies": {
     "drizzle-orm": "0.45.2",
     "jupyter-iframe-commands-host": "0.3.0",
-    "next": "16.3.8",
+    "next": "16.4.3",
     "onnxruntime-web": "1.27.0",
     "postgres": "3.4.7",
     "react": "19.2.8",
@@ -68,7 +69,7 @@
     "@types/react-dom": "19.2.3",
     "drizzle-kit": "0.31.10",
     "eslint": "9.39.4",
-    "eslint-config-next": "16.3.8",
+    "eslint-config-next": "16.4.3",
     "react-server-dom-webpack": "19.2.8",
     "tailwindcss": "4.2.1",
     "typescript": "5.9.3"

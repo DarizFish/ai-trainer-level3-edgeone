@@ -2097,8 +2097,12 @@ test("self-hosted releases preserve proxy trust, runtime health, and cache seman
   const databaseManager = await readFile(new URL("../scripts/manage-database.mjs", import.meta.url), "utf8");
   assert.match(qualityWorkflow, /pull_request:/);
   assert.match(qualityWorkflow, /push:[\s\S]*branches:[\s\S]*- main/);
-  assert.match(qualityWorkflow, /npm audit --omit=dev --audit-level=high/);
-  assert.match(qualityWorkflow, /npm run test:ci/);
+  const scripts = JSON.parse(packageJson).scripts;
+  assert.equal(scripts["test:security"], "npm audit --omit=dev --audit-level=high");
+  assert.equal(scripts["test:ci"], "npm run test:security && npm run test:full", "本地 CI 必须先通过与 Actions 相同的生产审计");
+  assert.match(qualityWorkflow, /run: npm run test:security/);
+  assert.match(qualityWorkflow, /run: npm run test:full/);
+  assert.ok(qualityWorkflow.indexOf("run: npm run test:security") < qualityWorkflow.indexOf("- name: Install Chromium"), "审计失败必须在安装浏览器与运行后续门禁前阻断");
   assert.match(qualityWorkflow, /aitrainer-\$\{\{ github\.sha \}\}/);
   // 打包步骤不能只在 main 上跑。它是唯一会校验「迁移脚本的依赖在发布物里能解析」的地方，
   // 而 2026-08-15 连着两次部署失败都是合并之后才发现的——门禁必须覆盖到这一步。

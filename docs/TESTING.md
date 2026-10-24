@@ -1,11 +1,12 @@
 # 测试体系
 
-本项目采用从快到慢、从本地到生产的五层质量门禁。测试默认不写数据库，也不创建账号或学习记录。
+本项目采用从本地到生产的分层质量门禁。测试默认不写数据库，也不创建账号或学习记录。
 
 ## 分层
 
 | 层级 | 命令 | 覆盖范围 | 是否需要服务 |
 |---|---|---|---|
+| 生产依赖审计 | `npm run test:security` | 按 npm 当前漏洞数据库阻断 high / critical；包含在 `test:ci` 中 | 无本地服务，需访问 npm registry |
 | 静态质量 | `npm run lint`、`npm run typecheck` | ESLint、TypeScript | 否 |
 | 小程序客户端 | `npm run test:miniprogram` | 原生页面状态、理论与实操、离线队列、内容哈希；包含在根目录 `npm test` 与 CI 中 | 否，无需微信开发者工具 |
 | 内容与合同 | `npm run content:validate`、`npm run test:contracts` | 900 道理论题、40 道实操题、评分、认证边界、资源哈希、JupyterLite 配置 | 否 |
@@ -44,7 +45,7 @@ npm.cmd test
 准备提交或部署时运行完整门禁：
 
 ```powershell
-npm.cmd run test:full
+npm.cmd run test:ci
 ```
 
 准备**推送 PR**时应在与 GitHub Actions 同构的 CI 模式下运行：
@@ -57,7 +58,9 @@ Remove-Item Env:CI
 Remove-Item Env:SELF_HOSTED_BUILD
 ```
 
-`test:ci` 当前与 `test:full` 覆盖相同，但 `CI=true` 会改变 Playwright 的关键行为：禁止复用端口上已有的旧服务、允许一次重试以采集 trace，同时通过 `failOnFlakyTests` 让“重试后才通过”仍然阻断门禁。`SELF_HOSTED_BUILD=1` 让浏览器测试运行与阿里云发布一致的 standalone 产物。两者都是 GitHub Quality Gate 的环境设置，因此本地普通模式通过不能替代这一步。
+`test:ci` 先运行 `test:security`，通过后再运行 `test:full` 的静态、内容、构建与浏览器检查；单独运行 `test:full` 不包含在线依赖审计。漏洞数据库会更新，即使锁文件未变，也不能沿用过去的审计结果。
+
+`CI=true` 会改变 Playwright 的关键行为：禁止复用端口上已有的旧服务、允许一次重试以采集 trace，同时通过 `failOnFlakyTests` 让“重试后才通过”仍然阻断门禁。`SELF_HOSTED_BUILD=1` 让浏览器测试运行与阿里云发布一致的 standalone 产物。两者都是 GitHub Quality Gate 的环境设置，因此本地普通模式通过不能替代这一步。
 
 修改 JupyterLite 内核启动、重启、Service Worker、环境准备或等待条件时，还要对冷启动、依赖探针和重启做压力回归：
 
@@ -100,9 +103,9 @@ npm.cmd run test:smoke
 
 ## CI
 
-`.github/workflows/quality.yml` 在推送和拉取请求时执行生产依赖 high 级审计、完整构建与浏览器/JupyterLite 门禁。`main` 的成功 run 额外生成以 commit SHA 命名的自托管 artifact；部署工作流只能消费该 run 的 artifact。质量门禁失败时上传浏览器诊断，并保留七天的 trace、截图、视频和 HTML 报告；成功运行不上传浏览器报告。正式发布 artifact 的上传仍为必需步骤，不能因存储额度不足而跳过。
+`.github/workflows/quality.yml` 先运行与本地相同的 `test:security`，通过后安装 Chromium 并运行 `test:full`。这样在安装浏览器前即可发现生产依赖审计失败，两个检查入口与本地 `test:ci` 保持一致，由合同测试约束。`main` 的成功 run 额外生成以 commit SHA 命名的自托管 artifact；部署工作流只能消费该 run 的 artifact。质量门禁失败时上传浏览器诊断，并保留七天的 trace、截图、视频和 HTML 报告；成功运行不上传浏览器报告。正式发布 artifact 的上传仍为必需步骤，不能因存储额度不足而跳过。
 
-PR 上的 Quality Gate **不负责部署**：打包和 artifact 上传步骤只在 `push main` 时执行，部署工作流再消费已经验证的 artifact。EdgeOne 仍会独立监听 `main`。
+PR 上的 Quality Gate **不负责部署**：PR 也执行 standalone 打包及容器构建、健康检查，artifact 上传只在 `push main` 时执行，部署工作流再消费已经验证的 artifact。EdgeOne 仍会独立监听 `main`。
 
 **当前决策（2026-08-13）**：暂不增加 `main` 的硬分支保护。现阶段必须依靠合并纪律，只合并 Quality Gate 已通过且 head SHA 未变化的 PR；若以后启用硬保护，再把 `Quality gate / Full build and browser regression` 设为 required check。
 

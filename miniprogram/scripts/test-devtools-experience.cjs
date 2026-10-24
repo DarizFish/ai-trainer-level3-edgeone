@@ -1,0 +1,64 @@
+const automator=require('miniprogram-automator');
+const assert=require('node:assert/strict');
+const fs=require('node:fs/promises');
+const path=require('node:path');
+const bank=require('../data/bundled');
+const output=path.join(require('node:os').tmpdir(),'aitrainer-miniprogram-acceptance','experience-review');
+const deadline=setTimeout(()=>{console.error('Experience acceptance exceeded five minutes');process.exit(1);},300000);
+async function until(label,read,check=Boolean,ms=15000){const end=Date.now()+ms;let value;while(Date.now()<end){value=await read();if(check(value))return value;await new Promise(r=>setTimeout(r,100));}throw new Error(label+': '+JSON.stringify(value));}
+(async()=>{
+ let mini,backup;const checks=[],geometry={},errors=[];
+ try{
+  mini=await until('runtime',async()=>{let client;try{client=await automator.connect({wsEndpoint:'ws://127.0.0.1:'+(process.env.WECHAT_AUTOMATION_PORT||9421)});if((await client.pageStack()).length&&await client.evaluate(expected=>getApp().globalData.acceptanceSnapshot===expected,process.env.WECHAT_ACCEPTANCE_SNAPSHOT))return client;}catch(_){}client?.disconnect();return null;},Boolean,45000);
+  mini.on('exception',error=>errors.push(error));
+  await fs.mkdir(output,{recursive:true});
+  const capture=name=>mini.screenshot({path:path.join(output,name+'.png')});
+  const tap=async(target,selector)=>{await (await until(selector,()=>target.$(selector))).tap();};
+  const comparison=page=>until('comparison',()=>page.$('.inline-comparison[data-index="0"]'));
+  const rect=selector=>mini.evaluate(selector=>new Promise(resolve=>wx.createSelectorQuery().select(selector).boundingClientRect().exec(r=>resolve(r[0]))),selector);
+  backup=await mini.evaluate(()=>Object.fromEntries(wx.getStorageInfoSync().keys.filter(k=>k.startsWith('aitrainer:v1:')).map(k=>[k,wx.getStorageSync(k)])));
+  await mini.evaluate(()=>{getApp().useDevelopmentServer('http://127.0.0.1:3210');for(const k of wx.getStorageInfoSync().keys)if(k.startsWith('aitrainer:v1:'))wx.removeStorageSync(k);return true;});
+  await mini.mockWxMethod('setClipboardData',{errMsg:'setClipboardData:ok'});
+  let page=await mini.reLaunch('/pages/index/index');await until('theory types',()=>page.data('types'),v=>v?.length===3);await capture('01-theory');
+  page=await mini.switchTab('/pages/mock/mock');await capture('02-mock');
+  page=await mini.switchTab('/pages/practical/practical');await until('modules',()=>page.data('sections'),v=>v?.length>0);
+  geometry.websiteEntry=await rect('.website-callout');const viewport=await mini.evaluate(()=>wx.getWindowInfo().windowHeight);
+  assert.ok(geometry.websiteEntry.top>=0&&geometry.websiteEntry.bottom<=viewport,'Website entry fits the first screen');await capture('03-practical');
+  await tap(page,'button[data-action="open-website"]');await until('website guidance',()=>page.data('websiteOpen'));
+  let guide=await until('website guide',()=>page.$('.website-guide'));await tap(guide,'button[data-action="copy-website"]');
+  assert.equal(await guide.data('url'),'https://www.aitrainer3.xyz/practical');await capture('04-website-guide');
+  await tap(guide,'.guide-heading button');await until('website guide closed',()=>page.data('websiteOpen'),v=>!v);checks.push('practical first-screen entry and working website-link copy');
+  page=await mini.redirectTo('/pages/task/task?code=2.1.1');await until('code task',()=>page.data('task.code'),v=>v==='2.1.1');
+  const task=bank.tasks.find(t=>t.code==='2.1.1');geometry.codeReader=await rect('.code-reader');assert.ok(geometry.codeReader.height>=viewport*.75);await capture('05-code');
+  await tap(page,'.code-blank[data-index="0"]');await until('inline editor',()=>page.data('editing'));
+  await (await page.$('.code-answer')).input(task.fields[0].answer);await until('saved exact answer',()=>page.data('answer'),v=>v===task.fields[0].answer);
+  await tap(page,'button[data-action="reveal"]');await until('exact comparison',()=>page.data('comparisons').then(async refs=>refs?.[await page.data('field.id')]?.comparison.state),v=>v==='exact');
+  assert.equal((await page.$$('.inline-comparison')).length,task.fields.filter(f=>f.kind==='code').length,'All code blanks expand together');let component=await comparison(page);geometry.exact=await (await component.$('.comparison')).size();console.log('Compact reference geometry',geometry.exact);await capture('06-compare-exact');assert.ok(parseFloat(geometry.exact.height)<=48,'Short reference stays on one compact row');
+  assert.equal((await (await component.$('.reference')).text()).trim(),task.fields[0].answer);await capture('06-compare-exact');
+  await tap(page,'button[data-action="reveal"]');await until('comparison closes',()=>page.data('revealed'),v=>!v);assert.equal(await page.data('answer'),task.fields[0].answer);
+  await until('editor restored',()=>page.data('editing'));await (await page.$('.code-answer')).input('pd.read_csv("other.csv")');await until('different answer saved',()=>page.data('answer'),v=>v.includes('other.csv'));
+  await tap(page,'button[data-action="reveal"]');await until('different comparison',()=>page.data('comparisons').then(async refs=>refs?.[await page.data('field.id')]?.comparison.state),v=>v==='different');await capture('07-compare-difference');
+  await tap(page,'.code-blank[data-index="0"]');await until('edit with comparisons visible',()=>page.data('editing'));assert.equal(await page.data('revealed'),true);
+  await (await page.$('.code-answer')).input(task.fields[0].answer);await until('comparison updates during input',()=>page.data('comparisons').then(refs=>refs?.[task.fields[0].id]?.comparison.state),v=>v==='exact');
+  await page.callMethod('done');await tap(page,'button[data-mode="document"]');await until('report comparisons survive switch',()=>page.data('mode'),v=>v==='document');assert.equal(await page.data('revealed'),true);assert.equal((await page.$$('.inline-comparison')).length,task.fields.filter(f=>f.kind!=='code').length);
+  await tap(page,'button[data-mode="code"]');await until('code comparisons return',()=>page.data('mode'),v=>v==='code');await tap(page,'button[data-action="reveal"]');await until('comparison hidden',()=>page.data('revealed'),v=>!v);await page.callMethod('done');
+  const draft=await page.data('answers');await tap(page,'button[data-action="open-website"]');await until('task guidance',()=>page.data('websiteOpen'));guide=await page.$('.website-guide');
+  await tap(guide,'button[data-action="copy-website"]');assert.equal(await guide.data('url'),'https://www.aitrainer3.xyz/practical/2.1.1/lab');await capture('08-execute-guide');
+  await tap(guide,'.guide-heading button');await until('task guidance closed',()=>page.data('websiteOpen'),v=>!v);assert.deepEqual(await page.data('answers'),draft);
+  const shared=await page.callMethod('onShareAppMessage');assert.equal(shared.path,'/pages/task/task?code=2.1.1');checks.push('all code blanks compare together; compact exact/difference rows, close-and-resume, current-task execution guide and share path');
+  page=await mini.redirectTo('/pages/task/task?code=4.2.1');await until('template',()=>page.data('task.code'),v=>v==='4.2.1');await tap(page,'.reader-reference');await until('empty comparison',()=>page.data('comparisons').then(async refs=>refs?.[await page.data('field.id')]?.comparison.state),v=>v==='empty');assert.equal((await page.$$('.inline-comparison')).length,bank.tasks.find(t=>t.code==='4.2.1').fields.length);await capture('09-template');
+  page=await mini.redirectTo('/pages/task/task?code=1.2.1');await until('report',()=>page.data('task.code'),v=>v==='1.2.1');
+  const field=await page.$('.answer-field[data-index="0"]');await tap(field,'.compare-field');await until('report comparison',()=>page.data('revealed'));component=await comparison(page);assert.equal((await page.$$('.inline-comparison')).length,bank.tasks.find(t=>t.code==='1.2.1').fields.length);
+  geometry.reportExpanded=await (await component.$('.comparison')).size();assert.equal((await (await component.$('.reference')).text()).trim(),bank.tasks.find(t=>t.code==='1.2.1').fields[0].answer);assert.equal(await component.$('.expand'),null);await capture('10-report-reference');
+  await tap(page,'button[data-action="reveal"]');await until('report comparison closed',()=>page.data('revealed'),v=>!v);await tap(field,'.answer-preview');await until('report writing',()=>page.data('writing'));
+  await (await page.$('.long-answer')).input('先分析数据，再提出可验证的优化措施。');await until('report saved',()=>page.data('answer'),v=>v.includes('优化措施'));await mini.callWxMethod('hideKeyboard');await page.callMethod('keyboard',{detail:{height:0}});await capture('11-report-writing');
+  await tap(page,'button[data-action="reveal"]');await until('report differences',()=>page.data('comparisons').then(async refs=>refs?.[await page.data('field.id')]?.comparison.state),v=>v==='different');await tap(page,'button[data-action="reveal"]');await until('report writing resumes',()=>page.data('writing'));assert.equal(await page.data('answer'),'先分析数据，再提出可验证的优化措施。');
+  await page.callMethod('done');await tap(page,'button[data-action="reveal"]');await until('all report references visible',()=>page.data('revealed'));await tap(await page.$('.answer-field[data-index="0"]'),'.answer-preview');await until('write while comparison enabled',()=>page.data('writing'));await tap(page,'button[data-action="reveal"]');await until('reopen all references from writing',()=>page.data('writing'),v=>!v);assert.equal(await page.data('revealed'),true);await tap(page,'button[data-action="reveal"]');await until('writing restored again',()=>page.data('writing'));checks.push('all template and report references expand together; full answers are visible and writing survives comparison');
+  const question=bank.questions.find(q=>q.type==='multi');page=await mini.redirectTo('/pages/practice/practice?type=multi&question='+question.id);await until('question',()=>page.data('question.id'),v=>v===question.id);
+  assert.equal((await page.callMethod('onShareAppMessage')).path,'/pages/practice/practice?type=multi&question='+question.id);await capture('12-theory-question');checks.push('theory question share path opens the exact public question');
+  assert.deepEqual(errors,[]);await fs.writeFile(path.join(output,'report.json'),JSON.stringify({passed:true,at:new Date().toISOString(),checks,geometry,screenshots:await fs.readdir(output),boundary:'Real-device forwarding, recipient access, keyboard and background recovery still require phone acceptance. Clipboard API is mocked here; payload is checked by the component unit test.'},null,2));
+  console.log('PASS '+checks.join(' / '));console.log('Evidence: '+output);
+ }catch(error){console.error('Runtime exceptions:',JSON.stringify(errors));throw error;}finally{
+  if(mini){await mini.restoreWxMethod('setClipboardData').catch(()=>{});if(backup)await mini.evaluate(saved=>{for(const k of wx.getStorageInfoSync().keys)if(k.startsWith('aitrainer:v1:'))wx.removeStorageSync(k);for(const [k,v] of Object.entries(saved))wx.setStorageSync(k,v);return true;},backup).catch(()=>{});mini.disconnect();}clearTimeout(deadline);
+ }
+})().catch(error=>{console.error(error);clearTimeout(deadline);process.exitCode=1;});
