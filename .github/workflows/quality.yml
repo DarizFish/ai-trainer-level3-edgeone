@@ -41,13 +41,13 @@ jobs:
         run: npm ci
 
       - name: Audit production dependencies
-        run: npm audit --omit=dev --audit-level=high
+        run: npm run test:security
 
       - name: Install Chromium
         run: npx playwright install --with-deps --no-shell chromium
 
       - name: Run the full quality gate
-        run: npm run test:ci
+        run: npm run test:full
 
       # 打包在 PR 上也要跑。它现在会自证迁移脚本的依赖真的在发布物里能解析，而这类问题
       # 只在打包阶段暴露：2026-08-15 连着两次部署失败（node 找不到、postgres 找不到）都是
