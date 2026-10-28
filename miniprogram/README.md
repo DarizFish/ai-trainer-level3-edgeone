@@ -65,6 +65,8 @@ npm.cmd run test:devtools
 
 `npm.cmd run test:experience` 验证本轮视觉与交互：首屏网站入口、题内网页指引、所有空位一键对比、紧凑参考条、长答案直接显示、notebook 浅色代码区、填写恢复以及公开分享路径，并输出截图到系统临时目录的 `aitrainer-miniprogram-acceptance/experience-review/`。剪贴板 API 在该流程中模拟，真实调用参数由客户端测试核对；实际发送与接收小程序卡片仍需真机验收。每次验收自动分配空闲端口，体验验收还核对临时项目中的源码标记，避免误验旧预览。
 
+`npm.cmd run test:sharing` 单独检查全部页面进入与返回时的原生分享菜单：记录实际 `wx.showShareMenu` 成功或失败的回调，先隐藏菜单、离开再返回，确认菜单重新启用并保留公开分享路径。结果保存在系统临时目录 `aitrainer-miniprogram-acceptance/sharing/result.json`。该检查不模拟菜单 API 的结果；手机发送、接收和正式版可用性仍需分别验收。
+
 `node scripts/run-devtools.cjs --theory-only` 单独验证三种题型的进度、续练、历史答案、重新作答和错题订正，并输出截图。该流程使用访客本机记录，无需启动测试 API；不覆盖账号接口、实操或关闭整个应用后的恢复。
 
 `npm.cmd run test:devtools:restart` 单独检查关闭整个测试项目再打开后的存储。当前工具环境会连普通 `wx` 存储标记一起清空，诊断结果为“无法判定”，退出码为 2；这不计入通过项。该命令只操作临时项目。实机关闭重开后的恢复必须另行验收。
