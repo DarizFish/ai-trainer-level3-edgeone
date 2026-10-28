@@ -6,7 +6,7 @@ const ui=require('../../utils/ui');
 Page({
   onShareAppMessage:require('../../utils/share').home,
   data:{session:null,stats:[],pending:0,error:'',busy:false,history:[],version:'',held:[],showHeld:false},
-  onShow(){this.render();},
+  onShow(){this.shareMenu=require('../../utils/share').enable();this.render();},
   held(){this.setData({showHeld:!this.data.showHeld});},
   render(){
     const state=study.read(),bank=content.get(),session=storage.get('session',null);

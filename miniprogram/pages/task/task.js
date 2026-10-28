@@ -6,6 +6,7 @@ const {compare}=require('../../utils/answer-comparison');
 const afterRender=fn=>wx.nextTick?wx.nextTick(fn):fn();
 Page({
   onShareAppMessage:require('../../utils/share').task,
+  onShow(){this.shareMenu=require('../../utils/share').enable();},
   data:{task:null,field:null,current:0,answer:'',revealed:false,checked:null,filled:0,older:[],showOlder:false,
     mode:'code',codeCells:[],codeFields:[],codePosition:0,codeTarget:'',documentTarget:'',answers:{},checks:{},
     document:{template:false,blocks:[],sections:[]},textFields:[],codeAvailable:false,saveError:'',

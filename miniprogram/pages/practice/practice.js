@@ -8,7 +8,7 @@ Page({
   onShareAppMessage:require('../../utils/share').question,
   data:{current:0,total:0,question:null,selected:[],revealed:false,favorite:false,empty:false,restored:false,answerRight:false,groupLabel:'理论练习'},
   onLoad(options){this.filter=options;this.user=storage.owner();this.load();},
-  onShow(){if(this.user!==storage.owner()){this.user=storage.owner();this.load();}},
+  onShow(){this.shareMenu=require('../../utils/share').enable();if(this.user!==storage.owner()){this.user=storage.owner();this.load();}},
   load(){
     const bank=content.get(), state=study.read();this.bank=bank;
     this.questions=bank.questions.filter(q=>(!this.filter.type||q.type===this.filter.type)&&(!this.filter.category||q.category===this.filter.category)&&(!this.filter.mode||this.filter.mode==='wrong'&&state.progress[q.id]?.correct===false||this.filter.mode==='favorite'&&state.favorites[q.id]));

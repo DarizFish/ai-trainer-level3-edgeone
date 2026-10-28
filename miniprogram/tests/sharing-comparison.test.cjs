@@ -8,7 +8,7 @@ const {compare}=require('../utils/answer-comparison');
 const {destination}=require('../utils/website');
 const bank=require('../data/bundled');
 const cache=new Map();
-global.wx={getStorageSync:k=>cache.has(k)?structuredClone(cache.get(k)):'',setStorageSync:(k,v)=>cache.set(k,structuredClone(v)),removeStorageSync:k=>cache.delete(k),pageScrollTo(){},showToast(){}};
+global.wx={getStorageSync:k=>cache.has(k)?structuredClone(cache.get(k)):'',setStorageSync:(k,v)=>cache.set(k,structuredClone(v)),removeStorageSync:k=>cache.delete(k),pageScrollTo(){},showToast(){},showShareMenu(options){options.success?.();}};
 function pageAt(route){
   const file=path.resolve(__dirname,'..',route+'.js');let definition;
   vm.runInNewContext(fs.readFileSync(file,'utf8'),{require:createRequire(file),Page:page=>{definition=page;},wx:global.wx},{filename:file});
@@ -35,6 +35,39 @@ test('sharing from wrong answers or favorites opens the exact public question fo
     const receiver=pageAt('pages/practice/practice');receiver.onLoad(Object.fromEntries(url.searchParams));
     assert.equal(receiver.data.question.id,question.id);assert.equal(receiver.data.empty,false);assert.equal(receiver.data.revealed,false);
   }
+});
+test('entering and returning to every page enables friend sharing while keeping page lifecycle work',()=>{
+  cache.clear();const calls=[],original=global.wx.showShareMenu;global.wx.showShareMenu=options=>{calls.push(options);options.success();};
+  try{
+    for(const route of require('../app.json').pages){
+      const page=pageAt(route);let timerStarts=0;
+      if(route==='pages/practice/practice')page.onLoad({type:'single'});
+      if(route==='pages/exam/exam'){page.exam={phase:'active'};page.startTimer=()=>timerStarts++;}
+      const start=calls.length;page.onShow();page.onShow();
+      assert.equal(calls.length-start,2,route);
+      assert.equal(page.shareMenu.state,'enabled',route);
+      for(const call of calls.slice(start))assert.deepEqual(call.menus,['shareAppMessage']);
+      if(route==='pages/index/index')assert.equal(page.data.types.length,3);
+      if(route==='pages/me/me')assert.equal(page.data.stats.length,3);
+      if(route==='pages/exam/exam')assert.equal(timerStarts,2);
+      if(route==='pages/practice/practice')assert.equal(page.data.question.type,'single');
+    }
+  }finally{global.wx.showShareMenu=original;}
+});
+test('a rejected share menu request stays diagnosable and does not stop the study page rendering',t=>{
+  const warnings=[],original=global.wx.showShareMenu;t.mock.method(console,'warn',(...args)=>warnings.push(args));
+  try{
+    for(const throws of [false,true]){
+      global.wx.showShareMenu=options=>{if(throws)throw new Error('bridge unavailable');options.fail({errMsg:'showShareMenu:fail denied'});};
+      const page=pageAt('pages/index/index');page.onShow();
+      assert.equal(page.data.types.length,3);
+      assert.equal(page.shareMenu.state,'failed');
+      assert.match(page.shareMenu.error,throws?/bridge unavailable/:/showShareMenu:fail denied/);
+    }
+    assert.equal(warnings.length,2);
+    assert.match(warnings[0].join(' '),/showShareMenu:fail denied/);
+    assert.match(warnings[1].join(' '),/bridge unavailable/);
+  }finally{global.wx.showShareMenu=original;}
 });
 test('practical sharing retains the current task and omits local drafts',()=>{
   for(const task of bank.tasks){
