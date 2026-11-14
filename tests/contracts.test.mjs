@@ -458,7 +458,7 @@ test("theory opens as a direct study console and Python tasks enter a code-first
   assert.match(lab, /ai-trainer:prepare-exercise/);
   assert.match(lab, /activeSurface/);
   assert.match(lab, /buildFillReferences/);
-  assert.match(lab, /extractBlankAnswers/);
+  assert.match(lab, /notebook-answers\.mjs/);
   assert.match(lab, /ai-trainer:set-fill-review/);
   assert.match(lab, /references: fillReferences/);
   assert.doesNotMatch(lab, /reviewNotebook|loadCodeReview|buildAnnotatedCodeBlocks|lab-fill-review|lab-annotated-code|lab-inline-code-reference|当前 Notebook 完整代码|你的填写|写法不同不代表错误/);
@@ -1090,6 +1090,71 @@ test("credit audit answers follow the task and remain usable in released minipro
   const solution = snapshot.solutions.find(item => item.code === task.code);
   assert.deepEqual(solution.cells, task.notebook.solutionCells);
   assert.equal(solution.codeSha256, task.notebook.solutionSha256);
+});
+
+test("low-carbon exercise selects all eight requested features and keeps released clients compatible", async () => {
+  const { buildMiniprogramContent } = await import("../scripts/miniprogram-content.mjs");
+  const bank = await loadContentBank();
+  const task = bank.practical.find(task => task.code === "2.1.2");
+  const exercise = buildMiniprogramContent({ ...bank, practical: [task] }).tasks[0];
+  const featureField = exercise.fields.find(field => field.template.startsWith("selected_features ="));
+  const previousFields = exercise.fields.map(field => ({
+    ...field,
+    answer: field.id === featureField.id ? "'1.您的性别○男性   ○女性'" : field.answer,
+  }));
+  const previousVersion = createHash("sha256")
+    .update(JSON.stringify({ fields: previousFields, rubric: task.rubric })).digest("hex");
+  assert.equal(exercise.exerciseVersion, previousVersion);
+  for (const mutate of [
+    changed => { changed.rubric[0].points += 1; },
+    changed => { changed.notebook.cells[0].source += "\n# Updated template"; },
+  ]) {
+    const changed = structuredClone(task);
+    mutate(changed);
+    assert.notEqual(buildMiniprogramContent({ ...bank, practical: [changed] }).tasks[0].exerciseVersion, previousVersion);
+  }
+
+  const { spawnSync } = await import("node:child_process");
+  const result = spawnSync("python", ["-c", `
+import ast, json, pathlib, zipfile, xml.etree.ElementTree as ET
+root = pathlib.Path.cwd()
+task = json.loads((root / 'data/entities/practical/2.1.2.json').read_text(encoding='utf-8'))
+source = '\\n'.join(cell['source'] for cell in task['notebook']['solutionCells'])
+data_path = root / 'public/labs/2.1.2/大学生低碳生活行为的影响因素数据集.xlsx'
+ns = {'s': 'http://schemas.openxmlformats.org/spreadsheetml/2006/main'}
+with zipfile.ZipFile(data_path) as workbook:
+    shared = ET.fromstring(workbook.read('xl/sharedStrings.xml'))
+    strings = [''.join(item.itertext()) for item in shared]
+    sheet = ET.fromstring(workbook.read('xl/worksheets/sheet1.xml'))
+    row = sheet.find('s:sheetData/s:row', ns)
+    columns = [strings[int(cell.find('s:v', ns).text)] for cell in row]
+expected = [next(column for column in columns if column.startswith(f'{i}.')) for i in range(1, 9)]
+assignment = next(node for node in ast.parse(source).body if isinstance(node, ast.Assign) and any(isinstance(target, ast.Name) and target.id == 'selected_features' for target in node.targets))
+assert ast.literal_eval(assignment.value) == expected
+`], { encoding: "utf8" });
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+});
+
+test("website per-blank references agree with every miniprogram code field", async () => {
+  const { buildFillReferences, extractBlankAnswers, codeOnly } = await import("../lib/notebook-answers.mjs");
+  const { extractCodeFields } = await import("../scripts/miniprogram-content.mjs");
+  const bank = await loadContentBank();
+  let checked = 0;
+  for (const task of bank.practical.filter(task => task.hasNotebook)) {
+    const references = buildFillReferences(task.notebook.cells, task.notebook.solutionCells);
+    for (const field of extractCodeFields(task)) {
+      const cell = references.find(cell => cell.cellId === field.source.cellId);
+      const item = cell.items.find(item => item.lineIndex === field.source.line - 1);
+      assert.equal(item.answers[field.source.slot - 1], field.answer.trim(), `${task.code} ${field.id}`);
+      checked++;
+    }
+  }
+  assert.equal(checked, 331);
+  assert.deepEqual(extractBlankAnswers("data_____ = _____(int) # 原题注释", "data['Age']=data['Age'].astype(int) # 答案注释"), ["['Age']", "data['Age'].astype"]);
+  assert.deepEqual(extractBlankAnswers("data_____ = _____(float)", "data['Speed'] = data['Speed'].astype(float)"), ["['Speed']", "data['Speed'].astype"]);
+  assert.deepEqual(extractBlankAnswers("y = _____  ", "y = df['daily_steps']"), ["df['daily_steps']"]);
+  assert.deepEqual(extractBlankAnswers("value = _____ # comment", 'value = "#inside"'), ['"#inside"']);
+  assert.equal(codeOnly('value = "a\\\"#b" # comment'), 'value = "a\\\"#b"');
 });
 
 test("all Python practical tasks expose audited completed-notebook reference code", async () => {

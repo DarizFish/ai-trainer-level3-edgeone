@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { createBridge } from "jupyter-iframe-commands-host";
+import { buildFillReferences } from "@/lib/notebook-answers.mjs";
 import type { PracticalTask } from "@/lib/content";
 import { getPracticalWordDeliverable } from "@/lib/practical-word-deliverable";
 import { isLabCold, labHasModel, markLabWarm, subscribeWarmth } from "@/lib/lab-warmup";
@@ -115,87 +116,7 @@ function kernelLabel(status: string): string {
   return labels[status] ?? status;
 }
 
-type FillReferenceItem = {
-  lineIndex: number;
-  templateLine: string;
-  referenceLine: string;
-  answers: string[];
-};
-
 type FillReviewSummary = { total: number; exact: number; different: number; empty: number };
-
-type FillReferenceCell = {
-  cellId: string;
-  items: FillReferenceItem[];
-};
-
-const BLANK_PATTERN = /_{3,}/g;
-
-function escapeRegExp(value: string): string {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
-function extractBlankAnswers(templateLine: string, completedLine: string): string[] | null {
-  const matches = [...templateLine.matchAll(BLANK_PATTERN)];
-  if (matches.length === 0) return [];
-  let cursor = 0;
-  let pattern = "^";
-  for (const match of matches) {
-    pattern += escapeRegExp(templateLine.slice(cursor, match.index));
-    pattern += "(.*?)";
-    cursor = (match.index ?? 0) + match[0].length;
-  }
-  pattern += escapeRegExp(templateLine.slice(cursor)) + "$";
-  const result = completedLine.match(new RegExp(pattern));
-  return result ? result.slice(1).map(value => value.trim()) : null;
-}
-
-function lineHasTemplateAnchors(templateLine: string, candidate: string): boolean {
-  const anchors = templateLine.split(BLANK_PATTERN).map(value => value.trim()).filter(value => value.length >= 2);
-  if (anchors.length === 0) return false;
-  let cursor = 0;
-  for (const anchor of anchors) {
-    const next = candidate.indexOf(anchor, cursor);
-    if (next < 0) return false;
-    cursor = next + anchor.length;
-  }
-  return true;
-}
-
-function locateCompletedLine(templateLine: string, lines: string[], expectedIndex: number): string | null {
-  const expected = lines[expectedIndex];
-  if (typeof expected === "string" && (extractBlankAnswers(templateLine, expected) || lineHasTemplateAnchors(templateLine, expected))) return expected;
-  const candidates = lines.filter(line => lineHasTemplateAnchors(templateLine, line));
-  return candidates.length === 1 ? candidates[0] : null;
-}
-
-function buildFillReferences(templateCells: Array<{ id: string; source: string }>, solutionCells: Array<{ id: string; source: string }>): FillReferenceCell[] {
-  const pairedSolutions = solutionCells.length === templateCells.length;
-  const combinedReferenceLines = solutionCells.length === 1 ? solutionCells[0].source.replaceAll("\r", "").split("\n") : [];
-  let combinedLineOffset = 0;
-
-  return templateCells.map((cell, cellIndex) => {
-    const templateLines = cell.source.replaceAll("\r", "").split("\n");
-    const referenceLines = pairedSolutions
-      ? solutionCells[cellIndex].source.replaceAll("\r", "").split("\n")
-      : combinedReferenceLines;
-    const expectedOffset = pairedSolutions ? 0 : combinedLineOffset;
-    const items = templateLines.flatMap((templateLine, lineIndex): FillReferenceItem[] => {
-      if (![...templateLine.matchAll(BLANK_PATTERN)].length) return [];
-      const referenceLine = locateCompletedLine(templateLine, referenceLines, expectedOffset + lineIndex)
-        ?? referenceLines[expectedOffset + lineIndex]
-        ?? "";
-      return [{
-        lineIndex,
-        templateLine,
-        referenceLine,
-        answers: extractBlankAnswers(templateLine, referenceLine) ?? [referenceLine.trim()],
-      }];
-    });
-    combinedLineOffset += templateLines.length + 2;
-    return { cellId: cell.id, items };
-  }).filter(cell => cell.items.length > 0);
-}
 
 export default function JupyterLiteLab({ task, signedIn, userEmail = null, examMode = false, activeSurface = "notebook" }: { task: PracticalTask; signedIn: boolean; userEmail?: string | null; examMode?: boolean; activeSurface?: "notebook" | "document" }) {
   const labRevision = "20260814-kernel-owner-runtime12";

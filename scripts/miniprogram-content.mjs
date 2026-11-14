@@ -1,22 +1,10 @@
+import { codeOnly } from "../lib/notebook-answers.mjs";
 import { createHash } from "node:crypto";
 import { rubricIdsFor } from "./miniprogram-rubrics.mjs";
 
 const digest = (value) => createHash("sha256").update(JSON.stringify(value)).digest("hex");
 const blanks = /_{5,}/g;
 const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/\s+/g, "\\s*");
-
-// Remove comments without cutting a # inside a Python string.
-function codeOnly(line) {
-  let quote = "";
-  for (let i = 0; i < line.length; i++) {
-    const c = line[i];
-    if (c === "\\") { i++; continue; }
-    if (quote) { if (c === quote) quote = ""; }
-    else if (c === "'" || c === '"') quote = c;
-    else if (c === "#") return line.slice(0, i).trim();
-  }
-  return line.trim();
-}
 
 export function extractCodeFields(task) {
   const original = task.notebook.cells.flatMap((cell) => cell.source.split("\n").map((line, index) => ({
