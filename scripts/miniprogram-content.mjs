@@ -103,11 +103,19 @@ export function buildMiniprogramContent(bank) {
       const fields = [...(task.hasNotebook ? extractCodeFields(task) : []), ...documentFields(task)];
       for (const field of fields) field.rubricIds = rubricIdsFor(task, field);
       if (!fields.length || new Set(fields.map((field) => field.id)).size !== fields.length) throw new Error(`Invalid exercise ${task.code}`);
+      // Answer corrections can reuse the shipped full-code context and drafts.
+      // Changes to the template, fields or rubric must create a new version.
+      const structureFields = fields.map(field => ({ ...field, answer: undefined }));
+      const structureSha256 = digest({ fields: structureFields, rubric: task.rubric, cells: task.notebook?.cells ?? [] });
+      const compatibility = task.exerciseCompatibility;
+      const exerciseVersion = compatibility?.structureSha256 === structureSha256
+        ? compatibility.version
+        : digest({ fields, rubric: task.rubric });
       return {
         code: task.code, title: task.title, group: task.group, category: task.category,
         description: task.description, rubric: task.rubric, maxScore: task.maxScore,
         materials: task.materials.map(({ label, name, note, preview }) => ({ label, name, note, preview })),
-        fields, exerciseVersion: digest({ fields, rubric: task.rubric }),
+        fields, exerciseVersion,
       };
     }),
   };

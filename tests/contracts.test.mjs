@@ -1054,6 +1054,44 @@ test("material-free business optimization tasks expose complete rubric-bound exa
   assert.match(validator, /rubricCoverage/);
 });
 
+test("credit audit answers follow the task and remain usable in released miniprograms", async () => {
+  const { buildMiniprogramContent } = await import("../scripts/miniprogram-content.mjs");
+  const bank = await loadContentBank();
+  const task = bank.practical.find(task => task.code === "1.1.3");
+  const source = task.notebook.solutionCells.map(cell => cell.source).join("\n");
+  assert.match(task.description, /收入：应大于2000/);
+  assert.match(source, /data\['is_income_valid'\] = data\['Income'\] > 2000\b/);
+  assert.match(source, /cleaned_data\.to_csv\('cleaned_credit_data\.csv', index=False\)/);
+
+  const exercise = buildMiniprogramContent({ ...bank, practical: [task] }).tasks[0];
+  assert.equal(exercise.fields.find(field => field.id === "cell-3-L3-B2").answer, "2000");
+  assert.equal(exercise.fields.find(field => field.id === "cell-4-L9-B3").answer, "'cleaned_credit_data.csv'");
+  const previousFields = exercise.fields.map(field => ({
+    ...field,
+    answer: field.id === "cell-3-L3-B2" ? "0"
+      : field.id === "cell-4-L9-B3" ? "'credit_data.csv'" : field.answer,
+  }));
+  const previousVersion = createHash("sha256")
+    .update(JSON.stringify({ fields: previousFields, rubric: task.rubric })).digest("hex");
+  assert.equal(exercise.exerciseVersion, previousVersion);
+
+  const changed = structuredClone(task);
+  changed.rubric[0].points += 1;
+  assert.notEqual(buildMiniprogramContent({ ...bank, practical: [changed] }).tasks[0].exerciseVersion, previousVersion);
+  const changedTemplate = structuredClone(task);
+  changedTemplate.notebook.cells[2].source = changedTemplate.notebook.cells[2].source.replace("_________ > _________", "_________ >= _________");
+  changedTemplate.notebook.solutionCells[2].source = changedTemplate.notebook.solutionCells[2].source.replace(" > 2000", " >= 2000");
+  assert.notEqual(buildMiniprogramContent({ ...bank, practical: [changedTemplate] }).tasks[0].exerciseVersion, previousVersion);
+  const changedContext = structuredClone(task);
+  changedContext.notebook.cells[0].source += "\n# Updated template";
+  assert.notEqual(buildMiniprogramContent({ ...bank, practical: [changedContext] }).tasks[0].exerciseVersion, previousVersion);
+
+  const snapshot = JSON.parse(await readFile(new URL("../data/references/notebook-solutions-2026-07-16.json", import.meta.url), "utf8"));
+  const solution = snapshot.solutions.find(item => item.code === task.code);
+  assert.deepEqual(solution.cells, task.notebook.solutionCells);
+  assert.equal(solution.codeSha256, task.notebook.solutionSha256);
+});
+
 test("all Python practical tasks expose audited completed-notebook reference code", async () => {
   const [content, snapshot, audit, importer, lab, bridgeExtension] = await Promise.all([
     loadContentBank(),
