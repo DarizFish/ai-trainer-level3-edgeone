@@ -103,6 +103,8 @@ npm.cmd run test:smoke
 
 ## CI
 
+质量门禁固定使用 Ubuntu 24.04，以兼容当前 Playwright 1.55.1 的浏览器依赖安装。
+
 `.github/workflows/quality.yml` 先运行与本地相同的 `test:security`，通过后安装 Chromium 并运行 `test:full`。这样在安装浏览器前即可发现生产依赖审计失败，两个检查入口与本地 `test:ci` 保持一致，由合同测试约束。`main` 的成功 run 额外生成以 commit SHA 命名的自托管 artifact；部署工作流只能消费该 run 的 artifact。质量门禁失败时上传浏览器诊断，并保留七天的 trace、截图、视频和 HTML 报告；成功运行不上传浏览器报告。正式发布 artifact 的上传仍为必需步骤，不能因存储额度不足而跳过。
 
 PR 上的 Quality Gate **不负责部署**：PR 也执行 standalone 打包及容器构建、健康检查，artifact 上传只在 `push main` 时执行，部署工作流再消费已经验证的 artifact。EdgeOne 仍会独立监听 `main`。

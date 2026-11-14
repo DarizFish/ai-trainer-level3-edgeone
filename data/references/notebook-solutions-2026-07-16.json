@@ -55,7 +55,7 @@
       "code": "1.1.3",
       "sourceNotebookSha256": "f49595b2a7714110d5c44b914e54e21530adee365f0ccf6aff441fa4411f6c58",
       "sourceOutputs": 3,
-      "codeSha256": "e3b1e6196763fa32df9e3f70557e4fb47305b5cea36e43d2dff29ed23a4bead5",
+      "codeSha256": "f1958aabeca86d6f2de0fc8929822671207cc3b72894e8ddb4c6cac7315d6dca",
       "cells": [
         {
           "id": "solution-1",
@@ -67,11 +67,18 @@
         },
         {
           "id": "solution-3",
-          "source": "# 2. 数据合理性审核\ndata['is_age_valid'] = data['Age'].between(18, 70)              #Age数据的合理性审核 2分\ndata['is_income_valid'] = data['Income'] > 0                 #Income数据的合理性审核 2分\ndata['is_loan_amount_valid'] = data['LoanAmount'] < (data['Income'] * 5)      #LoanAmount数据的合理性审核 2分\ndata['is_credit_score_valid'] = data['CreditScore'].between(300, 850)   #CreditScore数据的合理性审核 2分\n# 合理性检查结果\nvalidity_checks = data[['is_age_valid', 'is_income_valid', 'is_loan_amount_valid', 'is_credit_score_valid']].all(axis=1)\ndata['is_valid'] = validity_checks\n# 输出结果\nprint(\"数据合理性检查:\")\nprint(data[['is_age_valid', 'is_income_valid', 'is_loan_amount_valid', 'is_credit_score_valid', 'is_valid']].describe())\n"
+          "source": "# 2. 数据合理性审核\ndata['is_age_valid'] = data['Age'].between(18, 70)              #Age数据的合理性审核 2分\ndata['is_income_valid'] = data['Income'] > 2000                 #Income数据的合理性审核 2分\ndata['is_loan_amount_valid'] = data['LoanAmount'] < (data['Income'] * 5)      #LoanAmount数据的合理性审核 2分\ndata['is_credit_score_valid'] = data['CreditScore'].between(300, 850)   #CreditScore数据的合理性审核 2分\n# 合理性检查结果\nvalidity_checks = data[['is_age_valid', 'is_income_valid', 'is_loan_amount_valid', 'is_credit_score_valid']].all(axis=1)\ndata['is_valid'] = validity_checks\n# 输出结果\nprint(\"数据合理性检查:\")\nprint(data[['is_age_valid', 'is_income_valid', 'is_loan_amount_valid', 'is_credit_score_valid', 'is_valid']].describe())\n"
         },
         {
           "id": "solution-4",
-          "source": "# 3. 数据清洗和异常值处理\n# 标记不合理数据\ninvalid_rows = data[~data['is_valid']]\n# 删除不合理数据行\ncleaned_data = data[data['is_valid']]\n# 删除标记列\ncleaned_data = cleaned_data.drop(columns=['is_age_valid', 'is_income_valid', 'is_loan_amount_valid', 'is_credit_score_valid', 'is_valid'])\n# 保存清洗后的数据\ncleaned_data.to_csv('credit_data.csv', index=False)\nprint(\"数据清洗完成，已保存为 'cleaned_credit_data.csv'\")\n"
+          "source": "# 3. 数据清洗和异常值处理\n# 标记不合理数据\ninvalid_rows = data[~data['is_valid']]\n# 删除不合理数据行\ncleaned_data = data[data['is_valid']]\n# 删除标记列\ncleaned_data = cleaned_data.drop(columns=['is_age_valid', 'is_income_valid', 'is_loan_amount_valid', 'is_credit_score_valid', 'is_valid'])\n# 保存清洗后的数据\ncleaned_data.to_csv('cleaned_credit_data.csv', index=False)\nprint(\"数据清洗完成，已保存为 'cleaned_credit_data.csv'\")\n"
+        }
+      ],
+      "corrections": [
+        {
+          "date": "2026-11-14",
+          "basis": "1.1.3 题干要求收入大于 2000，清洗结果另存为 cleaned_credit_data.csv。",
+          "originalCodeSha256": "e3b1e6196763fa32df9e3f70557e4fb47305b5cea36e43d2dff29ed23a4bead5"
         }
       ]
     },

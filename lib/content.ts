@@ -76,6 +76,8 @@ export type PracticalTask = {
   answerSource: AnswerSource;
   answerBasis: PracticalAnswerBasis;
   referenceAnswer: string;
+  /** Reuse a released exercise version for answer corrections with identical fields and rubric. */
+  exerciseCompatibility?: { version: string; structureSha256: string };
   /** Word 交付物答案的结构化形式，由 scripts/practical_word_answers.py 从官方参考快照写入。
       1.1 组没有 Word 交付物，因此没有这个字段。详见 lib/practical-word-answer.ts。 */
   wordAnswer?: {
