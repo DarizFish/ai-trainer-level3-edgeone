@@ -6,7 +6,7 @@ const vm=require('node:vm');
 const {createRequire}=require('node:module');
 const bank=require('../data/bundled');
 const cache=new Map();
-global.wx={getStorageSync:k=>cache.has(k)?structuredClone(cache.get(k)):'',setStorageSync:(k,v)=>cache.set(k,structuredClone(v)),removeStorageSync:k=>cache.delete(k),pageScrollTo(){},showToast(){}};
+global.wx={getStorageSync:k=>cache.has(k)?structuredClone(cache.get(k)):'',setStorageSync:(k,v)=>cache.set(k,structuredClone(v)),removeStorageSync:k=>cache.delete(k),pageScrollTo(){},showToast(){},showShareMenu(options){options.success?.();}};
 const storage=require('../utils/storage');
 function loadPage(name,overrides={}){
   const filename=path.resolve(__dirname,`../pages/${name}/${name}.js`);

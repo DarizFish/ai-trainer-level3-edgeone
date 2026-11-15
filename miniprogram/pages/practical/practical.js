@@ -6,7 +6,7 @@ Page({
   data:{sections:[],group:'',groupTitle:'',keyword:'',tasks:[],recent:null,total:40,websiteOpen:false},
   openWebsite(){this.setData({websiteOpen:true});},
   closeWebsite(){this.setData({websiteOpen:false});},
-  onShow(){this.bank=content.get();this.render();},
+  onShow(){this.shareMenu=require('../../utils/share').enable();this.bank=content.get();this.render();},
   onPageScroll(e){this.scrollTop=e.scrollTop;},
   select(e){this.directoryScroll=this.scrollTop||0;const group=e.currentTarget.dataset.group;this.setData({group,keyword:'',groupTitle:modules.find(m=>m.id===group)?.title||group});this.render();wx.pageScrollTo({scrollTop:0,duration:0});},
   back(){this.setData({group:'',keyword:'',groupTitle:''});this.render();wx.pageScrollTo({scrollTop:this.directoryScroll||0,duration:0});},

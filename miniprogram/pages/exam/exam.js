@@ -22,7 +22,7 @@ Page({
       this.render();this.startTimer();
     }catch(error){ui.error(error);}
   },
-  onShow(){if(this.exam)this.startTimer();},
+  onShow(){this.shareMenu=require('../../utils/share').enable();if(this.exam)this.startTimer();},
   onHide(){clearInterval(this.timer);},onUnload(){clearInterval(this.timer);},
   startTimer(){clearInterval(this.timer);this.tick();if(this.exam.phase==='active')this.timer=setInterval(()=>this.tick(),1000);},
   tick(){if(!this.exam)return;const n=exams.remaining(this.exam);this.setData({clock:`${String(Math.floor(n/60)).padStart(2,'0')}:${String(n%60).padStart(2,'0')}`});if(n===0&&this.exam.phase==='active')void this.finish();},

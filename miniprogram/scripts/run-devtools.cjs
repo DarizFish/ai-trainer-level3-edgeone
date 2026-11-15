@@ -29,7 +29,7 @@ try{
  const run=(script,args=[])=>spawnSync(process.execPath,[path.join(__dirname,script),...args],options);
  // Project close/reopen is a separate diagnostic: this DevTools version may
  // discard the automation storage profile, including unrelated wx storage.
- const test=run(process.argv.includes('--experience-only')?'test-devtools-experience.cjs':process.argv.includes('--restart-only')?'test-devtools-restart.cjs':process.argv.includes('--ux-only')?'test-devtools-ux.cjs':process.argv.includes('--theory-only')?'test-devtools-theory.cjs':'test-devtools.cjs');
+ const test=run(process.argv.includes('--sharing-only')?'test-devtools-sharing.cjs':process.argv.includes('--experience-only')?'test-devtools-experience.cjs':process.argv.includes('--restart-only')?'test-devtools-restart.cjs':process.argv.includes('--ux-only')?'test-devtools-ux.cjs':process.argv.includes('--theory-only')?'test-devtools-theory.cjs':'test-devtools.cjs');
  process.exitCode=test.status|| (test.error?1:0);
 }finally{
  spawnSync('powershell.exe',['-NoProfile','-Command',`& ${quote(cli)} close --project ${quote(snapshot)}`],{stdio:'inherit',windowsHide:true});

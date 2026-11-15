@@ -2,6 +2,7 @@ const api=require('../../utils/request');
 const study=require('../../utils/study');
 Page({
   onShareAppMessage:require('../../utils/share').home,
+  onShow(){this.shareMenu=require('../../utils/share').enable();},
   data:{mode:'login',email:'',password:'',displayName:'',accepted:false,busy:false,error:''},
   onLoad(options){if(options.mode==='register')this.setData({mode:'register'});},
   input(e){this.setData({[e.currentTarget.dataset.name]:e.detail.value,error:''});},
